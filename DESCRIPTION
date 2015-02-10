@@ -1,9 +1,15 @@
 Package: CRSSIO
 Type: Package
-Title: What the package does (short line)
-Version: 1.0
+Title: Package to manage the input/output of CRSS data.
+Version: 0.1
 Date: 2015-02-10
-Author: Who wrote it
-Maintainer: Who to complain to <yourfault@somewhere.net>
+Author: as.person(c("Alan Butler <r.alan.butler@gmail.com> [aut,cre]"))
+Maintainer: as.person(c("Alan Butler <r.alan.butler@gmail.com> [aut,cre]"))
 Description: More about what it does (maybe more than one line)
-License: What license is it under?
+License: CCO
+LazyData: true
+Imports: 
+  xlsx
+Suggests:
+  knitr
+VignetteBuilder: knitr
