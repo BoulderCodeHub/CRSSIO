@@ -4,12 +4,15 @@ Title: Package to manage the input/output of CRSS data.
 Version: 0.1
 Date: 2015-02-10
 Author: as.person(c("Alan Butler <r.alan.butler@gmail.com> [aut,cre]"))
-Maintainer: as.person(c("Alan Butler <r.alan.butler@gmail.com> [aut,cre]"))
-Description: More about what it does (maybe more than one line)
+Maintainer: Alan Butler <r.alan.butler@gmail.com>
+Description: Provides functions to generate input files commmonly used by the
+    Colorado River Simulation System (CRSS) from publicly available data, as
+    well as functions to modify these files. Figures that are commonly used to
+    QA/QC and undersand CRSS results are also automated with this package.
 License: CCO
 LazyData: true
-Imports: 
-  xlsx
+Imports:
+    xlsx
 Suggests:
-  knitr
+    knitr
 VignetteBuilder: knitr
