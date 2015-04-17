@@ -1,5 +1,5 @@
 #source(paste(Sys.getenv('GEN_CODE'),'/getDataFromRdf.R',sep = ''))
-library(plyr)
+
 
 # variable names after getting data from rdf
 vNames <- function()
@@ -11,10 +11,10 @@ vNames <- function()
 		"SummaryOutputData.UpperBalancingAt823","SummaryOutputData.MidElevationReleaseAt748",
 		"SummaryOutputData.EqualizationAbove823","SummaryOutputData.LowerBalancingAbove823",
 		"SummaryOutputData.LowerBalancingBelow823","SummaryOutputData.LowerBalancingAt823",
-		"Surplus.Flood Control Surplus Flag",
-		"Shortage.Step 1 Shortage Flag","Shortage.Step 2 Shortage Flag",
-		"Shortage.Step 3 Shortage Flag")
-	r <- paste(r, '_EOCY_100',sep = '')
+		"SummaryOutputData.LBFloodControlSurplus",
+		"SummaryOutputData.LBShortageStep1","SummaryOutputData.LBShortageStep2",
+		"SummaryOutputData.LBShortageStep3")
+	r <- paste(r, '_Monthly_100',sep = '')
 	r
 }
 
@@ -28,7 +28,7 @@ vDescAll <- function()
 		'Equalization - annual release = 8.23 maf',
 		'Upper Elevation Balancing - annual release > 8.23 maf',
 		'Upper Elevation Balancing - annual release = 8.23 maf',
-		'Mid-Elevation Balancing - annual release = 7.48 maf',
+		'Mid-Elevation Release Tier - annual release = 7.48 maf',
 		'Equalization - annual release > 8.23 maf',
 		'Lower Elevation Balancing - annual release > 8.23 maf',
 		'Lower Elevation Balancing - annual release < 8.23 maf',
@@ -36,7 +36,7 @@ vDescAll <- function()
 		'Surplus - Flood Control','Shortage - 1st Level (Mead <= 1,075 and >= 1,050',
 		'Shortage - 2nd Level (Mead < 1,050 and >= 1,025',
 		'Shortage - 3rd Level (Mead < 1,025)','Equalization Tier','Upper Elevation Balancing Tier',
-		'Mid-Elevation Balancing Tier','Lower Elevation Balancing Tier')
+		'Mid-Elevation Release Tier','Lower Elevation Balancing Tier')
 	r
 }
 
@@ -80,10 +80,12 @@ get5YearTable <- function(scenPath, scen,oPath,nYrs)
 		"SummaryOutputData.UpperBalancingAt823","SummaryOutputData.MidElevationReleaseAt748",
 		"SummaryOutputData.EqualizationAbove823","SummaryOutputData.LowerBalancingAbove823",
 		"SummaryOutputData.LowerBalancingBelow823","SummaryOutputData.LowerBalancingAt823",
-		"Surplus.Flood Control Surplus Flag",
-		"Shortage.Step 1 Shortage Flag","Shortage.Step 2 Shortage Flag",
-		"Shortage.Step 3 Shortage Flag")
-	srA[[1]]$annualize <- matrix(c(rep('EOCY',length(srA[[1]]$slots)),rep('100',
+		"SummaryOutputData.LBFloodControlSurplus",
+		"SummaryOutputData.LBShortageStep1","SummaryOutputData.LBShortageStep2",
+		"SummaryOutputData.LBShortageStep3")
+	#** TO DO: using monthly below, since that essentially gets results as-is. There
+  #** should be an option in RWDataPlot::getDataForAllScens to return "raw" results
+  srA[[1]]$annualize <- matrix(c(rep('Monthly',length(srA[[1]]$slots)),rep('100',
 		length(srA[[1]]$slots))),ncol = length(srA[[1]]$slots), byrow = T)
 	srA[[1]]$rdf <- c('SystemConditions.rdf')
 
