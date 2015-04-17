@@ -1,2 +1,3 @@
 export(createCRSSDNFInputFiles,
-       CRSSNFInputNames)
+       CRSSNFInputNames,
+       get5YearTable)
