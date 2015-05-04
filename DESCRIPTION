@@ -12,7 +12,7 @@ Description: Provides functions to generate input files commmonly used by the
 License: CCO
 LazyData: true
 Imports:
-    xlsx, RWDataPlot, plyr
+    xlsx, RWDataPlot, plyr, dplyr
 Suggests:
     knitr
 VignetteBuilder: knitr

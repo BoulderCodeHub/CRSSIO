@@ -14,7 +14,7 @@ vNames <- function()
 		"SummaryOutputData.LBFloodControlSurplus",
 		"SummaryOutputData.LBShortageStep1","SummaryOutputData.LBShortageStep2",
 		"SummaryOutputData.LBShortageStep3")
-	r <- paste(r, '_Monthly_100',sep = '')
+	r <- paste(r, '_AnnualRaw_100',sep = '')
 	r
 }
 
@@ -42,30 +42,33 @@ vDescAll <- function()
 
 vShort <- function()
 {
-	r <- c('norm','mer823','short','uebLT823','surplus','eq823','uebGT823','ueb823','mer748',
-		'eq','lebGT823','lebLT823','leb823','fc','s1','s2','s3')
+	r <- c('lbNormal','mer823','lbShortage','uebLt823','lbSurplus','eq823','uebGt823','ueb823',
+         'mer748','eq','lebGt823','lebLt823','leb823','lbFcSurplus','lbShortageStep1',
+         'lbShortageStep2','lbShortageStep3')
 	r
 }
 
 vShortAll <- function()
 {
-	r <- c('norm','mer823','short','uebLT823','surplus','eq823','uebGT823','ueb823','mer748',
-		'eq','lebGT823','lebLT823','leb823','fc','s1','s2','s3','eqAll','uebAll','merAll',
-		'lebAll')
+	r <- c('lbNormal','mer823','lbShortage','uebLt823','lbSurplus','eq823','uebGt823','ueb823',
+         'mer748','eq','lebGt823','lebLt823','leb823','lbFcSurplus','lbShortageStep1',
+         'lbShortageStep2','lbShortageStep3','eqAll','uebAll','merAll','lebAll')
 	r
 }
 
 shortOrderFull <- function()
 {
-	r <- c('eqAll','eq','eq823','uebAll','uebGT823','ueb823','uebLT823','merAll','mer823','mer748',
-		'lebAll','lebGT823','leb823','lebLT823','short','s1','s2','s3','surplus','fc','norm')
+	r <- c('eqAll','eq','eq823','uebAll','uebGt823','ueb823','uebLt823','merAll','mer823','mer748',
+		'lebAll','lebGt823','leb823','lebLt823','lbShortage','lbShortageStep1','lbShortageStep2',
+    'lbShortageStep3','lbSurplus','lbFcSurplus','lbNormal')
 	r
 }
 
 shortOrderLimit <- function()
 {
-	r <- c('eqAll','eq','eq823','uebAll','uebGT823','ueb823','uebLT823','merAll','mer823','mer748',
-		'lebAll','short','s1','s2','s3','surplus','fc','norm')
+	r <- c('eqAll','eq','eq823','uebAll','uebGt823','ueb823','uebLt823','merAll','mer823','mer748',
+		'lebAll','lbShortage','lbShortageStep1','lbShortageStep2','lbShortageStep3','lbSurplus',
+    'lbFcSurplus','lbNormal')
 	r
 }
 
@@ -83,52 +86,77 @@ get5YearTable <- function(scenPath, scen,oPath,nYrs)
 		"SummaryOutputData.LBFloodControlSurplus",
 		"SummaryOutputData.LBShortageStep1","SummaryOutputData.LBShortageStep2",
 		"SummaryOutputData.LBShortageStep3")
-	#** TO DO: using monthly below, since that essentially gets results as-is. There
-  #** should be an option in RWDataPlot::getDataForAllScens to return "raw" results
-  srA[[1]]$annualize <- matrix(c(rep('Monthly',length(srA[[1]]$slots)),rep('100',
+## TO DO
+## change to use createSlotAggList
+## and to use the abbreviations or the createSysCondTable code will not work.
+## Do not multiply by 100. That's taken care of in the createSysCondTable code.
+  srA[[1]]$annualize <- matrix(c(rep('AnnualRaw',length(srA[[1]]$slots)),rep('100',
 		length(srA[[1]]$slots))),ncol = length(srA[[1]]$slots), byrow = T)
 	srA[[1]]$rdf <- c('SystemConditions.rdf')
 
 	getDataForAllScens(scen, scen, srA, scenPath, paste(oPath,'tmpData.txt',sep = ''))
 	
 	zz <- read.table(paste(oPath,'tmpData.txt',sep = ''),header = T)
-	zz2 <- ddply(zz, .(Year,Variable), summarize,mean = mean(Value))
-	yr <- min(zz2$Year)
-	yr <- yr:(yr+(nYrs-1)) # 5 year window from the first year
-	zz2 <- zz2[zz2$Year %in% yr,]
-	zz <- dcast(zz2, Year~Variable, value.var = 'mean')
 	
-	# change names and arange in the correct order
-	rr <- names(zz)[2:ncol(zz)]
-	rr[match(vNames(),rr)] <- vShort()
-	names(zz)[2:ncol(zz)] <- rr
-	yrs <- zz$Year
-	zz$eqAll <- zz$eq + zz$eq823
-	zz$uebAll <- zz$uebGT823 + zz$ueb823 + zz$uebLT823
-	zz$merAll <- zz$mer823 + zz$mer748
-	zz$lebAll <- zz$lebGT823 + zz$leb823 + zz$lebLT823
-	zz <- subset(zz,select = shortOrderFull())
-	zzLimit <- subset(zz, select = shortOrderLimit())
-	
-	# change to full descriptions and transpose the matrix
-	rr <- names(zz)
-	ii <- match(rr,vShortAll())
-	rr <- vDescAll()[ii]
-	names(zz) <- rr
-	zz <- t(zz)
-	colnames(zz) <- yrs
-	
-	rr <- names(zzLimit)
-	ii <- match(rr,vShortAll())
-	rr <- vDescAll()[ii]
-	names(zzLimit) <- rr
-	zzLimit <- t(zzLimit)
-	colnames(zzLimit) <- yrs
-	
-	write.csv(zz, paste(oPath,'/5YearTable_Full.csv',sep = ''), row.names = T)
-	write.csv(zzLimit, paste(oPath,'/5YearTable_Limited.csv',sep = ''), row.names = T)
+	yr <- min(zz$Year)
+	yr <- yr:(yr+(nYrs-1)) # N year window from the first year
+  
+  zz <- createSysCondTable(zz, yr)
+  write.csv(zz[['fullTable']], paste(oPath,'/5YearTable_Full.csv',sep = ''), row.names = T)
+	write.csv(zz[['limitedTable']], paste(oPath,'/5YearTable_Limited.csv',sep = ''), row.names = T)
 }
 
+#' @param zz Full data for all years/traces necessary for creating System Conditions table
+#' @param yrs Vector of years to process all of the System Conditions 
+#' @return List with two Data frames: one with the System Conditions for the specified 
+#' years including the breakout of Lower Elevation Balancing releases and the other without
+#' the Lower Elevation Balancing breakout
+createSysCondTable <- function(zz, yrs)
+{
+  zz2 <- dplyr::filter(zz, Year %in% yrs)
+  
+  ## for removal
+  ## zz2 <- ddply(zz, .(Year,Variable), summarize,mean = mean(Value))
+  
+  # multiply mean by 100 to create % of traces.
+  zz2 <- zz2 %>% 
+    dplyr::group_by(Year, Variable) %>%
+    dplyr::summarise(mean = mean(Value)*100)
+  
+  zz <- reshape2::dcast(zz2, Year~Variable, value.var = 'mean')
 
+  # change names and arange in the correct order
+  ## TO DO
+  ## Remove the following after using a new create slot agg list function in above code
+  # rr <- names(zz)[2:ncol(zz)]
+  # rr[match(vNames(),rr)] <- vShort()
+  # names(zz)[2:ncol(zz)] <- rr
+  yrsLab <- zz$Year
+  zz$eqAll <- zz$eq + zz$eq823
+  zz$uebAll <- zz$uebGt823 + zz$ueb823 + zz$uebLt823
+  zz$merAll <- zz$mer823 + zz$mer748
+  zz$lebAll <- zz$lebGt823 + zz$leb823 + zz$lebLt823
+  zz <- subset(zz,select = shortOrderFull())
+  zzLimit <- subset(zz, select = shortOrderLimit())
+  
+  # change to full descriptions and transpose the matrix
+  rr <- names(zz)
+  ii <- match(rr,vShortAll())
+  rr <- vDescAll()[ii]
+  names(zz) <- rr
+  zz <- t(zz)
+  colnames(zz) <- yrs
+  
+  rr <- names(zzLimit)
+  ii <- match(rr,vShortAll())
+  rr <- vDescAll()[ii]
+  names(zzLimit) <- rr
+  zzLimit <- t(zzLimit)
+  colnames(zzLimit) <- yrsLab
+  
+  rr <- list('fullTable' = zz, 'limitedTable' = zzLimit)
+  
+  rr
+}
 
 
