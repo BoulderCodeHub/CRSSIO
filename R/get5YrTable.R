@@ -106,6 +106,12 @@ get5YearTable <- function(scenPath, scen,oPath,nYrs)
 	write.csv(zz[['limitedTable']], paste(oPath,'/5YearTable_Limited.csv',sep = ''), row.names = T)
 }
 
+#' \code{createSysCondTable}
+#' 
+#' \code{createSysCondTable} creates the standard System Conditions table that is commonly created
+#' from CRSS results. The table reports the percent of traces that that simulate various
+#' system conditions, e.g., Lake Powell operating tiers, through time.
+#' 
 #' @param zz Full data for all years/traces necessary for creating System Conditions table
 #' @param yrs Vector of years to process all of the System Conditions 
 #' @return List with two Data frames: one with the System Conditions for the specified 
