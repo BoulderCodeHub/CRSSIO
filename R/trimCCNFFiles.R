@@ -39,7 +39,7 @@ trimFilesInFolder <- function(folder, startYear, endYear)
 {
   allFiles <- paste0(folder,'/',list.files(folder))
   print(paste('Processing:',folder))
-  
+  flush.console()
   # call trimSindleFile for every file found in the folder
   xx <- sapply(allFiles, trimSingleFile, startYear, endYear)
   xx
