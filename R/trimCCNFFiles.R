@@ -38,6 +38,7 @@ trimCCNFFiles <- function(startYear, endYear, iFolder, nTraces = 112)
 trimFilesInFolder <- function(folder, startYear, endYear)
 {
   allFiles <- paste0(folder,'/',list.files(folder))
+  print(paste('Processing:',folder))
   
   # call trimSindleFile for every file found in the folder
   xx <- sapply(allFiles, trimSingleFile, startYear, endYear)
