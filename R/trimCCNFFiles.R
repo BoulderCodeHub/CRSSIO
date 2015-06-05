@@ -51,7 +51,7 @@ trimSingleFile <- function(ff, startYear, endYear)
   # read in the flow or salinity data
   nf = as.matrix(read.table(ff, sep = '\t', skip = 2))
   # read in the header info and maintain units; necessary so the code works for flow and salinity files
-  headerInfo = scan(ff, what = 'char', nlines = 2, sep = '\t')
+  headerInfo = scan(ff, what = 'char', nlines = 2, sep = '\t', quiet = T)
   dataStartYear <- as.numeric(strsplit(strsplit(headerInfo[1],' ',fixed = T)[[1]][2], 
                                        '-',fixed = T)[[1]][1])
   
