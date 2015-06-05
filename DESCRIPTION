@@ -14,6 +14,7 @@ LazyData: true
 Imports:
     dplyr,
     plyr,
+    reshape2,
     RWDataPlot,
     xlsx,
     zoo
