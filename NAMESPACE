@@ -3,4 +3,5 @@ export(changeStartDate,
        createCRSSDNFInputFiles,
        createSysCondTable,
        CRSSNFInputNames,
-       get5YearTable)
+       get5YearTable,
+       trimCCNFFiles)

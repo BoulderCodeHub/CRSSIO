@@ -15,7 +15,8 @@ Imports:
     dplyr,
     plyr,
     RWDataPlot,
-    xlsx
+    xlsx,
+    zoo
 Suggests:
     knitr
 VignetteBuilder: knitr
