@@ -34,10 +34,17 @@
 createCRSSDNFInputFiles <- function(iFile, oFolder, startDate, simYrs, oFiles = CRSSNFInputNames(),
                                     recordToUse = NA)
 {
+  if(!file.exists(iFile)){
+    stop('iFile does not exist')
+  }
+  print('Starting to read in natural flow Excel file. Please be patient this may take several minutes.')
+  flush.console()
+  
   nf <- xlsx::read.xlsx(iFile, sheetName = 'Intervening Natural Flow')
 	# going to take a lot of trimming, etc. to get rid of all the labels we don't need for
 	# the flow matrix
-	
+  print('Finsihed reading in natural flow Excel file.')
+  flush.console()
 	# trim off extraneous data
   # know the first 7 rows are not needed
 	nf <- as.matrix(nf[8:(nrow(nf)),2:31]) 
