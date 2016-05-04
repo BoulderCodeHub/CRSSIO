@@ -36,8 +36,9 @@ the natural flow data.
 }
 \details{
 \code{createCRSSDNFInputFiles} creates individual trace files for the observed
-natural flow on the Colorado River Basin using the Index Sequential Method 
-(INSERT REFERENCE). Trace files are formated and saved in a format expected
+natural flow on the Colorado River Basin using the 
+\href{http://onlinelibrary.wiley.com/doi/10.1111/j.1752-1688.1997.tb03557.x/abstract}{Index Sequential Method} 
+Trace files are formated and saved in a format expected
 by the Colorado River Simulation System (CRSS). Data is read from the natural
 flow workbook available at \url{http://www.usbr.gov/lc/region/g4000/NaturalFlow/current.html}.
 }
