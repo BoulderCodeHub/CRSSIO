@@ -17,22 +17,30 @@
 #' @param oFiles A matrix of the file names (input into CRSS). The default uses
 #' \code{\link{CRSSNFInputNames}}. This must be specified in the correct order, i.e.,
 #' the same order as the nodes in the input Excel file.
+#' @param recordToUse The start and end dates of the natural flow record to perform ISM, if using
+#' something besides the full record. If it is \code{NA}, the full record will be used. Otherwise, it
+#' should be a vector of length 2, where the first entry is the start date and the second entry
+#' is the end date. The vector should be of type \code{\link[zoo]{yearmon}}, or something that will sucessfully 
+#' convert to a \code{\link[zoo]{yearmon}} object.
 #' 
 #' @return Nothing is returned by the function, but it writes out many files.
 #' @examples
-#' # will create 50 years for 107 traces based on the 1906-2012 record
-#' creatCRSSDNFInputFiles('NaturalFlows1906-2012_withExtensions_1.8.15.xlsx','NFSinput/','2015-1-31',50)
+#' # will create 50 years for 107 traces based on the full (1906-2012) record:
+#' createCRSSDNFInputFiles('NaturalFlows1906-2012_withExtensions_1.8.15.xlsx','NFSinput/','2015-1-31',50)
+#' # will create 20 years for 25 traces based on the 1988-2012 record:
+#' createCRSSDNFInputFiles('NaturalFlows1906-2012_withExtensions_1.8.15.xlsx','scratch/','2016-1-31', 20, recordToUse = c('1988-1-31','2012-12-31'))
 #' @seealso
 #' \code{\link{CRSSNFInputNames}}
-createCRSSDNFInputFiles <- function(iFile, oFolder, startDate, simYrs, oFiles = CRSSNFInputNames())
+createCRSSDNFInputFiles <- function(iFile, oFolder, startDate, simYrs, oFiles = CRSSNFInputNames(),
+                                    recordToUse = NA)
 {
-	nf <- xlsx::read.xlsx(iFile, sheetName = 'Intervening Natural Flow')
+  nf <- xlsx::read.xlsx(iFile, sheetName = 'Intervening Natural Flow')
 	# going to take a lot of trimming, etc. to get rid of all the labels we don't need for
 	# the flow matrix
 	
 	# trim off extraneous data
   # know the first 7 rows are not needed
-	nf <- as.matrix(nf[8:(nrow(nf)),2:31])
+	nf <- as.matrix(nf[8:(nrow(nf)),2:31]) 
   # remove any rows that are NA since there could be one or more at the bottom of the file
 	notNaRows <- which(!is.na(nf[,1]))
   nf <- nf[notNaRows,]
@@ -44,13 +52,22 @@ createCRSSDNFInputFiles <- function(iFile, oFolder, startDate, simYrs, oFiles = 
   if(simYrs > nrow(nf)/12){
     stop('Error: simYrs is larger than the number of years in the input data.')
   }
-	# remove gap column
+  # remove gap column
 	nf <- matrix(as.numeric(nf[,c(1:20,22:30)]),ncol = 29, byrow = F)
 	
-	nT <- nrow(nf)/12
-	
-	# repeat all data, so can sample the traces that wrap around time
-	nf <- rbind(nf, nf)
+	if(!anyNA(recordToUse)){
+	# convert nf to [zoo/xts] object so we can perform ISM on something besides the full record
+  	nf.YearMon <- zoo::as.yearmon('1906-01-31') + seq(0,nrow(nf)-1)/12
+  	nfZoo <- read.zoo(data.frame(nf.YearMon,nf))
+    # subset down to the start and end dates
+  	nfZoo <- window(nfZoo, start = as.yearmon(recordToUse[1]), end = as.yearmon(recordToUse[2]))
+  	nf <- rbind(as.matrix(nfZoo), as.matrix(nfZoo)) # no longer necessary to be zoo object
+  	nT <- dim(nfZoo)[1]/12
+	} else {
+  	# repeat all data, so can sample the traces that wrap around time
+	  nT <- nrow(nf)/12
+	  nf <- rbind(nf, nf)
+	}
 	
 	# number of months in each trace
 	nM <- simYrs * 12
