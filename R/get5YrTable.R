@@ -72,6 +72,18 @@ shortOrderLimit <- function()
 	r
 }
 
+#' \code{get5YearTable}
+#' 
+#' \code{get5YearTable} is depreciated and will be removed in future versions. Please combine
+#' \code{\link[RWDataPlot]{getDataForAllScens}} with \code{\link{createSysCondTable}} instead of
+#' using this function.
+#' 
+#' @param scenPath Path to scenario folder
+#' @param scen The scenario name
+#' @param oPath Path to write a text file to
+#' @param nYrs The number of years to create the table for
+#' @return Nothing. But two txt files are written out.
+#' @export
 get5YearTable <- function(scenPath, scen,oPath,nYrs)
 {
 	warning('get5YearTable will be depreciated in a future release.\nPlease use RWDataPlot::getDataForAllScens and CRSSIO::createSysCondTable instead.')
@@ -119,6 +131,7 @@ get5YearTable <- function(scenPath, scen,oPath,nYrs)
 #' @return List with two Data frames: one with the System Conditions for the specified 
 #' years including the breakout of Lower Elevation Balancing releases and the other without
 #' the Lower Elevation Balancing breakout
+#' @export
 createSysCondTable <- function(zz, yrs)
 {
   # if there there is a "Scenario" dimension and there are more than 1 scenarios, then 

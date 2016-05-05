@@ -32,6 +32,8 @@
 #' createCRSSDNFInputFiles('NaturalFlows1906-2012_withExtensions_1.8.15.xlsx','scratch/','2016-1-31', 20, recordToUse = c('1988-1-31','2012-12-31'))
 #' @seealso
 #' \code{\link{CRSSNFInputNames}}
+#' 
+#' @export
 createCRSSDNFInputFiles <- function(iFile, oFolder, startDate, simYrs, oFiles = CRSSNFInputNames(),
                                     recordToUse = NA)
 {

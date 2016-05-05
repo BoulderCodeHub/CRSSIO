@@ -19,6 +19,7 @@
 #' @seealso
 #' \code{\link{createCRSSDNFInputFiles}}
 #' 
+#' @export
 CRSSNFInputNames <- function()
 {
 	return(c('UpperColoradoReach.Inflow',

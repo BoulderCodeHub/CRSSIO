@@ -9,6 +9,8 @@
 #' @param folder A string with either a relative or absolute path that contains the trace 
 #' folders, e.g., 'C:/CRSS/dmi/DNFSinput'
 #' @param startDate string of new starting date. Should be in 2012-1-31 format. 
+#' 
+#' @export
 changeStartDate <- function(nTrace, folder, startDate)
 {
 	timeInfo = paste('start_date: ',startDate,' 24:00\n', sep = '')
