@@ -74,7 +74,9 @@ shortOrderLimit <- function()
 
 get5YearTable <- function(scenPath, scen,oPath,nYrs)
 {
-	srA = list()
+	warning('get5YearTable will be depreciated in a future release.\nPlease use RWDataPlot::getDataForAllScens and CRSSIO::createSysCondTable instead.')
+  
+  srA = list()
 	srA[[1]] <- list()
 	srA[[1]]$slots <- c("SummaryOutputData.LBNormalCondition",
 		"SummaryOutputData.MidElevationReleaseAt823","SummaryOutputData.LBShortageConditions",
