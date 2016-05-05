@@ -1,5 +1,5 @@
-## CRSSIO Package
-R Package to manage code for manipulating the input/output for CRSS.
+## CRSSIO
+R Package to manage code for manipulating the input and output data for CRSS.
 
 Only available from GitHub. Use the following to install:
 ```
@@ -14,3 +14,7 @@ Includes:
 * function(s) to change the file names of the natural flow input files in order to use natural flow input files in either the older or new structure of CRSS
 * function to create the standard System Conditions Table from CRSS output. Commonly refered to as the "5-year table" but it can go through as many years as simulation data exists.
 * function to trim the climate change hydrology files: `trimCCNFFiles`.       
+
+## Log:
+* 2016-05-05: version 0.2 available
+* 2015-02-10: version 0.1 available
