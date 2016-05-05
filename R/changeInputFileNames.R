@@ -19,7 +19,8 @@
 #' data(newNFNames)
 #' data(oldNFNames)
 #' copyAndChangeNames('C:/CRSS/dmi/NFSinputOrig/','C:/CRSS/dmi/NFSinputNew/',107,oldNFNames$Slot, newNFNames$Slot)
-
+#'
+#' @export
 copyAndChangeNFFileNames <- function(iFolder, oFolder, nTrace, fromNames, toNames)
 {
   
