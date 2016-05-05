@@ -4,6 +4,7 @@ R Package to manage code for manipulating the input/output for CRSS.
 Only available from GitHub. Use the following to install:
 ```
 install.packages('devtools')
+library(devtools)
 devtools::install_github('rabutler/CRSSIO')
 ```
 
