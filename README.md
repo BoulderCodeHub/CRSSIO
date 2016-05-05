@@ -1,5 +1,12 @@
 ## CRSSIO Package
-Package to manage code for manipulating the input/output for CRSS.
+R Package to manage code for manipulating the input/output for CRSS.
+
+Only available from GitHub. Use the following to install:
+```
+install.packages('devtools')
+devtools::install_github('rabutler/CRSSIO')
+```
+
 Includes:
 * code to create CRSS natural flow input files from posted natural flow data (http://www.usbr.gov/lc/region/g4000/NaturalFlow/current.html)
 * function to change the start date of the natural flow input files
