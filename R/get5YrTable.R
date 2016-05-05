@@ -119,6 +119,13 @@ get5YearTable <- function(scenPath, scen,oPath,nYrs)
 #' the Lower Elevation Balancing breakout
 createSysCondTable <- function(zz, yrs)
 {
+  # if there there is a "Scenario" dimension and there are more than 1 scenarios, then 
+  # post a warning message that the scenarios will be averaged together for crating the table
+  if(!is.null(zz$Scenario) & length(levels(as.factor(zz$Scenario))) > 1){
+    warning(paste('There are',length(levels(as.factor(zz$Scenario))),
+                  'Scenarios in the data. Please note, these scenarios will be averaged together when creating the system conditions table.'))
+  }
+  
   zz2 <- dplyr::filter(zz, Year %in% yrs)
   
   ## for removal
