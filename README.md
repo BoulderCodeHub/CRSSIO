@@ -16,5 +16,6 @@ Includes:
 * function to trim the climate change hydrology files: `trimCCNFFiles`.       
 
 ## Log:
+* 2016-05-30: version 0.2.1 available
 * 2016-05-05: version 0.2 available
 * 2015-02-10: version 0.1 available
