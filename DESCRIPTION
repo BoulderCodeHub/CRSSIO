@@ -1,7 +1,7 @@
 Package: CRSSIO
 Type: Package
 Title: Package to manage the input/output of CRSS data.
-Version: 0.2
+Version: 0.2.1
 Date: 2016-05-05
 Author: as.person(c("Alan Butler <r.alan.butler@gmail.com> [aut,cre]"))
 Maintainer: Alan Butler <r.alan.butler@gmail.com>
