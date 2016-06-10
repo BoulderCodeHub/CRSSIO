@@ -16,12 +16,14 @@
 #' @return Nothing is returned from function. 
 #' @examples
 #' # load the common old and new natural flow files names included with the CRSSIO package.
-#' data(newNFNames)
-#' data(oldNFNames)
+#' \dontrun{
 #' iFolder <- 'C:/CRSS/dmi/NFSinputOrig/'
 #' oFolder <- 'C:/CRSS/dmi/NFSinputNew/'
-#' copyAndChangeNFFileNames(iFolder, oFolder, 107,oldNFNames$Slot, newNFNames$Slot)
-#'
+#' oldFileNames <- CRSSInputNames(version = 1)
+#' newFileNames <- CRSSInputNames(version = 2)
+#' copyAndChangeNFFileNames(iFolder, oFolder, 107,oldFileNames, newFileNames)
+#' }
+#' 
 #' @export
 copyAndChangeNFFileNames <- function(iFolder, oFolder, nTrace, fromNames, toNames)
 {
