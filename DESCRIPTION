@@ -17,8 +17,12 @@ Imports:
     magrittr,
     reshape2,
     xlsx,
+    xts,
     zoo
+Remotes:
+    BoulderCodeHub/CoRiverNF
 Suggests:
-    knitr
+    knitr,
+    testthat
 VignetteBuilder: knitr
 RoxygenNote: 5.0.1
