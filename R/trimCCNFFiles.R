@@ -20,7 +20,9 @@
 #' 
 #' @examples 
 #' # Trim all 112 traces found in 'CRSS/dmi/VIC' to start in Jan-2017 and end in Dec-2019
+#' \dontrun{
 #' trimCCNFFiles(2017,2019,'CRSS/dmi/VIC/')
+#' }
 #' 
 #' @export
 trimCCNFFiles <- function(startYear, endYear, iFolder, nTraces = 112)

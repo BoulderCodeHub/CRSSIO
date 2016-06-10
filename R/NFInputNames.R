@@ -15,7 +15,10 @@
 #' @return Vector of characters (file names).
 #' @examples
 #' fileNames <- CRSSNFInputNames()
-#' createCRSSDNFInputFiles('NaturalFlows1906-2012_withExtensions_1.8.15.xlsx','NFSinput/','2015-1-31',50,fileNames)
+#' \dontrun{
+#' iFiles <- 'NaturalFlows1906-2012_withExtensions_1.8.15.xlsx'
+#' createCRSSDNFInputFiles(iFile,'NFSinput/','2015-1-31',50,fileNames)
+#' }
 #' @seealso
 #' \code{\link{createCRSSDNFInputFiles}}
 #' 

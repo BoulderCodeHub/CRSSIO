@@ -108,7 +108,7 @@ get5YearTable <- function(scenPath, scen,oPath,nYrs)
 		length(srA[[1]]$slots))),ncol = length(srA[[1]]$slots), byrow = T)
 	srA[[1]]$rdf <- c('SystemConditions.rdf')
 
-	getDataForAllScens(scen, scen, srA, scenPath, paste(oPath,'tmpData.txt',sep = ''))
+	RWDataPlot::getDataForAllScens(scen, scen, srA, scenPath, paste(oPath,'tmpData.txt',sep = ''))
 	
 	zz <- read.table(paste(oPath,'tmpData.txt',sep = ''),header = T)
 	
@@ -131,6 +131,8 @@ get5YearTable <- function(scenPath, scen,oPath,nYrs)
 #' @return List with two Data frames: one with the System Conditions for the specified 
 #' years including the breakout of Lower Elevation Balancing releases and the other without
 #' the Lower Elevation Balancing breakout
+#' 
+#' @importFrom magrittr "%>%"
 #' @export
 createSysCondTable <- function(zz, yrs)
 {

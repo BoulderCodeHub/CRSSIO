@@ -43,10 +43,14 @@ by the Colorado River Simulation System (CRSS). Data is read from the natural
 flow workbook available at \url{http://www.usbr.gov/lc/region/g4000/NaturalFlow/current.html}.
 }
 \examples{
+\dontrun{
+# path to excel file
+iFile <- 'user/docs/NaturalFlows1906-2012_withExtensions_1.8.15.xlsx'
 # will create 50 years for 107 traces based on the full (1906-2012) record:
-createCRSSDNFInputFiles('NaturalFlows1906-2012_withExtensions_1.8.15.xlsx','NFSinput/','2015-1-31',50)
+createCRSSDNFInputFiles(iFile,'NFSinput/','2015-1-31',50)
 # will create 20 years for 25 traces based on the 1988-2012 record:
-createCRSSDNFInputFiles('NaturalFlows1906-2012_withExtensions_1.8.15.xlsx','scratch/','2016-1-31', 20, recordToUse = c('1988-1-31','2012-12-31'))
+createCRSSDNFInputFiles(iFile,'scratch/','2016-1-31', 20, recordToUse = c('1988-1-31','2012-12-31'))
+}
 }
 \seealso{
 \code{\link{CRSSNFInputNames}}

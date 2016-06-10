@@ -26,10 +26,14 @@
 #' 
 #' @return Nothing is returned by the function, but it writes out many files.
 #' @examples
+#' \dontrun{
+#' # path to excel file
+#' iFile <- 'user/docs/NaturalFlows1906-2012_withExtensions_1.8.15.xlsx'
 #' # will create 50 years for 107 traces based on the full (1906-2012) record:
-#' createCRSSDNFInputFiles('NaturalFlows1906-2012_withExtensions_1.8.15.xlsx','NFSinput/','2015-1-31',50)
+#' createCRSSDNFInputFiles(iFile,'NFSinput/','2015-1-31',50)
 #' # will create 20 years for 25 traces based on the 1988-2012 record:
-#' createCRSSDNFInputFiles('NaturalFlows1906-2012_withExtensions_1.8.15.xlsx','scratch/','2016-1-31', 20, recordToUse = c('1988-1-31','2012-12-31'))
+#' createCRSSDNFInputFiles(iFile,'scratch/','2016-1-31', 20, recordToUse = c('1988-1-31','2012-12-31'))
+#' }
 #' @seealso
 #' \code{\link{CRSSNFInputNames}}
 #' 
@@ -68,9 +72,9 @@ createCRSSDNFInputFiles <- function(iFile, oFolder, startDate, simYrs, oFiles = 
 	if(!anyNA(recordToUse)){
 	# convert nf to [zoo/xts] object so we can perform ISM on something besides the full record
   	nf.YearMon <- zoo::as.yearmon('1906-01-31') + seq(0,nrow(nf)-1)/12
-  	nfZoo <- read.zoo(data.frame(nf.YearMon,nf))
+  	nfZoo <- zoo::read.zoo(data.frame(nf.YearMon,nf))
     # subset down to the start and end dates
-  	nfZoo <- window(nfZoo, start = as.yearmon(recordToUse[1]), end = as.yearmon(recordToUse[2]))
+  	nfZoo <- window(nfZoo, start = zoo::as.yearmon(recordToUse[1]), end = zoo::as.yearmon(recordToUse[2]))
   	nf <- rbind(as.matrix(nfZoo), as.matrix(nfZoo)) # no longer necessary to be zoo object
   	nT <- dim(nfZoo)[1]/12
 	} else {

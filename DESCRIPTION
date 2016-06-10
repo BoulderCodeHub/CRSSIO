@@ -1,7 +1,7 @@
 Package: CRSSIO
 Type: Package
-Title: Package to manage the input/output of CRSS data.
-Version: 0.2.1
+Title: Package to manage the CRSS input/output data
+Version: 0.2.1.9000
 Date: 2016-05-05
 Author: as.person(c("Alan Butler <r.alan.butler@gmail.com> [aut,cre]"))
 Maintainer: Alan Butler <r.alan.butler@gmail.com>
@@ -9,15 +9,17 @@ Description: Provides functions to generate input files commmonly used by the
     Colorado River Simulation System (CRSS) from publicly available data, as
     well as functions to modify these files. Figures that are commonly used to
     QA/QC and undersand CRSS results are also automated with this package.
-License: CCO
+License: CC0
 LazyData: true
+Depends: R (>= 2.10)
 Imports:
     dplyr,
-    plyr,
+    magrittr,
     reshape2,
-    RWDataPlot,
     xlsx,
     zoo
+Remotes:
+    rabutler/RWDataPlot
 Suggests:
     knitr
 VignetteBuilder: knitr

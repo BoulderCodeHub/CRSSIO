@@ -34,7 +34,9 @@ are structured for CRSS input, e.g., C:/CRSS/dmi/NFSinput/trace1/NFInput.Files.
 # load the common old and new natural flow files names included with the CRSSIO package.
 data(newNFNames)
 data(oldNFNames)
-copyAndChangeNames('C:/CRSS/dmi/NFSinputOrig/','C:/CRSS/dmi/NFSinputNew/',107,oldNFNames$Slot, newNFNames$Slot)
+iFolder <- 'C:/CRSS/dmi/NFSinputOrig/'
+oFolder <- 'C:/CRSS/dmi/NFSinputNew/'
+copyAndChangeNFFileNames(iFolder, oFolder, 107,oldNFNames$Slot, newNFNames$Slot)
 
 }
 
