@@ -1,4 +1,5 @@
 library(CRSSIO)
+library(xts)
 context('check that the ISM related functions work.')
 
 myYM <- zoo::as.yearmon('1905-01') + seq(0,47)/12
@@ -11,10 +12,8 @@ test_that('createISMMatrix returns an expected matrix', {
   # comparing to a range of differences because myISM is not an xts object,
   # so all.equal will not work as it will return differences in attributes
   
-  # not sure why these work with devtools::test, but fail when using check.
-  
-  #expect_equal(range(createISMMatrix(tstData, '2016-01', nYrs = NA)-myIsm), c(0,0))
-  #expect_equal(range(createISMMatrix(tstData, '2016-01',nYrs = 3)-myIsm[1:36,]), c(0,0))
+  expect_equal(range(createISMMatrix(tstData, '2016-01', nYrs = NA)-myIsm), c(0,0))
+  expect_equal(range(createISMMatrix(tstData, '2016-01',nYrs = 3)-myIsm[1:36,]), c(0,0))
 })
 
 test_that('createISMMatrix errors out correctly',{
