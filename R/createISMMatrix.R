@@ -39,7 +39,7 @@ createISMMatrix <- function(xtsData, startMonth, nYrs = NA)
   }
   
   # make the data not an xts object so we can rbind it together
-  zz <- matrix(xtsData, nrow = length(xtsData))
+  zz <- matrix(unclass(xtsData))#, nrow = length(xtsData))
   zz <- rbind(zz,zz) # now can easily loop through the data for ISM
   
   ntraces <- 1:(xts::nmonths(xtsData)/12)
