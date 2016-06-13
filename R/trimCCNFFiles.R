@@ -41,8 +41,7 @@ trimCCNFFiles <- function(startYear, endYear, iFolder, nTraces = 112)
 trimFilesInFolder <- function(folder, startYear, endYear)
 {
   allFiles <- paste0(folder,'/',list.files(folder))
-  print(paste('Processing:',folder))
-  flush.console()
+  message(paste('Processing:',folder))
   # call trimSindleFile for every file found in the folder
   xx <- sapply(allFiles, trimSingleFile, startYear, endYear)
   xx
@@ -50,6 +49,9 @@ trimFilesInFolder <- function(folder, startYear, endYear)
 
 # will trim the data in a single file and write out the new file
 # ff is the file to trim
+#' @keywords internal
+#' @importFrom utils read.table
+#' @importFrom utils write.table
 trimSingleFile <- function(ff, startYear, endYear)
 {
   # read in the flow or salinity data

@@ -10,13 +10,15 @@
 #' folders, e.g., 'C:/CRSS/dmi/DNFSinput'
 #' @param startDate string of new starting date. Should be in 2012-1-31 format. 
 #' 
+#' @importFrom utils write.table
+#' @importFrom utils read.table
 #' @export
 changeStartDate <- function(nTrace, folder, startDate)
 {
 	timeInfo = paste('start_date: ',startDate,' 24:00\n', sep = '')
 	for(i in 1:nTrace){
-		print(paste('Starting trace:',i,'of',nTrace))
-		flush.console()
+		message(paste('Starting trace:',i,'of',nTrace))
+	
 		currFold = paste(folder,'/trace',i,'/',sep = '')
 		# get list of all files contained in the trace folder
 		currFiles = list.files(currFold)
@@ -42,12 +44,14 @@ changeStartDate <- function(nTrace, folder, startDate)
 # folder is a string with either a relative or absolute path that contains the trace folders, e.g., C:/CRSS/dmi/DNFSinput
 # startDate is a string containing the desired start date in the files; should be in 2012-1-31 format
 # NZeros is the number of zeros to add to the data that is read in
+#' @keywords internal
+#' @importFrom utils read.table
+#' @importFrom utils write.table
 changeStartDateForEvapAndAddZeros <- function(nTrace, folder, startDate, NZeros)
 {
 	timeInfo = paste('start_date: ',startDate,' 24:00\n', sep = '')
 	for(i in 1:nTrace){
-		print(paste('Starting trace:',i,'of',nTrace))
-		flush.console()
+		message(paste('Starting trace:',i,'of',nTrace))
 		currFold = paste(folder,'/trace',i,'/',sep = '')
 		# get list of all files contained in the trace folder
 		currFiles = list.files(currFold)
