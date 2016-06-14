@@ -50,7 +50,7 @@ file, so it the files created are identical for each of the two data sets.
 }
 \examples{
 
-dir.create('~/R/tmp')
+dir.create('tmp')
 # create 107 traces of 107 years using the CoRiverNF R data package
 createCRSSDNFInputFiles("CoRiverNF", '~/R/tmp','2017-1-31',107)
 # will create 20 years for 25 traces based on the 1988-2012 record:
