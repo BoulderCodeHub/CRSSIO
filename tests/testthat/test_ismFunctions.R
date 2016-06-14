@@ -37,3 +37,16 @@ test_that('createISMMatrix messages',{
   expect_error(createISMMatrix(myIsm, '2016-01'),
                'xtsData is not of type xts')
 })
+
+tstMat <- xts::as.xts(zoo::read.zoo(
+  data.frame(myYM,matrix(rep(tstData,29), ncol = 29, byrow = F))))
+
+test_that('getAllISMMatrices works', {
+  expect_error(getAllISMMatrices(cbind(tstData,tstData), '2016-01', 3),
+               'nfMat does not contain 29 columns')
+  expect_equal(getAllISMMatrices(tstMat,'2016-01', 3)[[1]], 
+               createISMMatrix(tstData, '2016-01', nYrs = 3))
+  expect_equal(getAllISMMatrices(tstMat,'2016-01', NA)[[1]],
+               getAllISMMatrices(tstMat,'2016-01', NA)[[29]])
+  expect_equal(length(getAllISMMatrices(tstMat,'2016-01', NA)),29)
+})
