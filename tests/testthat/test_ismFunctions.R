@@ -3,8 +3,8 @@ library(xts)
 context('check that the ISM related functions work.')
 
 myYM <- zoo::as.yearmon('1905-01') + seq(0,47)/12
-tstData <- 1:48
-tstData <- xts::as.xts(zoo::read.zoo(data.frame(myYM,tstData)))
+tstData <- xts::xts(1:48, myYM)
+xts::indexTZ(tstData) <- 'UTC'
 
 myIsm <- cbind(1:48,c(13:48,1:12),c(25:48,1:24),c(37:48,1:36))
 
@@ -40,6 +40,7 @@ test_that('createISMMatrix messages',{
 
 tstMat <- xts::as.xts(zoo::read.zoo(
   data.frame(myYM,matrix(rep(tstData,29), ncol = 29, byrow = F))))
+xts::indexTZ(tstMat) <- 'UTC'
 
 test_that('getAllISMMatrices works', {
   expect_error(getAllISMMatrices(cbind(tstData,tstData), '2016-01', 3),

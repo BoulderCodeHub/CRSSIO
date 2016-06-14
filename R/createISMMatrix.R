@@ -29,12 +29,10 @@ createISMMatrix <- function(xtsData, startMonth, nYrs = NA)
     stop('xtsData is not of type xts')
   }
   
-  # using nmonths/12 because xtsnyears returns too many. 
-  
   if(is.na(nYrs)){
-    nYrs <- xts::nmonths(xtsData)/12
+    nYrs <- xts::nyears(xtsData)
   } else{
-    if(nYrs > xts::nmonths(xtsData)/12)
+    if(nYrs > xts::nyears(xtsData))
       stop('nYrs is longer than xtsData.')
   }
   
@@ -42,7 +40,7 @@ createISMMatrix <- function(xtsData, startMonth, nYrs = NA)
   zz <- matrix(unclass(xtsData))#, nrow = length(xtsData))
   zz <- rbind(zz,zz) # now can easily loop through the data for ISM
   
-  ntraces <- 1:(xts::nmonths(xtsData)/12)
+  ntraces <- 1:xts::nyears(xtsData)
 
   ismMatrix <- sapply(ntraces, getSubsetOfData, zz, nYrs)
   
