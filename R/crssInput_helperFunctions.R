@@ -50,6 +50,7 @@ readAndFormatNFExcel <- function(iFile)
 
   # remove gap column
   nf <- matrix(as.numeric(nf[,c(1:20,22:30)]),ncol = 29, byrow = F)
+  Sys.setenv(TZ = 'UTC') # set the system timezone to UTC
   nf.YearMon <- zoo::as.yearmon('1906-01-31') + seq(0,nrow(nf)-1)/12
   nf <- xts::as.xts(zoo::read.zoo(data.frame(nf.YearMon,nf)))
   nf
