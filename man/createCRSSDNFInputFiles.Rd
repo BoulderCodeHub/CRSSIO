@@ -52,9 +52,9 @@ file, so it the files created are identical for each of the two data sets.
 
 dir.create('tmp')
 # create 107 traces of 107 years using the CoRiverNF R data package
-createCRSSDNFInputFiles("CoRiverNF", '~/R/tmp','2017-1-31',107)
+createCRSSDNFInputFiles("CoRiverNF", 'tmp','2017-1-31',107)
 # will create 20 years for 25 traces based on the 1988-2012 record:
-createCRSSDNFInputFiles("CoRiverNF", '~/R/tmp','2017-1-31',20, 
+createCRSSDNFInputFiles("CoRiverNF", 'tmp','2017-1-31',20, 
   CRSSNFInputNames(version=2),recordToUse=c('1988-1','2012-12'))
 
 \dontrun{
