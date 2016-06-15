@@ -20,7 +20,6 @@ Imports:
     reshape2,
     rstudioapi (>= 0.5),
     shiny (>= 0.13),
-    shinyFiles,
     utils,
     xlsx,
     xts,
