@@ -34,19 +34,23 @@ changeStartDate <- function(nTrace, folder, startDate)
 	}
 }
 
-# ---------------------------------------------------------
-# THE BELOW CODE IS SPECIFIC TO DATA IN THE EVAP FOLDER
-# ---------------------------------------------------------
-
-# changes the start date in all files in each trace folder
-# startDate should be in 2012-1-31 format
-# nTrace is the number of traces to process
-# folder is a string with either a relative or absolute path that contains the trace folders, e.g., C:/CRSS/dmi/DNFSinput
-# startDate is a string containing the desired start date in the files; should be in 2012-1-31 format
-# NZeros is the number of zeros to add to the data that is read in
-#' @keywords internal
+#' Change Start Date of Evap Files
+#' 
+#' Changes the start date in all files in each CRSS_DIR/dmi/evap/trace folder.
+#' 
+#' For evaporation files used in CRSS that are in CRSS_DIR/dmi/Evap, this function
+#' will change their start date, and add 0s on if necessary to extend the evaporation
+#' rates. The files specific to Powell are skipped.
+#' 
+#' @param startDate New start date. Should be in 2012-1-31 format.
+#' @param nTrace The number of traces to process.
+#' @param folder A string with either a relative or absolute path that contains 
+#' the trace folders, e.g., C:/CRSS/dmi/DNFSinput
+#' @param NZeros is the number of zeros to add to the data that is read in
+#' 
 #' @importFrom utils read.table
 #' @importFrom utils write.table
+#' @export
 changeStartDateForEvapAndAddZeros <- function(nTrace, folder, startDate, NZeros)
 {
 	timeInfo = paste('start_date: ',startDate,' 24:00\n', sep = '')
