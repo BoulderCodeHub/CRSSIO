@@ -1,4 +1,4 @@
-#' trimCCNFFiles
+#' Trim Climate Change Natural Flow Files
 #' 
 #' Trims the Climate Change natural flow input data to start and/or end in a different year.
 #' 
@@ -7,6 +7,9 @@
 #' sequential method is not used on the climate change hydrology. Sometimes it is necessary 
 #' to trim the data to start, and end in a particular year. The function will return data starting
 #' in January of the \code{startYear} and ending in December of \code{endYear}. 
+#' 
+#' While the function is typically used on climate change natural flow files, it
+#' will still work with other natural flow input files.
 #' 
 #' Assumes folder numbers will always start at 1 and that all files in the folder should be 
 #' processed.
@@ -38,6 +41,7 @@ trimCCNFFiles <- function(startYear, endYear, iFolder, nTraces = 112)
   sum(xx)
 }
 
+#' @keywords internal
 trimFilesInFolder <- function(folder, startYear, endYear)
 {
   allFiles <- paste0(folder,'/',list.files(folder))

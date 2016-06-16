@@ -2,7 +2,7 @@
 % Please edit documentation in R/trimCCNFFiles.R
 \name{trimCCNFFiles}
 \alias{trimCCNFFiles}
-\title{trimCCNFFiles}
+\title{Trim Climate Change Natural Flow Files}
 \usage{
 trimCCNFFiles(startYear, endYear, iFolder, nTraces = 112)
 }
@@ -28,6 +28,9 @@ flow files used in CRSS, the data are associated with specific years, i.e., the 
 sequential method is not used on the climate change hydrology. Sometimes it is necessary 
 to trim the data to start, and end in a particular year. The function will return data starting
 in January of the \code{startYear} and ending in December of \code{endYear}.
+
+While the function is typically used on climate change natural flow files, it
+will still work with other natural flow input files.
 
 Assumes folder numbers will always start at 1 and that all files in the folder should be 
 processed.
