@@ -16,44 +16,43 @@ createCRSSInputAddIn <- function() {
     ),
     
     gadgetTitleBar("Create CRSS Input Files", 
-                   right = miniTitleBarButton("done","Run", primary = TRUE)),
-    miniContentPanel(column(
+                   right = miniTitleBarButton("done","Close and Run", primary = TRUE)),
+    miniContentPanel(
+      fillCol(
         h4('Create CRSS Input Files from Observed Natural Flow Record Using the ISM Method'),
         
-        p('1. Select the start and end months of the natural flow record to use the ISM method on. This should be January 1 of some year through December 31 of some year.'),
-        dateRangeInput('nfInputYrs', 'Start and End Months:',
-                       start = '1906-01-01',end = '2012-12-31', startview = 'decade'),
+        h5('1. Select the start and end months of the natural flow record to use the ISM method on. This should be January 1 of some year through December 31 of some year.'),
+        fillRow(flex = c(NA,1),
+                dateRangeInput('nfInputYrs', 'Start and End Months:',
+                               start = '1906-01-01',end = '2012-12-31', startview = 'decade'),
+                htmlOutput('startEndErrors')
+                ),
+        br(),
         
-        p('2. Select the number of years in the simulation period, i.e., the number of years each trace of data will contain'),
-        numericInput('simYrs', 'Simulation Years:',50, min = 1, max = 107, step = 1),
+        h5('2. Select the number of years in the simulation period, i.e., the number of years each trace of data will contain'),
+        fillRow(flex = c(NA,1),
+                numericInput('simYrs', 'Simulation Years:',50, min = 1, max = 107, step = 1),
+                htmlOutput('simYrsCheck')
+                ),
+        br(),
         
-        p('3. Select the start date of the trace files. (Should be January 31 of some year.)'),
-        dateInput('traceStartYear','Traces Start In:',value = '2017-01-31',
-                  startview = "decade"),
+        h5('3. Select the start date of the trace files. (Should be January 31 of some year.)'),
+        fillRow(flex = c(NA,1),
+                dateInput('traceStartYear','Traces Start In:',value = '2017-01-31',
+                          startview = "decade"), 
+                htmlOutput('traceStartCheck')
+                ),
+        br(),
         
-        p('4. Select the folder to save the trace files in. The folder should already exist.'),
-        textInput('selectFolder', 'Select Folder', value = 'C:/'), width = 8),
+        h5('4. Select the folder to save the trace files in. The folder should already exist.'),
+        fillRow(flex = c(NA,1),
+                textInput('selectFolder', 'Select Folder', value = 'C:/'), 
+                htmlOutput('checkInputFolder')
+                ),
+        br(),
         
-        column(width = 4,
-          p('Start and End Month errors:'),
-          htmlOutput('startEndErrors'),
-          br(),
-          
-          p('Simulation Years errors:'),
-          htmlOutput('simYrsCheck'),
-          br(),
-          
-          p('Traces Start In errors:'),
-          htmlOutput('traceStartCheck'),
-          br(),
-               
-          p('Select Folder Messages Here:'),
-          htmlOutput('checkInputFolder'),
-          br(),
-          
-          p('MASTER ERRORS:'),
-          htmlOutput('checkAllErrors')
-        )
+        htmlOutput('checkAllErrors')
+      )
       
     )
   )
@@ -162,9 +161,6 @@ createCRSSInputAddIn <- function() {
     
   }
   
-  # We'll use a pane viwer, and set the minimum height at
-  # 300px to ensure we get enough screen space to display the clock.
-  viewer <- paneViewer(300)
-  runGadget(ui, server, viewer = viewer)
+  runGadget(ui, server, viewer = paneViewer(550))
   
 }
