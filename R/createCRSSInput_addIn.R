@@ -1,4 +1,16 @@
 
+#' RStudio Addin to Create CRSS Input Files
+#' 
+#' \code{createCRSSInputAddIn} is accessed via a RStudio Addin. It is a GUI 
+#' (Shiny Gadget) used to set key parameters of \code{\link{createCRSSDNFInputFiles}} 
+#' before running it.
+#' 
+#' To use the Addin, RStudio v0.99.878 or later must be used. The key user input
+#' to \code{createCRSSDNFInputFiles} can be set in the GUI. The \code{oFiles}
+#' arguement uses the default value of \code{\link{CRSSNFInputNames}}.
+#' 
+#' @seealso \code{\link{createCRSSDNFInputFiles}}, \code{\link{CRSSNFInputNames}}
+#' 
 #' @import shiny
 #' @import miniUI
 
