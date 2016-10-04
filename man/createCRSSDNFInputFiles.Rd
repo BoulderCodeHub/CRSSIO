@@ -8,13 +8,16 @@ createCRSSDNFInputFiles(iFile, oFolder, startDate, simYrs,
   oFiles = CRSSNFInputNames(), recordToUse = NA)
 }
 \arguments{
-\item{iFile}{The relative or absolute path to the excel workbook.}
+\item{iFile}{Either the string "CoRiverNF", or the relative or absolute path 
+to the excel workbook. When "CoRiverNF" is used, the data from the \code{CoRiverNF}
+data package is used. Otherwise, it should be a valid path to the natural flow
+Excel workbook.}
 
 \item{oFolder}{The location to write out all trace files.}
 
 \item{startDate}{The start date to be listed in each trace file; should be in 2014-1-31 format}
 
-\item{simYrs}{The number of years data each file should contain. Should be
+\item{simYrs}{The number of years of data each file should contain. Should be
 no longer than the number of years in the input data.}
 
 \item{oFiles}{A matrix of the file names (input into CRSS). The default uses
@@ -31,22 +34,37 @@ convert to a \code{\link[zoo]{yearmon}} object.}
 Nothing is returned by the function, but it writes out many files.
 }
 \description{
-Creates the CRSS natural flow input files from the standard excel workbook that is used to publish 
-the natural flow data.
+Creates the CRSS natural flow input files used by the Colorado River Simulation
+System (CRSS)
 }
 \details{
 \code{createCRSSDNFInputFiles} creates individual trace files for the observed
 natural flow on the Colorado River Basin using the 
-\href{http://onlinelibrary.wiley.com/doi/10.1111/j.1752-1688.1997.tb03557.x/abstract}{Index Sequential Method} 
+\href{http://onlinelibrary.wiley.com/doi/10.1111/j.1752-1688.1997.tb03557.x/abstract}{Index Sequential Method}. 
 Trace files are formated and saved in a format expected
 by the Colorado River Simulation System (CRSS). Data is read from the natural
-flow workbook available at \url{http://www.usbr.gov/lc/region/g4000/NaturalFlow/current.html}.
+flow workbook available at \url{http://www.usbr.gov/lc/region/g4000/NaturalFlow/current.html} or
+from the `CoRiverNF` data package. It is much faster to use the data package
+rather than the Excel workbook. The data package is created from the Excel
+file, so it the files created are identical for each of the two data sets.
 }
 \examples{
-# will create 50 years for 107 traces based on the full (1906-2012) record:
-createCRSSDNFInputFiles('NaturalFlows1906-2012_withExtensions_1.8.15.xlsx','NFSinput/','2015-1-31',50)
+
+dir.create('tmp')
+# create 107 traces of 107 years using the CoRiverNF R data package
+createCRSSDNFInputFiles("CoRiverNF", 'tmp','2017-1-31',107)
 # will create 20 years for 25 traces based on the 1988-2012 record:
-createCRSSDNFInputFiles('NaturalFlows1906-2012_withExtensions_1.8.15.xlsx','scratch/','2016-1-31', 20, recordToUse = c('1988-1-31','2012-12-31'))
+createCRSSDNFInputFiles("CoRiverNF", 'tmp','2017-1-31',20, 
+  CRSSNFInputNames(version=2),recordToUse=c('1988-1','2012-12'))
+
+\dontrun{
+# path to excel file
+iFile <- 'user/docs/NaturalFlows1906-2012_withExtensions_1.8.15.xlsx'
+# will create 50 years for 107 traces based on the full (1906-2012) record:
+createCRSSDNFInputFiles(iFile,'NFSinput/','2015-1-31',50)
+# will create 20 years for 25 traces based on the 1988-2012 record:
+createCRSSDNFInputFiles(iFile,'scratch/','2016-1-31', 20, recordToUse = c('1988-1-31','2012-12-31'))
+}
 }
 \seealso{
 \code{\link{CRSSNFInputNames}}

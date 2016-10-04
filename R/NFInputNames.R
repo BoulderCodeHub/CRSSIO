@@ -1,4 +1,4 @@
-#' Get vector of CRSS natural inflow file names.
+#' Get vector of CRSS natural inflow file names
 #' 
 #' \code{CRSSNFInputNames} returns a vector with the CRSS natural inflow file
 #' names in the correct node order.
@@ -13,16 +13,24 @@
 #' for creating the input files for CRSS.
 #' 
 #' @return Vector of characters (file names).
+#' 
+#' @param version The CRSS version number. Current version of CRSS is 2. Valid 
+#' versions are 1 or 2.
+#' 
 #' @examples
 #' fileNames <- CRSSNFInputNames()
-#' createCRSSDNFInputFiles('NaturalFlows1906-2012_withExtensions_1.8.15.xlsx','NFSinput/','2015-1-31',50,fileNames)
+#' \dontrun{
+#' iFiles <- 'NaturalFlows1906-2012_withExtensions_1.8.15.xlsx'
+#' createCRSSDNFInputFiles(iFile,'NFSinput/','2015-1-31',50,fileNames)
+#' }
 #' @seealso
-#' \code{\link{createCRSSDNFInputFiles}}
+#' \code{\link{createCRSSDNFInputFiles}}, \code{\link{CRSSNatSaltInputNames}}
 #' 
 #' @export
-CRSSNFInputNames <- function()
+CRSSNFInputNames <- function(version=2)
 {
-	return(c('UpperColoradoReach.Inflow',
+	if(version ==2){
+	  return(c('UpperColoradoReach.Inflow',
 		'UpperColoradoAboveCameo_GainsAboveCameo.Local_Inflow',
 		'TaylorPark.Inflow',
 		'TaylorAboveBlueMesa_GainsAboveBlueMesa.Local_Inflow',
@@ -51,13 +59,97 @@ CRSSNFInputNames <- function()
 		'CoRivMohaveToHavasu_BillWilliamsRiver.Local_Inflow',
 		'CoRivMohaveToHavasu_GainsAboveParker.Local_Inflow',
 		'AboveImperialDamColoradoR_GainsOnColoRAboveImperialDam.Local_Inflow'))
+	} else if(version == 1){
+	  return(c('UpperColoradoReach.Inflow',
+	  'UpperColoradoReach_GainsAboveCameo.Local_Inflow',
+	  'TaylorPark.Inflow',                              
+	  'TaylorAboveBlueMesa_GainsAboveBlueMesa.Local_Inflow',
+	  'GunnisonRiverAboveCrystal_GainsAboveCrystal.Local_Inflow',
+	  'GunnisonRiverAboveGrandJunction_GainsGunnisonRiverAbvGrandJunction.Local_Inflow',
+	  'DoloresRiver.Inflow',
+	  'UpperColoradoReach_GainsAboveCisco.Local_Inflow',
+	  'GreenRAboveFontenelle.Inflow',          
+	  'FontToFlamingGorge_GainsAboveGRWY.Local_Inflow',                                
+	  'FontToFlamingGorge_GainsAboveGreendale.Local_Inflow',                            
+	  'YampaRiver.Inflow',                                                              
+	  'YampaRiver_LittleSnakeRInflow.Local_Inflow',                                     
+	  'DuchesneAboveStarv.Inflow',                                                      
+	  'WhiteRiver.Inflow',                                                              
+	  'GreenRWhiteToSanRafael_GainsAboveGreenRiverUT.Local_Inflow',                     
+	  'SanRafaelRiver.Inflow',                                                          
+	  'SJAboveNavajo.Inflow',                                                           
+	  'SJBelowNavajo_GainsAboveBluff.Local_Inflow',                                     
+	  'SanJuanPowell_GainsAboveLeesFerry.Local_Inflow',                                 
+	  'CoRivPowellToVirgin_PariaGains.Local_Inflow',                                    
+	  'CoRivPowellToVirgin_LittleCoR.Local_Inflow',                                     
+	  'CoRivPowellToVirgin_GainsAboveGC.Local_Inflow',                                  
+	  'VirginRiver.Inflow',                                                             
+	  'CoRivVirginToMead_GainsAboveHoover.Local_Inflow',                                
+	  'CoRivMeadToMohave_GainsAboveDavis.Local_Inflow',                                 
+	  'CoRivMohaveToHavasu_BillWilliamsRiver.Local_Inflow',                             
+	  'CoRivMohaveToHavasu_GainsAboveParker.Local_Inflow',                              
+	  'AboveImperialDamColoradoR_GainsOnColoRAboveImperialDam.Local_Inflow')) 
+	} else{
+	  stop('Invalid version number in CRSSNFInputNames')
+	}
 }
 
 
-# not sure what the salt files are for
-CRSSOldNatSaltInput <- function()
+#' Get vector of CRSS natural salt input file names
+#' 
+#' \code{CRSSNatSaltInputNames} returns a vector with the CRSS natural salt file
+#' names in the correct node order.
+#' 
+#' This function returns a vector with the file names used by CRSS to import
+#' the natural salt. The order matches the node order used by Reclamation and
+#' CRSS and thus should not be modified. As the structure to CRSS changes, 
+#' the file names also may change. If this occurs in the future, the function
+#' will be modified to return different values for different versions of CRSS.
+#' 
+#' @return Vector of characters (file names).
+#' 
+#' @param version The CRSS version number. Current version of CRSS is 2. Valid 
+#' versions are 1 or 2.
+#' 
+#' @examples
+#' fileNames <- CRSSNatSaltInputNames(2)
+#' @seealso
+#' \code{\link{CRSSNFInputNames}}
+#' 
+#' @export
+CRSSNatSaltInputNames <- function(version=2)
 {
-	return(c('UpperColoradoReach.Inflow_Salt_Concentration',
+	if(version == 2){
+	  return(c('UpperColoradoReach.Inflow_Salt_Concentration',
+      'UpperColoradoAboveCameo_GainsAboveCameo.Local_Inflow_Salt_Concentration',
+      'TaylorPark.Inflow_Salt_Concentration',
+      'TaylorAboveBlueMesa_GainsAboveBlueMesa.Local_Inflow_Salt_Concentration',
+      'GunnisonRiverAboveCrystal_GainsAboveCrystal.Local_Inflow_Salt_Concentration',
+      'GunnisonRiverAboveGrandJunction_GainsGunnisonRiverAbvGrandJunction.Local_Inflow_Salt_Concentration',
+      'DoloresRiver.Inflow_Salt_Concentration',
+      'UpperColoradoCameoToGunnison_GainsAboveCisco.Local_Inflow_Salt_Concentration',
+      'GreenRAboveFontenelle.Inflow_Salt_Concentration',
+      'GreenRAboveGreenRiverWY_GainsAboveGRWY.Local_Inflow_Salt_Concentration',
+      'GreenRAboveFlamingGorge_GainsAboveGreendale.Local_Inflow_Salt_Concentration',
+      'YampaRiver.Inflow_Salt_Concentration','LittleSnakeRiver.Inflow_Salt_Concentration',
+      'DuchesneAboveStarv.Inflow_Salt_Concentration',
+      'WhiteRiverAboveWatson.Inflow_Salt_Concentration',
+      'GreenRWhiteToSanRafael_GainsAboveGreenRiverUT.Local_Inflow_Salt_Concentration',
+      'SanRafaelRiver.Inflow_Salt_Concentration',
+      'SJAboveNavajo.Inflow_Salt_Concentration',
+      'SanJuanTributaries.Inflow_Salt_Concentration',
+      'SanJuanPowell_GainsAboveLeesFerry.Local_Inflow_Salt_Concentration',
+      'PariaRiver.Inflow_Salt_Concentration',
+      'LittleColoradoRiver.Inflow_Salt_Concentration',
+      'CoRivLittleCOToVirgin_GainsAboveGC.Local_Inflow_Salt_Concentration',
+      'VirginRiver.Inflow_Salt_Concentration',
+      'CoRivVirginToMead_GainsAboveHoover.Local_Inflow_Salt_Concentration',
+      'CoRivMeadToMohave_GainsAboveDavis.Local_Inflow_Salt_Concentration',
+      'CoRivMohaveToHavasu_BillWilliamsRiver.Local_Inflow_Salt_Concentration',
+      'CoRivMohaveToHavasu_GainsAboveParker.Local_Inflow_Salt_Concentration',
+      'AboveImperialDamColoradoR_GainsOnColoRAboveImperialDam.Local_Inflow_Salt_Concentration'))
+	} else if(version == 1){
+  return(c('UpperColoradoReach.Inflow_Salt_Concentration',
 		'UpperColoradoReach_GainsAboveCameo.Local_Inflow_Salt_Concentration',
 		'TaylorPark.Inflow_Salt_Concentration',
 		'TaylorAboveBlueMesa_GainsAboveBlueMesa.Local_Inflow_Salt_Concentration',
@@ -86,6 +178,9 @@ CRSSOldNatSaltInput <- function()
 		'CoRivMohaveToHavasu_BillWilliamsRiver.Local_Inflow_Salt_Concentration',
 		'CoRivMohaveToHavasu_GainsAboveParker.Local_Inflow_Salt_Concentration',
 		'AboveImperialDamColoradoR_GainsOnColoRAboveImperialDam.Local_Inflow_Salt_Concentration'))
+	} else{
+	  stop('Invalid version passed to CRSSNatSaltInputNames.')
+	}
 
 }
 

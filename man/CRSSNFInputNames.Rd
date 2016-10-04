@@ -2,9 +2,13 @@
 % Please edit documentation in R/NFInputNames.R
 \name{CRSSNFInputNames}
 \alias{CRSSNFInputNames}
-\title{Get vector of CRSS natural inflow file names.}
+\title{Get vector of CRSS natural inflow file names}
 \usage{
-CRSSNFInputNames()
+CRSSNFInputNames(version = 2)
+}
+\arguments{
+\item{version}{The CRSS version number. Current version of CRSS is 2. Valid 
+versions are 1 or 2.}
 }
 \value{
 Vector of characters (file names).
@@ -25,9 +29,12 @@ for creating the input files for CRSS.
 }
 \examples{
 fileNames <- CRSSNFInputNames()
-createCRSSDNFInputFiles('NaturalFlows1906-2012_withExtensions_1.8.15.xlsx','NFSinput/','2015-1-31',50,fileNames)
+\dontrun{
+iFiles <- 'NaturalFlows1906-2012_withExtensions_1.8.15.xlsx'
+createCRSSDNFInputFiles(iFile,'NFSinput/','2015-1-31',50,fileNames)
+}
 }
 \seealso{
-\code{\link{createCRSSDNFInputFiles}}
+\code{\link{createCRSSDNFInputFiles}}, \code{\link{CRSSNatSaltInputNames}}
 }
 

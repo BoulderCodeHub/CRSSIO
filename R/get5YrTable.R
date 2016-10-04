@@ -72,54 +72,6 @@ shortOrderLimit <- function()
 	r
 }
 
-#' \code{get5YearTable}
-#' 
-#' \code{get5YearTable} is depreciated and will be removed in future versions. Please combine
-#' \code{\link[RWDataPlot]{getDataForAllScens}} with \code{\link{createSysCondTable}} instead of
-#' using this function.
-#' 
-#' @param scenPath Path to scenario folder
-#' @param scen The scenario name
-#' @param oPath Path to write a text file to
-#' @param nYrs The number of years to create the table for
-#' @return Nothing. But two txt files are written out.
-#' @export
-get5YearTable <- function(scenPath, scen,oPath,nYrs)
-{
-	warning('get5YearTable will be depreciated in a future release.\nPlease use RWDataPlot::getDataForAllScens and CRSSIO::createSysCondTable instead.')
-  
-  srA = list()
-	srA[[1]] <- list()
-	srA[[1]]$slots <- c("SummaryOutputData.LBNormalCondition",
-		"SummaryOutputData.MidElevationReleaseAt823","SummaryOutputData.LBShortageConditions",
-		"SummaryOutputData.UpperBalancingBelow823","SummaryOutputData.LBSurplusConditions",
-		"SummaryOutputData.EqualizationAt823","SummaryOutputData.UpperBalancingAbove823",
-		"SummaryOutputData.UpperBalancingAt823","SummaryOutputData.MidElevationReleaseAt748",
-		"SummaryOutputData.EqualizationAbove823","SummaryOutputData.LowerBalancingAbove823",
-		"SummaryOutputData.LowerBalancingBelow823","SummaryOutputData.LowerBalancingAt823",
-		"SummaryOutputData.LBFloodControlSurplus",
-		"SummaryOutputData.LBShortageStep1","SummaryOutputData.LBShortageStep2",
-		"SummaryOutputData.LBShortageStep3")
-## TO DO
-## change to use createSlotAggList
-## and to use the abbreviations or the createSysCondTable code will not work.
-## Do not multiply by 100. That's taken care of in the createSysCondTable code.
-  srA[[1]]$annualize <- matrix(c(rep('AnnualRaw',length(srA[[1]]$slots)),rep('100',
-		length(srA[[1]]$slots))),ncol = length(srA[[1]]$slots), byrow = T)
-	srA[[1]]$rdf <- c('SystemConditions.rdf')
-
-	getDataForAllScens(scen, scen, srA, scenPath, paste(oPath,'tmpData.txt',sep = ''))
-	
-	zz <- read.table(paste(oPath,'tmpData.txt',sep = ''),header = T)
-	
-	yr <- min(zz$Year)
-	yr <- yr:(yr+(nYrs-1)) # N year window from the first year
-  
-  zz <- createSysCondTable(zz, yr)
-  write.csv(zz[['fullTable']], paste(oPath,'/5YearTable_Full.csv',sep = ''), row.names = T)
-	write.csv(zz[['limitedTable']], paste(oPath,'/5YearTable_Limited.csv',sep = ''), row.names = T)
-}
-
 #' \code{createSysCondTable}
 #' 
 #' \code{createSysCondTable} creates the standard System Conditions table that is commonly created
@@ -131,6 +83,8 @@ get5YearTable <- function(scenPath, scen,oPath,nYrs)
 #' @return List with two Data frames: one with the System Conditions for the specified 
 #' years including the breakout of Lower Elevation Balancing releases and the other without
 #' the Lower Elevation Balancing breakout
+#' 
+#' @importFrom magrittr "%>%"
 #' @export
 createSysCondTable <- function(zz, yrs)
 {

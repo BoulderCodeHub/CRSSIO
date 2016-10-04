@@ -1,0 +1,4 @@
+Name: Create CRSS Input Files
+Description: Creates the trace based natural flow input files for CRSS.
+Binding: createCRSSInputAddIn
+Interactive: true
