@@ -7,7 +7,7 @@ Only available from GitHub. Use the following to install:
 ```
 install.packages('devtools')
 library(devtools)
-devtools::install_github('rabutler/CRSSIO')
+devtools::install_github('BoulderCodeHub/CRSSIO')
 ```
 
 Includes:
