@@ -11,7 +11,9 @@ Description: Provides functions to generate input files commmonly used by the
     QA/QC and undersand CRSS results are also automated with this package.
 License: CC0
 LazyData: true
-Depends: R (>= 2.10)
+Depends: 
+    R (>= 2.10),
+    zoo
 Imports:
     CoRiverNF,
     dplyr,
@@ -22,8 +24,7 @@ Imports:
     shiny (>= 0.13),
     utils,
     xlsx,
-    xts,
-    zoo
+    xts
 Remotes:
     BoulderCodeHub/CoRiverNF
 Suggests:
