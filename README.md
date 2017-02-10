@@ -1,5 +1,5 @@
 ## CRSSIO
-[![Travis-CI Build Status](https://travis-ci.org/rabutler/CRSSIO.svg?branch=master)](https://travis-ci.org/rabutler/CRSSIO)
+[![Travis-CI Build Status](https://travis-ci.org/BoulderCodeHub/CRSSIO.svg?branch=master)](https://travis-ci.org/BoulderCodeHub/CRSSIO)
 
 R Package to manage code for manipulating the input and output data for CRSS.
 
@@ -7,7 +7,7 @@ Only available from GitHub. Use the following to install:
 ```
 install.packages('devtools')
 library(devtools)
-devtools::install_github('rabutler/CRSSIO')
+devtools::install_github('BoulderCodeHub/CRSSIO')
 ```
 
 Includes:
@@ -18,6 +18,7 @@ Includes:
 * function to trim the climate change hydrology files: `trimCCNFFiles`.       
 
 ## Log:
+* 2016-10-04: version 0.3 available
 * 2016-05-30: version 0.2.1 available
 * 2016-05-05: version 0.2 available
 * 2015-02-10: version 0.1 available
