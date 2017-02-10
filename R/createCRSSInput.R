@@ -51,6 +51,8 @@
 #' @seealso
 #' \code{\link{CRSSNFInputNames}}
 #' 
+#' @importFrom zoo as.yearmon
+#' @importFrom zoo index
 #' @export
 createCRSSDNFInputFiles <- function(iFile, oFolder, startDate, simYrs, oFiles = CRSSNFInputNames(),
                                     recordToUse = NA)
@@ -64,6 +66,8 @@ createCRSSDNFInputFiles <- function(iFile, oFolder, startDate, simYrs, oFiles = 
     } else{
       nf <- nf['1906-01/'] # trim off OND 1905
     }
+    createFrom <- paste0('Created from: CoRiverNF (v',
+                         utils::packageVersion('CoRiverNF'), ')')
   } else{
     # use the data in the Excel workbook, if it exists.
     if(!file.exists(iFile)){
@@ -76,6 +80,17 @@ createCRSSDNFInputFiles <- function(iFile, oFolder, startDate, simYrs, oFiles = 
       # trim data
       nf <- nf[paste(recordToUse[1], recordToUse[2],sep = '/')]
     }
+    
+    createFrom <- paste('Created from:', iFile)
+  }
+  
+  # get the years used before changing nf
+  if(!anyNA(recordToUse)){
+    periodToUse <- paste0('period used: ', format(zoo::as.yearmon(recordToUse[1]), "%Y"),
+                          '-', format(zoo::as.yearmon(recordToUse[2]), "%Y"))
+  } else{
+    # uses the full record, so it's 1906 - some year. figure out some year
+    periodToUse <- paste('period used: 1906', format(zoo::index(nf)[nrow(nf)], "%Y"), sep = '-')
   }
   
   nf <- getAllISMMatrices(nf, startDate, simYrs)
@@ -94,4 +109,18 @@ createCRSSDNFInputFiles <- function(iFile, oFolder, startDate, simYrs, oFiles = 
 
 	# for each node, write out all of the trace files
 	rV <- sapply(1:29, function(x) writeNFFilesByNode(nf[[x]], oFiles[x], oFolder, headerInfo))
+	
+	# data for writing out the README file
+	intro <- paste0('Created From Observed Hydrology with ISM from CRSSIO (v', 
+	                utils::packageVersion('CRSSIO'),') package')
+	dateCreate <- paste('date created:', Sys.Date())
+	createBy <- paste('created by:', Sys.info()[["user"]])
+	traceLength <- paste('trace length:', simYrs, 'years')
+	startYear <- paste('original start date:', startDate)
+	oText <- paste('Natural Flow Data', intro, '----------', dateCreate, 
+	               createBy, periodToUse, traceLength, startYear, createFrom, sep = '\n')
+	
+	# write out the README in the top level folder
+	utils::write.table(oText, file.path(oFolder, 'README.txt'), quote = FALSE, 
+	                   row.names = FALSE, col.names = FALSE)
 }
