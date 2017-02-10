@@ -54,12 +54,11 @@ trimFilesInFolder <- function(folder, startYear, endYear)
 # will trim the data in a single file and write out the new file
 # ff is the file to trim
 #' @keywords internal
-#' @importFrom utils read.table
-#' @importFrom utils write.table
+
 trimSingleFile <- function(ff, startYear, endYear)
 {
   # read in the flow or salinity data
-  nf = as.matrix(read.table(ff, sep = '\t', skip = 2))
+  nf = as.matrix(utils::read.table(ff, sep = '\t', skip = 2))
   # read in the header info and maintain units; necessary so the code works for flow and salinity files
   headerInfo = scan(ff, what = 'char', nlines = 2, sep = '\t', quiet = T)
   dataStartYear <- as.numeric(strsplit(strsplit(headerInfo[1],' ',fixed = T)[[1]][2], 
@@ -82,6 +81,6 @@ trimSingleFile <- function(ff, startYear, endYear)
   
   colnames(nf) <- headerInfo
   # writes out to the same folder it reads in from
-  write.table(nf, ff,quote = F, row.names = F)
+  utils::write.table(nf, ff,quote = F, row.names = F)
   1
 }
