@@ -1,5 +1,5 @@
 ## CRSSIO
-[![Travis-CI Build Status](https://travis-ci.org/BoulderCodeHub/CRSSIO.svg?branch=master)](https://travis-ci.org/BoulderCodeHub/CRSSIO)
+[![Travis-CI Build Status](https://travis-ci.org/rabutler/CRSSIO.svg?branch=master)](https://travis-ci.org/rabutler/CRSSIO)
 
 R Package to manage code for manipulating the input and output data for CRSS.
 
