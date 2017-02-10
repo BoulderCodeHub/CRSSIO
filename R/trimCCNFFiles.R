@@ -34,6 +34,12 @@ trimCCNFFiles <- function(startYear, endYear, iFolder, nTraces = 112)
     stop("In trimCCNFFiles, endYear cannot be before startYear.")
   }
   
+  if(startYear < 1950)
+    stop("startYear should not be before 1950")
+  
+  if(endYear > 2099)
+    stop("endYear should not be after 2099")
+  
   # create list of all folder names to process.
   allFolders <- paste0(iFolder,'/trace',1:nTraces)
   # call trimFilesInFolder for all folders
