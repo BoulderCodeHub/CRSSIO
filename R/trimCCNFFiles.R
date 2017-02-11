@@ -70,8 +70,18 @@ trimSingleFile <- function(ff, startYear, endYear)
   dataStartYear <- as.numeric(strsplit(strsplit(headerInfo[1],' ',fixed = T)[[1]][2], 
                                        '-',fixed = T)[[1]][1])
   
+  # check to see if the year you want to start the data in is after the year that
+  # the data actual starts in
+  if(dataStartYear > startYear)
+    stop("startYear is before the actual start year listed in the files you are trying to trim in iFolder")
+  
   # convert flows to zoo object to make sumsetting to trimmed data easier
   nf.months <- zoo::as.yearmon(dataStartYear + seq(0,length(nf)-1)/12)
+  # nf.months is as long as the data you have; if endYear is greater than this,
+  # then you don't have enough data to extend to endYear
+  if(endYear > as.numeric(format(nf.months[length(nf.months)], "%Y")))
+    stop("endYear is after the last year of the data in iFolder.")
+  
   nfZ <- zoo::zoo(nf,nf.months)
   
   # create subset of months to trim data
