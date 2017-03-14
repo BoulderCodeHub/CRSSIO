@@ -58,11 +58,10 @@ readAndFormatNFExcel <- function(iFile)
 
 #' write out a single trace of data
 #' @keywords internal
-#' @importFrom utils write.table
 writeSingleFile <- function(xData, fPath, headerInfo)
 {
   colnames(xData) = headerInfo
-  write.table(xData, file = fPath,quote = F, row.names = F)
+  utils::write.table(xData, file = fPath,quote = F, row.names = F)
 }
 
 #' Write out all of the traces file for a given node
