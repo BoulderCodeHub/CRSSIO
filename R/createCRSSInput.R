@@ -118,7 +118,7 @@ createCRSSDNFInputFiles <- function(iFile, oFolder, startDate, simYrs, oFiles = 
 	rV <- sapply(1:29, function(x) writeNFFilesByNode(nf[[x]], oFiles[x], oFolder, headerInfo))
 	
 	# for each trace, write out all of the trace and supply scenario number files
-	rV2 <- sapply(1:nT, function(x) writeTraceNumber(x, supplyScenario, oFolder))
+	rV2 <- sapply(1:nT, function(x) writeTraceSupplyNumbers(x, supplyScenario, oFolder))
 	
 	# data for writing out the README file
 	intro <- paste0('Created From Observed Hydrology with ISM from CRSSIO (v', 

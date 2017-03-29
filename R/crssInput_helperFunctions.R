@@ -84,7 +84,7 @@ writeNFFilesByNode <- function(nfXts, oFile, oFolder, headerInfo)
 #' write out the trace number and supply scenario number, to a given trace folder
 #' folderPath should be the top level folder, e.g., dmi/NFSinput
 #' @keywords internal
-writeTraceNumber <- function(traceNum, supplyScenNum, folderPath)
+writeTraceSupplyNumbers <- function(traceNum, supplyScenNum, folderPath)
 {
   # traceNum will output as follows:
   # units: NONE
