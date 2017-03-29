@@ -86,11 +86,18 @@ createCRSSDNFInputFiles <- function(iFile, oFolder, startDate, simYrs, oFiles = 
   
   # get the years used before changing nf
   if(!anyNA(recordToUse)){
-    periodToUse <- paste0('period used: ', format(zoo::as.yearmon(recordToUse[1]), "%Y"),
-                          '-', format(zoo::as.yearmon(recordToUse[2]), "%Y"))
+    y1 <- format(zoo::as.yearmon(recordToUse[1]), "%Y")
+    y2 <- format(zoo::as.yearmon(recordToUse[2]), "%Y")
+    periodToUse <- paste0('period used: ', y1, '-', y2)
+    # this only deals with historical observed NF, so that is supply scenario 
+    # 1.xxxxxxxx, where the .xxxxxxxx are the beginning and ending years used
+    # for ISM
+    supplyScenario <- as.numeric(paste0(1,'.',y1,y2))
   } else{
     # uses the full record, so it's 1906 - some year. figure out some year
-    periodToUse <- paste('period used: 1906', format(zoo::index(nf)[nrow(nf)], "%Y"), sep = '-')
+    y2 <- format(zoo::index(nf)[nrow(nf)], "%Y")
+    periodToUse <- paste('period used: 1906', y2, sep = '-')
+    supplyScenario <- as.numeric(paste0('1.1906',y2))
   }
   
   nf <- getAllISMMatrices(nf, startDate, simYrs)
@@ -109,6 +116,9 @@ createCRSSDNFInputFiles <- function(iFile, oFolder, startDate, simYrs, oFiles = 
 
 	# for each node, write out all of the trace files
 	rV <- sapply(1:29, function(x) writeNFFilesByNode(nf[[x]], oFiles[x], oFolder, headerInfo))
+	
+	# for each trace, write out all of the trace and supply scenario number files
+	rV2 <- sapply(1:nT, function(x) writeTraceNumber(x, supplyScenario, oFolder))
 	
 	# data for writing out the README file
 	intro <- paste0('Created From Observed Hydrology with ISM from CRSSIO (v', 
