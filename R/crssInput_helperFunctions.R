@@ -80,3 +80,25 @@ writeNFFilesByNode <- function(nfXts, oFile, oFolder, headerInfo)
                                      file.path(oFolder,paste0('trace',x),oFile),
                                      headerInfo))
 }
+
+#' write out the trace number and supply scenario number, to a given trace folder
+#' folderPath should be the top level folder, e.g., dmi/NFSinput
+#' @keywords internal
+writeTraceNumber <- function(traceNum, supplyScenNum, folderPath)
+{
+  # traceNum will output as follows:
+  # units: NONE
+  # 1
+  # and supplyScenNum will output:
+  # units: NONE
+  # 1.19882012
+  
+  traceText <- matrix(c('units: NONE', traceNum),ncol = 1)
+  supplyText <- matrix(c('units: NONE', supplyScenNum), ncol = 1)
+  folderName <- file.path(folderPath, paste0('Trace', traceNum))
+  
+  utils::write.table(traceText, file = file.path(folderName, 'Trace.Number'),
+                     quote = F, row.names = F, col.names = F)
+  utils::write.table(supplyText, file = file.path(folderName, 'Supply.Number'),
+                     quote = F, row.names = F, col.names = F)
+}
