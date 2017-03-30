@@ -95,7 +95,7 @@ writeTraceSupplyNumbers <- function(traceNum, supplyScenNum, folderPath)
   
   traceText <- matrix(c('units: NONE', traceNum),ncol = 1)
   supplyText <- matrix(c('units: NONE', supplyScenNum), ncol = 1)
-  folderName <- file.path(folderPath, paste0('Trace', traceNum))
+  folderName <- file.path(folderPath, paste0('trace', traceNum))
   
   utils::write.table(traceText, 
                      file = file.path(folderName, getOption('crssio.traceNumberSlot')),
