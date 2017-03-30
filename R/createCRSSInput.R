@@ -11,7 +11,7 @@
 #' flow workbook available at \url{http://www.usbr.gov/lc/region/g4000/NaturalFlow/current.html} or
 #' from the `CoRiverNF` data package. It is much faster to use the data package
 #' rather than the Excel workbook. The data package is created from the Excel
-#' file, so it the files created are identical for each of the two data sets.
+#' file, so the files created are identical for each of the two data sets.
 #' 
 #' @param iFile Either the string "CoRiverNF", or the relative or absolute path 
 #' to the excel workbook. When "CoRiverNF" is used, the data from the \code{CoRiverNF}
