@@ -28,7 +28,11 @@
 #' be set to 1.19882012 in this example. This tells the user of CRSS that the 
 #' supply scenario is the observed historical natural flows with the ISM method
 #' applied to the 1988-2012 data. The supply scenario slot name is set
-#' by the "HydrologyParameters.SupplyScenario" option.
+#' by the "crssio.supplyScenarioSlot" option.
+#' 
+#' Finally, the hydrologyIncrement data that sets the random number generator for
+#' each year and trace is created for each trace folder. The slot name that is created
+#' for the hydrologyIncrement is set by the "crssio.hydroIncrement" option.
 #' 
 #' @param iFile Either the string "CoRiverNF", or the relative or absolute path 
 #' to the excel workbook. When "CoRiverNF" is used, the data from the \code{CoRiverNF}
@@ -136,6 +140,10 @@ createCRSSDNFInputFiles <- function(iFile, oFolder, startDate, simYrs, oFiles = 
 	
 	# for each trace, write out all of the trace and supply scenario number files
 	rV2 <- sapply(1:nT, function(x) writeTraceSupplyNumbers(x, supplyScenario, oFolder))
+	
+	# for each trace, write out the hydrology increment slot
+	message('Beginning to write node: hydrologyIncrement')
+	rv3 <- sapply(1:nT, function(x) writeHydroIncrement(x, simYrs, startDate, oFolder))
 	
 	# data for writing out the README file
 	intro <- paste0('Created From Observed Hydrology with ISM from CRSSIO (v', 

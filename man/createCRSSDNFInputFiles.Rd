@@ -63,7 +63,11 @@ the second four numbers represent the end year. The supply scenario slot will
 be set to 1.19882012 in this example. This tells the user of CRSS that the 
 supply scenario is the observed historical natural flows with the ISM method
 applied to the 1988-2012 data. The supply scenario slot name is set
-by the "HydrologyParameters.SupplyScenario" option.
+by the "crssio.supplyScenarioSlot" option.
+
+Finally, the hydrologyIncrement data that sets the random number generator for
+each year and trace is created for each trace folder. The slot name that is created
+for the hydrologyIncrement is set by the "crssio.hydroIncrement" option.
 }
 \examples{
 
