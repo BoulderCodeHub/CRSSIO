@@ -72,34 +72,38 @@ shortOrderLimit <- function()
 	r
 }
 
-#' \code{createSysCondTable}
+#' Create standard CRSS system conditions table
 #' 
-#' \code{createSysCondTable} creates the standard System Conditions table that is commonly created
-#' from CRSS results. The table reports the percent of traces that that simulate various
-#' system conditions, e.g., Lake Powell operating tiers, through time.
+#' \code{createSysCondTable} creates the standard system conditions table that 
+#' is commonly created from CRSS results, e.g., slide 6 at
+#' \url{https://www.usbr.gov/lc/region/g4000/crss-5year.pdf}. The table reports 
+#' the percent of traces that simulate various system conditions, e.g., Lake 
+#' Powell operating tiers, through time.
 #' 
-#' @param zz Full data for all years/traces necessary for creating System Conditions table
-#' @param yrs Vector of years to process all of the System Conditions 
-#' @return List with two Data frames: one with the System Conditions for the specified 
-#' years including the breakout of Lower Elevation Balancing releases and the other without
-#' the Lower Elevation Balancing breakout
+#' @param zz Full data for all years/traces necessary for creating System Conditions 
+#' table. \code{zz} should be a data frame returned from 
+#' \code{RWDataPlot::\link[RWDataPlyr]{getDataForAllScens}} that contains all of 
+#' the 17 variables necessary to create the system conditions table.
+#' @param yrs Vector of years to provide the system conditions for. Ex: \code{2017:2020}
+#' @return Named list with two data frames. The first data frame (\code{'fullTable'}) 
+#' includes the system conditions for the specified years including the breakout 
+#' of Lower Elevation Balancing releases.  The second data frame (\code{'limitedTable'}) 
+#' includes the system conditions without the Lower Elevation Balancing breakout.
 #' 
 #' @importFrom magrittr "%>%"
 #' @export
 createSysCondTable <- function(zz, yrs)
 {
-  # if there there is a "Scenario" dimension and there are more than 1 scenarios, then 
-  # post a warning message that the scenarios will be averaged together for crating the table
+  # if there there is a "Scenario" dimension and there are more than 1 scenarios, 
+  # then post a warning message that the scenarios will be averaged together 
+  # for creating the table
   if(!is.null(zz$Scenario) & length(levels(as.factor(zz$Scenario))) > 1){
     warning(paste('There are',length(levels(as.factor(zz$Scenario))),
                   'Scenarios in the data. Please note, these scenarios will be averaged together when creating the system conditions table.'))
   }
   
   zz2 <- dplyr::filter(zz, Year %in% yrs)
-  
-  ## for removal
-  ## zz2 <- ddply(zz, .(Year,Variable), summarize,mean = mean(Value))
-  
+
   # multiply mean by 100 to create % of traces.
   zz2 <- zz2 %>% 
     dplyr::group_by(Year, Variable) %>%
@@ -108,11 +112,6 @@ createSysCondTable <- function(zz, yrs)
   zz <- reshape2::dcast(zz2, Year~Variable, value.var = 'mean')
 
   # change names and arange in the correct order
-  ## TO DO
-  ## Remove the following after using a new create slot agg list function in above code
-  # rr <- names(zz)[2:ncol(zz)]
-  # rr[match(vNames(),rr)] <- vShort()
-  # names(zz)[2:ncol(zz)] <- rr
   yrsLab <- zz$Year
   zz$eqAll <- zz$eq + zz$eq823
   zz$uebAll <- zz$uebGt823 + zz$ueb823 + zz$uebLt823

@@ -2,23 +2,29 @@
 % Please edit documentation in R/get5YrTable.R
 \name{createSysCondTable}
 \alias{createSysCondTable}
-\title{\code{createSysCondTable}}
+\title{Create standard CRSS system conditions table}
 \usage{
 createSysCondTable(zz, yrs)
 }
 \arguments{
-\item{zz}{Full data for all years/traces necessary for creating System Conditions table}
+\item{zz}{Full data for all years/traces necessary for creating System Conditions 
+table. \code{zz} should be a data frame returned from 
+\code{RWDataPlot::\link[RWDataPlyr]{getDataForAllScens}} that contains all of 
+the 17 variables necessary to create the system conditions table.}
 
-\item{yrs}{Vector of years to process all of the System Conditions}
+\item{yrs}{Vector of years to provide the system conditions for. Ex: \code{2017:2020}}
 }
 \value{
-List with two Data frames: one with the System Conditions for the specified 
-years including the breakout of Lower Elevation Balancing releases and the other without
-the Lower Elevation Balancing breakout
+Named list with two data frames. The first data frame (\code{'fullTable'}) 
+includes the system conditions for the specified years including the breakout 
+of Lower Elevation Balancing releases.  The second data frame (\code{'limitedTable'}) 
+includes the system conditions without the Lower Elevation Balancing breakout.
 }
 \description{
-\code{createSysCondTable} creates the standard System Conditions table that is commonly created
-from CRSS results. The table reports the percent of traces that that simulate various
-system conditions, e.g., Lake Powell operating tiers, through time.
+\code{createSysCondTable} creates the standard system conditions table that 
+is commonly created from CRSS results, e.g., slide 6 at
+\url{https://www.usbr.gov/lc/region/g4000/crss-5year.pdf}. The table reports 
+the percent of traces that simulate various system conditions, e.g., Lake 
+Powell operating tiers, through time.
 }
 
