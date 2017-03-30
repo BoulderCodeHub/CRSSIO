@@ -97,9 +97,9 @@ sysCondSALMatrix <- function()
 #' \code{RWDataPlot::\link[RWDataPlyr]{getDataForAllScens}} that contains all of 
 #' the 17 variables necessary to create the system conditions table.
 #' @param yrs Vector of years to provide the system conditions for. Ex: \code{2017:2020}
-#' @return Named list with two data frames. The first data frame (\code{'fullTable'}) 
+#' @return Named list with two matrices. The first matrix (\code{'fullTable'}) 
 #' includes the system conditions for the specified years including the breakout 
-#' of Lower Elevation Balancing releases.  The second data frame (\code{'limitedTable'}) 
+#' of Lower Elevation Balancing releases.  The second matrix (\code{'limitedTable'}) 
 #' includes the system conditions without the Lower Elevation Balancing breakout.
 #' 
 #' @importFrom magrittr "%>%"
