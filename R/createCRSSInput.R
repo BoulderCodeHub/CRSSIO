@@ -13,6 +13,23 @@
 #' rather than the Excel workbook. The data package is created from the Excel
 #' file, so the files created are identical for each of the two data sets.
 #' 
+#' In addition to creating the natural flow input files, data for two informative 
+#' slots are created. These slots include the trace number and the supply scenario
+#' number. The trace numbers are intuitive, i.e., they are integers from 1 to N
+#' where N is the trace number. This information is saved in the slot name that
+#' is set by the "crssio.traceNumberSlot" option. The scenario number provides
+#' the user with a numeric representation of which supply scenario is used. The
+#' observed historical natural flows (used by this function) are supply scenario 1. 
+#' For this supply scenario, the decimals of the supply scenario number represent
+#' the start and end year that the ISM method are applied to. For example, if 
+#' you set \code{recordToUse} to \code{c('1988-1','2012-12')}, the decimal portion
+#' will be 19882012, where the first 4 numbers represent the start year and
+#' the second four numbers represent the end year. The supply scenario slot will 
+#' be set to 1.19882012 in this example. This tells the user of CRSS that the 
+#' supply scenario is the observed historical natural flows with the ISM method
+#' applied to the 1988-2012 data. The supply scenario slot name is set
+#' by the "HydrologyParameters.SupplyScenario" option.
+#' 
 #' @param iFile Either the string "CoRiverNF", or the relative or absolute path 
 #' to the excel workbook. When "CoRiverNF" is used, the data from the \code{CoRiverNF}
 #' data package is used. Otherwise, it should be a valid path to the natural flow
