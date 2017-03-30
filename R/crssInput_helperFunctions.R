@@ -104,3 +104,20 @@ writeTraceSupplyNumbers <- function(traceNum, supplyScenNum, folderPath)
                      file = file.path(folderName, getOption('crssio.supplyScenarioSlot')),
                      quote = F, row.names = F, col.names = F)
 }
+
+# ***** 
+# function that takes in the trace number and writes out the hydrology increment
+# data
+# *****
+
+writeHydroIncrement <- function(traceNum, nYrs, startDate, folderPath){
+  # the hydrology increment data starts with the trace number, and increments
+  # by one every year until the end of the simulation
+  # it is monthly data, so each index repeats 12 times
+  tt <- as.vector(t(matrix(rep(traceNum:(nYrs + traceNum - 1), 12), byrow = F, ncol = 12)))
+  folderName <- file.path(folderPath, paste0('trace', traceNum))
+  startInfo <- paste('start_date:', startDate, '24:00')
+  tt <- matrix(c(startInfo, 'units: NONE', as.character(tt)), ncol = 1)
+  utils::write.table(tt, quote = F, row.names = F, col.names = F,
+                     file = file.path(folderName, getOption('crssio.hydroIncrement')))
+}
