@@ -2,7 +2,7 @@
 
 
 # variable names after getting data from rdf
-vNames <- function()
+slotNames <- function()
 {
 	r <- c("SummaryOutputData.LBNormalCondition",
 		"SummaryOutputData.MidElevationReleaseAt823","SummaryOutputData.LBShortageConditions",
@@ -14,7 +14,7 @@ vNames <- function()
 		"SummaryOutputData.LBFloodControlSurplus",
 		"SummaryOutputData.LBShortageStep1","SummaryOutputData.LBShortageStep2",
 		"SummaryOutputData.LBShortageStep3")
-	r <- paste(r, '_AnnualRaw_100',sep = '')
+	
 	r
 }
 
@@ -70,6 +70,18 @@ shortOrderLimit <- function()
 		'lebAll','lbShortage','lbShortageStep1','lbShortageStep2','lbShortageStep3','lbSurplus',
     'lbFcSurplus','lbNormal')
 	r
+}
+
+# ********
+# start here by documenting this function and then adding to the examples of 
+# createSysCondTable
+# *********
+sysCondSALMatrix <- function()
+{
+  n <- length(slotNames())
+  r <- cbind(rep('SystemConditions.rdf',n), slotNames(), rep('AnnualRaw',n), 
+             rep(NA, n), vShort())
+  r
 }
 
 #' Create standard CRSS system conditions table
