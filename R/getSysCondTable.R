@@ -72,10 +72,29 @@ shortOrderLimit <- function()
 	r
 }
 
-# ********
-# start here by documenting this function and then adding to the examples of 
-# createSysCondTable
-# *********
+#' Matrix for slot aggregation list for system conditions
+#' 
+#' \code{sysCondSALMatrix} returns a matrix for use in creating the slot aggregation
+#' list to get the variables necessary to create the system conditions table.
+#' 
+#' The matrix returned by \code{sysCondSALMatrix} contains all of the slots and
+#' their corresponding variable names that are expected in 
+#' \code{\link{createSysCondTable}}. This matrix should be passed to
+#' \code{RWDataPlyr::\link[RWDataPlyr]{createSlotAggList}} to create the necessary
+#' slot aggregation list that \code{RWDataPlyr::\link[RWDataPlyr]{getDataForAllScens}}
+#' uses. See the example in \code{\link{createSysCondTable}} for an example of
+#' using all of these functions together. 
+#' 
+#' This is a convenience function to save the user from having to routinely 
+#' recreate the information to pass to \code{RWDataPlyr::createSlotAggList} for
+#' the system conditions table. Additionally, since \code{createSysCondTable}
+#' expects a specific set of variable names, this ensures the slots from CRSS
+#' are correctly mapped to these variables. 
+#' 
+#' @return 17x5 character matrix
+#' @seealso \code{\link{createSysCondTable}}
+#' @export
+
 sysCondSALMatrix <- function()
 {
   n <- length(slotNames())
@@ -102,6 +121,19 @@ sysCondSALMatrix <- function()
 #' of Lower Elevation Balancing releases.  The second matrix (\code{'limitedTable'}) 
 #' includes the system conditions without the Lower Elevation Balancing breakout.
 #' 
+#' @examples
+#' # use RWDataPlyr package to get the data to create the system conditions table
+#' require(RWDataPlyr)
+#' slotAggList <- RWDataPlyr::createSlotAggList(CRSSIO::sysCondSALMatrix())
+#' scenFolder <- 'DNF,CT,IG'
+#' scenName <- 'DNF Hydrology'
+#' scenPath <- system.file('extdata','Scenario/',package = 'RWDataPlyr')
+#' sysData <- RWDataPlyr::getDataForAllScens(scenFolder, scenName, slotAggList,
+#'                                           scenPath, 'tmp.feather', TRUE)
+#' sysCondTable <- createSysCondTable(sysData, 2017:2021)
+#' sysCondTable[['limitedTable']]
+#' 
+#' @seealso \code{\link{sysCondSALMatrix}}
 #' @importFrom magrittr "%>%"
 #' @export
 createSysCondTable <- function(zz, yrs)

@@ -27,4 +27,20 @@ is commonly created from CRSS results, e.g., slide 6 at
 the percent of traces that simulate various system conditions, e.g., Lake 
 Powell operating tiers, through time.
 }
+\examples{
+# use RWDataPlyr package to get the data to create the system conditions table
+require(RWDataPlyr)
+slotAggList <- RWDataPlyr::createSlotAggList(CRSSIO::sysCondSALMatrix())
+scenFolder <- 'DNF,CT,IG'
+scenName <- 'DNF Hydrology'
+scenPath <- system.file('extdata','Scenario/',package = 'RWDataPlyr')
+sysData <- RWDataPlyr::getDataForAllScens(scenFolder, scenName, slotAggList,
+                                          scenPath, 'tmp.feather', TRUE)
+sysCondTable <- createSysCondTable(sysData, 2017:2021)
+sysCondTable[['limitedTable']]
+
+}
+\seealso{
+\code{\link{sysCondSALMatrix}}
+}
 
