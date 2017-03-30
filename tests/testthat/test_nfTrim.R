@@ -8,7 +8,7 @@ dir.create('tmp/trace3')
 dir.create('tmp/trace4')
 p1 <- '..' # for automated tests
 #p1 <- 'tests'
-rr <- floor(runif(4,1,30)) # get 4 random nodes
+rr <- sample(1:29, 4) # get 4 random nodes
 message(cat('4 random nodes are:',rr))
 rr <- CRSSNFInputNames()[rr]
 
