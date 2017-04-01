@@ -11,7 +11,28 @@
 #' flow workbook available at \url{http://www.usbr.gov/lc/region/g4000/NaturalFlow/current.html} or
 #' from the `CoRiverNF` data package. It is much faster to use the data package
 #' rather than the Excel workbook. The data package is created from the Excel
-#' file, so it the files created are identical for each of the two data sets.
+#' file, so the files created are identical for each of the two data sets.
+#' 
+#' In addition to creating the natural flow input files, data for two informative 
+#' slots are created. These slots include the trace number and the supply scenario
+#' number. The trace numbers are intuitive, i.e., they are integers from 1 to N
+#' where N is the trace number. This information is saved in the slot name that
+#' is set by the "crssio.traceNumberSlot" option. The scenario number provides
+#' the user with a numeric representation of which supply scenario is used. The
+#' observed historical natural flows (used by this function) are supply scenario 1. 
+#' For this supply scenario, the decimals of the supply scenario number represent
+#' the start and end year that the ISM method are applied to. For example, if 
+#' you set \code{recordToUse} to \code{c('1988-1','2012-12')}, the decimal portion
+#' will be 19882012, where the first 4 numbers represent the start year and
+#' the second four numbers represent the end year. The supply scenario slot will 
+#' be set to 1.19882012 in this example. This tells the user of CRSS that the 
+#' supply scenario is the observed historical natural flows with the ISM method
+#' applied to the 1988-2012 data. The supply scenario slot name is set
+#' by the "crssio.supplyScenarioSlot" option.
+#' 
+#' Finally, the hydrologyIncrement data that sets the random number generator for
+#' each year and trace is created for each trace folder. The slot name that is created
+#' for the hydrologyIncrement is set by the "crssio.hydroIncrement" option.
 #' 
 #' @param iFile Either the string "CoRiverNF", or the relative or absolute path 
 #' to the excel workbook. When "CoRiverNF" is used, the data from the \code{CoRiverNF}
@@ -51,6 +72,8 @@
 #' @seealso
 #' \code{\link{CRSSNFInputNames}}
 #' 
+#' @importFrom zoo as.yearmon
+#' @importFrom zoo index
 #' @export
 createCRSSDNFInputFiles <- function(iFile, oFolder, startDate, simYrs, oFiles = CRSSNFInputNames(),
                                     recordToUse = NA)
@@ -64,6 +87,8 @@ createCRSSDNFInputFiles <- function(iFile, oFolder, startDate, simYrs, oFiles = 
     } else{
       nf <- nf['1906-01/'] # trim off OND 1905
     }
+    createFrom <- paste0('Created from: CoRiverNF (v',
+                         utils::packageVersion('CoRiverNF'), ')')
   } else{
     # use the data in the Excel workbook, if it exists.
     if(!file.exists(iFile)){
@@ -76,6 +101,24 @@ createCRSSDNFInputFiles <- function(iFile, oFolder, startDate, simYrs, oFiles = 
       # trim data
       nf <- nf[paste(recordToUse[1], recordToUse[2],sep = '/')]
     }
+    
+    createFrom <- paste('Created from:', iFile)
+  }
+  
+  # get the years used before changing nf
+  if(!anyNA(recordToUse)){
+    y1 <- format(zoo::as.yearmon(recordToUse[1]), "%Y")
+    y2 <- format(zoo::as.yearmon(recordToUse[2]), "%Y")
+    periodToUse <- paste0('period used: ', y1, '-', y2)
+    # this only deals with historical observed NF, so that is supply scenario 
+    # 1.xxxxxxxx, where the .xxxxxxxx are the beginning and ending years used
+    # for ISM
+    supplyScenario <- as.numeric(paste0(1,'.',y1,y2))
+  } else{
+    # uses the full record, so it's 1906 - some year. figure out some year
+    y2 <- format(zoo::index(nf)[nrow(nf)], "%Y")
+    periodToUse <- paste('period used: 1906', y2, sep = '-')
+    supplyScenario <- as.numeric(paste0('1.1906',y2))
   }
   
   nf <- getAllISMMatrices(nf, startDate, simYrs)
@@ -94,4 +137,25 @@ createCRSSDNFInputFiles <- function(iFile, oFolder, startDate, simYrs, oFiles = 
 
 	# for each node, write out all of the trace files
 	rV <- sapply(1:29, function(x) writeNFFilesByNode(nf[[x]], oFiles[x], oFolder, headerInfo))
+	
+	# for each trace, write out all of the trace and supply scenario number files
+	rV2 <- sapply(1:nT, function(x) writeTraceSupplyNumbers(x, supplyScenario, oFolder))
+	
+	# for each trace, write out the hydrology increment slot
+	message('Beginning to write node: hydrologyIncrement')
+	rv3 <- sapply(1:nT, function(x) writeHydroIncrement(x, simYrs, startDate, oFolder))
+	
+	# data for writing out the README file
+	intro <- paste0('Created From Observed Hydrology with ISM from CRSSIO (v', 
+	                utils::packageVersion('CRSSIO'),') package')
+	dateCreate <- paste('date created:', Sys.Date())
+	createBy <- paste('created by:', Sys.info()[["user"]])
+	traceLength <- paste('trace length:', simYrs, 'years')
+	startYear <- paste('original start date:', startDate)
+	oText <- paste('Natural Flow Data', intro, '----------', dateCreate, 
+	               createBy, periodToUse, traceLength, startYear, createFrom, sep = '\n')
+	
+	# write out the README in the top level folder
+	utils::write.table(oText, file.path(oFolder, 'README.txt'), quote = FALSE, 
+	                   row.names = FALSE, col.names = FALSE)
 }

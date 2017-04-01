@@ -2,7 +2,7 @@
 
 
 # variable names after getting data from rdf
-vNames <- function()
+slotNames <- function()
 {
 	r <- c("SummaryOutputData.LBNormalCondition",
 		"SummaryOutputData.MidElevationReleaseAt823","SummaryOutputData.LBShortageConditions",
@@ -14,7 +14,7 @@ vNames <- function()
 		"SummaryOutputData.LBFloodControlSurplus",
 		"SummaryOutputData.LBShortageStep1","SummaryOutputData.LBShortageStep2",
 		"SummaryOutputData.LBShortageStep3")
-	r <- paste(r, '_AnnualRaw_100',sep = '')
+	
 	r
 }
 
@@ -72,34 +72,82 @@ shortOrderLimit <- function()
 	r
 }
 
-#' \code{createSysCondTable}
+#' Matrix for slot aggregation list for system conditions
 #' 
-#' \code{createSysCondTable} creates the standard System Conditions table that is commonly created
-#' from CRSS results. The table reports the percent of traces that that simulate various
-#' system conditions, e.g., Lake Powell operating tiers, through time.
+#' \code{sysCondSALMatrix} returns a matrix for use in creating the slot aggregation
+#' list to get the variables necessary to create the system conditions table.
 #' 
-#' @param zz Full data for all years/traces necessary for creating System Conditions table
-#' @param yrs Vector of years to process all of the System Conditions 
-#' @return List with two Data frames: one with the System Conditions for the specified 
-#' years including the breakout of Lower Elevation Balancing releases and the other without
-#' the Lower Elevation Balancing breakout
+#' The matrix returned by \code{sysCondSALMatrix} contains all of the slots and
+#' their corresponding variable names that are expected in 
+#' \code{\link{createSysCondTable}}. This matrix should be passed to
+#' \code{RWDataPlyr::\link[RWDataPlyr]{createSlotAggList}} to create the necessary
+#' slot aggregation list that \code{RWDataPlyr::\link[RWDataPlyr]{getDataForAllScens}}
+#' uses. See the example in \code{\link{createSysCondTable}} for an example of
+#' using all of these functions together. 
 #' 
+#' This is a convenience function to save the user from having to routinely 
+#' recreate the information to pass to \code{RWDataPlyr::createSlotAggList} for
+#' the system conditions table. Additionally, since \code{createSysCondTable}
+#' expects a specific set of variable names, this ensures the slots from CRSS
+#' are correctly mapped to these variables. 
+#' 
+#' @return 17x5 character matrix
+#' @seealso \code{\link{createSysCondTable}}
+#' @export
+
+sysCondSALMatrix <- function()
+{
+  n <- length(slotNames())
+  r <- cbind(rep('SystemConditions.rdf',n), slotNames(), rep('AnnualRaw',n), 
+             rep(NA, n), vShort())
+  r
+}
+
+#' Create standard CRSS system conditions table
+#' 
+#' \code{createSysCondTable} creates the standard system conditions table that 
+#' is commonly created from CRSS results, e.g., slide 6 at
+#' \url{https://www.usbr.gov/lc/region/g4000/crss-5year.pdf}. The table reports 
+#' the percent of traces that simulate various system conditions, e.g., Lake 
+#' Powell operating tiers, through time.
+#' 
+#' @param zz Full data for all years/traces necessary for creating System Conditions 
+#' table. \code{zz} should be a data frame returned from 
+#' \code{RWDataPlot::\link[RWDataPlyr]{getDataForAllScens}} that contains all of 
+#' the 17 variables necessary to create the system conditions table.
+#' @param yrs Vector of years to provide the system conditions for. Ex: \code{2017:2020}
+#' @return Named list with two matrices. The first matrix (\code{'fullTable'}) 
+#' includes the system conditions for the specified years including the breakout 
+#' of Lower Elevation Balancing releases.  The second matrix (\code{'limitedTable'}) 
+#' includes the system conditions without the Lower Elevation Balancing breakout.
+#' 
+#' @examples
+#' # use RWDataPlyr package to get the data to create the system conditions table
+#' require(RWDataPlyr)
+#' slotAggList <- RWDataPlyr::createSlotAggList(CRSSIO::sysCondSALMatrix())
+#' scenFolder <- 'DNF,CT,IG'
+#' scenName <- 'DNF Hydrology'
+#' scenPath <- system.file('extdata','Scenario/',package = 'RWDataPlyr')
+#' sysData <- RWDataPlyr::getDataForAllScens(scenFolder, scenName, slotAggList,
+#'                                           scenPath, 'tmp.feather', TRUE)
+#' sysCondTable <- createSysCondTable(sysData, 2017:2021)
+#' sysCondTable[['limitedTable']]
+#' 
+#' @seealso \code{\link{sysCondSALMatrix}}
 #' @importFrom magrittr "%>%"
 #' @export
 createSysCondTable <- function(zz, yrs)
 {
-  # if there there is a "Scenario" dimension and there are more than 1 scenarios, then 
-  # post a warning message that the scenarios will be averaged together for crating the table
+  # if there there is a "Scenario" dimension and there are more than 1 scenarios, 
+  # then post a warning message that the scenarios will be averaged together 
+  # for creating the table
   if(!is.null(zz$Scenario) & length(levels(as.factor(zz$Scenario))) > 1){
     warning(paste('There are',length(levels(as.factor(zz$Scenario))),
                   'Scenarios in the data. Please note, these scenarios will be averaged together when creating the system conditions table.'))
   }
   
   zz2 <- dplyr::filter(zz, Year %in% yrs)
-  
-  ## for removal
-  ## zz2 <- ddply(zz, .(Year,Variable), summarize,mean = mean(Value))
-  
+
   # multiply mean by 100 to create % of traces.
   zz2 <- zz2 %>% 
     dplyr::group_by(Year, Variable) %>%
@@ -108,11 +156,6 @@ createSysCondTable <- function(zz, yrs)
   zz <- reshape2::dcast(zz2, Year~Variable, value.var = 'mean')
 
   # change names and arange in the correct order
-  ## TO DO
-  ## Remove the following after using a new create slot agg list function in above code
-  # rr <- names(zz)[2:ncol(zz)]
-  # rr[match(vNames(),rr)] <- vShort()
-  # names(zz)[2:ncol(zz)] <- rr
   yrsLab <- zz$Year
   zz$eqAll <- zz$eq + zz$eq823
   zz$uebAll <- zz$uebGt823 + zz$ueb823 + zz$uebLt823

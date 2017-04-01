@@ -3,9 +3,11 @@ context('check that Natural Flow files are created correctly.')
 
 dir.create('tmp')
 p1 <- '..'
-rr <- floor(runif(4,1,30)) # get 4 random nodes
+rr <- sample(1:29, 4) # get 4 random nodes
 message(cat('4 random nodes are:',rr))
 
+# because we are using pre- 1971 data, we do not need to regenerate the data
+# in the provided trace folders each time the natural flow are updated
 test_that('can create files',{
   expect_message(createCRSSDNFInputFiles('CoRiverNF', oFolder = 'tmp', 
                                          startDate = '2017-1-31', simYrs = 5, 

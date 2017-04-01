@@ -2,7 +2,7 @@
 % Please edit documentation in R/crssInput_helperFunctions.R
 \name{writeNFFilesByNode}
 \alias{writeNFFilesByNode}
-\title{Write out all of the traces file for a given node}
+\title{Write out all of the trace files for a given node}
 \usage{
 writeNFFilesByNode(nfXts, oFile, oFolder, headerInfo)
 }
@@ -15,7 +15,7 @@ is the number of traces that will be written out to oFolder/trace[n]/oFile}
 \item{oFolder}{Folder location to write files to}
 }
 \description{
-Write out all of the traces file for a given node
+Write out all of the trace files for a given node
 }
 \keyword{internal}
 

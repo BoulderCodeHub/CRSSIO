@@ -10,8 +10,6 @@
 #' folders, e.g., 'C:/CRSS/dmi/DNFSinput'
 #' @param startDate string of new starting date. Should be in 2012-1-31 format. 
 #' 
-#' @importFrom utils write.table
-#' @importFrom utils read.table
 #' @export
 changeStartDate <- function(nTrace, folder, startDate)
 {
@@ -23,13 +21,13 @@ changeStartDate <- function(nTrace, folder, startDate)
 		# get list of all files contained in the trace folder
 		currFiles = list.files(currFold)
 		for(j in 1:length(currFiles)){
-			tmpData = as.matrix(read.table(paste0(currFold,currFiles[j]), sep = '\t', skip = 2))
+			tmpData = as.matrix(utils::read.table(paste0(currFold,currFiles[j]), sep = '\t', skip = 2))
 			# read in the header info and maintain units; necessary so the code works for flow and salinity files
 			headerInfo = scan(paste0(currFold,currFiles[j]), what = 'char', nlines = 2, sep = '\t')
 			headerInfo = paste0(timeInfo, headerInfo[2])
 			colnames(tmpData) = headerInfo
 			# writes out to the same folder it reads in from
-			write.table(tmpData, file = paste(currFold,currFiles[j],sep = ''),quote = F, row.names = F)
+			utils::write.table(tmpData, file = paste(currFold,currFiles[j],sep = ''),quote = F, row.names = F)
 		}
 	}
 }
@@ -48,8 +46,6 @@ changeStartDate <- function(nTrace, folder, startDate)
 #' the trace folders, e.g., C:/CRSS/dmi/DNFSinput
 #' @param NZeros is the number of zeros to add to the data that is read in
 #' 
-#' @importFrom utils read.table
-#' @importFrom utils write.table
 #' @export
 changeStartDateForEvapAndAddZeros <- function(nTrace, folder, startDate, NZeros)
 {
@@ -62,7 +58,7 @@ changeStartDateForEvapAndAddZeros <- function(nTrace, folder, startDate, NZeros)
 		for(j in 1:length(currFiles)){
 			if(!(currFiles[j] %in% c('Powell.Average_Air_Temperature','Powell.Average_Precipitation',
 				'Powell.Gross_Evaporation_Coefficient','Powell.River_Evaporation_Coefficient'))){
-				tmpData = as.matrix(read.table(paste(currFold,currFiles[j],sep = ''), sep = '\t', skip = 2))
+				tmpData = as.matrix(utils::read.table(paste(currFold,currFiles[j],sep = ''), sep = '\t', skip = 2))
 				# read in the header info and maintain units; necessary so the code works for flow and salinity files
 				headerInfo = scan(paste(currFold,currFiles[j],sep = ''), what = 'char', nlines = 2, sep = '\t')
 				headerInfo = paste(timeInfo, headerInfo[2], sep = '')
@@ -70,7 +66,7 @@ changeStartDateForEvapAndAddZeros <- function(nTrace, folder, startDate, NZeros)
 
 				colnames(tmpData) = headerInfo
 				# writes out to the same folder it reads in from
-				write.table(tmpData, file = paste(currFold,currFiles[j],sep = ''),quote = F, row.names = F)
+				utils::write.table(tmpData, file = paste(currFold,currFiles[j],sep = ''),quote = F, row.names = F)
 			}
 		}
 	}

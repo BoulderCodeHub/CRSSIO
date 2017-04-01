@@ -58,14 +58,13 @@ readAndFormatNFExcel <- function(iFile)
 
 #' write out a single trace of data
 #' @keywords internal
-#' @importFrom utils write.table
 writeSingleFile <- function(xData, fPath, headerInfo)
 {
   colnames(xData) = headerInfo
-  write.table(xData, file = fPath,quote = F, row.names = F)
+  utils::write.table(xData, file = fPath,quote = F, row.names = F)
 }
 
-#' Write out all of the traces file for a given node
+#' Write out all of the trace files for a given node
 #' 
 #' @param nfXts Natural flow data as a matrix for a single node. The number of columns
 #' is the number of traces that will be written out to oFolder/trace[n]/oFile
@@ -80,4 +79,45 @@ writeNFFilesByNode <- function(nfXts, oFile, oFolder, headerInfo)
          function(x) writeSingleFile(nfXts[,x], 
                                      file.path(oFolder,paste0('trace',x),oFile),
                                      headerInfo))
+}
+
+#' write out the trace number and supply scenario number, to a given trace folder
+#' folderPath should be the top level folder, e.g., dmi/NFSinput
+#' @keywords internal
+writeTraceSupplyNumbers <- function(traceNum, supplyScenNum, folderPath)
+{
+  # traceNum will output as follows:
+  # units: NONE
+  # 1
+  # and supplyScenNum will output:
+  # units: NONE
+  # 1.19882012
+  
+  traceText <- matrix(c('units: NONE', traceNum),ncol = 1)
+  supplyText <- matrix(c('units: NONE', supplyScenNum), ncol = 1)
+  folderName <- file.path(folderPath, paste0('trace', traceNum))
+  
+  utils::write.table(traceText, 
+                     file = file.path(folderName, getOption('crssio.traceNumberSlot')),
+                     quote = F, row.names = F, col.names = F)
+  utils::write.table(supplyText, 
+                     file = file.path(folderName, getOption('crssio.supplyScenarioSlot')),
+                     quote = F, row.names = F, col.names = F)
+}
+
+# ***** 
+# function that takes in the trace number and writes out the hydrology increment
+# data
+# *****
+
+writeHydroIncrement <- function(traceNum, nYrs, startDate, folderPath){
+  # the hydrology increment data starts with the trace number, and increments
+  # by one every year until the end of the simulation
+  # it is monthly data, so each index repeats 12 times
+  tt <- as.vector(t(matrix(rep(traceNum:(nYrs + traceNum - 1), 12), byrow = F, ncol = 12)))
+  folderName <- file.path(folderPath, paste0('trace', traceNum))
+  startInfo <- paste('start_date:', startDate, '24:00')
+  tt <- matrix(c(startInfo, 'units: NONE', as.character(tt)), ncol = 1)
+  utils::write.table(tt, quote = F, row.names = F, col.names = F,
+                     file = file.path(folderName, getOption('crssio.hydroIncrement')))
 }

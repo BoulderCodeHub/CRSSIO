@@ -34,6 +34,12 @@ trimCCNFFiles <- function(startYear, endYear, iFolder, nTraces = 112)
     stop("In trimCCNFFiles, endYear cannot be before startYear.")
   }
   
+  if(startYear < 1950)
+    stop("startYear should not be before 1950")
+  
+  if(endYear > 2099)
+    stop("endYear should not be after 2099")
+  
   # create list of all folder names to process.
   allFolders <- paste0(iFolder,'/trace',1:nTraces)
   # call trimFilesInFolder for all folders
@@ -54,19 +60,28 @@ trimFilesInFolder <- function(folder, startYear, endYear)
 # will trim the data in a single file and write out the new file
 # ff is the file to trim
 #' @keywords internal
-#' @importFrom utils read.table
-#' @importFrom utils write.table
+
 trimSingleFile <- function(ff, startYear, endYear)
 {
   # read in the flow or salinity data
-  nf = as.matrix(read.table(ff, sep = '\t', skip = 2))
+  nf = as.matrix(utils::read.table(ff, sep = '\t', skip = 2))
   # read in the header info and maintain units; necessary so the code works for flow and salinity files
   headerInfo = scan(ff, what = 'char', nlines = 2, sep = '\t', quiet = T)
   dataStartYear <- as.numeric(strsplit(strsplit(headerInfo[1],' ',fixed = T)[[1]][2], 
                                        '-',fixed = T)[[1]][1])
   
+  # check to see if the year you want to start the data in is after the year that
+  # the data actual starts in
+  if(dataStartYear > startYear)
+    stop("startYear is before the actual start year listed in the files you are trying to trim in iFolder")
+  
   # convert flows to zoo object to make sumsetting to trimmed data easier
   nf.months <- zoo::as.yearmon(dataStartYear + seq(0,length(nf)-1)/12)
+  # nf.months is as long as the data you have; if endYear is greater than this,
+  # then you don't have enough data to extend to endYear
+  if(endYear > as.numeric(format(nf.months[length(nf.months)], "%Y")))
+    stop("endYear is after the last year of the data in iFolder.")
+  
   nfZ <- zoo::zoo(nf,nf.months)
   
   # create subset of months to trim data
@@ -82,6 +97,6 @@ trimSingleFile <- function(ff, startYear, endYear)
   
   colnames(nf) <- headerInfo
   # writes out to the same folder it reads in from
-  write.table(nf, ff,quote = F, row.names = F)
+  utils::write.table(nf, ff,quote = F, row.names = F)
   1
 }

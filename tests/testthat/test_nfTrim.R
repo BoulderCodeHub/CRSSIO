@@ -8,7 +8,7 @@ dir.create('tmp/trace3')
 dir.create('tmp/trace4')
 p1 <- '..' # for automated tests
 #p1 <- 'tests'
-rr <- floor(runif(4,1,30)) # get 4 random nodes
+rr <- sample(1:29, 4) # get 4 random nodes
 message(cat('4 random nodes are:',rr))
 rr <- CRSSNFInputNames()[rr]
 
@@ -27,6 +27,21 @@ file.copy(f1.o, f1)
 file.copy(f2.o, f2)
 file.copy(f3.o, f3)
 file.copy(f4.o, f4)
+
+# make sure errors are working properly
+test_that('trimSingleFile errors out correctly', {
+  expect_error(trimSingleFile(f1, 2016, 2020), 
+               "startYear is before the actual start year listed in the files you are trying to trim in iFolder")
+  expect_error(trimSingleFile(f2, 2017, 2025),
+               "endYear is after the last year of the data in iFolder.")
+})
+
+test_that('trimCCNFFiles errors out if startYear or endYear are outside of 1950-2099', {
+  expect_error(trimCCNFFiles(1940, 2060, 'dummy/folder', 112), 
+               "startYear should not be before 1950")
+  expect_error(trimCCNFFiles(2010, 2100, 'dummy/folder', 112),
+               "endYear should not be after 2099")
+})
 
 zz <- trimSingleFile(f1, 2017, 2020)
 zz <- trimSingleFile(f2, 2018, 2020)
