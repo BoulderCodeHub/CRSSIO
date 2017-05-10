@@ -1,3 +1,9 @@
+# CRSSIO 0.4.1
+
+## Bug Fixes
+
+* Modified `changeStartDate()` so that it works for natural flow files created by `CRSSIO` >= v0.4.0 (#20)
+
 # CRSSIO 0.4.0
 
 Released March 31, 2017
