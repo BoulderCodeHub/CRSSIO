@@ -53,6 +53,7 @@ devtools::install_github('BoulderCodeHub/CRSSIO')
 
 For details, see the [News](NEWS.md)
 
+* 2017-05-10: version 0.4.1 available
 * 2017-03-31: version 0.4.0 available
 * 2016-10-04: version 0.3 available
 * 2016-05-30: version 0.2.1 available

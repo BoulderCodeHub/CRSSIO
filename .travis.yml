@@ -4,6 +4,8 @@ language: r
 warnings_are_errors: true
 sudo: required
 
+dist: trusty
+
 addons:
   apt:
     sources:
@@ -15,6 +17,7 @@ addons:
 before_install: |
   mkdir ~/.R
   cat <<EOF > ~/.R/Makevars
+  CXX=g++-4.9
   CXX1X=g++-4.9
   CXX1XSTD=-std=c++11
   
