@@ -1,6 +1,12 @@
 # CRSSIO 0.4.1.9000
 
+*In development* 
+
+- package now depends on xts >= 0.10.0 (#17)
+
 # CRSSIO 0.4.1
+
+*Released May 10, 2017*
 
 ## Bug Fixes
 
@@ -8,7 +14,7 @@
 
 # CRSSIO 0.4.0
 
-Released March 31, 2017
+*Released March 31, 2017*
 
 ## Major new features
 
