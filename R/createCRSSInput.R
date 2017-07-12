@@ -72,8 +72,6 @@
 #' @seealso
 #' \code{\link{CRSSNFInputNames}}
 #' 
-#' @importFrom zoo as.yearmon
-#' @importFrom zoo index
 #' @export
 createCRSSDNFInputFiles <- function(iFile, oFolder, startDate, simYrs, oFiles = CRSSNFInputNames(),
                                     recordToUse = NA)

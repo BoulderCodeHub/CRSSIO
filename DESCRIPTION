@@ -12,8 +12,7 @@ Description: Provides functions to generate input files commmonly used by the
 License: CC0
 LazyData: true
 Depends: 
-    R (>= 2.10),
-    zoo
+    R (>= 2.10)
 Imports:
     CoRiverNF,
     dplyr,
@@ -24,7 +23,8 @@ Imports:
     shiny (>= 0.13),
     utils,
     xlsx,
-    xts
+    xts (>= 0.10.0),
+    zoo
 Remotes:
     BoulderCodeHub/CoRiverNF,
     BoulderCodeHub/RWDataPlyr
@@ -33,4 +33,4 @@ Suggests:
     RWDataPlyr,
     testthat
 VignetteBuilder: knitr
-RoxygenNote: 5.0.1
+RoxygenNote: 6.0.1
