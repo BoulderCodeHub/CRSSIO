@@ -16,4 +16,3 @@ An xts matrix beginning in January 1906 with 29 columns.
 Read in the NF Excel file, removes whitespace and unnecessary rows and columns.
 }
 \keyword{internal}
-

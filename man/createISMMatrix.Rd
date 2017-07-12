@@ -23,4 +23,3 @@ Takes in a matrix of historical data and applies the ISM method to it. Because
 this is typically used to create future hydrology data, the entire matrix
 will have a new start month.
 }
-

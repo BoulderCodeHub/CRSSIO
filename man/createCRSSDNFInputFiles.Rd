@@ -90,4 +90,3 @@ createCRSSDNFInputFiles(iFile,'scratch/','2016-1-31', 20, recordToUse = c('1988-
 \seealso{
 \code{\link{CRSSNFInputNames}}
 }
-

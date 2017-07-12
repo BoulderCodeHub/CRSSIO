@@ -43,4 +43,3 @@ sysCondTable[['limitedTable']]
 \seealso{
 \code{\link{sysCondSALMatrix}}
 }
-

@@ -42,4 +42,3 @@ trimCCNFFiles(2017,2019,'CRSS/dmi/VIC/')
 }
 
 }
-

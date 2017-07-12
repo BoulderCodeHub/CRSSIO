@@ -31,4 +31,3 @@ are correctly mapped to these variables.
 \seealso{
 \code{\link{createSysCondTable}}
 }
-
