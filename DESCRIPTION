@@ -30,7 +30,7 @@ Remotes:
     BoulderCodeHub/RWDataPlyr
 Suggests:
     knitr,
-    RWDataPlyr,
+    RWDataPlyr (> 0.5),
     testthat
 VignetteBuilder: knitr
 RoxygenNote: 6.0.1
