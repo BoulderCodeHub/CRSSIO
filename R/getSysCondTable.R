@@ -125,7 +125,7 @@ sysCondSALMatrix <- function()
 #' # use RWDataPlyr package to get the data to create the system conditions table
 #' require(RWDataPlyr)
 #' slotAggList <- RWDataPlyr::createSlotAggList(CRSSIO::sysCondSALMatrix())
-#' scenFolder <- 'DNF,CT,IG'
+#' scenFolder <- 'ISM1988_2014,2007Dems,IG,Most'
 #' scenName <- 'DNF Hydrology'
 #' scenPath <- system.file('extdata','Scenario/',package = 'RWDataPlyr')
 #' sysData <- RWDataPlyr::getDataForAllScens(scenFolder, scenName, slotAggList,
@@ -152,7 +152,7 @@ createSysCondTable <- function(zz, yrs)
   zz2 <- zz2 %>% 
     dplyr::group_by(Year, Variable) %>%
     dplyr::summarise(mean = mean(Value)*100)
-  
+
   zz <- reshape2::dcast(zz2, Year~Variable, value.var = 'mean')
 
   # change names and arange in the correct order
