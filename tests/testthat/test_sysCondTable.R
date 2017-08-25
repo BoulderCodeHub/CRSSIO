@@ -93,5 +93,12 @@ test_that("computations of chances are correct", {
 })
 
 test_that("rows sum together correctly", {
-  expect_equal(1, 1)
+  expect_equal(sysCondTable$fullTable[1,], apply(sysCondTable$fullTable[2:3,], 2, sum))
+  expect_equal(sysCondTable$fullTable[4,], apply(sysCondTable$fullTable[5:7,], 2, sum))
+  expect_equal(sysCondTable$fullTable[8,], apply(sysCondTable$fullTable[9:10,], 2, sum))
+  expect_equal(sysCondTable$fullTable[11,], apply(sysCondTable$fullTable[12:14,], 2, sum))
+  expect_equal(sysCondTable$fullTable[15,], apply(sysCondTable$fullTable[16:18,], 2, sum))
+  expect_equivalent(rep(100, 5), apply(sysCondTable$fullTable[c(1,4,8,11),], 2, sum))
+  expect_equivalent(rep(100, 5), apply(sysCondTable$fullTable[c(15,19,21),], 2, sum))
+  expect_true(all(sysCondTable$fullTable[20,] <= sysCondTable$fullTable[19,]))
 })
