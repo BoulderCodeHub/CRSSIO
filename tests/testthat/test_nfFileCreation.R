@@ -2,6 +2,7 @@ library(CRSSIO)
 context('check that Natural Flow files are created correctly.')
 
 dir.create('tmp')
+on.exit(unlink('tmp',recursive = T))
 p1 <- '..'
 rr <- sample(1:29, 4) # get 4 random nodes
 message(cat('4 random nodes are:',rr))
@@ -34,4 +35,3 @@ test_that('ism files match each other as expected', {
                as.matrix(read.csv(file.path(p1,'trace5/', CRSSNFInputNames()[rr[2]]),skip=1))[1:12])
 })
 
-unlink('tmp',recursive = T) # delete the files that were created in the tests

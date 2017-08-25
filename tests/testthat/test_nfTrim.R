@@ -6,6 +6,9 @@ dir.create('tmp/trace1')
 dir.create('tmp/trace2')
 dir.create('tmp/trace3')
 dir.create('tmp/trace4')
+# delete the files that were created in the tests
+on.exit(unlink('tmp',recursive = T))
+
 p1 <- '..' # for automated tests
 #p1 <- 'tests'
 rr <- sample(1:29, 4) # get 4 random nodes
@@ -89,6 +92,4 @@ test_that('files are all trimmed as expected', {
   expect_equal(length(readNF(f1)), 36)
   expect_equal(length(readNF(f2)), 36)
 })
-
-unlink('tmp',recursive = T) # delete the files that were created in the tests
 
