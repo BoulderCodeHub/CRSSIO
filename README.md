@@ -3,7 +3,7 @@
 CRSSIO
 ======
 
-[![Travis-CI Build Status](https://travis-ci.org/rabutler/CRSSIO.svg?branch=master)](https://travis-ci.org/rabutler/CRSSIO)
+[![Travis-CI Build Status](https://travis-ci.org/rabutler/CRSSIO.svg?branch=master)](https://travis-ci.org/rabutler/CRSSIO) [![codecov](https://codecov.io/gh/rabutler/CRSSIO/branch/master/graphs/badge.svg)](https://codecov.io/gh/rabutler/CRSSIO)
 
 R Package to manage code for manipulating the input and output data for CRSS.
 
@@ -29,13 +29,13 @@ library(RWDataPlyr) # install_github("BoulderCodeHub/RWDataPlyr")
 slotAggList <- RWDataPlyr::createSlotAggList(CRSSIO::sysCondSALMatrix())
 # use example data in RWDataPlyr to create system condition table
 # first get all of the data
-scenFolder <- 'DNF,CT,IG'
+scenFolder <- 'ISM1988_2014,2007Dems,IG,Most'
 scenName <- 'DNF Hydrology'
 scenPath <- system.file('extdata','Scenario/',package = 'RWDataPlyr')
 sysData <- RWDataPlyr::getDataForAllScens(scenFolder, scenName, slotAggList,
                                           scenPath, 'tmp.feather', TRUE)
 # then create the system condition table
-sysCondTable <- createSysCondTable(sysData, 2017:2021)
+sysCondTable <- createSysCondTable(sysData, 2018:2022)
 # sysCondTable[['limitedTable']] to access results
 ```
 
