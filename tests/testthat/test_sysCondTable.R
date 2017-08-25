@@ -29,6 +29,16 @@ test_that("warnings and errors are as expected", {
   expect_warning(createSysCondTable(s2, yrs),
                  'There are 2 Scenarios in the data. Please note, these scenarios will be averaged together when creating the system conditions table.'
   )
+  expect_error(
+    sysData %>% filter(Variable != "mer748") %>% createSysCondTable(yrs),
+    "The following variables are not found in the data frame passed to createSysCondTable():\nmer748",
+    fixed = TRUE
+  )
+  expect_error(
+    sysData %>% filter(Variable != "mer748", Variable != "eq") %>% createSysCondTable(yrs),
+    "The following variables are not found in the data frame passed to createSysCondTable():\nmer748, eq",
+    fixed = TRUE
+  )
 })
 
 expVals <- matrix(c(

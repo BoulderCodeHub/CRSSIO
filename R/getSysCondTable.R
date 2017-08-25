@@ -146,6 +146,13 @@ createSysCondTable <- function(zz, yrs)
                   'Scenarios in the data. Please note, these scenarios will be averaged together when creating the system conditions table.'))
   }
   
+  # check that all of the necesary variables are present
+  if(!all(vShort() %in% as.character(levels(as.factor(zz$Variable))))) {
+    tmp <- vShort()[!(vShort() %in% as.character(levels(as.factor(zz$Variable))))]
+    stop("The following variables are not found in the data frame passed to createSysCondTable():\n",
+         paste(tmp, collapse = ", "))
+  }
+  
   zz2 <- dplyr::filter(zz, Year %in% yrs)
 
   # multiply mean by 100 to create % of traces.
