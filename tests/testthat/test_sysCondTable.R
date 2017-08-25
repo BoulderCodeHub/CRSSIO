@@ -19,6 +19,9 @@ test_that('object dimensions and attributes are correct', {
   expect_equal(names(sysCondTable), c("fullTable", "limitedTable"))
   expect_equal(dim(sysCondTable$fullTable), c(length(CRSSIO:::slotNames())+4,length(yrs)))
   expect_equal(dim(sysCondTable$limitedTable), c(length(CRSSIO:::slotNames())+1,length(yrs)))
+  # test that when using too few years, you only get back one year of data
+  expect_warning(s2 <- createSysCondTable(sysData, 2016:2018)) # warning text is checked below
+  expect_equal(dim(s2$fullTable), c(length(CRSSIO:::slotNames()) + 4, 1))
 })
 
 s2 <- sysData %>%
@@ -39,6 +42,13 @@ test_that("warnings and errors are as expected", {
     "The following variables are not found in the data frame passed to createSysCondTable():\nmer748, eq",
     fixed = TRUE
   )
+  expect_warning(
+    createSysCondTable(sysData, 2016:2018),
+    paste0("All years (yrs) are not in the data frame passed to createSysCondTable()\n",
+           "Will only evaluate for the years that are in the data frame"),
+    fixed = TRUE
+  )
+  expect_error(createSysCondTable(sysData, 1999:2005), "None of the yrs exist in the data")
 })
 
 expVals <- matrix(c(

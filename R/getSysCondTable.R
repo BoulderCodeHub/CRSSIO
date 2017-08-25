@@ -153,6 +153,18 @@ createSysCondTable <- function(zz, yrs)
          paste(tmp, collapse = ", "))
   }
   
+  if(!all(yrs %in% zz$Year)){
+    yrs <- yrs[yrs %in% zz$Year]
+    # if none of the years exist then throw an error, otherwise warn the user and will
+    # use a subset
+    if(length(yrs) == 0)
+      stop("None of the yrs exist in the data")
+    
+    warning("All years (yrs) are not in the data frame passed to createSysCondTable()\n",
+            "Will only evaluate for the years that are in the data frame")
+   
+  }
+  
   zz2 <- dplyr::filter(zz, Year %in% yrs)
 
   # multiply mean by 100 to create % of traces.
