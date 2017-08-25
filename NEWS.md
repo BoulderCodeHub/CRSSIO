@@ -3,6 +3,8 @@
 *In development* 
 
 - package now depends on xts >= 0.10.0 (#17)
+- `createSysCondTable()` now checks to see if `yrs` exist in the data and reacts properly. (#26)
+- Improved unit tests
 
 # CRSSIO 0.4.1
 
