@@ -135,6 +135,7 @@ sysCondSALMatrix <- function()
 #' 
 #' @seealso \code{\link{sysCondSALMatrix}}
 #' @importFrom magrittr "%>%"
+#' @importFrom rlang .data
 #' @export
 createSysCondTable <- function(zz, yrs)
 {
@@ -165,34 +166,35 @@ createSysCondTable <- function(zz, yrs)
    
   }
   
-  zz2 <- dplyr::filter(zz, Year %in% yrs)
-
-  # multiply mean by 100 to create % of traces.
-  zz2 <- zz2 %>% 
+  zz <- zz %>% 
+    dplyr::filter(Year %in% yrs) %>%
+    # multiply mean by 100 to create % of traces.
     dplyr::group_by(Year, Variable) %>%
-    dplyr::summarise(mean = mean(Value)*100)
+    dplyr::summarise(Value = mean(Value)*100) %>%
+    tidyr::spread(Variable, Value) %>%
+    # change names and arange in the correct order
+    dplyr::mutate(
+      eqAll = .data$eq + .data$eq823,
+      uebAll = .data$uebGt823 + .data$ueb823 + .data$uebLt823,
+      merAll = .data$mer823 + .data$mer748,
+      lebAll = .data$lebGt823 + .data$leb823 + .data$lebLt823
+    ) %>%
+    dplyr::arrange(Year)
 
-  zz <- reshape2::dcast(zz2, Year~Variable, value.var = 'mean')
-
-  # change names and arange in the correct order
   yrsLab <- zz$Year
-  zz$eqAll <- zz$eq + zz$eq823
-  zz$uebAll <- zz$uebGt823 + zz$ueb823 + zz$uebLt823
-  zz$merAll <- zz$mer823 + zz$mer748
-  zz$lebAll <- zz$lebGt823 + zz$leb823 + zz$lebLt823
   zz <- subset(zz,select = shortOrderFull())
   zzLimit <- subset(zz, select = shortOrderLimit())
   
   # change to full descriptions and transpose the matrix
   rr <- names(zz)
-  ii <- match(rr,vShortAll())
+  ii <- match(rr, vShortAll())
   rr <- vDescAll()[ii]
   names(zz) <- rr
   zz <- t(zz)
   colnames(zz) <- yrs
   
   rr <- names(zzLimit)
-  ii <- match(rr,vShortAll())
+  ii <- match(rr, vShortAll())
   rr <- vDescAll()[ii]
   names(zzLimit) <- rr
   zzLimit <- t(zzLimit)
