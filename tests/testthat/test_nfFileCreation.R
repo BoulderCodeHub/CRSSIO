@@ -15,6 +15,17 @@ test_that('can create files',{
                                          recordToUse = c('1950-01','1954-12')))
 })
 
+allFiles <- c(CRSSNFInputNames(), "MWD ICS.SacWYType", 
+              "MeadFloodControlData.hydrologyIncrement", "HydrologyParameters.TraceNumber",
+              "HydrologyParameters.SupplyScenario")
+
+test_that("all files exist", {
+  expect_true(all(allFiles %in% list.files("tmp/trace1")))
+  expect_true(all(allFiles %in% list.files("tmp/trace3")))
+  expect_true(all(list.files("tmp/trace1") %in% allFiles))
+  expect_true(all(list.files("tmp/trace3") %in% allFiles))
+})
+
 test_that('files created from "CoRiverNF" are the same as from Excel', {
   expect_equal(as.matrix(read.csv(file.path('tmp/trace1/',CRSSNFInputNames()[rr[1]]),skip=1)),
                as.matrix(read.csv(file.path(p1,'trace1/', CRSSNFInputNames()[rr[1]]),skip=1)))
