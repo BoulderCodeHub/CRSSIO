@@ -6,6 +6,7 @@
 - `createSysCondTable()` now checks to see if `yrs` exist in the data and reacts properly. (#26)
 - Improved unit tests
 - `createISMMatrix()` now works with annual data as well as monthly data. (#24)
+- `createCRSSDNFInputFiles()` now creates Sacramento year type index using ISM and saves it (#25)
 
 # CRSSIO 0.4.1
 
