@@ -74,3 +74,21 @@ test_that('getAllISMMatrices works', {
                getAllISMMatrices(tstMat,'2016-01', NA)[[29]])
   expect_equal(length(getAllISMMatrices(tstMat,'2016-01', NA)),29)
 })
+
+yt1 <- getYTISMData("2018-12-31", 110, 1906, 2015)
+yt2 <- getYTISMData("2000-12-31", 10, 1988, 2012)
+yt11 <- unclass(yt1[,110])
+attributes(yt11) <- NULL
+yt21 <- unclass(yt2[,23])
+attributes(yt21) <- NULL
+
+test_that("getYTISMData works", {
+  expect_equal(dim(yt1), c(110, 110))
+  expect_equal(dim(yt2), c(10, 25))
+  expect_equal(index(yt1), zoo::as.yearmon("Dec 2018") + 0:109)
+  expect_equal(index(yt2), zoo::as.yearmon("Dec 2000") + 0:9)
+  expect_equivalent(yt1[1,], CRSSIO:::sacYT["1906/2015"])
+  expect_equivalent(yt2[1,], CRSSIO:::sacYT["1988/2012"])
+  expect_equivalent(yt11, c(unclass(CRSSIO:::sacYT["2015"]), unclass(CRSSIO:::sacYT["1906/2014"])))
+  expect_equivalent(yt21, c(unclass(CRSSIO:::sacYT["2010/2012"]), unclass(CRSSIO:::sacYT["1988/1994"])))
+})

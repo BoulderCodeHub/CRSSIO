@@ -30,9 +30,17 @@
 #' applied to the 1988-2012 data. The supply scenario slot name is set
 #' by the "crssio.supplyScenarioSlot" option.
 #' 
-#' Finally, the hydrologyIncrement data that sets the random number generator for
+#' The hydrologyIncrement data that sets the random number generator for
 #' each year and trace is created for each trace folder. The slot name that is created
 #' for the hydrologyIncrement is set by the "crssio.hydroIncrement" option.
+#' 
+#' Beginning in CRSS v2.6, input data for the Sacramento year type 
+#' index are necessary. The historical Sacramento year type data (available at
+#' \url{http://cdec.water.ca.gov/cgi-progs/iodir/WSIHIST}) are resampled using
+#' ISM with the same years as the historical natural flows. This function also
+#' creates an input file for each trace that includes the Sacramento year type
+#' index. This file name is controlled by the \code{crssio.sacYTSlot} option and
+#' defaults to "MWD ICS.SacWYType".
 #' 
 #' @param iFile Either the string "CoRiverNF", or the relative or absolute path 
 #' to the excel workbook. When "CoRiverNF" is used, the data from the \code{CoRiverNF}
@@ -114,6 +122,7 @@ createCRSSDNFInputFiles <- function(iFile, oFolder, startDate, simYrs, oFiles = 
     supplyScenario <- as.numeric(paste0(1,'.',y1,y2))
   } else{
     # uses the full record, so it's 1906 - some year. figure out some year
+    y1 <- 1906
     y2 <- format(zoo::index(nf)[nrow(nf)], "%Y")
     periodToUse <- paste('period used: 1906', y2, sep = '-')
     supplyScenario <- as.numeric(paste0('1.1906',y2))
@@ -134,14 +143,22 @@ createCRSSDNFInputFiles <- function(iFile, oFolder, startDate, simYrs, oFiles = 
 	}
 
 	# for each node, write out all of the trace files
-	rV <- sapply(1:29, function(x) writeNFFilesByNode(nf[[x]], oFiles[x], oFolder, headerInfo))
-	
+	sapply(1:29, function(x) writeNFFilesByNode(nf[[x]], oFiles[x], oFolder, headerInfo))
+
 	# for each trace, write out all of the trace and supply scenario number files
-	rV2 <- sapply(1:nT, function(x) writeTraceSupplyNumbers(x, supplyScenario, oFolder))
+	message("Beginning to write node: supply scenario and trace number")
+	sapply(1:nT, function(x) writeTraceSupplyNumbers(x, supplyScenario, oFolder))
 	
 	# for each trace, write out the hydrology increment slot
 	message('Beginning to write node: hydrologyIncrement')
-	rv3 <- sapply(1:nT, function(x) writeHydroIncrement(x, simYrs, startDate, oFolder))
+	sapply(1:nT, function(x) writeHydroIncrement(x, simYrs, startDate, oFolder))
+	
+	# for each trace, write out the sacramento year type file
+	# convert from january to december
+	eoyDate <- paste0(format(zoo::as.yearmon(startDate), "%Y"), "-12-31")
+	ytData <- getYTISMData(eoyDate, simYrs, y1, y2)
+	message("Beginning to write node: Sacramento year type")
+	sapply(1:nT, function(x) writeSacYT(x, ytData, eoyDate, oFolder))
 	
 	# data for writing out the README file
 	intro <- paste0('Created From Observed Hydrology with ISM from CRSSIO (v', 

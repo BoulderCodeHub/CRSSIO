@@ -65,9 +65,17 @@ supply scenario is the observed historical natural flows with the ISM method
 applied to the 1988-2012 data. The supply scenario slot name is set
 by the "crssio.supplyScenarioSlot" option.
 
-Finally, the hydrologyIncrement data that sets the random number generator for
+The hydrologyIncrement data that sets the random number generator for
 each year and trace is created for each trace folder. The slot name that is created
 for the hydrologyIncrement is set by the "crssio.hydroIncrement" option.
+
+Beginning in CRSS v2.6, input data for the Sacramento year type 
+index are necessary. The historical Sacramento year type data (available at
+\url{http://cdec.water.ca.gov/cgi-progs/iodir/WSIHIST}) are resampled using
+ISM with the same years as the historical natural flows. This function also
+creates an input file for each trace that includes the Sacramento year type
+index. This file name is controlled by the \code{crssio.sacYTSlot} option and
+defaults to "MWD ICS.SacWYType".
 }
 \examples{
 
