@@ -1,14 +1,15 @@
 Package: CRSSIO
 Type: Package
 Title: Package to manage the CRSS input/output data
-Version: 0.4.1.9000
-Date: 2017-03-31
+Version: 0.5.0
+Date: 2017-08-30
 Author: as.person(c("Alan Butler <r.alan.butler@gmail.com> [aut,cre]"))
 Maintainer: Alan Butler <r.alan.butler@gmail.com>
 Description: Provides functions to generate input files commmonly used by the
     Colorado River Simulation System (CRSS) from publicly available data, as
     well as functions to modify these files. Figures that are commonly used to
     QA/QC and undersand CRSS results are also automated with this package.
+BugReports: https://github.com/BoulderCodeHub/CRSSIO/issues
 License: CC0
 LazyData: true
 Depends: 

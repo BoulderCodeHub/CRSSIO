@@ -29,7 +29,7 @@ library(RWDataPlyr) # install_github("BoulderCodeHub/RWDataPlyr")
 slotAggList <- RWDataPlyr::createSlotAggList(CRSSIO::sysCondSALMatrix())
 # use example data in RWDataPlyr to create system condition table
 # first get all of the data
-scenFolder <- 'ISM1988_2014,2007Dems,IG,Most'
+scenFolder <- 'DNF,CT,IG'
 scenName <- 'DNF Hydrology'
 scenPath <- system.file('extdata','Scenario/',package = 'RWDataPlyr')
 sysData <- RWDataPlyr::getDataForAllScens(scenFolder, scenName, slotAggList,
@@ -55,6 +55,7 @@ Log:
 
 For details, see the [News](NEWS.md)
 
+-   2017-08-30: version 0.5.0 available
 -   2017-05-10: version 0.4.1 available
 -   2017-03-31: version 0.4.0 available
 -   2016-10-04: version 0.3 available

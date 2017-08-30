@@ -1,13 +1,18 @@
-# CRSSIO 0.4.1.9000
+# CRSSIO 0.5.0
 
-*In development* 
+*Released August 30, 2017* 
 
-- package now depends on xts >= 0.10.0 (#17)
-- `createSysCondTable()` now checks to see if `yrs` exist in the data and reacts properly. (#26)
-- Improved unit tests
-- `createISMMatrix()` now works with annual data as well as monthly data. (#24)
-- `createCRSSDNFInputFiles()` now creates Sacramento year type index using ISM and saves it (#25)
-- new function: `elevation2Volume()`
+## New Features and Functions
+
+* `createISMMatrix()` now works with annual data as well as monthly data. (#24)
+* `createCRSSDNFInputFiles()` now creates Sacramento year type index using ISM and saves it (#25)
+* new function: `elevation2Volume()` that will convert reservoir elevation values to resevoir storage values
+
+## Minor Updates and Bug Fixes
+
+* `createSysCondTable()` now checks to see if `yrs` exist in the data and reacts properly. (#26)
+* package now depends on xts >= 0.10.0 (#17)
+* Improved unit tests
 
 # CRSSIO 0.4.1
 
