@@ -28,10 +28,10 @@ Imports:
     zoo
 Remotes:
     BoulderCodeHub/CoRiverNF,
-    rabutler/RWDataPlyr
+    BoulderCodeHub/RWDataPlyr
 Suggests:
     knitr,
-    RWDataPlyr (> 0.5),
+    RWDataPlyr,
     testthat
 VignetteBuilder: knitr
 RoxygenNote: 6.0.1

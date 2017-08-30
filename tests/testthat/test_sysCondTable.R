@@ -4,7 +4,7 @@ library(dplyr)
 context('Check system condition table creation')
 
 slotAggList <- RWDataPlyr::createSlotAggList(CRSSIO::sysCondSALMatrix())
-scenFolder <- 'ISM1988_2014,2007Dems,IG,Most'
+scenFolder <- "DNF,CT,IG"
 scenName <- 'scen1'
 scenPath <- system.file('extdata','Scenario/',package = 'RWDataPlyr')
 sysData <- RWDataPlyr::getDataForAllScens(scenFolder, scenName, slotAggList,
@@ -21,7 +21,7 @@ test_that('object dimensions and attributes are correct', {
   expect_equal(dim(sysCondTable$limitedTable), c(length(CRSSIO:::slotNames())+1,length(yrs)))
   # test that when using too few years, you only get back one year of data
   expect_warning(s2 <- createSysCondTable(sysData, 2016:2018)) # warning text is checked below
-  expect_equal(dim(s2$fullTable), c(length(CRSSIO:::slotNames()) + 4, 1))
+  expect_equal(dim(s2$fullTable), c(length(CRSSIO:::slotNames()) + 4, 2))
 })
 
 s2 <- sysData %>%

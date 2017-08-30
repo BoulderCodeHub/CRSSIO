@@ -31,7 +31,7 @@ Powell operating tiers, through time.
 # use RWDataPlyr package to get the data to create the system conditions table
 require(RWDataPlyr)
 slotAggList <- RWDataPlyr::createSlotAggList(CRSSIO::sysCondSALMatrix())
-scenFolder <- 'ISM1988_2014,2007Dems,IG,Most'
+scenFolder <- 'DNF,CT,IG'
 scenName <- 'DNF Hydrology'
 scenPath <- system.file('extdata','Scenario/',package = 'RWDataPlyr')
 sysData <- RWDataPlyr::getDataForAllScens(scenFolder, scenName, slotAggList,
