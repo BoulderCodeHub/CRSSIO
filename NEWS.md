@@ -7,6 +7,7 @@
 - Improved unit tests
 - `createISMMatrix()` now works with annual data as well as monthly data. (#24)
 - `createCRSSDNFInputFiles()` now creates Sacramento year type index using ISM and saves it (#25)
+- new function: `elevation2Volume()`
 
 # CRSSIO 0.4.1
 

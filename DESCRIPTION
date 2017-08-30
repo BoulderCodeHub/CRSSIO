@@ -21,6 +21,7 @@ Imports:
     rlang,
     rstudioapi (>= 0.5),
     shiny (>= 0.13),
+    stats,
     tidyr,
     utils,
     xlsx,
