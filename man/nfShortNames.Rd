@@ -33,4 +33,3 @@ CRSSNFInputNames()[20]
 \seealso{
 \code{\link{CRSSNFInputNames}}, \code{\link{nfGageNames}}
 }
-

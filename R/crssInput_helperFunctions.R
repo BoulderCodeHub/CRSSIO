@@ -75,10 +75,14 @@ writeNFFilesByNode <- function(nfXts, oFile, oFolder, headerInfo)
 {
   message('Beginning to write node: ',oFile)
 
-  rV <- sapply(1:ncol(nfXts), 
-         function(x) writeSingleFile(nfXts[,x], 
-                                     file.path(oFolder,paste0('trace',x),oFile),
-                                     headerInfo))
+  sapply(
+    1:ncol(nfXts), 
+    function(x) writeSingleFile(
+      nfXts[,x], 
+      file.path(oFolder,paste0('trace',x),oFile),
+      headerInfo
+    )
+  )
 }
 
 #' write out the trace number and supply scenario number, to a given trace folder
@@ -103,6 +107,7 @@ writeTraceSupplyNumbers <- function(traceNum, supplyScenNum, folderPath)
   utils::write.table(supplyText, 
                      file = file.path(folderName, getOption('crssio.supplyScenarioSlot')),
                      quote = F, row.names = F, col.names = F)
+  
 }
 
 # ***** 
@@ -120,4 +125,55 @@ writeHydroIncrement <- function(traceNum, nYrs, startDate, folderPath){
   tt <- matrix(c(startInfo, 'units: NONE', as.character(tt)), ncol = 1)
   utils::write.table(tt, quote = F, row.names = F, col.names = F,
                      file = file.path(folderName, getOption('crssio.hydroIncrement')))
+}
+
+#' Write the Sacramento Year Type Data
+#' 
+#' \code{writeSacYT} writes out the Sacramento year type data for a single trace, 
+#' given a matrix of data for all traces.
+#' 
+#' @param traceNum The trace of data to save
+#' @param ytData A matrix of all traces of data
+#' @param startDate The start date of the trace file as a character. Should be
+#' in yyyy-mm-dd format, which is what RiverWare expects.
+#' @param folderPath The folder path to the directory containing the trace folders.
+#' 
+#' @keywords internal
+#' @noRd
+
+writeSacYT <- function(traceNum, ytData, startDate, folderPath)
+{
+  folderName <- file.path(folderPath, paste0('trace', traceNum))
+  tt <- matrix(c(
+    paste("start_date:", startDate, "24:00"), 
+    "units: NONE", 
+    as.character(ytData[,traceNum])),
+    ncol = 1)
+  utils::write.table(tt, quote = F, row.names = F, col.names = F, 
+                     file = file.path(folderName, getOption("crssio.sacYTSlot")))
+}
+
+#' Create the Sacramento Year Type ISM Data
+#' 
+#' \code{getYTISMData} creates ISM matrix for the Sacramento Year Type data, using
+#' the specified historical period.
+#' 
+#' @param startDate The start date for the ISM matrix. Should be able to be converted
+#' to a \code{yearmon} class.
+#' @param simYrs The number of years to create the ISM matrix for.
+#' @param y1 The start year of the historical record to use.
+#' @param y2 The ned year of the historical record to use.
+#' 
+#' @keywords internal
+#' @noRd
+
+getYTISMData <- function(startDate, simYrs, y1, y2)
+{
+  yt <- createISMMatrix(
+    sacYT[paste0(y1, "/", y2)], 
+    startMonth = zoo::as.yearmon(startDate),
+    nYrs = simYrs, 
+    monthly = FALSE
+  )
+  yt
 }

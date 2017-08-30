@@ -21,4 +21,3 @@ changes the start date in all files in each trace folder
 Used to change the start date of all natural flow input files. Will change them for all 
 files in a folder.
 }
-

@@ -130,11 +130,12 @@ sysCondSALMatrix <- function()
 #' scenPath <- system.file('extdata','Scenario/',package = 'RWDataPlyr')
 #' sysData <- RWDataPlyr::getDataForAllScens(scenFolder, scenName, slotAggList,
 #'                                           scenPath, 'tmp.feather', TRUE)
-#' sysCondTable <- createSysCondTable(sysData, 2017:2021)
+#' sysCondTable <- createSysCondTable(sysData, 2018:2022)
 #' sysCondTable[['limitedTable']]
 #' 
 #' @seealso \code{\link{sysCondSALMatrix}}
 #' @importFrom magrittr "%>%"
+#' @importFrom rlang .data
 #' @export
 createSysCondTable <- function(zz, yrs)
 {
@@ -146,34 +147,54 @@ createSysCondTable <- function(zz, yrs)
                   'Scenarios in the data. Please note, these scenarios will be averaged together when creating the system conditions table.'))
   }
   
-  zz2 <- dplyr::filter(zz, Year %in% yrs)
-
-  # multiply mean by 100 to create % of traces.
-  zz2 <- zz2 %>% 
-    dplyr::group_by(Year, Variable) %>%
-    dplyr::summarise(mean = mean(Value)*100)
+  # check that all of the necesary variables are present
+  if(!all(vShort() %in% as.character(levels(as.factor(zz$Variable))))) {
+    tmp <- vShort()[!(vShort() %in% as.character(levels(as.factor(zz$Variable))))]
+    stop("The following variables are not found in the data frame passed to createSysCondTable():\n",
+         paste(tmp, collapse = ", "))
+  }
   
-  zz <- reshape2::dcast(zz2, Year~Variable, value.var = 'mean')
+  if(!all(yrs %in% zz$Year)){
+    yrs <- yrs[yrs %in% zz$Year]
+    # if none of the years exist then throw an error, otherwise warn the user and will
+    # use a subset
+    if(length(yrs) == 0)
+      stop("None of the yrs exist in the data")
+    
+    warning("All years (yrs) are not in the data frame passed to createSysCondTable()\n",
+            "Will only evaluate for the years that are in the data frame")
+   
+  }
+  
+  zz <- zz %>% 
+    dplyr::filter(Year %in% yrs) %>%
+    # multiply mean by 100 to create % of traces.
+    dplyr::group_by(Year, Variable) %>%
+    dplyr::summarise(Value = mean(Value)*100) %>%
+    tidyr::spread(Variable, Value) %>%
+    # change names and arange in the correct order
+    dplyr::mutate(
+      eqAll = .data$eq + .data$eq823,
+      uebAll = .data$uebGt823 + .data$ueb823 + .data$uebLt823,
+      merAll = .data$mer823 + .data$mer748,
+      lebAll = .data$lebGt823 + .data$leb823 + .data$lebLt823
+    ) %>%
+    dplyr::arrange(Year)
 
-  # change names and arange in the correct order
   yrsLab <- zz$Year
-  zz$eqAll <- zz$eq + zz$eq823
-  zz$uebAll <- zz$uebGt823 + zz$ueb823 + zz$uebLt823
-  zz$merAll <- zz$mer823 + zz$mer748
-  zz$lebAll <- zz$lebGt823 + zz$leb823 + zz$lebLt823
   zz <- subset(zz,select = shortOrderFull())
   zzLimit <- subset(zz, select = shortOrderLimit())
   
   # change to full descriptions and transpose the matrix
   rr <- names(zz)
-  ii <- match(rr,vShortAll())
+  ii <- match(rr, vShortAll())
   rr <- vDescAll()[ii]
   names(zz) <- rr
   zz <- t(zz)
   colnames(zz) <- yrs
   
   rr <- names(zzLimit)
-  ii <- match(rr,vShortAll())
+  ii <- match(rr, vShortAll())
   rr <- vDescAll()[ii]
   names(zzLimit) <- rr
   zzLimit <- t(zzLimit)

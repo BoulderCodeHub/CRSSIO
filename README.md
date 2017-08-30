@@ -3,7 +3,8 @@
 CRSSIO
 ======
 
-[![Travis-CI Build Status](https://travis-ci.org/BoulderCodeHub/CRSSIO.svg?branch=master)](https://travis-ci.org/BoulderCodeHub/CRSSIO)
+[![Travis-CI Build Status](https://travis-ci.org/BoulderCodeHub/CRSSIO.svg?branch=master)](https://travis-ci.org/BoulderCodeHub/CRSSIO) [![codecov](https://codecov.io/gh/BoulderCodeHub/CRSSIO/branch/master/graphs/badge.svg)](https://codecov.io/gh/BoulderCodeHub/CRSSIO)
+
 
 R Package to manage code for manipulating the input and output data for CRSS.
 
@@ -35,7 +36,7 @@ scenPath <- system.file('extdata','Scenario/',package = 'RWDataPlyr')
 sysData <- RWDataPlyr::getDataForAllScens(scenFolder, scenName, slotAggList,
                                           scenPath, 'tmp.feather', TRUE)
 # then create the system condition table
-sysCondTable <- createSysCondTable(sysData, 2017:2021)
+sysCondTable <- createSysCondTable(sysData, 2018:2022)
 # sysCondTable[['limitedTable']] to access results
 ```
 
@@ -55,6 +56,7 @@ Log:
 
 For details, see the [News](NEWS.md)
 
+-   2017-08-30: version 0.5.0 available
 -   2017-05-10: version 0.4.1 available
 -   2017-03-31: version 0.4.0 available
 -   2016-10-04: version 0.3 available

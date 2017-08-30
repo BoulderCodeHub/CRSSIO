@@ -12,4 +12,3 @@ write out the trace number and supply scenario number, to a given trace folder
 folderPath should be the top level folder, e.g., dmi/NFSinput
 }
 \keyword{internal}
-

@@ -10,4 +10,3 @@ writeSingleFile(xData, fPath, headerInfo)
 write out a single trace of data
 }
 \keyword{internal}
-

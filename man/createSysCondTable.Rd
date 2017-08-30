@@ -36,11 +36,10 @@ scenName <- 'DNF Hydrology'
 scenPath <- system.file('extdata','Scenario/',package = 'RWDataPlyr')
 sysData <- RWDataPlyr::getDataForAllScens(scenFolder, scenName, slotAggList,
                                           scenPath, 'tmp.feather', TRUE)
-sysCondTable <- createSysCondTable(sysData, 2017:2021)
+sysCondTable <- createSysCondTable(sysData, 2018:2022)
 sysCondTable[['limitedTable']]
 
 }
 \seealso{
 \code{\link{sysCondSALMatrix}}
 }
-

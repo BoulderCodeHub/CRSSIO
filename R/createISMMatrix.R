@@ -1,10 +1,17 @@
 
 # returns subset of a data
 # assumes monthly data
-getSubsetOfData <- function(startYear, monData, nYrs)
+getSubsetOfData <- function(startYear, zz, nYrs, monthly)
 {
-  startI <- startYear*12-11
-  monData[startI:(nYrs*12+startI-1)]
+  if(monthly){
+    startI <- startYear * 12 - 11
+    zz <- zz[startI:(nYrs * 12 + startI - 1)]
+  } else{
+    # annual data
+    zz <- zz[startYear:(nYrs + startYear - 1)]
+  }
+  
+  zz
 }
 
 #' Create a matrix of data based on the ISM method
@@ -13,17 +20,35 @@ getSubsetOfData <- function(startYear, monData, nYrs)
 #' this is typically used to create future hydrology data, the entire matrix
 #' will have a new start month. 
 #' 
-#' @return xts matrix
+#' The method can be used on monthly or annual data. If you are applying it to 
+#' monthly data, then \code{xtsData} needs to be monthly data, and \code{monthly}
+#' should be set to \code{TRUE}. If using annual data, then \code{xtsData} should 
+#' be annual, i.e., all with a December timestamp, and \code{monthly} should be
+#' set to \code{FALSE}. If \code{monthly} is \code{FALSE} and \code{xtsData} is 
+#' monthly data, an error will occur.
+#' 
+#' @return xts matrix with the number of years/months specified by \code{nYrs} 
+#' and the number of columns equal to the number of years of data in \code{xtsData}
+#' 
+#' @examples 
+#' # monthly data, that will create a 48x4 xts matrix
+#' t1 <- xts::xts(1:48, zoo::as.yearmon("Jan 2000") + seq(0,47)/12)
+#' createISMMatrix(t1, "Jan 2020")
+#' 
+#' # annual data that will create a 5 x 6 matrix
+#' t2 <- xts::xts(1:6, zoo::as.yearmon("Dec 2000") + 0:5)
+#' createISMMatrix(t2, "Dec 2020", nYrs = 5, monthly = FALSE)
 #' 
 #' @param xtsData An xts vector
 #' @param startMonth The startMonth of the return matrix. Should be able to be
 #' cast to a zoo::yearmon
 #' @param nYrs The number of years to create the data for. Defaults to the number
 #' of years in xtsData, but can be less. 
+#' @param monthly \code{TRUE} if the data is monthly data; \code{FALSE} if it is annual data
 #' 
 #' @export
 #' 
-createISMMatrix <- function(xtsData, startMonth, nYrs = NA)
+createISMMatrix <- function(xtsData, startMonth, nYrs = NA, monthly = TRUE)
 {
   if(!xts::is.xts(xtsData)){
     stop('xtsData is not of type xts')
@@ -42,10 +67,14 @@ createISMMatrix <- function(xtsData, startMonth, nYrs = NA)
   
   ntraces <- 1:xts::nyears(xtsData)
 
-  ismMatrix <- sapply(ntraces, getSubsetOfData, zz, nYrs)
+  ismMatrix <- sapply(ntraces, getSubsetOfData, zz, nYrs, monthly)
   
   # now convert back to xts object with monthly timestep
-  ism.yearMon <- zoo::as.yearmon(startMonth) + seq(0,nrow(ismMatrix)-1)/12
-  ismMatrix <- xts::as.xts(zoo::read.zoo(data.frame(ism.yearMon, ismMatrix)))
+  if(monthly) {
+    ismYearMon <- zoo::as.yearmon(startMonth) + seq(0,nrow(ismMatrix)-1)/12
+  } else{
+    ismYearMon <- zoo::as.yearmon(startMonth) + seq(0,nrow(ismMatrix)-1)
+  }
+  ismMatrix <- xts::as.xts(zoo::read.zoo(data.frame(ismYearMon, ismMatrix)))
   ismMatrix
 }

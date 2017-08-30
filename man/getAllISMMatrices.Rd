@@ -21,4 +21,3 @@ list of matrices. Each node is one matrix entry into the list
 Given a matrix of natural flow data, applies the ISM method to all nodes
 }
 \keyword{internal}
-

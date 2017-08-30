@@ -18,4 +18,3 @@ is the number of traces that will be written out to oFolder/trace[n]/oFile}
 Write out all of the trace files for a given node
 }
 \keyword{internal}
-
