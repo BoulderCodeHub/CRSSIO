@@ -15,7 +15,6 @@
 #' 
 #' @example 
 #' sacYT <- parseSACData("data-raw/sacramentoData.txt", 1906:2015)
-#' devtools::use_data(sacYT, internal = TRUE, overwrite = TRUE)
 
 parseSACData <- function(iFile, histYrs)
 {

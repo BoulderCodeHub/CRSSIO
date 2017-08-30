@@ -1,3 +1,5 @@
+source("data-raw/parseSacYTData.R")
+
 # get the elevation volume tables, and save them as system data
 
 res <- c("blueMesa", "flamingGorge", "mead", "navajo", "powell") # reservoirs
@@ -11,4 +13,7 @@ getData <- function(res)
 evTables <- lapply(res, getData)
 names(evTables) <- tolower(res)
 
-devtools::use_data(evTables, internal = TRUE)
+# and get the sacramento year type data too
+sacYT <- parseSACData("data-raw/sacrementoData.txt", 1906:2015)
+
+devtools::use_data(evTables, sacYT, internal = TRUE, overwrite = TRUE)
