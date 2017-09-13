@@ -81,7 +81,11 @@
 #' \code{\link{CRSSNFInputNames}}
 #' 
 #' @export
-createCRSSDNFInputFiles <- function(iFile, oFolder, startDate, simYrs, oFiles = CRSSNFInputNames(),
+createCRSSDNFInputFiles <- function(iFile, 
+                                    oFolder, 
+                                    startDate, 
+                                    simYrs, 
+                                    oFiles = CRSSNFInputNames(),
                                     recordToUse = NA)
 {
   if(iFile == 'CoRiverNF'){
