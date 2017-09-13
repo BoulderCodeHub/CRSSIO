@@ -29,8 +29,8 @@ copyAndChangeNFFileNames <- function(iFolder, oFolder, nTrace, fromNames, toName
 {
   
   for(i in 1:nTrace){
-    fromPath = paste(iFolder,'trace',i,'/',sep = '')
-    toPath = paste(oFolder,'trace',i,'/',sep = '')
+    fromPath <- paste(iFolder,'trace',i,'/',sep = '')
+    toPath <- paste(oFolder,'trace',i,'/',sep = '')
     dir.create(toPath)
     for(j in 1:length(fromNames)){
       file.copy(paste(fromPath,fromNames[j],sep = ''),paste(toPath, toNames[j],sep = ''))

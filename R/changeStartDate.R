@@ -40,7 +40,7 @@ seperateHeaderFromData <- function(x) {
 #' @export
 changeStartDate <- function(nTrace, folder, startDate)
 {
-	timeInfo = paste(startDate,' 24:00', sep = '')
+	timeInfo <- paste(startDate,' 24:00', sep = '')
 	
 	# if the new start date is before the old start date, issue a warning
 	# but only issue the warning once per call of this function, b/c issuing 
@@ -50,12 +50,12 @@ changeStartDate <- function(nTrace, folder, startDate)
 	for(i in 1:nTrace){
 		message(paste('Starting trace:',i,'of',nTrace))
 	
-		currFold = file.path(folder,paste0('trace',i))
+		currFold <- file.path(folder,paste0('trace',i))
 		# get list of all files contained in the trace folder
-		currFiles = list.files(currFold)
+		currFiles <- list.files(currFold)
 		for(j in 1:length(currFiles)){
 		  # read in the entire file
-			tmpData = scan(
+			tmpData <- scan(
 			  file.path(currFold,currFiles[j]), 
 			  sep = '\t', 
 			  what = character(),
@@ -114,24 +114,45 @@ changeStartDate <- function(nTrace, folder, startDate)
 #' @export
 changeStartDateForEvapAndAddZeros <- function(nTrace, folder, startDate, NZeros)
 {
-	timeInfo = paste('start_date: ',startDate,' 24:00\n', sep = '')
+	timeInfo <- paste('start_date: ',startDate,' 24:00\n', sep = '')
+  powellFiles <- c(
+	  'Powell.Average_Air_Temperature',
+	  'Powell.Average_Precipitation',
+	  'Powell.Gross_Evaporation_Coefficient',
+	  'Powell.River_Evaporation_Coefficient'
+	)
+	
 	for(i in 1:nTrace){
 		message(paste('Starting trace:',i,'of',nTrace))
-		currFold = paste(folder,'/trace',i,'/',sep = '')
+		currFold <- paste(folder,'/trace',i,'/',sep = '')
 		# get list of all files contained in the trace folder
 		currFiles = list.files(currFold)
 		for(j in 1:length(currFiles)){
-			if(!(currFiles[j] %in% c('Powell.Average_Air_Temperature','Powell.Average_Precipitation',
-				'Powell.Gross_Evaporation_Coefficient','Powell.River_Evaporation_Coefficient'))){
-				tmpData = as.matrix(utils::read.table(paste(currFold,currFiles[j],sep = ''), sep = '\t', skip = 2))
-				# read in the header info and maintain units; necessary so the code works for flow and salinity files
-				headerInfo = scan(paste(currFold,currFiles[j],sep = ''), what = 'char', nlines = 2, sep = '\t')
-				headerInfo = paste(timeInfo, headerInfo[2], sep = '')
+			if(!(currFiles[j] %in% powellFiles)){
+				tmpData <- as.matrix(utils::read.table(
+				  paste(currFold,currFiles[j],sep = ''),
+				  sep = '\t',
+				  skip = 2
+				))
+				# read in the header info and maintain units; 
+				# necessary so the code works for flow and salinity files
+				headerInfo <- scan(
+				  paste(currFold,currFiles[j],sep = ''),
+				  what = 'char',
+				  nlines = 2,
+				  sep = '\t'
+				)
+				headerInfo <- paste(timeInfo, headerInfo[2], sep = '')
 				tmpData <- matrix(c(tmpData, rep(0, NZeros)),ncol = 1)
 
-				colnames(tmpData) = headerInfo
+				colnames(tmpData) <- headerInfo
 				# writes out to the same folder it reads in from
-				utils::write.table(tmpData, file = paste(currFold,currFiles[j],sep = ''),quote = F, row.names = F)
+				utils::write.table(
+				  tmpData,
+				  file = paste(currFold,currFiles[j],sep = ''),
+				  quote = FALSE,
+				  row.names = FALSE
+				)
 			}
 		}
 	}

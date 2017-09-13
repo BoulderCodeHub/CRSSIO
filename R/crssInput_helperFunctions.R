@@ -49,7 +49,7 @@ readAndFormatNFExcel <- function(iFile)
   }
 
   # remove gap column
-  nf <- matrix(as.numeric(nf[,c(1:20,22:30)]),ncol = 29, byrow = F)
+  nf <- matrix(as.numeric(nf[,c(1:20,22:30)]),ncol = 29, byrow = FALSE)
   Sys.setenv(TZ = 'UTC') # set the system timezone to UTC
   nf.YearMon <- zoo::as.yearmon('1906-01-31') + seq(0,nrow(nf)-1)/12
   nf <- xts::as.xts(zoo::read.zoo(data.frame(nf.YearMon,nf)))
@@ -61,7 +61,7 @@ readAndFormatNFExcel <- function(iFile)
 writeSingleFile <- function(xData, fPath, headerInfo)
 {
   colnames(xData) = headerInfo
-  utils::write.table(xData, file = fPath,quote = F, row.names = F)
+  utils::write.table(xData, file = fPath,quote = F, row.names = FALSE)
 }
 
 #' Write out all of the trace files for a given node
@@ -103,10 +103,10 @@ writeTraceSupplyNumbers <- function(traceNum, supplyScenNum, folderPath)
   
   utils::write.table(traceText, 
                      file = file.path(folderName, getOption('crssio.traceNumberSlot')),
-                     quote = F, row.names = F, col.names = F)
+                     quote = F, row.names = F, col.names = FALSE)
   utils::write.table(supplyText, 
                      file = file.path(folderName, getOption('crssio.supplyScenarioSlot')),
-                     quote = F, row.names = F, col.names = F)
+                     quote = F, row.names = F, col.names = FALSE)
   
 }
 
@@ -119,11 +119,11 @@ writeHydroIncrement <- function(traceNum, nYrs, startDate, folderPath){
   # the hydrology increment data starts with the trace number, and increments
   # by one every year until the end of the simulation
   # it is monthly data, so each index repeats 12 times
-  tt <- as.vector(t(matrix(rep(traceNum:(nYrs + traceNum - 1), 12), byrow = F, ncol = 12)))
+  tt <- as.vector(t(matrix(rep(traceNum:(nYrs + traceNum - 1), 12), byrow = FALSE, ncol = 12)))
   folderName <- file.path(folderPath, paste0('trace', traceNum))
   startInfo <- paste('start_date:', startDate, '24:00')
   tt <- matrix(c(startInfo, 'units: NONE', as.character(tt)), ncol = 1)
-  utils::write.table(tt, quote = F, row.names = F, col.names = F,
+  utils::write.table(tt, quote = F, row.names = F, col.names = FALSE,
                      file = file.path(folderName, getOption('crssio.hydroIncrement')))
 }
 
@@ -149,7 +149,7 @@ writeSacYT <- function(traceNum, ytData, startDate, folderPath)
     "units: NONE", 
     as.character(ytData[,traceNum])),
     ncol = 1)
-  utils::write.table(tt, quote = F, row.names = F, col.names = F, 
+  utils::write.table(tt, quote = FALSE, row.names = FALSE, col.names = FALSE, 
                      file = file.path(folderName, getOption("crssio.sacYTSlot")))
 }
 
