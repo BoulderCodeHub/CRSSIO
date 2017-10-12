@@ -6,3 +6,4 @@
 ^README\.Rmd$
 ^README-.*\.png$
 ^tmp\.feather$
+^appveyor\.yml$
