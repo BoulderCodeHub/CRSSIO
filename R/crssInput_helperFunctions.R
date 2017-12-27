@@ -1,3 +1,4 @@
+
 #' returns all ISM matrices for all nodes
 #' 
 #' Given a matrix of natural flow data, applies the ISM method to all nodes
@@ -9,7 +10,8 @@
 #' 
 #' @return list of matrices. Each node is one matrix entry into the list
 #' @keywords internal
-#' 
+#' @noRd
+
 getAllISMMatrices <- function(nfMat, startMonth, nYrs)
 {
   # make sure matrix is correct dimension
@@ -26,6 +28,7 @@ getAllISMMatrices <- function(nfMat, startMonth, nYrs)
 #' @param iFile Relative or absolute file path to the Excel file
 #' @return An xts matrix beginning in January 1906 with 29 columns. 
 #' @keywords internal
+#' @noRd
 #' 
 readAndFormatNFExcel <- function(iFile)
 {
@@ -60,6 +63,7 @@ readAndFormatNFExcel <- function(iFile)
 
 #' write out a single trace of data
 #' @keywords internal
+#' @noRd
 writeSingleFile <- function(xData, fPath, headerInfo)
 {
   colnames(xData) <- headerInfo
@@ -74,11 +78,12 @@ writeSingleFile <- function(xData, fPath, headerInfo)
 #' @param oFile File name that each file will be saved as
 #' @param oFolder Folder location to write files to
 #' @keywords internal
+#' @noRd
 writeNFFilesByNode <- function(nfXts, oFile, oFolder, headerInfo)
 {
   message('Beginning to write node: ',oFile)
 
-  sapply(
+  lapply(
     seq_len(ncol(nfXts)), 
     function(x) writeSingleFile(
       nfXts[,x], 
@@ -91,6 +96,8 @@ writeNFFilesByNode <- function(nfXts, oFile, oFolder, headerInfo)
 #' write out the trace number and supply scenario number, to a given trace 
 #' folder folderPath should be the top level folder, e.g., dmi/NFSinput
 #' @keywords internal
+#' @noRd
+
 writeTraceSupplyNumbers <- function(traceNum, supplyScenNum, folderPath)
 {
   # traceNum will output as follows:
@@ -121,10 +128,14 @@ writeTraceSupplyNumbers <- function(traceNum, supplyScenNum, folderPath)
   
 }
 
-# ***** 
-# function that takes in the trace number and writes out the hydrology increment
-# data
-# *****
+#' Write the hydrology increment file based on the trace number
+#'
+#' `writeHydroIncrement()` takes in the trace number as an argument and uses that
+#' to create the hydrology increment data. Then the hydrology increment data
+#' is saved in the specified folder. 
+#' 
+#' @keywords internal
+#' @noRd
 
 writeHydroIncrement <- function(traceNum, nYrs, startDate, folderPath){
   # the hydrology increment data starts with the trace number, and increments
