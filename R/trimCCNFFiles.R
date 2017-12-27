@@ -1,28 +1,33 @@
 #' Trim Climate Change Natural Flow Files
 #' 
-#' Trims the Climate Change natural flow input data to start and/or end in a different year.
+#' `trimCCNFFiles()` trims the climate change natural flow input data to 
+#' start and/or end in a different year.
 #' 
-#' The climate change natural flows were developed to start in January 1950. Unlike the other natural
-#' flow files used in CRSS, the data are associated with specific years, i.e., the index
-#' sequential method is not used on the climate change hydrology. Sometimes it is necessary 
-#' to trim the data to start, and end in a particular year. The function will return data starting
+#' The climate change natural flows were developed to start in January 1950. 
+#' Unlike the other natural flow files used in CRSS, the data are associated 
+#' with specific years, i.e., the index sequential method is not used on the 
+#' climate change hydrology. Sometimes it is necessary to trim the data to 
+#' start, and end in a particular year. The function will return data starting 
 #' in January of the \code{startYear} and ending in December of \code{endYear}. 
 #' 
 #' While the function is typically used on climate change natural flow files, it
 #' will still work with other natural flow input files.
 #' 
-#' Assumes folder numbers will always start at 1 and that all files in the folder should be 
-#' processed.
+#' @note 
+#' Assumes folder numbers will always start at 1 and that all files in the 
+#' folder should be processed.
 #' 
 #' @param startYear The desired start year. Should be after 1950 and before 2099.
 #' @param endYear The desired end year. Should be after 1950 and before 2099.
 #' @param iFolder The path to the trace files, e.g., '/dmi/VIC/'.
-#' @param nTraces The number of traces to process. The default is 112, which is the number of traces
-#' in the CMIP3 climate change hydrology.
+#' @param nTraces The number of traces to process. The default is 112, which is 
+#' the number of traces in the CMIP3 climate change hydrology.
+#' 
 #' @return The number of files that were processed
 #' 
 #' @examples 
-#' # Trim all 112 traces found in 'CRSS/dmi/VIC' to start in Jan-2017 and end in Dec-2019
+#' # Trim all 112 traces found in 'CRSS/dmi/VIC' to start in Jan-2017 and 
+#' # end in Dec-2019
 #' \dontrun{
 #' trimCCNFFiles(2017,2019,'CRSS/dmi/VIC/')
 #' }
@@ -30,7 +35,7 @@
 #' @export
 trimCCNFFiles <- function(startYear, endYear, iFolder, nTraces = 112)
 {
-  if(endYear < startYear){
+  if (endYear < startYear){
     stop("In trimCCNFFiles, endYear cannot be before startYear.")
   }
   
@@ -43,8 +48,11 @@ trimCCNFFiles <- function(startYear, endYear, iFolder, nTraces = 112)
   # create list of all folder names to process.
   allFolders <- paste0(iFolder,'/trace',1:nTraces)
   # call trimFilesInFolder for all folders
-  xx <- sapply(allFolders, trimFilesInFolder, startYear, endYear)
-  sum(xx)
+  xx <- simplify2array(
+    lapply(allFolders, trimFilesInFolder, startYear, endYear)
+  )
+
+  sum(simplify2array(lapply(seq_len(length(xx)), function(x) sum(xx[[x]]))))
 }
 
 #' @keywords internal
@@ -53,7 +61,7 @@ trimFilesInFolder <- function(folder, startYear, endYear)
   allFiles <- paste0(folder,'/',list.files(folder))
   message(paste('Processing:',folder))
   # call trimSindleFile for every file found in the folder
-  xx <- sapply(allFiles, trimSingleFile, startYear, endYear)
+  xx <- simplify2array(lapply(allFiles, trimSingleFile, startYear, endYear))
   xx
 }
 
@@ -67,11 +75,11 @@ trimSingleFile <- function(ff, startYear, endYear)
   nf <- as.matrix(utils::read.table(ff, sep = '\t', skip = 2))
   # read in the header info and maintain units; 
   # necessary so the code works for flow and salinity files
-  headerInfo <- scan(ff, what = 'char', nlines = 2, sep = '\t', quiet = T)
+  headerInfo <- scan(ff, what = 'char', nlines = 2, sep = '\t', quiet = TRUE)
   dataStartYear <- as.numeric(strsplit(
-    strsplit(headerInfo[1],' ',fixed = T)[[1]][2], 
+    strsplit(headerInfo[1], ' ', fixed = TRUE)[[1]][2], 
     '-',
-    fixed = T
+    fixed = TRUE
   )[[1]][1])
   
   # check to see if the year you want to start the data in is after the year that
@@ -96,7 +104,7 @@ trimSingleFile <- function(ff, startYear, endYear)
   nf <- as.matrix(nfZ)
   
   # change header info to have the new start date
-  startInfo <- strsplit(headerInfo[1],' ',fixed = T)[[1]]
+  startInfo <- strsplit(headerInfo[1],' ',fixed = TRUE)[[1]]
   startDate <- paste0(startYear,'-1-31')
   headerInfo[1] <- paste(startInfo[1],startDate,startInfo[3])
   headerInfo <- paste0(headerInfo[1],'\n', headerInfo[2])
