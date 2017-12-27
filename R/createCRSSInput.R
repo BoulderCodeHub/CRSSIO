@@ -147,25 +147,25 @@ createCRSSDNFInputFiles <- function(iFile,
 	}
 
 	# for each node, write out all of the trace files
-	sapply(
+	lapply(
 	  1:29, 
 	  function(x) writeNFFilesByNode(nf[[x]], oFiles[x], oFolder, headerInfo)
 	)
 
 	# for each trace, write out all of the trace and supply scenario number files
 	message("Beginning to write node: supply scenario and trace number")
-	sapply(1:nT, function(x) writeTraceSupplyNumbers(x, supplyScenario, oFolder))
+	lapply(1:nT, function(x) writeTraceSupplyNumbers(x, supplyScenario, oFolder))
 	
 	# for each trace, write out the hydrology increment slot
 	message('Beginning to write node: hydrologyIncrement')
-	sapply(1:nT, function(x) writeHydroIncrement(x, simYrs, startDate, oFolder))
+	lapply(1:nT, function(x) writeHydroIncrement(x, simYrs, startDate, oFolder))
 	
 	# for each trace, write out the sacramento year type file
 	# convert from january to december
 	eoyDate <- paste0(format(zoo::as.yearmon(startDate), "%Y"), "-12-31")
 	ytData <- getYTISMData(eoyDate, simYrs, y1, y2)
 	message("Beginning to write node: Sacramento year type")
-	sapply(1:nT, function(x) writeSacYT(x, ytData, eoyDate, oFolder))
+	lapply(1:nT, function(x) writeSacYT(x, ytData, eoyDate, oFolder))
 	
 	# data for writing out the README file
 	intro <- paste0('Created From Observed Hydrology with ISM from CRSSIO (v', 

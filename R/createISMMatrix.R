@@ -16,9 +16,9 @@ getSubsetOfData <- function(startYear, zz, nYrs, monthly)
 
 #' Create a matrix of data based on the ISM method
 #' 
-#' Takes in a matrix of historical data and applies the ISM method to it. Because
-#' this is typically used to create future hydrology data, the entire matrix
-#' will have a new start month. 
+#' `createISMMatrix()` takes in a matrix of historical data and applies the ISM 
+#' method to it. Because this is typically used to create future hydrology data, 
+#' the entire matrix will have a new start month. 
 #' 
 #' The method can be used on monthly or annual data. If you are applying it to 
 #' monthly data, then \code{xtsData} needs to be monthly data, and \code{monthly}
@@ -67,7 +67,9 @@ createISMMatrix <- function(xtsData, startMonth, nYrs = NA, monthly = TRUE)
   
   ntraces <- 1:xts::nyears(xtsData)
 
-  ismMatrix <- sapply(ntraces, getSubsetOfData, zz, nYrs, monthly)
+  ismMatrix <- simplify2array(
+    lapply(ntraces, getSubsetOfData, zz, nYrs, monthly)
+  )
   
   # now convert back to xts object with monthly timestep
   if(monthly) {
