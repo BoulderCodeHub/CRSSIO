@@ -3,8 +3,7 @@
 CRSSIO
 ======
 
-[![Travis-CI Build Status](https://travis-ci.org/BoulderCodeHub/CRSSIO.svg?branch=master)](https://travis-ci.org/BoulderCodeHub/CRSSIO) [![codecov](https://codecov.io/gh/BoulderCodeHub/CRSSIO/branch/master/graphs/badge.svg)](https://codecov.io/gh/BoulderCodeHub/CRSSIO)
-
+[![Travis-CI Build Status](https://travis-ci.org/rabutler/CRSSIO.svg?branch=master)](https://travis-ci.org/rabutler/CRSSIO) [![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/BoulderCodeHub/CRSSIO?branch=master&svg=true)](https://ci.appveyor.com/project/BoulderCodeHub/CRSSIO) [![codecov](https://codecov.io/gh/rabutler/CRSSIO/branch/master/graphs/badge.svg)](https://codecov.io/gh/rabutler/CRSSIO)
 
 R Package to manage code for manipulating the input and output data for CRSS.
 
