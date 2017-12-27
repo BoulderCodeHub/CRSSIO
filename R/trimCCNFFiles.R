@@ -14,14 +14,16 @@
 #' will still work with other natural flow input files.
 #' 
 #' @note 
-#' Assumes folder numbers will always start at 1 and that all files in the 
-#' folder should be processed.
+#' Assumes folder numbers will always start at 1. Additionally, it only attempts 
+#' to trim files that have expected natural flow or natural salt file names. 
+#' These are the file names returned by `\link{CRSSNFInputNames}()` and 
+#' `\link{CRSSNatSaltInputNames}()`.
 #' 
 #' @param startYear The desired start year. Should be after 1950 and before 2099.
 #' @param endYear The desired end year. Should be after 1950 and before 2099.
 #' @param iFolder The path to the trace files, e.g., '/dmi/VIC/'.
 #' @param nTraces The number of traces to process. The default is 112, which is 
-#' the number of traces in the CMIP3 climate change hydrology.
+#'   the number of traces in the CMIP3 climate change hydrology.
 #' 
 #' @return The number of files that were processed
 #' 
@@ -51,14 +53,22 @@ trimCCNFFiles <- function(startYear, endYear, iFolder, nTraces = 112)
   xx <- simplify2array(
     lapply(allFolders, trimFilesInFolder, startYear, endYear)
   )
-
+  
+  message("\n", "Files sucessfully trimmed.", "\n",
+    "**Do not forget to re-create the hydrology increment trace files.")
+  
   sum(simplify2array(lapply(seq_len(length(xx)), function(x) sum(xx[[x]]))))
 }
 
 #' @keywords internal
 trimFilesInFolder <- function(folder, startYear, endYear)
 {
-  allFiles <- paste0(folder,'/',list.files(folder))
+  allFiles <- list.files(folder)
+  # remove the files that aren't either natural flow, or natural salt files, or 
+  # hydrology increment
+  validFiles <- c(CRSSNFInputNames(), CRSSNatSaltInputNames())
+  allFiles <- allFiles[allFiles %in% validFiles]
+  allFiles <- file.path(folder, allFiles)
   message(paste('Processing:',folder))
   # call trimSindleFile for every file found in the folder
   xx <- simplify2array(lapply(allFiles, trimSingleFile, startYear, endYear))

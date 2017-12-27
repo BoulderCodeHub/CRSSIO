@@ -35,8 +35,10 @@ While the function is typically used on climate change natural flow files, it
 will still work with other natural flow input files.
 }
 \note{
-Assumes folder numbers will always start at 1 and that all files in the
-folder should be processed.
+Assumes folder numbers will always start at 1. Additionally, it only attempts
+to trim files that have expected natural flow or natural salt file names.
+These are the file names returned by \code{\link{CRSSNFInputNames}()} and
+\code{\link{CRSSNatSaltInputNames}()}.
 }
 \examples{
 # Trim all 112 traces found in 'CRSS/dmi/VIC' to start in Jan-2017 and 
