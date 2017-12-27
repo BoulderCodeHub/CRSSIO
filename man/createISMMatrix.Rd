@@ -22,9 +22,9 @@ xts matrix with the number of years/months specified by \code{nYrs}
 and the number of columns equal to the number of years of data in \code{xtsData}
 }
 \description{
-Takes in a matrix of historical data and applies the ISM method to it. Because
-this is typically used to create future hydrology data, the entire matrix
-will have a new start month.
+\code{createISMMatrix()} takes in a matrix of historical data and applies the ISM
+method to it. Because this is typically used to create future hydrology data,
+the entire matrix will have a new start month.
 }
 \details{
 The method can be used on monthly or annual data. If you are applying it to
