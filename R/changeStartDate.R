@@ -47,13 +47,13 @@ changeStartDate <- function(nTrace, folder, startDate)
 	# it for every single file and trace would be extremely annoying
 	issueWarning <- FALSE
 	
-	for(i in 1:nTrace){
+	for (i in seq_len(nTrace)){
 		message(paste('Starting trace:',i,'of',nTrace))
 	
 		currFold <- file.path(folder,paste0('trace',i))
 		# get list of all files contained in the trace folder
 		currFiles <- list.files(currFold)
-		for(j in 1:length(currFiles)){
+		for (j in seq_len(length(currFiles))){
 		  # read in the entire file
 			tmpData <- scan(
 			  file.path(currFold,currFiles[j]), 
