@@ -14,8 +14,8 @@
 #' \code{NA}.
 #' 
 #' @param elevation The elevation (in feet) that will be converted to volume
-#' @param reservoir The reservoir to compute the conversion for. Spaces are removed
-#' from the name, and case is ignored.
+#' @param reservoir The reservoir to compute the conversion for. Spaces are 
+#' removed from the name, and case is ignored.
 #' 
 #' @return Volume in acre-feet, or \code{NA} if the elevation is invalid for the
 #' reservoir.
@@ -31,11 +31,15 @@
 elevation2Volume <- function(elevation, reservoir)
 {
   reservoir <- tolower(gsub(" ", "", reservoir))
-  if(!(reservoir %in% c("navajo", "bluemesa", "flaminggorge", "powell", "mead")))
+  resNames <- c("navajo", "bluemesa", "flaminggorge", "powell", "mead")
+  if(!(reservoir %in% resNames))
     stop("Invalid reservoir")
   
   # evTables are system data for this package
-  e2vFunc <- stats::approxfun(evTables[[reservoir]][,1], evTables[[reservoir]][,2])
+  e2vFunc <- stats::approxfun(
+    evTables[[reservoir]][,1], 
+    evTables[[reservoir]][,2]
+  )
   
   e2vFunc(elevation)
 }

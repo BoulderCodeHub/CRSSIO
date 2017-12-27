@@ -27,31 +27,49 @@ createCRSSInputAddIn <- function() {
                       "))  
     ),
     
-    gadgetTitleBar("Create CRSS Input Files", 
-                   right = miniTitleBarButton("done","Close and Run", primary = TRUE)),
+    gadgetTitleBar(
+      "Create CRSS Input Files", 
+      right = miniTitleBarButton("done","Close and Run", primary = TRUE)
+    ),
     miniContentPanel(
       fillCol(
         h4('Create CRSS Input Files from Observed Natural Flow Record Using the ISM Method'),
         
         h5('1. Select the start and end months of the natural flow record to use the ISM method on. This should be January 1 of some year through December 31 of some year.'),
         fillRow(flex = c(NA,1),
-                dateRangeInput('nfInputYrs', 'Start and End Months:',
-                               start = '1906-01-01',end = '2012-12-31', startview = 'decade'),
+                dateRangeInput(
+                  'nfInputYrs', 
+                  'Start and End Months:',
+                  start = '1906-01-01',
+                  end = '2012-12-31', 
+                  startview = 'decade'
+                ),
                 htmlOutput('startEndErrors')
                 ),
         br(),
         
         h5('2. Select the number of years in the simulation period, i.e., the number of years each trace of data will contain'),
         fillRow(flex = c(NA,1),
-                numericInput('simYrs', 'Simulation Years:',50, min = 1, max = 107, step = 1),
+                numericInput(
+                  'simYrs', 
+                  'Simulation Years:',
+                  50, 
+                  min = 1, 
+                  max = 107, 
+                  step = 1
+                ),
                 htmlOutput('simYrsCheck')
                 ),
         br(),
         
         h5('3. Select the start date of the trace files. (Should be January 31 of some year.)'),
         fillRow(flex = c(NA,1),
-                dateInput('traceStartYear','Traces Start In:',value = '2017-01-31',
-                          startview = "decade"), 
+                dateInput(
+                  'traceStartYear',
+                  'Traces Start In:',
+                  value = '2017-01-31',
+                  startview = "decade"
+                ), 
                 htmlOutput('traceStartCheck')
                 ),
         br(),
@@ -91,16 +109,28 @@ createCRSSInputAddIn <- function() {
     output$startEndErrors <- renderUI({
       errMsg <- ''
       if(!isStartDateValid())
-        errMsg <- paste0(errMsg,"Start date needs to be January 1, some year.",br())
+        errMsg <- paste0(
+          errMsg,
+          "Start date needs to be January 1, some year.",
+          br()
+        )
       
       if(!isStartYearValid())
         errMsg <- paste0(errMsg, "Start year should be after 1906", br())
       
       if(!isEndDateValid())
-        errMsg <- paste0(errMsg,"End date needs to be December 31, some year.", br())
+        errMsg <- paste0(
+          errMsg,
+          "End date needs to be December 31, some year.", 
+          br()
+        )
       
       if(!isEndAfterStart())
-        errMsg <- paste0(errMsg,"The end date should be after the start date.", br())
+        errMsg <- paste0(
+          errMsg,
+          "The end date should be after the start date.", 
+          br()
+        )
    
       div(class = "errorMessage", HTML(errMsg))
     })
@@ -149,7 +179,8 @@ createCRSSInputAddIn <- function() {
     
     isAllInputValid <- reactive({
       isTraceStartValid() & isSimYrsValid() & isOutputFolderValid() &
-        isStartDateValid() & isStartYearValid() & isEndDateValid() & isEndAfterStart()
+        isStartDateValid() & isStartYearValid() & isEndDateValid() & 
+        isEndAfterStart()
     })
     
     output$checkAllErrors <- renderUI({
@@ -163,9 +194,13 @@ createCRSSInputAddIn <- function() {
     # Listen for 'done' events.
     observeEvent(input$done, {
       if(isAllInputValid()){
-        createCRSSDNFInputFiles('CoRiverNF',oFolder = input$selectFolder,
-                              startDate = input$traceStartYear, simYrs = input$simYrs,
-                              recordToUse = input$nfInputYrs)
+        createCRSSDNFInputFiles(
+          'CoRiverNF',
+          oFolder = input$selectFolder,
+          startDate = input$traceStartYear, 
+          simYrs = input$simYrs,
+          recordToUse = input$nfInputYrs
+        )
         message(paste('All trace files have been saved to: ',input$selectFolder))
         stopApp()
       }

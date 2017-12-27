@@ -27,22 +27,78 @@ test_that("all files exist", {
 })
 
 test_that('files created from "CoRiverNF" are the same as from Excel', {
-  expect_equal(as.matrix(read.csv(file.path('tmp/trace1/',CRSSNFInputNames()[rr[1]]),skip=1)),
-               as.matrix(read.csv(file.path(p1,'trace1/', CRSSNFInputNames()[rr[1]]),skip=1)))
-  expect_equal(as.matrix(read.csv(file.path('tmp/trace5/',CRSSNFInputNames()[rr[1]]),skip=1)),
-               as.matrix(read.csv(file.path(p1,'trace5/', CRSSNFInputNames()[rr[1]]),skip=1)))
-  expect_equal(as.matrix(read.csv(file.path('tmp/trace2/',CRSSNFInputNames()[rr[2]]),skip=1)),
-               as.matrix(read.csv(file.path(p1,'trace2/', CRSSNFInputNames()[rr[2]]),skip=1)))
-  expect_equal(as.matrix(read.csv(file.path('tmp/trace3/',CRSSNFInputNames()[rr[3]]),skip=1)),
-               as.matrix(read.csv(file.path(p1,'trace3/', CRSSNFInputNames()[rr[3]]),skip=1)))
-  expect_equal(as.matrix(read.csv(file.path('tmp/trace4/',CRSSNFInputNames()[rr[4]]),skip=1)),
-               as.matrix(read.csv(file.path(p1,'trace4/', CRSSNFInputNames()[rr[4]]),skip=1)))
+  expect_equal(
+    as.matrix(read.csv(
+      file.path('tmp/trace1/',CRSSNFInputNames()[rr[1]]),
+      skip = 1
+    )),
+    as.matrix(read.csv(
+      file.path(p1,'trace1/', CRSSNFInputNames()[rr[1]]), 
+      skip = 1
+    ))
+  )
+  expect_equal(
+    as.matrix(read.csv(
+      file.path('tmp/trace5/',CRSSNFInputNames()[rr[1]]),
+      skip = 1
+    )),
+    as.matrix(read.csv(
+      file.path(p1,'trace5/', CRSSNFInputNames()[rr[1]]),
+      skip = 1
+    ))
+  )
+  expect_equal(
+    as.matrix(read.csv(
+      file.path('tmp/trace2/',CRSSNFInputNames()[rr[2]]),
+      skip = 1
+    )),
+    as.matrix(read.csv(
+      file.path(p1,'trace2/', CRSSNFInputNames()[rr[2]]),
+      skip = 1
+    ))
+  )
+  expect_equal(
+    as.matrix(read.csv(
+      file.path('tmp/trace3/',CRSSNFInputNames()[rr[3]]),
+      skip = 1
+    )),
+    as.matrix(read.csv(
+      file.path(p1,'trace3/', CRSSNFInputNames()[rr[3]]),
+      skip = 1
+    ))
+  )
+  expect_equal(
+    as.matrix(read.csv(
+      file.path('tmp/trace4/',CRSSNFInputNames()[rr[4]]),
+      skip = 1
+    )),
+    as.matrix(read.csv(
+      file.path(p1,'trace4/', CRSSNFInputNames()[rr[4]]),
+      skip = 1
+    ))
+  )
 })
 
 test_that('ism files match each other as expected', {
-  expect_equal(as.matrix(read.csv(file.path('tmp/trace1/',CRSSNFInputNames()[rr[1]]),skip=1))[13:24],
-               as.matrix(read.csv(file.path(p1,'trace2/', CRSSNFInputNames()[rr[1]]),skip=1))[1:12])
-  expect_equal(as.matrix(read.csv(file.path('tmp/trace1/',CRSSNFInputNames()[rr[2]]),skip=1))[49:60],
-               as.matrix(read.csv(file.path(p1,'trace5/', CRSSNFInputNames()[rr[2]]),skip=1))[1:12])
+  expect_equal(
+    as.matrix(read.csv(
+      file.path('tmp/trace1/',CRSSNFInputNames()[rr[1]]),
+      skip = 1
+    ))[13:24],
+    as.matrix(read.csv(
+      file.path(p1,'trace2/', CRSSNFInputNames()[rr[1]]),
+      skip = 1
+    ))[1:12]
+  )
+  expect_equal(
+    as.matrix(read.csv(
+      file.path('tmp/trace1/',CRSSNFInputNames()[rr[2]]),
+      skip = 1
+    ))[49:60],
+    as.matrix(read.csv(
+      file.path(p1,'trace5/', CRSSNFInputNames()[rr[2]]),
+      skip = 1
+    ))[1:12]
+  )
 })
 

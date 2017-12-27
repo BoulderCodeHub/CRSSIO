@@ -4,16 +4,25 @@
 # variable names after getting data from rdf
 slotNames <- function()
 {
-	r <- c("SummaryOutputData.LBNormalCondition",
-		"SummaryOutputData.MidElevationReleaseAt823","SummaryOutputData.LBShortageConditions",
-		"SummaryOutputData.UpperBalancingBelow823","SummaryOutputData.LBSurplusConditions",
-		"SummaryOutputData.EqualizationAt823","SummaryOutputData.UpperBalancingAbove823",
-		"SummaryOutputData.UpperBalancingAt823","SummaryOutputData.MidElevationReleaseAt748",
-		"SummaryOutputData.EqualizationAbove823","SummaryOutputData.LowerBalancingAbove823",
-		"SummaryOutputData.LowerBalancingBelow823","SummaryOutputData.LowerBalancingAt823",
+	r <- c(
+	  "SummaryOutputData.LBNormalCondition",
+		"SummaryOutputData.MidElevationReleaseAt823",
+		"SummaryOutputData.LBShortageConditions",
+		"SummaryOutputData.UpperBalancingBelow823",
+		"SummaryOutputData.LBSurplusConditions",
+		"SummaryOutputData.EqualizationAt823",
+		"SummaryOutputData.UpperBalancingAbove823",
+		"SummaryOutputData.UpperBalancingAt823",
+		"SummaryOutputData.MidElevationReleaseAt748",
+		"SummaryOutputData.EqualizationAbove823",
+		"SummaryOutputData.LowerBalancingAbove823",
+		"SummaryOutputData.LowerBalancingBelow823",
+		"SummaryOutputData.LowerBalancingAt823",
 		"SummaryOutputData.LBFloodControlSurplus",
-		"SummaryOutputData.LBShortageStep1","SummaryOutputData.LBShortageStep2",
-		"SummaryOutputData.LBShortageStep3")
+		"SummaryOutputData.LBShortageStep1",
+		"SummaryOutputData.LBShortageStep2",
+		"SummaryOutputData.LBShortageStep3"
+	)
 	
 	r
 }
@@ -21,7 +30,9 @@ slotNames <- function()
 # description want to use in the output file, ordered in the same name as vNames
 vDescAll <- function()
 {
-	r <- c('Normal Year or ICS Surplus Condition', 'Mid-Elevation Balancing - annual release = 8.23 maf',
+	r <- c(
+	  'Normal Year or ICS Surplus Condition', 
+	  'Mid-Elevation Balancing - annual release = 8.23 maf',
 		'Shortage Condition - any amount (Mead <= 1,075 ft)',
 		'Upper Elevation Balancing - annual release < 8.23 maf',
 		'Surplus Condition - any amount (Mead>= 1,145 ft)',
@@ -35,40 +46,45 @@ vDescAll <- function()
 		'Lower Elevation Balancing - annual release = 8.23 maf',
 		'Surplus - Flood Control','Shortage - 1st Level (Mead <= 1,075 and >= 1,050',
 		'Shortage - 2nd Level (Mead < 1,050 and >= 1,025',
-		'Shortage - 3rd Level (Mead < 1,025)','Equalization Tier','Upper Elevation Balancing Tier',
-		'Mid-Elevation Release Tier','Lower Elevation Balancing Tier')
+		'Shortage - 3rd Level (Mead < 1,025)',
+		'Equalization Tier','Upper Elevation Balancing Tier',
+		'Mid-Elevation Release Tier','Lower Elevation Balancing Tier'
+	)
 	r
 }
 
 vShort <- function()
 {
-	r <- c('lbNormal','mer823','lbShortage','uebLt823','lbSurplus','eq823','uebGt823','ueb823',
-         'mer748','eq','lebGt823','lebLt823','leb823','lbFcSurplus','lbShortageStep1',
-         'lbShortageStep2','lbShortageStep3')
+	r <- c('lbNormal','mer823','lbShortage','uebLt823','lbSurplus','eq823',
+	       'uebGt823','ueb823','mer748','eq','lebGt823','lebLt823','leb823',
+	       'lbFcSurplus','lbShortageStep1','lbShortageStep2','lbShortageStep3')
 	r
 }
 
 vShortAll <- function()
 {
-	r <- c('lbNormal','mer823','lbShortage','uebLt823','lbSurplus','eq823','uebGt823','ueb823',
-         'mer748','eq','lebGt823','lebLt823','leb823','lbFcSurplus','lbShortageStep1',
-         'lbShortageStep2','lbShortageStep3','eqAll','uebAll','merAll','lebAll')
+	r <- c('lbNormal','mer823','lbShortage','uebLt823','lbSurplus','eq823',
+	       'uebGt823','ueb823', 'mer748','eq','lebGt823','lebLt823','leb823',
+	       'lbFcSurplus','lbShortageStep1', 'lbShortageStep2','lbShortageStep3',
+	       'eqAll','uebAll','merAll','lebAll')
 	r
 }
 
 shortOrderFull <- function()
 {
-	r <- c('eqAll','eq','eq823','uebAll','uebGt823','ueb823','uebLt823','merAll','mer823','mer748',
-		'lebAll','lebGt823','leb823','lebLt823','lbShortage','lbShortageStep1','lbShortageStep2',
-    'lbShortageStep3','lbSurplus','lbFcSurplus','lbNormal')
+	r <- c('eqAll','eq','eq823','uebAll','uebGt823','ueb823','uebLt823','merAll',
+	       'mer823','mer748', 'lebAll','lebGt823','leb823','lebLt823',
+	       'lbShortage','lbShortageStep1','lbShortageStep2', 'lbShortageStep3',
+	       'lbSurplus','lbFcSurplus','lbNormal')
 	r
 }
 
 shortOrderLimit <- function()
 {
-	r <- c('eqAll','eq','eq823','uebAll','uebGt823','ueb823','uebLt823','merAll','mer823','mer748',
-		'lebAll','lbShortage','lbShortageStep1','lbShortageStep2','lbShortageStep3','lbSurplus',
-    'lbFcSurplus','lbNormal')
+	r <- c('eqAll','eq','eq823','uebAll','uebGt823','ueb823','uebLt823','merAll',
+	       'mer823','mer748', 'lebAll','lbShortage','lbShortageStep1',
+	       'lbShortageStep2','lbShortageStep3','lbSurplus','lbFcSurplus',
+	       'lbNormal')
 	r
 }
 
@@ -143,15 +159,21 @@ createSysCondTable <- function(zz, yrs)
   # then post a warning message that the scenarios will be averaged together 
   # for creating the table
   if(!is.null(zz$Scenario) & length(levels(as.factor(zz$Scenario))) > 1){
-    warning(paste('There are',length(levels(as.factor(zz$Scenario))),
-                  'Scenarios in the data. Please note, these scenarios will be averaged together when creating the system conditions table.'))
+    warning(paste(
+      'There are', 
+      length(levels(as.factor(zz$Scenario))),
+      "Scenarios in the data.\n",
+      "Please note, these scenarios will be averaged together when creating the system conditions table."
+    ))
   }
   
   # check that all of the necesary variables are present
   if(!all(vShort() %in% as.character(levels(as.factor(zz$Variable))))) {
     tmp <- vShort()[!(vShort() %in% as.character(levels(as.factor(zz$Variable))))]
-    stop("The following variables are not found in the data frame passed to createSysCondTable():\n",
-         paste(tmp, collapse = ", "))
+    stop(
+      "The following variables are not found in the data frame passed to createSysCondTable():\n",
+      paste(tmp, collapse = ", ")
+    )
   }
   
   if(!all(yrs %in% zz$Year)){
@@ -161,8 +183,10 @@ createSysCondTable <- function(zz, yrs)
     if(length(yrs) == 0)
       stop("None of the yrs exist in the data")
     
-    warning("All years (yrs) are not in the data frame passed to createSysCondTable()\n",
-            "Will only evaluate for the years that are in the data frame")
+    warning(
+      "All years (yrs) are not in the data frame passed to createSysCondTable()\n",
+      "Will only evaluate for the years that are in the data frame"
+    )
    
   }
   

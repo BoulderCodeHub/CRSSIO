@@ -22,12 +22,18 @@ test_that('createISMMatrix returns currect dimensions',{
   expect_equal(dim(createISMMatrix(tstData,'2016-01',nYrs = 3)),c(36,4))
   expect_equal(dim(createISMMatrix(tstData[1:36],'2016-01',nYrs = 2)),c(24,3))
   # test the annual data
-  expect_equal(dim(createISMMatrix(t2[1:5], "2016-12", nYrs = NA, monthly = FALSE)),
-               c(5,5))
-  expect_equal(dim(createISMMatrix(t2, "2016-12", nYrs = 5, monthly = FALSE)),
-               c(5,6))
-  expect_equal(dim(createISMMatrix(t2[1:4], "2016-12", nYrs = 3, monthly = FALSE)),
-               c(3,4))
+  expect_equal(
+    dim(createISMMatrix(t2[1:5], "2016-12", nYrs = NA, monthly = FALSE)),
+    c(5,5)
+  )
+  expect_equal(
+    dim(createISMMatrix(t2, "2016-12", nYrs = 5, monthly = FALSE)),
+    c(5,6)
+  )
+  expect_equal(
+    dim(createISMMatrix(t2[1:4], "2016-12", nYrs = 3, monthly = FALSE)),
+    c(3,4)
+  )
 })
 
 test_that('createISMMatrix returns an expected matrix', {
@@ -89,6 +95,15 @@ test_that("getYTISMData works", {
   expect_equal(index(yt2), zoo::as.yearmon("Dec 2000") + 0:9)
   expect_equivalent(yt1[1,], CRSSIO:::sacYT["1906/2015"])
   expect_equivalent(yt2[1,], CRSSIO:::sacYT["1988/2012"])
-  expect_equivalent(yt11, c(unclass(CRSSIO:::sacYT["2015"]), unclass(CRSSIO:::sacYT["1906/2014"])))
-  expect_equivalent(yt21, c(unclass(CRSSIO:::sacYT["2010/2012"]), unclass(CRSSIO:::sacYT["1988/1994"])))
+  expect_equivalent(
+    yt11, 
+    c(unclass(CRSSIO:::sacYT["2015"]), unclass(CRSSIO:::sacYT["1906/2014"]))
+  )
+  expect_equivalent(
+    yt21, 
+    c(
+      unclass(CRSSIO:::sacYT["2010/2012"]), 
+      unclass(CRSSIO:::sacYT["1988/1994"])
+    )
+  )
 })

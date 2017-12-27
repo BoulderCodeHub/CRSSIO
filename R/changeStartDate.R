@@ -69,7 +69,8 @@ changeStartDate <- function(nTrace, folder, startDate)
 			
 			#if it doesn't exist, then can just skip this file
 			if(!is.na(startKeyword)) {
-			  issueWarning <- issueWarning | as.POSIXct(timeInfo) < as.POSIXct(tmpData$atts[2,startKeyword])
+			  issueWarning <- issueWarning | 
+			    (as.POSIXct(timeInfo) < as.POSIXct(tmpData$atts[2,startKeyword]))
 			  
 			  # replace existing start_date
 			  tmpData$atts[2,startKeyword] <- timeInfo
@@ -90,9 +91,11 @@ changeStartDate <- function(nTrace, folder, startDate)
 	}
 	
 	if(issueWarning) 
-	  warning("The new start date is before the original start date.\n",
-	          "  This may result in not a long enough time series in the new run.\n",
-	          "  Consider using createCRSSDNFInputFiles() instead.")
+	  warning(
+	    "The new start date is before the original start date.\n",
+	    "  This may result in not a long enough time series in the new run.\n",
+	    "  Consider using createCRSSDNFInputFiles() instead."
+	  )
 	
 	invisible(nTrace)
 }
@@ -122,13 +125,13 @@ changeStartDateForEvapAndAddZeros <- function(nTrace, folder, startDate, NZeros)
 	  'Powell.River_Evaporation_Coefficient'
 	)
 	
-	for(i in 1:nTrace){
+	for (i in seq_len(nTrace)){
 		message(paste('Starting trace:',i,'of',nTrace))
 		currFold <- paste(folder,'/trace',i,'/',sep = '')
 		# get list of all files contained in the trace folder
-		currFiles = list.files(currFold)
-		for(j in 1:length(currFiles)){
-			if(!(currFiles[j] %in% powellFiles)){
+		currFiles <- list.files(currFold)
+		for (j in seq_len(length(currFiles))){
+			if (!(currFiles[j] %in% powellFiles)){
 				tmpData <- as.matrix(utils::read.table(
 				  paste(currFold,currFiles[j],sep = ''),
 				  sep = '\t',

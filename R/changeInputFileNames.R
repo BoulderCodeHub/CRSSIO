@@ -25,15 +25,22 @@
 #' }
 #' 
 #' @export
-copyAndChangeNFFileNames <- function(iFolder, oFolder, nTrace, fromNames, toNames)
+copyAndChangeNFFileNames <- function(iFolder, 
+                                     oFolder, 
+                                     nTrace, 
+                                     fromNames, 
+                                     toNames)
 {
   
-  for(i in 1:nTrace){
+  for (i in seq_len(nTrace)){
     fromPath <- paste(iFolder,'trace',i,'/',sep = '')
     toPath <- paste(oFolder,'trace',i,'/',sep = '')
     dir.create(toPath)
-    for(j in 1:length(fromNames)){
-      file.copy(paste(fromPath,fromNames[j],sep = ''),paste(toPath, toNames[j],sep = ''))
+    for (j in seq_len(length(fromNames))){
+      file.copy(
+        paste(fromPath,fromNames[j],sep = ''),
+        paste(toPath, toNames[j],sep = '')
+      )
     }
   }
 } 

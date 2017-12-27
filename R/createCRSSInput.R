@@ -138,7 +138,7 @@ createCRSSDNFInputFiles <- function(iFile,
   
 	# number of months in each trace
 	nM <- simYrs * 12
-	headerInfo = paste('start_date: ',startDate, ' 24:00\nunits: acre-ft/month',sep = '')
+	headerInfo <- paste0("start_date: ",startDate, " 24:00\nunits: acre-ft/month")
 	
 	# create all directories
 	for(i in 1:nT){
@@ -147,7 +147,10 @@ createCRSSDNFInputFiles <- function(iFile,
 	}
 
 	# for each node, write out all of the trace files
-	sapply(1:29, function(x) writeNFFilesByNode(nf[[x]], oFiles[x], oFolder, headerInfo))
+	sapply(
+	  1:29, 
+	  function(x) writeNFFilesByNode(nf[[x]], oFiles[x], oFolder, headerInfo)
+	)
 
 	# for each trace, write out all of the trace and supply scenario number files
 	message("Beginning to write node: supply scenario and trace number")
@@ -172,7 +175,8 @@ createCRSSDNFInputFiles <- function(iFile,
 	traceLength <- paste('trace length:', simYrs, 'years')
 	startYear <- paste('original start date:', startDate)
 	oText <- paste('Natural Flow Data', intro, '----------', dateCreate, 
-	               createBy, periodToUse, traceLength, startYear, createFrom, sep = '\n')
+	               createBy, periodToUse, traceLength, startYear, createFrom, 
+	               sep = '\n')
 	
 	# write out the README in the top level folder
 	utils::write.table(oText, file.path(oFolder, 'README.txt'), quote = FALSE, 

@@ -29,22 +29,24 @@ getAllISMMatrices <- function(nfMat, startMonth, nYrs)
 #' 
 readAndFormatNFExcel <- function(iFile)
 {
-  message('Starting to read in natural flow Excel file. Please be patient this may take several minutes.')
+  message("Starting to read in natural flow Excel file.", "\n",
+          "Please be patient this may take several minutes.")
 
   nf <- xlsx::read.xlsx(iFile, sheetName = 'Intervening Natural Flow')
-  # going to take a lot of trimming, etc. to get rid of all the labels we don't need for
-  # the flow matrix
+  # going to take a lot of trimming, etc. to get rid of all the labels we don't 
+  # need for the flow matrix
   message('Finished reading in natural flow Excel file.')
 
   # trim off extraneous data
   # know the first 7 rows are not needed
   nf <- as.matrix(nf[8:(nrow(nf)),2:31]) 
-  # remove any rows that are NA since there could be one or more at the bottom of the file
+  # remove any rows that are NA since there could be one or more at the 
+  # bottom of the file
   notNaRows <- which(!is.na(nf[,1]))
   nf <- nf[notNaRows,]
   # now remove the bottom row since this is the average for the period
   nf <- nf[1:(nrow(nf)-1),]
-  if(nrow(nf)%%12 != 0){
+  if(nrow(nf) %% 12 != 0){
     stop('error in formatting the table resulted in a matrix that is not divisible by 12 months')
   }
 
@@ -60,14 +62,15 @@ readAndFormatNFExcel <- function(iFile)
 #' @keywords internal
 writeSingleFile <- function(xData, fPath, headerInfo)
 {
-  colnames(xData) = headerInfo
-  utils::write.table(xData, file = fPath,quote = F, row.names = FALSE)
+  colnames(xData) <- headerInfo
+  utils::write.table(xData, file = fPath, quote = FALSE, row.names = FALSE)
 }
 
 #' Write out all of the trace files for a given node
 #' 
-#' @param nfXts Natural flow data as a matrix for a single node. The number of columns
-#' is the number of traces that will be written out to oFolder/trace[n]/oFile
+#' @param nfXts Natural flow data as a matrix for a single node. The number of 
+#' columns is the number of traces that will be written out to 
+#' oFolder/trace[n]/oFile
 #' @param oFile File name that each file will be saved as
 #' @param oFolder Folder location to write files to
 #' @keywords internal
@@ -76,7 +79,7 @@ writeNFFilesByNode <- function(nfXts, oFile, oFolder, headerInfo)
   message('Beginning to write node: ',oFile)
 
   sapply(
-    1:ncol(nfXts), 
+    seq_len(ncol(nfXts)), 
     function(x) writeSingleFile(
       nfXts[,x], 
       file.path(oFolder,paste0('trace',x),oFile),
@@ -85,8 +88,8 @@ writeNFFilesByNode <- function(nfXts, oFile, oFolder, headerInfo)
   )
 }
 
-#' write out the trace number and supply scenario number, to a given trace folder
-#' folderPath should be the top level folder, e.g., dmi/NFSinput
+#' write out the trace number and supply scenario number, to a given trace 
+#' folder folderPath should be the top level folder, e.g., dmi/NFSinput
 #' @keywords internal
 writeTraceSupplyNumbers <- function(traceNum, supplyScenNum, folderPath)
 {
@@ -101,12 +104,20 @@ writeTraceSupplyNumbers <- function(traceNum, supplyScenNum, folderPath)
   supplyText <- matrix(c('units: NONE', supplyScenNum), ncol = 1)
   folderName <- file.path(folderPath, paste0('trace', traceNum))
   
-  utils::write.table(traceText, 
-                     file = file.path(folderName, getOption('crssio.traceNumberSlot')),
-                     quote = F, row.names = F, col.names = FALSE)
-  utils::write.table(supplyText, 
-                     file = file.path(folderName, getOption('crssio.supplyScenarioSlot')),
-                     quote = F, row.names = F, col.names = FALSE)
+  utils::write.table(
+    traceText, 
+    file = file.path(folderName, getOption('crssio.traceNumberSlot')),
+    quote = FALSE, 
+    row.names = FALSE, 
+    col.names = FALSE
+  )
+  utils::write.table(
+    supplyText, 
+    file = file.path(folderName, getOption('crssio.supplyScenarioSlot')),
+    quote = FALSE, 
+    row.names = FALSE, 
+    col.names = FALSE
+  )
   
 }
 
@@ -119,24 +130,34 @@ writeHydroIncrement <- function(traceNum, nYrs, startDate, folderPath){
   # the hydrology increment data starts with the trace number, and increments
   # by one every year until the end of the simulation
   # it is monthly data, so each index repeats 12 times
-  tt <- as.vector(t(matrix(rep(traceNum:(nYrs + traceNum - 1), 12), byrow = FALSE, ncol = 12)))
+  tt <- as.vector(t(matrix(
+    rep(traceNum:(nYrs + traceNum - 1), 12), 
+    byrow = FALSE, 
+    ncol = 12
+  )))
   folderName <- file.path(folderPath, paste0('trace', traceNum))
   startInfo <- paste('start_date:', startDate, '24:00')
   tt <- matrix(c(startInfo, 'units: NONE', as.character(tt)), ncol = 1)
-  utils::write.table(tt, quote = F, row.names = F, col.names = FALSE,
-                     file = file.path(folderName, getOption('crssio.hydroIncrement')))
+  utils::write.table(
+    tt, 
+    quote = FALSE, 
+    row.names = FALSE, 
+    col.names = FALSE,
+    file = file.path(folderName, getOption('crssio.hydroIncrement'))
+  )
 }
 
 #' Write the Sacramento Year Type Data
 #' 
-#' \code{writeSacYT} writes out the Sacramento year type data for a single trace, 
-#' given a matrix of data for all traces.
+#' \code{writeSacYT} writes out the Sacramento year type data for a single 
+#' trace, given a matrix of data for all traces.
 #' 
 #' @param traceNum The trace of data to save
 #' @param ytData A matrix of all traces of data
 #' @param startDate The start date of the trace file as a character. Should be
 #' in yyyy-mm-dd format, which is what RiverWare expects.
-#' @param folderPath The folder path to the directory containing the trace folders.
+#' @param folderPath The folder path to the directory containing the 
+#' trace folders.
 #' 
 #' @keywords internal
 #' @noRd
@@ -149,17 +170,22 @@ writeSacYT <- function(traceNum, ytData, startDate, folderPath)
     "units: NONE", 
     as.character(ytData[,traceNum])),
     ncol = 1)
-  utils::write.table(tt, quote = FALSE, row.names = FALSE, col.names = FALSE, 
-                     file = file.path(folderName, getOption("crssio.sacYTSlot")))
+  utils::write.table(
+    tt, 
+    quote = FALSE, 
+    row.names = FALSE, 
+    col.names = FALSE, 
+    file = file.path(folderName, getOption("crssio.sacYTSlot"))
+  )
 }
 
 #' Create the Sacramento Year Type ISM Data
 #' 
-#' \code{getYTISMData} creates ISM matrix for the Sacramento Year Type data, using
-#' the specified historical period.
+#' \code{getYTISMData} creates ISM matrix for the Sacramento Year Type data, 
+#' using the specified historical period.
 #' 
-#' @param startDate The start date for the ISM matrix. Should be able to be converted
-#' to a \code{yearmon} class.
+#' @param startDate The start date for the ISM matrix. Should be able to be 
+#' converted to a \code{yearmon} class.
 #' @param simYrs The number of years to create the ISM matrix for.
 #' @param y1 The start year of the historical record to use.
 #' @param y2 The ned year of the historical record to use.

@@ -64,11 +64,15 @@ trimFilesInFolder <- function(folder, startYear, endYear)
 trimSingleFile <- function(ff, startYear, endYear)
 {
   # read in the flow or salinity data
-  nf = as.matrix(utils::read.table(ff, sep = '\t', skip = 2))
-  # read in the header info and maintain units; necessary so the code works for flow and salinity files
-  headerInfo = scan(ff, what = 'char', nlines = 2, sep = '\t', quiet = T)
-  dataStartYear <- as.numeric(strsplit(strsplit(headerInfo[1],' ',fixed = T)[[1]][2], 
-                                       '-',fixed = T)[[1]][1])
+  nf <- as.matrix(utils::read.table(ff, sep = '\t', skip = 2))
+  # read in the header info and maintain units; 
+  # necessary so the code works for flow and salinity files
+  headerInfo <- scan(ff, what = 'char', nlines = 2, sep = '\t', quiet = T)
+  dataStartYear <- as.numeric(strsplit(
+    strsplit(headerInfo[1],' ',fixed = T)[[1]][2], 
+    '-',
+    fixed = T
+  )[[1]][1])
   
   # check to see if the year you want to start the data in is after the year that
   # the data actual starts in
@@ -85,7 +89,9 @@ trimSingleFile <- function(ff, startYear, endYear)
   nfZ <- zoo::zoo(nf,nf.months)
   
   # create subset of months to trim data
-  trimMonths <- zoo::as.yearmon(startYear + seq(0,(endYear-startYear+1)*12-1)/12)
+  trimMonths <- zoo::as.yearmon(
+    startYear + seq(0, (endYear - startYear + 1) * 12 - 1) / 12
+  )
   nfZ <- nfZ[trimMonths]
   nf <- as.matrix(nfZ)
   
@@ -97,6 +103,6 @@ trimSingleFile <- function(ff, startYear, endYear)
   
   colnames(nf) <- headerInfo
   # writes out to the same folder it reads in from
-  utils::write.table(nf, ff,quote = F, row.names = F)
+  utils::write.table(nf, ff,quote = FALSE, row.names = FALSE)
   1
 }

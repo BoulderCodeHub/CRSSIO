@@ -33,18 +33,25 @@ file.copy(f4.o, f4)
 
 # make sure errors are working properly
 test_that('trimSingleFile errors out correctly', {
-  expect_error(trimSingleFile(f1, 2016, 2020), 
-               "startYear is before the actual start year listed in the files you are trying to trim in iFolder")
-  expect_error(trimSingleFile(f2, 2017, 2025),
-               "endYear is after the last year of the data in iFolder.")
+  expect_error(
+    trimSingleFile(f1, 2016, 2020), 
+    "startYear is before the actual start year listed in the files you are trying to trim in iFolder"
+  )
+  expect_error(
+    trimSingleFile(f2, 2017, 2025),
+    "endYear is after the last year of the data in iFolder."
+  )
 })
 
-test_that('trimCCNFFiles errors out if startYear or endYear are outside of 1950-2099', {
-  expect_error(trimCCNFFiles(1940, 2060, 'dummy/folder', 112), 
+test_that(
+  'trimCCNFFiles errors out if startYear or endYear are outside of 1950-2099', 
+  {
+    expect_error(trimCCNFFiles(1940, 2060, 'dummy/folder', 112), 
                "startYear should not be before 1950")
-  expect_error(trimCCNFFiles(2010, 2100, 'dummy/folder', 112),
+    expect_error(trimCCNFFiles(2010, 2100, 'dummy/folder', 112),
                "endYear should not be after 2099")
-})
+  }
+)
 
 zz <- trimSingleFile(f1, 2017, 2020)
 zz <- trimSingleFile(f2, 2018, 2020)
@@ -67,7 +74,13 @@ test_that('single files match subset of untrimmed data', {
   expect_equal(readNF(f4)[,], readNF(f4.o)[,])
 })
 
-readHeader <- function(ff) scan(ff, what = 'char', nlines = 2, sep = '\t', quiet = T)
+readHeader <- function(ff) scan(
+  ff, 
+  what = 'char', 
+  nlines = 2, 
+  sep = '\t', 
+  quiet = TRUE
+)
 
 test_that('start date is correctly set in trimmed data', {
   expect_equal(readHeader(f1)[1],"start_date: 2017-1-31 24:00")

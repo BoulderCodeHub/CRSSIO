@@ -189,12 +189,12 @@ CRSSNatSaltInputNames <- function(version=2)
 #' \code{nfGageNames} returns a vector with the CRSS natural flow node USGS gage
 #' names in the correct node order.
 #' 
-#' This function returns a vector with the USGS gage names used by CRSS corresponding to the
-#' the natural flow basins. The order matches the node order used by Reclamation and
-#' CRSS and thus should not be modified.
+#' This function returns a vector with the USGS gage names used by CRSS 
+#' corresponding to the natural flow basins. The order matches the node order 
+#' used by Reclamation and CRSS and thus should not be modified.
 #' 
-#' The gage names returned here, match the CRSS natural inflow slot names returned by 
-#' \code{\link{CRSSNFInputNames}}
+#' The gage names returned here, match the CRSS natural inflow slot names 
+#' returned by \code{\link{CRSSNFInputNames}}
 #' 
 #' @return Vector of characters (file names).
 #' @examples
@@ -208,21 +208,36 @@ CRSSNatSaltInputNames <- function(version=2)
 #' @export
 nfGageNames <- function()
 {
-  return(c("Colorado River At Glenwood Springs, CO", "Colorado River Near Cameo, CO",
-    "Taylor River Below Taylor Park Reservoir, CO", "Gunnision River Above Blue Mesa Reservoir,CO",
-    "Gunnison River At Crystal Reservoir,CO", "Gunnison River Near Grand Junction, CO",
-    "Dolores River Near Cisco, UT", "Colorado River Near Cisco UT",
-    "Green R Bel Fontenelle Res WY", "Green R. Nr Green River, WY",
-    "Green River Near Greendale, UT", "Yampa River Near Maybell, CO",
-    "Little Snake River Near Lily, CO", "Duchesne River Near Randlett, UT",
-    "White River Near Watson, UT", "Green River At Green River, UT",
-    "San Rafael River Near Green River, UT", "San Juan River Near Archuleta,NM",
-    "San Juan River Near Bluff, UT", "Colorado R At Lees Ferry, AZ",
-    "Paria R At Lees Ferry, AZ", "Little Colorado River Near Cameron, AZ",
-    "Colorado River Near Grand Canyon, AZ", "Virgin River At Littlefield, AZ",
-    "Colorado River Below Hoover Dam, AZ-NV", "Colorado River Below Davis Dam, AZ-NV",
-    "Bill Williams River Below Alamo Dam, AZ", "Colorado River Below Parker Dam, AZ-CA",
-    "Colorado River Above Imperial Dam, AZ"))
+  c("Colorado River At Glenwood Springs, CO", 
+    "Colorado River Near Cameo, CO",
+    "Taylor River Below Taylor Park Reservoir, CO", 
+    "Gunnision River Above Blue Mesa Reservoir,CO",
+    "Gunnison River At Crystal Reservoir,CO", 
+    "Gunnison River Near Grand Junction, CO",
+    "Dolores River Near Cisco, UT", 
+    "Colorado River Near Cisco UT",
+    "Green R Bel Fontenelle Res WY", 
+    "Green R. Nr Green River, WY",
+    "Green River Near Greendale, UT", 
+    "Yampa River Near Maybell, CO",
+    "Little Snake River Near Lily, CO", 
+    "Duchesne River Near Randlett, UT",
+    "White River Near Watson, UT", 
+    "Green River At Green River, UT",
+    "San Rafael River Near Green River, UT", 
+    "San Juan River Near Archuleta,NM",
+    "San Juan River Near Bluff, UT", 
+    "Colorado R At Lees Ferry, AZ",
+    "Paria R At Lees Ferry, AZ", 
+    "Little Colorado River Near Cameron, AZ",
+    "Colorado River Near Grand Canyon, AZ", 
+    "Virgin River At Littlefield, AZ",
+    "Colorado River Below Hoover Dam, AZ-NV", 
+    "Colorado River Below Davis Dam, AZ-NV",
+    "Bill Williams River Below Alamo Dam, AZ", 
+    "Colorado River Below Parker Dam, AZ-CA",
+    "Colorado River Above Imperial Dam, AZ"
+  )
 }
 
 #' Get vector of CRSS natural inflow shorthand names
@@ -230,13 +245,14 @@ nfGageNames <- function()
 #' \code{nfShortNames} returns a vector with the CRSS natural flow node 
 #' shorthand names in the correct node order.
 #' 
-#' For many purposes, it is desirable to have shorthand names for the natural flow nodes
-#' used in CRSS. This function returns a vector with the shorthand names used by CRSS corresponding to the
-#' the natural flow basins. The order matches the node order used by Reclamation and
-#' CRSS and thus should not be modified.
+#' For many purposes, it is desirable to have shorthand names for the natural 
+#' flow nodes used in CRSS. This function returns a vector with the shorthand 
+#' names used by CRSS corresponding to the the natural flow basins. The order 
+#' matches the node order used by Reclamation and CRSS and thus should not be 
+#' modified.
 #' 
-#' The shorthand names returned here, match the CRSS natural inflow slot names returned by 
-#' \code{\link{CRSSNFInputNames}}
+#' The shorthand names returned here, match the CRSS natural inflow slot names 
+#' returned by \code{\link{CRSSNFInputNames}}
 #' 
 #' @return Vector of characters (file names).
 #' @examples
@@ -252,12 +268,10 @@ nfGageNames <- function()
 #' @export
 nfShortNames <- function()
 {
-  return(c("GlenwoodSprings", "Cameo", "TaylorPark", "BlueMesa",
-           "Crystal", "GrandJunction", "CiscoDolores", "CiscoColorado",
-           "Fontenelle", "GreenRiverWY", "Greendale", "Maybell",
-           "Lily", "Randlett", "Watson", "GreenRiverUTGreen",
-           "GreenRiverUTSanRafael", "Archuleta",
-           "Bluff", "LeesFerry", "LeesFerryParia", "Cameron",
-           "GrandCanyon", "Littlefield","Hoover", "Davis",
-           "Alamo", "Parker", "Imperial"))
+  c("GlenwoodSprings", "Cameo", "TaylorPark", "BlueMesa", "Crystal", 
+    "GrandJunction", "CiscoDolores", "CiscoColorado", "Fontenelle", 
+    "GreenRiverWY", "Greendale", "Maybell", "Lily", "Randlett", "Watson", 
+    "GreenRiverUTGreen", "GreenRiverUTSanRafael", "Archuleta", "Bluff", 
+    "LeesFerry", "LeesFerryParia", "Cameron", "GrandCanyon", "Littlefield",
+    "Hoover", "Davis", "Alamo", "Parker", "Imperial")
 }
