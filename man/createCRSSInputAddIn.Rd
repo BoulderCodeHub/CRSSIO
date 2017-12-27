@@ -7,8 +7,8 @@
 createCRSSInputAddIn()
 }
 \description{
-\code{createCRSSInputAddIn} is accessed via a RStudio Addin. It is a GUI 
-(Shiny Gadget) used to set key parameters of \code{\link{createCRSSDNFInputFiles}} 
+\code{createCRSSInputAddIn} is accessed via a RStudio Addin. It is a GUI
+(Shiny Gadget) used to set key parameters of \code{\link{createCRSSDNFInputFiles}}
 before running it.
 }
 \details{

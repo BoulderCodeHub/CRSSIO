@@ -9,25 +9,25 @@ elevation2Volume(elevation, reservoir)
 \arguments{
 \item{elevation}{The elevation (in feet) that will be converted to volume}
 
-\item{reservoir}{The reservoir to compute the conversion for. Spaces are removed
-from the name, and case is ignored.}
+\item{reservoir}{The reservoir to compute the conversion for. Spaces are
+removed from the name, and case is ignored.}
 }
 \value{
 Volume in acre-feet, or \code{NA} if the elevation is invalid for the
 reservoir.
 }
 \description{
-\code{elevation2Volume} computes the volume for a given elevation for a 
+\code{elevation2Volume} computes the volume for a given elevation for a
 particular reservoir.
 }
 \details{
-Elevation is assumed to be provided in feet, and the volume will be returned 
-in acre-feet. Currently, the function will work for Flaming Gorge, Navajo, 
-Blue Mesa, Powell, and Mead reservoirs. The elevation-volume tables contain 
+Elevation is assumed to be provided in feet, and the volume will be returned
+in acre-feet. Currently, the function will work for Flaming Gorge, Navajo,
+Blue Mesa, Powell, and Mead reservoirs. The elevation-volume tables contain
 data for 0.5 foot increments. Volume is linearly interpolated for sub 0.5
 foot values of elevation.
 
-If the elevation is beyond the range of the resevoir, the function returns 
+If the elevation is beyond the range of the resevoir, the function returns
 \code{NA}.
 }
 \examples{

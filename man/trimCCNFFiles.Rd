@@ -13,30 +13,34 @@ trimCCNFFiles(startYear, endYear, iFolder, nTraces = 112)
 
 \item{iFolder}{The path to the trace files, e.g., '/dmi/VIC/'.}
 
-\item{nTraces}{The number of traces to process. The default is 112, which is the number of traces
-in the CMIP3 climate change hydrology.}
+\item{nTraces}{The number of traces to process. The default is 112, which is
+the number of traces in the CMIP3 climate change hydrology.}
 }
 \value{
 The number of files that were processed
 }
 \description{
-Trims the Climate Change natural flow input data to start and/or end in a different year.
+\code{trimCCNFFiles()} trims the climate change natural flow input data to
+start and/or end in a different year.
 }
 \details{
-The climate change natural flows were developed to start in January 1950. Unlike the other natural
-flow files used in CRSS, the data are associated with specific years, i.e., the index
-sequential method is not used on the climate change hydrology. Sometimes it is necessary 
-to trim the data to start, and end in a particular year. The function will return data starting
+The climate change natural flows were developed to start in January 1950.
+Unlike the other natural flow files used in CRSS, the data are associated
+with specific years, i.e., the index sequential method is not used on the
+climate change hydrology. Sometimes it is necessary to trim the data to
+start, and end in a particular year. The function will return data starting
 in January of the \code{startYear} and ending in December of \code{endYear}.
 
 While the function is typically used on climate change natural flow files, it
 will still work with other natural flow input files.
-
-Assumes folder numbers will always start at 1 and that all files in the folder should be 
-processed.
+}
+\note{
+Assumes folder numbers will always start at 1 and that all files in the
+folder should be processed.
 }
 \examples{
-# Trim all 112 traces found in 'CRSS/dmi/VIC' to start in Jan-2017 and end in Dec-2019
+# Trim all 112 traces found in 'CRSS/dmi/VIC' to start in Jan-2017 and 
+# end in Dec-2019
 \dontrun{
 trimCCNFFiles(2017,2019,'CRSS/dmi/VIC/')
 }

@@ -10,17 +10,18 @@ nfShortNames()
 Vector of characters (file names).
 }
 \description{
-\code{nfShortNames} returns a vector with the CRSS natural flow node 
+\code{nfShortNames} returns a vector with the CRSS natural flow node
 shorthand names in the correct node order.
 }
 \details{
-For many purposes, it is desirable to have shorthand names for the natural flow nodes
-used in CRSS. This function returns a vector with the shorthand names used by CRSS corresponding to the
-the natural flow basins. The order matches the node order used by Reclamation and
-CRSS and thus should not be modified.
+For many purposes, it is desirable to have shorthand names for the natural
+flow nodes used in CRSS. This function returns a vector with the shorthand
+names used by CRSS corresponding to the the natural flow basins. The order
+matches the node order used by Reclamation and CRSS and thus should not be
+modified.
 
-The shorthand names returned here, match the CRSS natural inflow slot names returned by 
-\code{\link{CRSSNFInputNames}}
+The shorthand names returned here, match the CRSS natural inflow slot names
+returned by \code{\link{CRSSNFInputNames}}
 }
 \examples{
 # get the gage name for node 20 

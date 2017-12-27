@@ -25,8 +25,8 @@ Rename the CRSS natural flow and salt input files.
 }
 \details{
 Because multiple versions of CRSS exist and the inflow locations have had their names changed
-in recent years, it is necessary to create files with different file names. It might be 
-easier to copy existing files instead of creating files from the source data, as 
+in recent years, it is necessary to create files with different file names. It might be
+easier to copy existing files instead of creating files from the source data, as
 \code{\link{createCRSSDNFInputFiles}} does. \code{copyAndChangeNames} assumes the folders
 are structured for CRSS input, e.g., C:/CRSS/dmi/NFSinput/trace1/NFInput.Files.
 }

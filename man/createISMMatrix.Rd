@@ -18,7 +18,7 @@ of years in xtsData, but can be less.}
 \item{monthly}{\code{TRUE} if the data is monthly data; \code{FALSE} if it is annual data}
 }
 \value{
-xts matrix with the number of years/months specified by \code{nYrs} 
+xts matrix with the number of years/months specified by \code{nYrs}
 and the number of columns equal to the number of years of data in \code{xtsData}
 }
 \description{
@@ -27,11 +27,11 @@ this is typically used to create future hydrology data, the entire matrix
 will have a new start month.
 }
 \details{
-The method can be used on monthly or annual data. If you are applying it to 
+The method can be used on monthly or annual data. If you are applying it to
 monthly data, then \code{xtsData} needs to be monthly data, and \code{monthly}
-should be set to \code{TRUE}. If using annual data, then \code{xtsData} should 
+should be set to \code{TRUE}. If using annual data, then \code{xtsData} should
 be annual, i.e., all with a December timestamp, and \code{monthly} should be
-set to \code{FALSE}. If \code{monthly} is \code{FALSE} and \code{xtsData} is 
+set to \code{FALSE}. If \code{monthly} is \code{FALSE} and \code{xtsData} is
 monthly data, an error will occur.
 }
 \examples{

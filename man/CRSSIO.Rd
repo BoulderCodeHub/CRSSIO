@@ -6,23 +6,23 @@
 \alias{CRSSIO-package}
 \title{CRSSIO: Package to manage the input/output of CRSS data.}
 \description{
-The CRSSIO package provides functions to generate input files commmonly used by the 
-Colorado River Simulation System (CRSS) from publicly available data, as well as 
-functions to modify these files. Figures that are commonly used to QA/QC and 
+The CRSSIO package provides functions to generate input files commmonly used by the
+Colorado River Simulation System (CRSS) from publicly available data, as well as
+functions to modify these files. Figures that are commonly used to QA/QC and
 undersand CRSS results are also automated with this package.
 }
 \section{Major Input Related Functions}{
 
 \itemize{
- \item \code{\link{createCRSSDNFInputFiles}}
- \item \code{\link{changeStartDate}}
+\item \code{\link{createCRSSDNFInputFiles}}
+\item \code{\link{changeStartDate}}
 }
 }
 
 \section{Major Output Related Functions}{
 
 \itemize{
- \item \code{\link{createSysCondTable}}
+\item \code{\link{createSysCondTable}}
 }
 }
 

@@ -14,12 +14,12 @@ Vector of characters (file names).
 names in the correct node order.
 }
 \details{
-This function returns a vector with the USGS gage names used by CRSS corresponding to the
-the natural flow basins. The order matches the node order used by Reclamation and
-CRSS and thus should not be modified.
+This function returns a vector with the USGS gage names used by CRSS
+corresponding to the natural flow basins. The order matches the node order
+used by Reclamation and CRSS and thus should not be modified.
 
-The gage names returned here, match the CRSS natural inflow slot names returned by 
-\code{\link{CRSSNFInputNames}}
+The gage names returned here, match the CRSS natural inflow slot names
+returned by \code{\link{CRSSNFInputNames}}
 }
 \examples{
 # get the gage name for node 20 

@@ -9,7 +9,7 @@ changeStartDateForEvapAndAddZeros(nTrace, folder, startDate, NZeros)
 \arguments{
 \item{nTrace}{The number of traces to process.}
 
-\item{folder}{A string with either a relative or absolute path that contains 
+\item{folder}{A string with either a relative or absolute path that contains
 the trace folders, e.g., C:/CRSS/dmi/DNFSinput}
 
 \item{startDate}{New start date. Should be in 2012-1-31 format.}

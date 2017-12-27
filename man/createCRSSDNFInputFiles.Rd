@@ -8,7 +8,7 @@ createCRSSDNFInputFiles(iFile, oFolder, startDate, simYrs,
   oFiles = CRSSNFInputNames(), recordToUse = NA)
 }
 \arguments{
-\item{iFile}{Either the string "CoRiverNF", or the relative or absolute path 
+\item{iFile}{Either the string "CoRiverNF", or the relative or absolute path
 to the excel workbook. When "CoRiverNF" is used, the data from the \code{CoRiverNF}
 data package is used. Otherwise, it should be a valid path to the natural flow
 Excel workbook.}
@@ -27,7 +27,7 @@ the same order as the nodes in the input Excel file.}
 \item{recordToUse}{The start and end dates of the natural flow record to perform ISM, if using
 something besides the full record. If it is \code{NA}, the full record will be used. Otherwise, it
 should be a vector of length 2, where the first entry is the start date and the second entry
-is the end date. The vector should be of type \code{\link[zoo]{yearmon}}, or something that will sucessfully 
+is the end date. The vector should be of type \code{\link[zoo]{yearmon}}, or something that will sucessfully
 convert to a \code{\link[zoo]{yearmon}} object.}
 }
 \value{
@@ -39,28 +39,28 @@ System (CRSS)
 }
 \details{
 \code{createCRSSDNFInputFiles} creates individual trace files for the observed
-natural flow on the Colorado River Basin using the 
-\href{http://onlinelibrary.wiley.com/doi/10.1111/j.1752-1688.1997.tb03557.x/abstract}{Index Sequential Method}. 
+natural flow on the Colorado River Basin using the
+\href{http://onlinelibrary.wiley.com/doi/10.1111/j.1752-1688.1997.tb03557.x/abstract}{Index Sequential Method}.
 Trace files are formated and saved in a format expected
 by the Colorado River Simulation System (CRSS). Data is read from the natural
 flow workbook available at \url{http://www.usbr.gov/lc/region/g4000/NaturalFlow/current.html} or
-from the `CoRiverNF` data package. It is much faster to use the data package
+from the \code{CoRiverNF} data package. It is much faster to use the data package
 rather than the Excel workbook. The data package is created from the Excel
 file, so the files created are identical for each of the two data sets.
 
-In addition to creating the natural flow input files, data for two informative 
+In addition to creating the natural flow input files, data for two informative
 slots are created. These slots include the trace number and the supply scenario
 number. The trace numbers are intuitive, i.e., they are integers from 1 to N
 where N is the trace number. This information is saved in the slot name that
 is set by the "crssio.traceNumberSlot" option. The scenario number provides
 the user with a numeric representation of which supply scenario is used. The
-observed historical natural flows (used by this function) are supply scenario 1. 
+observed historical natural flows (used by this function) are supply scenario 1.
 For this supply scenario, the decimals of the supply scenario number represent
-the start and end year that the ISM method are applied to. For example, if 
+the start and end year that the ISM method are applied to. For example, if
 you set \code{recordToUse} to \code{c('1988-1','2012-12')}, the decimal portion
 will be 19882012, where the first 4 numbers represent the start year and
-the second four numbers represent the end year. The supply scenario slot will 
-be set to 1.19882012 in this example. This tells the user of CRSS that the 
+the second four numbers represent the end year. The supply scenario slot will
+be set to 1.19882012 in this example. This tells the user of CRSS that the
 supply scenario is the observed historical natural flows with the ISM method
 applied to the 1988-2012 data. The supply scenario slot name is set
 by the "crssio.supplyScenarioSlot" option.
@@ -69,7 +69,7 @@ The hydrologyIncrement data that sets the random number generator for
 each year and trace is created for each trace folder. The slot name that is created
 for the hydrologyIncrement is set by the "crssio.hydroIncrement" option.
 
-Beginning in CRSS v2.6, input data for the Sacramento year type 
+Beginning in CRSS v2.6, input data for the Sacramento year type
 index are necessary. The historical Sacramento year type data (available at
 \url{http://cdec.water.ca.gov/cgi-progs/iodir/WSIHIST}) are resampled using
 ISM with the same years as the historical natural flows. This function also

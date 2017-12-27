@@ -9,7 +9,7 @@ changeStartDate(nTrace, folder, startDate)
 \arguments{
 \item{nTrace}{The number of traces to process.}
 
-\item{folder}{A string with either a relative or absolute path that contains the trace 
+\item{folder}{A string with either a relative or absolute path that contains the trace
 folders, e.g., 'C:/CRSS/dmi/DNFSinput'}
 
 \item{startDate}{string of new starting date. Should be in 2012-1-31 format.}
@@ -18,6 +18,6 @@ folders, e.g., 'C:/CRSS/dmi/DNFSinput'}
 changes the start date in all files in each trace folder
 }
 \details{
-Used to change the start date of all natural flow input files. Will change them for all 
+Used to change the start date of all natural flow input files. Will change them for all
 files in a folder.
 }

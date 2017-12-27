@@ -7,8 +7,9 @@
 writeNFFilesByNode(nfXts, oFile, oFolder, headerInfo)
 }
 \arguments{
-\item{nfXts}{Natural flow data as a matrix for a single node. The number of columns
-is the number of traces that will be written out to oFolder/trace[n]/oFile}
+\item{nfXts}{Natural flow data as a matrix for a single node. The number of
+columns is the number of traces that will be written out to
+oFolder/trace\link{n}/oFile}
 
 \item{oFile}{File name that each file will be saved as}
 

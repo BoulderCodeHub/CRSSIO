@@ -15,14 +15,14 @@ list to get the variables necessary to create the system conditions table.
 }
 \details{
 The matrix returned by \code{sysCondSALMatrix} contains all of the slots and
-their corresponding variable names that are expected in 
+their corresponding variable names that are expected in
 \code{\link{createSysCondTable}}. This matrix should be passed to
 \code{RWDataPlyr::\link[RWDataPlyr]{createSlotAggList}} to create the necessary
 slot aggregation list that \code{RWDataPlyr::\link[RWDataPlyr]{getDataForAllScens}}
 uses. See the example in \code{\link{createSysCondTable}} for an example of
 using all of these functions together.
 
-This is a convenience function to save the user from having to routinely 
+This is a convenience function to save the user from having to routinely
 recreate the information to pass to \code{RWDataPlyr::createSlotAggList} for
 the system conditions table. Additionally, since \code{createSysCondTable}
 expects a specific set of variable names, this ensures the slots from CRSS

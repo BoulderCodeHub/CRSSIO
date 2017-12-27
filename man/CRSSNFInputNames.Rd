@@ -7,7 +7,7 @@
 CRSSNFInputNames(version = 2)
 }
 \arguments{
-\item{version}{The CRSS version number. Current version of CRSS is 2. Valid 
+\item{version}{The CRSS version number. Current version of CRSS is 2. Valid
 versions are 1 or 2.}
 }
 \value{
@@ -20,11 +20,11 @@ names in the correct node order.
 \details{
 This function returns a vector with the file names used by CRSS to import
 the natural flows. The order matches the node order used by Reclamation and
-CRSS and thus should not be modified. As the structure to CRSS changes, 
+CRSS and thus should not be modified. As the structure to CRSS changes,
 the file names also may change. If this occurs in the future, the function
 will be modified to return different values for different versions of CRSS.
 
-This is the default function used by \code{\link{createCRSSDNFInputFiles}} 
+This is the default function used by \code{\link{createCRSSDNFInputFiles}}
 for creating the input files for CRSS.
 }
 \examples{
