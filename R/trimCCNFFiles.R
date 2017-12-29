@@ -107,9 +107,7 @@ trimSingleFile <- function(ff, startYear, endYear)
   nfZ <- zoo::zoo(nf,nf.months)
   
   # create subset of months to trim data
-  trimMonths <- zoo::as.yearmon(
-    startYear + seq(0, (endYear - startYear + 1) * 12 - 1) / 12
-  )
+  trimMonths <- get_yearmon_series(startYear, endYear)
   nfZ <- nfZ[trimMonths]
   nf <- as.matrix(nfZ)
   
