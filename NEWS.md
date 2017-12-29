@@ -2,6 +2,9 @@
 
 *In development*
 
+* Formatting and other updates to conform to `goodpractice::gp()`
+* `trimCCNFFiles()` only trims natural flow and salt files, not all files in the directory. (#31)
+
 # CRSSIO 0.5.0
 
 *Released August 30, 2017* 
