@@ -61,6 +61,8 @@ nc_to_single_trace <- function(nc, tt, oFolder, startYear, endYear, oFiles, prog
   setTxtProgressBar(progressBar, tt)
 }
 
+#' @export
+
 create_crss_cmip_nf_files <- function(iFile, 
                                       oFolder, 
                                       startYear, 
@@ -84,7 +86,7 @@ create_crss_cmip_nf_files <- function(iFile,
   # is false the throw error, if overwrite is true, then proceed
   if (length(list.files(oFolder, recursive = TRUE)) != 0 & !overwriteFiles){
     stop("Trace files exist in ", oFolder, "\n",
-         "Choose a different folder, delete the files, or use overwriteFiles = TRUE")
+         "  Choose a different folder, delete the files, or use overwriteFiles = TRUE")
   }
   
   if (endYear < startYear)
