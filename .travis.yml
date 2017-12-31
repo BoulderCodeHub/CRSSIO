@@ -24,6 +24,9 @@ before_install: |
 r_packages:
   - covr
   
+r_binary_packages:
+  - ncdf4
+  
 after_success:
   - Rscript -e 'library(covr); codecov()'
   
