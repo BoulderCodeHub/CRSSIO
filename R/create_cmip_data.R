@@ -80,11 +80,11 @@ write_nc_single_trace <- function(nc, tt, oFolder, startYear, endYear, oFiles, p
 
 #' Create CRSS natural flow input files from CMIP data
 #' 
-#' `create_crss_cmip_nf_files()` creates individual trace files for CRSS from
+#' `crssi_create_cmip_nf_files()` creates individual trace files for CRSS from
 #'   a netcdf file containing CMIP based natural flow data. 
 #' 
 #' @details 
-#' `create_crss_cmip_nf_files()` will create individual trace files named by the
+#' `crssi_create_cmip_nf_files()` will create individual trace files named by the
 #' `oFiles` argument for all traces that exist in `iFile`. Individual trace 
 #' folders, e.g., trace1, trace2, traceN, are created for all traces found in 
 #' `iFile`. `iFile` should be a netcdf file that contains a variable called 
@@ -123,7 +123,7 @@ write_nc_single_trace <- function(nc, tt, oFolder, startYear, endYear, oFiles, p
 #' 
 #' @examples 
 #' \dontrun{
-#' create_crss_cmip_nf_files(
+#' crssi_create_cmip_nf_files(
 #'   "cmip5_bcsd.nc",
 #'   oFolder = "c:/model/CRSS/dmi/cmip5",
 #'   startYear = 2018,
@@ -134,7 +134,7 @@ write_nc_single_trace <- function(nc, tt, oFolder, startYear, endYear, oFiles, p
 #' 
 #' @export
 
-create_crss_cmip_nf_files <- function(iFile, 
+crssi_create_cmip_nf_files <- function(iFile, 
                                       oFolder, 
                                       startYear, 
                                       endYear = 2060, 
