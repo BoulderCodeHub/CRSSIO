@@ -1,20 +1,30 @@
 
+#' Read a single trace of data from netcdf file, and call function to write data
+#' 
+#' `write_nc_single_trace()` reads a single trace of data from the netcdf file, 
+#'   formats the data as a `zoo` object, subsets the data based on `startYear` 
+#'   and `endYear`, and writes the data to the correct natural flow file with
+#'   the appropriate header text.
+#'   
+#' @param nc An object of class `ncdf4` that contains natural flow data.
+#' @param tt A numeric specifying which trace of data will be selected. 
+#' @param oFolder Path to the top level directory where the trace folders and
+#'   input files will be created.
+#' @param startYear The year to start the trace files in. Data will be trimmed 
+#'   to start in this year. 
+#' @param endYear The final year of data the trace files will contain.
+#' @param oFiles The CRSS natural inflow file names to use for the individual
+#'   traces files.
+#' @param progressBar An object of class `txtProgressBar` that will be updated.
+#' 
+#' @return 
+#' `nc` is returned invisibly because the function writes out 29 natural flow 
+#'   files. 
+#' 
 #' @keywords internal
 #' @noRd
 
-format_and_write <- function(traceData, headerTxt, oFile)
-{
-  traceData <- as.matrix(traceData)
-  colnames(traceData) <- headerTxt
-  # writes out to the same folder it reads in from
-  utils::write.table(traceData, file = oFile, quote = FALSE, row.names = FALSE)
-  invisible(traceData)
-}
-
-#' @keywords internal
-#' @noRd
-
-nc_to_single_trace <- function(nc, tt, oFolder, startYear, endYear, oFiles, progressBar)
+write_nc_single_trace <- function(nc, tt, oFolder, startYear, endYear, oFiles, progressBar)
 {
   if (nc$var$naturalFlow$dim[[1]]$name != "trace")
     stop("The netcdf file is not formated as expected.", "\n",
@@ -50,17 +60,78 @@ nc_to_single_trace <- function(nc, tt, oFolder, startYear, endYear, oFiles, prog
     
   nfSites <- ncdf4::ncvar_get(nc, "gageNumber")
   
+  # write out each site's natural flow data to the correct file name
   lapply(
     nfSites, 
-    function(x) format_and_write(
-      traceZoo[, x], 
-      headerTxt = headerInfo,
-      oFile = file.path(traceFolder, oFiles[x])
-    )
+    function(x) {
+      utils::write.table(
+        matrix(traceZoo[, x], ncol = 1, dimnames = list(NULL, headerInfo)),
+        file = file.path(traceFolder, oFiles[x]),
+        quote = FALSE,
+        row.names = FALSE
+      )
+    }
   )
+  
   setTxtProgressBar(progressBar, tt)
+  
+  invisible(nc)
 }
 
+#' Create CRSS natural flow input files from CMIP data
+#' 
+#' `create_crss_cmip_nf_files()` creates individual trace files for CRSS from
+#'   a netcdf file containing CMIP based natural flow data. 
+#' 
+#' @details 
+#' `create_crss_cmip_nf_files()` will create individual trace files named by the
+#' `oFiles` argument for all traces that exist in `iFile`. Individual trace 
+#' folders, e.g., trace1, trace2, traceN, are created for all traces found in 
+#' `iFile`. `iFile` should be a netcdf file that contains a variable called 
+#' `naturalFlow`. If it does not, then the function will error. The netcdf file 
+#' should contain a 3-dimensional array in (trace, gageNumber, time) format. 
+#' 
+#' The CMIP data currently exists for 1950 - 2099. If the user specifies years 
+#' outside of this range, the function will abort. Because CRSS needs data to
+#' start in the year that the CRSS simulations begin, this function trims the
+#' data based on `startYear` and `endYear`, and correctly formats the trace 
+#' files to begin in January of `startYear` and end in December of `endYear`.
+#' 
+#' `oFiles` sets the individual file names for the natural inflow locations. If
+#' you do not use `\link{CRSSNFInputNames}()`, oFiles should contain 29 strings:
+#' one for each of the natural inflow locations, and should be specified in the
+#' default order corresponding to the gages in `\link{nfGageNames}()`. 
+#' 
+#' `overwriteFiles` allows the user to control whether existing files within the
+#' trace folders should be overwritten (default is they are not). 
+#' 
+#' @param iFile Path to netcdf file containing the CMIP based natural inflow
+#'   data. See 'Details'.
+#' @param oFolder Path to the top level directory where the trace folders and
+#'   input files will be created.
+#' @param startYear The year to start the trace files in. Data will be trimmed 
+#'   to start in this year. 
+#' @param endYear The final year of data the trace files will contain.
+#' @param oFiles The CRSS natural inflow file names to use for the individual
+#'   traces files.
+#' @param overwriteFiles A boolean that determines whether or not the function
+#'   should overwrite existing files. See 'Details'.
+#' 
+#' @return 
+#' `iFile` is invisibly returned as the main purpose of the function is to write
+#' many files. 
+#' 
+#' @examples 
+#' \dontrun{
+#' create_crss_cmip_nf_files(
+#'   "cmip5_bcsd.nc",
+#'   oFolder = "c:/model/CRSS/dmi/cmip5",
+#'   startYear = 2018,
+#'   endYear = 2060,
+#'   overwriteFiles = TRUE
+#' )
+#' }
+#' 
 #' @export
 
 create_crss_cmip_nf_files <- function(iFile, 
@@ -75,7 +146,7 @@ create_crss_cmip_nf_files <- function(iFile,
     stop("iFile does not exist")
   
   if (tools::file_ext(iFile) != "nc")
-    stop(iFile, " is not a netcdf.")
+    stop(iFile, " does not appear to be a netcdf file.")
   
   if (!dir.exists(oFolder))
     stop(oFolder, " folder does not exist.", "\n",
@@ -108,9 +179,12 @@ create_crss_cmip_nf_files <- function(iFile,
   message("Starting to create files. Creating ", max(tt), " traces of data...")
   processProgress <- utils::txtProgressBar(min = 0, max = max(tt) , style = 3)
   
-  lapply(tt, function(x) nc_to_single_trace(
-    nc, x, oFolder, startYear, endYear, oFiles, processProgress
-  ))
+  lapply(
+    tt, 
+    function(x) write_nc_single_trace(
+      nc, x, oFolder, startYear, endYear, oFiles, processProgress
+    )
+  )
   
   invisible(iFile)
 }
