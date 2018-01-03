@@ -5,7 +5,7 @@ dir.create('tmp')
 on.exit(unlink('tmp',recursive = T))
 p1 <- '..'
 rr <- sample(1:29, 4) # get 4 random nodes
-message(cat('4 random nodes are:',rr))
+message(cat('\n4 random nodes are:',rr))
 
 # because we are using pre- 1971 data, we do not need to regenerate the data
 # in the provided trace folders each time the natural flow are updated
