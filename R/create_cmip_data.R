@@ -73,7 +73,7 @@ write_nc_single_trace <- function(nc, tt, oFolder, startYear, endYear, oFiles, p
     }
   )
   
-  setTxtProgressBar(progressBar, tt)
+  utils::setTxtProgressBar(progressBar, tt)
   
   invisible(nc)
 }
@@ -150,7 +150,7 @@ crssi_create_cmip_nf_files <- function(iFile,
   
   if (!dir.exists(oFolder))
     stop(oFolder, " folder does not exist.", "\n",
-         "Create the directory before calling create_crss_cmip_nf_files()")
+         "Create the directory before calling crssi_create_cmip_nf_files()")
   
   # check that all folders are empty. If they are empty, then proceed no matter
   # what; if they are not empty, then check the overwrite argument. if overwrite
