@@ -161,7 +161,7 @@ crssi_create_cmip_nf_files <- function(iFile,
   }
   
   if (endYear < startYear)
-    stop("In trimCCNFFiles, endYear cannot be before startYear.")
+    stop("EndYear cannot be before startYear.")
   
   if (startYear < 1950)
     stop("startYear should not be before 1950")
