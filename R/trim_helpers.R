@@ -28,7 +28,7 @@ get_yearmon_series <- function(startYear, endYear)
 #' `get_trace_file_header()` returns formatted header info for the input trace
 #' files.
 #' 
-#' @param startYear Numeric year the trace file starts with.
+#' @param startYear Numeric or string of the year the trace file starts with.
 #' @param units The units that are specified in the trace data.
 #' 
 #' @return Returns a string that is formatted so it can be the header for 
