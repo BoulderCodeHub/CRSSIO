@@ -111,6 +111,10 @@ writeTraceSupplyNumbers <- function(traceNum, supplyScenNum, folderPath)
   supplyText <- matrix(c('units: NONE', supplyScenNum), ncol = 1)
   folderName <- file.path(folderPath, paste0('trace', traceNum))
   
+  if(!dir.exists(folderName))
+    stop("folderName does not exist", "\n", 
+         "writeTraceSupplyNumbers() expects the directory to already exist")
+  
   utils::write.table(
     traceText, 
     file = file.path(folderName, getOption('crssio.traceNumberSlot')),
