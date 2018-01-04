@@ -110,6 +110,21 @@ test_that("output exists and all files exist", {
   expect_true(all(list.files(file.path(dmi1, "trace2")) %in% allFiles))
   expect_true(all(list.files(file.path(dmi2, "trace1")) %in% allFiles))
   expect_true(all(list.files(file.path(dmi2, "trace2")) %in% allFiles))
+  
+  # function will fail if you try to create files again with overwrite == FALSE
+  expect_error(
+    crssi_create_cmip_nf_files(
+      nc,
+      oFolder = dmi2, 
+      startYear = 2020,
+      endYear = 2029,
+      scenarioNumber = myScen
+    ),
+    paste0(
+      "Trace files exist in ", dmi2, "\n",
+      "  Choose a different folder, delete the files, or use overwriteFiles = TRUE"
+    )
+  )
 })
 
 # check trimmed output matches full output -------------------------
