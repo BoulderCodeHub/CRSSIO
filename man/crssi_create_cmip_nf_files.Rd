@@ -5,7 +5,7 @@
 \title{Create CRSS natural flow input files from CMIP data}
 \usage{
 crssi_create_cmip_nf_files(iFile, oFolder, startYear, endYear = 2060,
-  oFiles = CRSSNFInputNames(), overwriteFiles = FALSE)
+  scenarioNumber, oFiles = CRSSNFInputNames(), overwriteFiles = FALSE)
 }
 \arguments{
 \item{iFile}{Path to netcdf file containing the CMIP based natural inflow
@@ -18,6 +18,9 @@ input files will be created.}
 to start in this year.}
 
 \item{endYear}{The final year of data the trace files will contain.}
+
+\item{scenarioNumber}{The scenario number used as an identifier in CRSS.
+See 'Details.'}
 
 \item{oFiles}{The CRSS natural inflow file names to use for the individual
 traces files.}
@@ -46,6 +49,21 @@ outside of this range, the function will abort. Because CRSS needs data to
 start in the year that the CRSS simulations begin, this function trims the
 data based on \code{startYear} and \code{endYear}, and correctly formats the trace
 files to begin in January of \code{startYear} and end in December of \code{endYear}.
+
+\code{scenarioNumber} is specified by the user and is saved to the slot specified
+by the \code{"crssio.supplyScenarioSlot"} option. The following maps supply
+scenario names to the scenario numbers that should be used here. (See the
+CRSS model documentation for more details on the scenario number.) This
+function will error if the \code{scenarioNumber} provided is 1, 2, or 3 as these
+data are not created with this function.
+\itemize{
+\item 1 = Observed Resampled
+\item 2 = Direct Paleo Resampled
+\item 3 = Paleo-conditioned
+\item 4 = CMIP3 Downscaled GCM Projected
+\item 5 = CMIP5 Downscaled GCM Projected, BCSD downscaling, quantile mapping
+secondary bias correction
+}
 
 \code{oFiles} sets the individual file names for the natural inflow locations. If
 you do not use \code{\link{CRSSNFInputNames}()}, oFiles should contain 29 strings:

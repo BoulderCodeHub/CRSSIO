@@ -97,6 +97,20 @@ write_nc_single_trace <- function(nc, tt, oFolder, startYear, endYear, oFiles, p
 #' data based on `startYear` and `endYear`, and correctly formats the trace 
 #' files to begin in January of `startYear` and end in December of `endYear`.
 #' 
+#' `scenarioNumber` is specified by the user and is saved to the slot specified
+#' by the `"crssio.supplyScenarioSlot"` option. The following maps supply 
+#' scenario names to the scenario numbers that should be used here. (See the 
+#' CRSS model documentation for more details on the scenario number.) This 
+#' function will error if the `scenarioNumber` provided is 1, 2, or 3 as these
+#' data are not created with this function. 
+#' 
+#' - 1 = Observed Resampled
+#' - 2 = Direct Paleo Resampled
+#' - 3 = Paleo-conditioned
+#' - 4 = CMIP3 Downscaled GCM Projected
+#' - 5 = CMIP5 Downscaled GCM Projected, BCSD downscaling, quantile mapping 
+#' secondary bias correction
+#' 
 #' `oFiles` sets the individual file names for the natural inflow locations. If
 #' you do not use `\link{CRSSNFInputNames}()`, oFiles should contain 29 strings:
 #' one for each of the natural inflow locations, and should be specified in the
@@ -112,6 +126,8 @@ write_nc_single_trace <- function(nc, tt, oFolder, startYear, endYear, oFiles, p
 #' @param startYear The year to start the trace files in. Data will be trimmed 
 #'   to start in this year. 
 #' @param endYear The final year of data the trace files will contain.
+#' @param scenarioNumber The scenario number used as an identifier in CRSS. 
+#'   See 'Details.'
 #' @param oFiles The CRSS natural inflow file names to use for the individual
 #'   traces files.
 #' @param overwriteFiles A boolean that determines whether or not the function
@@ -138,6 +154,7 @@ crssi_create_cmip_nf_files <- function(iFile,
                                       oFolder, 
                                       startYear, 
                                       endYear = 2060, 
+                                      scenarioNumber,
                                       oFiles = CRSSNFInputNames(),
                                       overwriteFiles = FALSE)
 {
@@ -169,6 +186,9 @@ crssi_create_cmip_nf_files <- function(iFile,
   if (endYear > 2099)
     stop("endYear should not be after 2099")
   
+  if (scenarioNumber %in% c(1:3))
+    stop("Invalid scenario number for climate change natural flow files.")
+  
   # get the data from the netcdf file
   nc <- ncdf4::nc_open(iFile, write = FALSE)
   on.exit(ncdf4::nc_close(nc))
@@ -181,9 +201,14 @@ crssi_create_cmip_nf_files <- function(iFile,
   
   lapply(
     tt, 
-    function(x) write_nc_single_trace(
-      nc, x, oFolder, startYear, endYear, oFiles, processProgress
-    )
+    function(x){
+      # write out the nf data
+      write_nc_single_trace(
+        nc, x, oFolder, startYear, endYear, oFiles, processProgress
+      )
+      # write out the supply scenario and trace files
+      writeTraceSupplyNumbers(x, scenarioNumber, oFolder)
+    } 
   )
   
   invisible(iFile)
