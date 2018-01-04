@@ -16,48 +16,60 @@ on.exit(file.remove(nc), add = TRUE)
 
 fBad <- "../trace1/DoloresRiver.Inflow"
 
+myScen <- 5
 # test the errors ------------------------------
 
 test_that('correct errors post',{
   expect_error(
-    crssi_create_cmip_nf_files("bad.file","",2018,2020), 
+    crssi_create_cmip_nf_files("bad.file", "", 2018, 2020, myScen), 
     "iFile does not exist"
   )
   
   expect_error(
-    crssi_create_cmip_nf_files(fBad, "", 2018, 2020),
+    crssi_create_cmip_nf_files(fBad, "", 2018, 2020, myScen),
     paste(fBad, "does not appear to be a netcdf file.")
   )
   
   expect_error(
-    crssi_create_cmip_nf_files(nc, file.path(cmipDir, "noExist"), 2018, 2020),
+    crssi_create_cmip_nf_files(
+      nc, 
+      file.path(cmipDir, "noExist"), 
+      2018, 
+      2020, 
+      myScen
+    ),
     paste0(file.path(cmipDir, "noExist"), " folder does not exist.", "\n", 
            "Create the directory before calling crssi_create_cmip_nf_files()")
   )
   
   expect_error(
-    crssi_create_cmip_nf_files(nc, cmipDir, 2025, 2020),
+    crssi_create_cmip_nf_files(nc, cmipDir, 2025, 2020, myScen),
     "EndYear cannot be before startYear."
   )
   
   expect_error(
-    crssi_create_cmip_nf_files(nc, cmipDir, 1940, 2020),
+    crssi_create_cmip_nf_files(nc, cmipDir, 1940, 2020, myScen),
     "startYear should not be before 1950"
   )
   
   expect_error(
-    crssi_create_cmip_nf_files(nc, cmipDir, 2018, 2100),
+    crssi_create_cmip_nf_files(nc, cmipDir, 2018, 2100, myScen),
     "endYear should not be after 2099"
+  )
+  
+  expect_error(
+    crssi_create_cmip_nf_files(nc, cmipDir, 2018, 2020, 1),
+    "Invalid scenario number for climate change natural flow files."
   )
 })
 
 # test creation of files -----------------------
 
 # ** uncomment after we update the function to create these supplementary files
-allFiles <- c(CRSSNFInputNames()) #, "MWD ICS.SacWYType", 
+allFiles <- c(CRSSNFInputNames(), #, "MWD ICS.SacWYType", 
               # "MeadFloodControlData.hydrologyIncrement", 
-              # "HydrologyParameters.TraceNumber",
-              # "HydrologyParameters.SupplyScenario")
+              "HydrologyParameters.TraceNumber",
+              "HydrologyParameters.SupplyScenario")
 
 dmi1 <- file.path(cmipDir, "dmi1")
 dmi2 <- file.path(cmipDir, "dmi2")
@@ -71,7 +83,8 @@ test_that("output exists and all files exist", {
       nc,
       oFolder = dmi1, 
       startYear = 1950,
-      endYear = 2099
+      endYear = 2099, 
+      scenarioNumber = myScen
     ),
     nc
   )
@@ -81,7 +94,8 @@ test_that("output exists and all files exist", {
       nc,
       oFolder = dmi2, 
       startYear = 2020,
-      endYear = 2029
+      endYear = 2029,
+      scenarioNumber = myScen
     ),
     nc
   )
@@ -147,4 +161,90 @@ test_that("Full output matches orignal data", {
   expect_identical(file2zoo(f1[2]), file2zoo(f2[2]))
   expect_identical(file2zoo(f1[3]), file2zoo(f2[3]))
   expect_identical(file2zoo(f1[4]), file2zoo(f2[4]))
+})
+
+test_that("Scenario number is correctly output", {
+  expect_identical(
+    scan(
+      file.path(dmi1, "trace1/HydrologyParameters.SupplyScenario"),
+      nlines = 1,
+      what = "character",
+      skip = 1,
+      quiet = TRUE
+    ),
+    "5"
+  )
+  expect_identical(
+    scan(
+      file.path(dmi1, "trace2/HydrologyParameters.SupplyScenario"),
+      nlines = 1,
+      what = "character",
+      skip = 1,
+      quiet = TRUE
+    ),
+    "5"
+  )
+  expect_identical(
+    scan(
+      file.path(dmi2, "trace1/HydrologyParameters.SupplyScenario"),
+      nlines = 1,
+      what = "character",
+      skip = 1,
+      quiet = TRUE
+    ),
+    "5"
+  )
+  expect_identical(
+    scan(
+      file.path(dmi2, "trace2/HydrologyParameters.SupplyScenario"),
+      nlines = 1,
+      what = "character",
+      skip = 1,
+      quiet = TRUE
+    ),
+    "5"
+  )
+})
+
+test_that("Trace number is correctly output", {
+  expect_identical(
+    scan(
+      file.path(dmi1, "trace1/HydrologyParameters.TraceNumber"),
+      nlines = 1,
+      what = "character",
+      skip = 1,
+      quiet = TRUE
+    ),
+    "1"
+  )
+  expect_identical(
+    scan(
+      file.path(dmi1, "trace2/HydrologyParameters.TraceNumber"),
+      nlines = 1,
+      what = "character",
+      skip = 1,
+      quiet = TRUE
+    ),
+    "2"
+  )
+  expect_identical(
+    scan(
+      file.path(dmi2, "trace1/HydrologyParameters.TraceNumber"),
+      nlines = 1,
+      what = "character",
+      skip = 1,
+      quiet = TRUE
+    ),
+    "1"
+  )
+  expect_identical(
+    scan(
+      file.path(dmi2, "trace2/HydrologyParameters.TraceNumber"),
+      nlines = 1,
+      what = "character",
+      skip = 1,
+      quiet = TRUE
+    ),
+    "2"
+  )
 })
