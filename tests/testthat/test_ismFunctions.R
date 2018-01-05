@@ -72,17 +72,17 @@ tstMat <- xts::as.xts(zoo::read.zoo(
 xts::indexTZ(tstMat) <- 'UTC'
 
 test_that('getAllISMMatrices works', {
-  expect_error(getAllISMMatrices(cbind(tstData,tstData), '2016-01', 3),
+  expect_error(CRSSIO:::getAllISMMatrices(cbind(tstData,tstData), '2016-01', 3),
                'nfMat does not contain 29 columns')
-  expect_equal(getAllISMMatrices(tstMat,'2016-01', 3)[[1]], 
+  expect_equal(CRSSIO:::getAllISMMatrices(tstMat,'2016-01', 3)[[1]], 
                createISMMatrix(tstData, '2016-01', nYrs = 3))
-  expect_equal(getAllISMMatrices(tstMat,'2016-01', NA)[[1]],
-               getAllISMMatrices(tstMat,'2016-01', NA)[[29]])
-  expect_equal(length(getAllISMMatrices(tstMat,'2016-01', NA)),29)
+  expect_equal(CRSSIO:::getAllISMMatrices(tstMat,'2016-01', NA)[[1]],
+               CRSSIO:::getAllISMMatrices(tstMat,'2016-01', NA)[[29]])
+  expect_equal(length(CRSSIO:::getAllISMMatrices(tstMat,'2016-01', NA)),29)
 })
 
-yt1 <- getYTISMData("2018-12-31", 110, 1906, 2015)
-yt2 <- getYTISMData("2000-12-31", 10, 1988, 2012)
+yt1 <- CRSSIO:::getYTISMData("2018-12-31", 110, 1906, 2015)
+yt2 <- CRSSIO:::getYTISMData("2000-12-31", 10, 1988, 2012)
 yt11 <- unclass(yt1[,110])
 attributes(yt11) <- NULL
 yt21 <- unclass(yt2[,23])

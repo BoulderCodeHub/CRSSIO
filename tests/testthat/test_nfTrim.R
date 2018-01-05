@@ -34,11 +34,11 @@ file.copy(f4.o, f4)
 # make sure errors are working properly
 test_that('trimSingleFile errors out correctly', {
   expect_error(
-    trimSingleFile(f1, 2016, 2020), 
+    CRSSIO:::trimSingleFile(f1, 2016, 2020), 
     "startYear is before the actual start year listed in the files you are trying to trim in iFolder"
   )
   expect_error(
-    trimSingleFile(f2, 2017, 2025),
+    CRSSIO:::trimSingleFile(f2, 2017, 2025),
     "endYear is after the last year of the data in iFolder."
   )
 })
@@ -53,10 +53,10 @@ test_that(
   }
 )
 
-zz <- trimSingleFile(f1, 2017, 2020)
-zz <- trimSingleFile(f2, 2018, 2020)
-zz <- trimSingleFile(f3, 2019, 2021)
-zz <- trimSingleFile(f4, 2017, 2021)
+zz <- CRSSIO:::trimSingleFile(f1, 2017, 2020)
+zz <- CRSSIO:::trimSingleFile(f2, 2018, 2020)
+zz <- CRSSIO:::trimSingleFile(f3, 2019, 2021)
+zz <- CRSSIO:::trimSingleFile(f4, 2017, 2021)
 
 readNF <- function(ff) as.matrix(read.table(ff, sep = '\t', skip = 2))
 
