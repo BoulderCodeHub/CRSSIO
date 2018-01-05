@@ -224,3 +224,58 @@ getYTISMData <- function(startDate, simYrs, y1, y2)
   )
   yt
 }
+
+#' Write the natural flow README.txt file
+#' 
+#' write_nf_readme() creates the natural flow README.txt file that contains 
+#' metadata associated with when/how the natural flow files were created.
+#' 
+#' @param vals A named list that contains the following names: intro, simYrs,
+#'   periodToUse, startDate, and createFrom.
+#' @param oFolder The top level directory for the dmi trace folders.
+#' 
+#' @return Writes the README.txt file to `oFolder` and invisibly returns the 
+#' text in README.txt
+#' 
+#' @examples 
+#' vals <- list(
+#'   intro = "Created From Observed Hydrology with ISM",
+#'   simYrs = 20,
+#'   periodToUse = "1988-2015",
+#'   startDate = "2017-1-31",
+#'   createFrom = "CoRiverNF (v0.3.0.9000)"
+#' )
+#' write_nf_readme(vals, ".")
+#' 
+#' @keywords internal
+#' @noRd
+
+write_nf_readme <- function(vals, oFolder)
+{
+  expNames <- c("intro", "simYrs", "periodToUse", "startDate", "createFrom")
+  stopifnot(expNames %in% names(vals), dir.exists(oFolder))
+  
+  # data for writing out the README file
+  intro <- paste0(vals$intro, " using CRSSIO (v", 
+                  utils::packageVersion('CRSSIO'),') package')
+  dateCreate <- paste('date created:', Sys.Date())
+  createBy <- paste('created by:', Sys.info()[["user"]])
+  periodToUse <- paste("period used:", vals$periodToUse)
+  traceLength <- paste('trace length:', vals$simYrs, 'years')
+  startYear <- paste('original start date:', vals$startDate)
+  createFrom <- paste("created from:", vals$createFrom)
+  
+  oText <- paste('Natural Flow Data', intro, '----------', dateCreate, 
+                 createBy, periodToUse, traceLength, startYear, createFrom, 
+                 sep = '\n')
+  
+  # write out the README in the top level folder
+  utils::write.table(
+    oText, 
+    file = file.path(oFolder, 'README.txt'), 
+    quote = FALSE, 
+    row.names = FALSE, 
+    col.names = FALSE
+  )
+  invisible(oText)
+}
