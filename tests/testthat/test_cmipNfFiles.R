@@ -110,6 +110,8 @@ test_that("output exists and all files exist", {
   expect_true(all(list.files(file.path(dmi1, "trace2")) %in% allFiles))
   expect_true(all(list.files(file.path(dmi2, "trace1")) %in% allFiles))
   expect_true(all(list.files(file.path(dmi2, "trace2")) %in% allFiles))
+  expect_true(file.exists(file.path(dmi1, "README.txt")))
+  expect_true(file.exists(file.path(dmi2, "README.txt")))
   
   # function will fail if you try to create files again with overwrite == FALSE
   expect_error(
