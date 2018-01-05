@@ -37,8 +37,8 @@ many files.
 a netcdf file containing CMIP based natural flow data.
 }
 \details{
-\code{crssi_create_cmip_nf_files()} will create individual trace files named by the
-\code{oFiles} argument for all traces that exist in \code{iFile}. Individual trace
+\code{crssi_create_cmip_nf_files()} will create individual trace files named by
+the \code{oFiles} argument for all traces that exist in \code{iFile}. Individual trace
 folders, e.g., trace1, trace2, traceN, are created for all traces found in
 \code{iFile}. \code{iFile} should be a netcdf file that contains a variable called
 \code{naturalFlow}. If it does not, then the function will error. The netcdf file
@@ -65,11 +65,15 @@ data are not created with this function.
 secondary bias correction
 }
 
-In addition to the scenario number, the trace number, and the hydrology
-increment are created for each trace. The names of these slots are controlled
-by the \code{"crssio.traceNumberSlot"} and \code{"crssio.hydroIncrement"}
-options, respectively. Finally, a README file is created in \code{oFolder} that
-provides some metadata on the creation of the trace files.
+In addition to the scenario number, the trace number, the hydrology
+increment, and the Sacramento Year Type index are created for each trace.
+The names of these slots are controlled by the \code{"crssio.traceNumberSlot"},
+\code{"crssio.hydroIncrement"}, and \code{"crssio.sacYTSlot"} options, respectively.
+The Sacramento Year Type index is stored in the netcdf file with the natural
+flow files, and is created from a regression of a river gage in the
+Sacramento Basin. See the CRSS documentation for more details. Finally,
+a README file is created in \code{oFolder} that provides some metadata on the
+creation of the trace files.
 
 \code{oFiles} sets the individual file names for the natural inflow locations. If
 you do not use \code{\link{CRSSNFInputNames}()}, oFiles should contain 29 strings:

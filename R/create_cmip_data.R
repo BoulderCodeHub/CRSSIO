@@ -16,7 +16,8 @@ get_cc_readme_vals <- function(nc, iFile, startYear, endYear)
   list(
     intro = paste0(
       "Created from Downscaled GCM Projected data (", 
-      paste(cmip$value, ds$value, bc2$value, paste("and", rm$value), sep = ", "),
+      paste(cmip$value, ds$value, bc2$value, 
+            paste("and", rm$value), sep = ", "),
       ")"
     ),
     simYrs = simYrs,
@@ -51,7 +52,12 @@ get_cc_readme_vals <- function(nc, iFile, startYear, endYear)
 #' @keywords internal
 #' @noRd
 
-write_nc_single_trace <- function(nc, tt, oFolder, startYear, endYear, oFiles, progressBar)
+write_nc_single_trace <- function(nc, 
+                                  tt, 
+                                  oFolder, 
+                                  startYear, 
+                                  endYear, 
+                                  oFiles, progressBar)
 {
   if (nc$var$naturalFlow$dim[[1]]$name != "trace")
     stop("The netcdf file is not formated as expected.", "\n",
@@ -100,6 +106,14 @@ write_nc_single_trace <- function(nc, tt, oFolder, startYear, endYear, oFiles, p
     }
   )
   
+  # get the sacramento year type data and write it out -------------------
+  sac <- t(ncdf4::ncvar_get(nc, varid = "sacYT")) # t([trace, year])
+  year <- ncdf4::ncvar_get(nc, varid = "year")
+  # select the data to keep
+  sac <- sac[year %in% seq.int(startYear, endYear), , drop = FALSE]
+  startDate <- paste0(startYear, "-12-31")
+  writeSacYT(tt, ytData = sac, startDate = startDate, folderPath = oFolder)
+    
   utils::setTxtProgressBar(progressBar, tt)
   
   invisible(nc)
@@ -111,8 +125,8 @@ write_nc_single_trace <- function(nc, tt, oFolder, startYear, endYear, oFiles, p
 #'   a netcdf file containing CMIP based natural flow data. 
 #' 
 #' @details 
-#' `crssi_create_cmip_nf_files()` will create individual trace files named by the
-#' `oFiles` argument for all traces that exist in `iFile`. Individual trace 
+#' `crssi_create_cmip_nf_files()` will create individual trace files named by 
+#' the `oFiles` argument for all traces that exist in `iFile`. Individual trace 
 #' folders, e.g., trace1, trace2, traceN, are created for all traces found in 
 #' `iFile`. `iFile` should be a netcdf file that contains a variable called 
 #' `naturalFlow`. If it does not, then the function will error. The netcdf file 
@@ -138,11 +152,15 @@ write_nc_single_trace <- function(nc, tt, oFolder, startYear, endYear, oFiles, p
 #' - 5 = CMIP5 Downscaled GCM Projected, BCSD downscaling, quantile mapping 
 #' secondary bias correction
 #' 
-#' In addition to the scenario number, the trace number, and the hydrology 
-#' increment are created for each trace. The names of these slots are controlled
-#' by the `"crssio.traceNumberSlot"` and `"crssio.hydroIncrement"` 
-#' options, respectively. Finally, a README file is created in `oFolder` that 
-#' provides some metadata on the creation of the trace files.
+#' In addition to the scenario number, the trace number, the hydrology 
+#' increment, and the Sacramento Year Type index are created for each trace. 
+#' The names of these slots are controlled by the `"crssio.traceNumberSlot"`,
+#' `"crssio.hydroIncrement"`, and `"crssio.sacYTSlot"` options, respectively. 
+#' The Sacramento Year Type index is stored in the netcdf file with the natural
+#' flow files, and is created from a regression of a river gage in the 
+#' Sacramento Basin. See the CRSS documentation for more details. Finally, 
+#' a README file is created in `oFolder` that provides some metadata on the 
+#' creation of the trace files.
 #' 
 #' `oFiles` sets the individual file names for the natural inflow locations. If
 #' you do not use `\link{CRSSNFInputNames}()`, oFiles should contain 29 strings:

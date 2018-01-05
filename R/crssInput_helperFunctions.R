@@ -186,6 +186,8 @@ writeHydroIncrement <- function(traceNum, nYrs, startDate, folderPath){
 writeSacYT <- function(traceNum, ytData, startDate, folderPath)
 {
   folderName <- file.path(folderPath, paste0('trace', traceNum))
+  stopifnot(dir.exists(folderName))
+  
   tt <- matrix(c(
     paste("start_date:", startDate, "24:00"), 
     "units: NONE", 

@@ -66,7 +66,8 @@ test_that('correct errors post',{
 # test creation of files -----------------------
 
 # ** uncomment after we update the function to create these supplementary files
-allFiles <- c(CRSSNFInputNames(), #, "MWD ICS.SacWYType", 
+sacFile <- getOption("crssio.sacYTSlot")
+allFiles <- c(CRSSNFInputNames(), sacFile, 
               "MeadFloodControlData.hydrologyIncrement", 
               "HydrologyParameters.TraceNumber",
               "HydrologyParameters.SupplyScenario")
@@ -133,13 +134,18 @@ test_that("output exists and all files exist", {
 # check that subset of the full output is the same as the trimmed output
 
 # function to read in the file and create a zoo object
-file2zoo <- function(iFile)
+file2zoo <- function(iFile, monthly = TRUE)
 {
   zz <- scan(iFile, skip = 2, sep = "\n", quiet = TRUE)
   sm <- zoo::as.yearmon(
     scan(iFile, nlines = 1, what = "character", quiet = TRUE)[2]
   )
-  mm <- sm + (seq_len(length(zz)) - 1)/12
+  if (monthly){
+    mm <- sm + (seq_len(length(zz)) - 1)/12
+  } else {
+    # annual so create time series based on december only
+    mm <- sm + (seq_len(length(zz)) - 1)
+  }
   zz <- zoo::zoo(zz, mm)
   zz
 }
@@ -268,8 +274,6 @@ test_that("Trace number is correctly output", {
   )
 })
 
-
-
 # check hydrologyIncrement ----------------------------
 test_that("hydrologyIncrement is correctly saved", {
   expect_identical(
@@ -295,5 +299,26 @@ test_that("hydrologyIncrement is correctly saved", {
       file2zoo(file.path(dmi2, "trace2", getOption("crssio.hydroIncrement")))
     )),
     as.numeric(rep(2:11, each = 12))
+  )
+})
+
+trimYears <- as.yearmon(paste("Dec", 2020:2029))
+# check sacramento year type --------------------------
+test_that("sacramento year type data is correctly saved", {
+  expect_identical(
+    file2zoo(file.path(dmi1, "trace1", sacFile), monthly = FALSE),
+    file2zoo(file.path("../ccOrig/trace1", sacFile), monthly = FALSE)
+  )
+  expect_identical(
+    file2zoo(file.path(dmi1, "trace2", sacFile), monthly = FALSE),
+    file2zoo(file.path("../ccOrig/trace2", sacFile), monthly = FALSE)
+  )
+  expect_identical(
+    file2zoo(file.path(dmi2, "trace1", sacFile), monthly = FALSE),
+    file2zoo(file.path("../ccOrig/trace1", sacFile), monthly = FALSE)[trimYears]
+  )
+  expect_identical(
+    file2zoo(file.path(dmi2, "trace2", sacFile), monthly = FALSE),
+    file2zoo(file.path("../ccOrig/trace2", sacFile), monthly = FALSE)[trimYears]
   )
 })
