@@ -1,4 +1,31 @@
 
+get_cc_readme_vals <- function(nc, iFile, startYear, endYear)
+{
+  simYrs <- endYear - startYear + 1
+  startDate <- paste0(startYear, "-1-31")
+  fName <- basename(iFile)
+  
+  vNum <- ncdf4::ncatt_get(nc, varid = 0, attname = "version")
+  cmip <- ncdf4::ncatt_get(nc, varid = 0, attname = "cmip")
+  ds <- ncdf4::ncatt_get(nc, varid = 0, attname = "downscale_method")
+  bc2 <- ncdf4::ncatt_get(nc, varid = 0, attname = "secondary_bias_correction")
+  rm <- ncdf4::ncatt_get(nc, varid = 0, attname = "routing_method")
+  
+  stopifnot(vNum$hasatt, cmip$hasatt, ds$hasatt, bc2$hasatt, rm$hasatt)
+  
+  list(
+    intro = paste0(
+      "Created from Downscaled GCM Projected data (", 
+      paste(cmip$value, ds$value, bc2$value, paste("and", rm$value), sep = ", "),
+      ")"
+    ),
+    simYrs = simYrs,
+    periodToUse = paste0(startYear, "-", endYear),
+    startDate = startDate,
+    createFrom = paste0(basename(iFile), " v", vNum$value)
+  )
+}
+
 #' Read a single trace of data from netcdf file, and call function to write data
 #' 
 #' `write_nc_single_trace()` reads a single trace of data from the netcdf file, 
@@ -220,6 +247,10 @@ crssi_create_cmip_nf_files <- function(iFile,
       writeHydroIncrement(x, simYrs, startDate, oFolder)
     } 
   )
+  
+  # create the README
+  vals <- get_cc_readme_vals(nc, iFile, startYear, endYear)
+  write_nf_readme(vals, oFolder = oFolder)
   
   invisible(iFile)
 }
