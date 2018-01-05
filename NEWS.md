@@ -4,6 +4,7 @@
 
 * Formatting and other updates to conform to `goodpractice::gp()`
 * `trimCCNFFiles()` only trims natural flow and salt files, not all files in the directory. (#31)
+* New function: `crssi_create_cmip_nf_files()` to create natural flow files from a netcdf file that contains cmip3/5 data. (#30)
 
 # CRSSIO 0.5.0
 
