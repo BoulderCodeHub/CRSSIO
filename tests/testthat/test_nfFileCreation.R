@@ -15,7 +15,7 @@ test_that('can create files',{
                                          recordToUse = c('1950-01','1954-12')))
 })
 
-allFiles <- c(CRSSNFInputNames(), "MWD ICS.SacWYType", 
+allFiles <- c(CRSSNFInputNames(), "MWD_ICS.SacWYType", 
               "MeadFloodControlData.hydrologyIncrement", "HydrologyParameters.TraceNumber",
               "HydrologyParameters.SupplyScenario")
 
