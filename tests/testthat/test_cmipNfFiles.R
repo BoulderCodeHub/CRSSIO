@@ -67,7 +67,7 @@ test_that('correct errors post',{
 
 # ** uncomment after we update the function to create these supplementary files
 allFiles <- c(CRSSNFInputNames(), #, "MWD ICS.SacWYType", 
-              # "MeadFloodControlData.hydrologyIncrement", 
+              "MeadFloodControlData.hydrologyIncrement", 
               "HydrologyParameters.TraceNumber",
               "HydrologyParameters.SupplyScenario")
 
@@ -99,7 +99,7 @@ test_that("output exists and all files exist", {
     ),
     nc
   )
-  
+
   # all files exist in both trace folders, and only files that should exist are
   # created
   expect_true(all(allFiles %in% list.files(file.path(dmi1, "trace1"))))
@@ -178,6 +178,7 @@ test_that("Full output matches orignal data", {
   expect_identical(file2zoo(f1[4]), file2zoo(f2[4]))
 })
 
+# check scenario number --------------------------
 test_that("Scenario number is correctly output", {
   expect_identical(
     scan(
@@ -221,6 +222,7 @@ test_that("Scenario number is correctly output", {
   )
 })
 
+# check trace number -------------------------
 test_that("Trace number is correctly output", {
   expect_identical(
     scan(
@@ -261,5 +263,35 @@ test_that("Trace number is correctly output", {
       quiet = TRUE
     ),
     "2"
+  )
+})
+
+
+
+# check hydrologyIncrement ----------------------------
+test_that("hydrologyIncrement is correctly saved", {
+  expect_identical(
+    as.vector(unclass(
+      file2zoo(file.path(dmi1, "trace1", getOption("crssio.hydroIncrement")))
+    )),
+    as.numeric(rep(1:150, each = 12))
+  )
+  expect_identical(
+    as.vector(unclass(
+      file2zoo(file.path(dmi1, "trace2", getOption("crssio.hydroIncrement")))
+    )),
+    as.numeric(rep(2:151, each = 12))
+  )
+  expect_identical(
+    as.vector(unclass(
+      file2zoo(file.path(dmi2, "trace1", getOption("crssio.hydroIncrement")))
+    )),
+    as.numeric(rep(1:10, each = 12))
+  )
+  expect_identical(
+    as.vector(unclass(
+      file2zoo(file.path(dmi2, "trace2", getOption("crssio.hydroIncrement")))
+    )),
+    as.numeric(rep(2:11, each = 12))
   )
 })

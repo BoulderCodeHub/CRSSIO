@@ -111,6 +111,12 @@ write_nc_single_trace <- function(nc, tt, oFolder, startYear, endYear, oFiles, p
 #' - 5 = CMIP5 Downscaled GCM Projected, BCSD downscaling, quantile mapping 
 #' secondary bias correction
 #' 
+#' In addition to the scenario number, the trace number, and the hydrology 
+#' increment are created for each trace. The names of these slots are controlled
+#' by the `"crssio.traceNumberSlot"` and `"crssio.hydroIncrement"` 
+#' options, respectively. Finally, a README file is created in `oFolder` that 
+#' provides some metadata on the creation of the trace files.
+#' 
 #' `oFiles` sets the individual file names for the natural inflow locations. If
 #' you do not use `\link{CRSSNFInputNames}()`, oFiles should contain 29 strings:
 #' one for each of the natural inflow locations, and should be specified in the
@@ -195,6 +201,8 @@ crssi_create_cmip_nf_files <- function(iFile,
   
   # loop over each trace and write out all of the locations
   tt <- ncdf4::ncvar_get(nc, "trace")
+  simYrs <- endYear - startYear + 1
+  startDate <- paste0(startYear, "-1-31")
   
   message("Starting to create files. Creating ", max(tt), " traces of data...")
   processProgress <- utils::txtProgressBar(min = 0, max = max(tt) , style = 3)
@@ -208,6 +216,8 @@ crssi_create_cmip_nf_files <- function(iFile,
       )
       # write out the supply scenario and trace files
       writeTraceSupplyNumbers(x, scenarioNumber, oFolder)
+      # save the hydrologyIncrement data
+      writeHydroIncrement(x, simYrs, startDate, oFolder)
     } 
   )
   

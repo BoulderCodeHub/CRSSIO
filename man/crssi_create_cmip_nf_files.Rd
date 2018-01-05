@@ -65,6 +65,12 @@ data are not created with this function.
 secondary bias correction
 }
 
+In addition to the scenario number, the trace number, and the hydrology
+increment are created for each trace. The names of these slots are controlled
+by the \code{"crssio.traceNumberSlot"} and \code{"crssio.hydroIncrement"}
+options, respectively. Finally, a README file is created in \code{oFolder} that
+provides some metadata on the creation of the trace files.
+
 \code{oFiles} sets the individual file names for the natural inflow locations. If
 you do not use \code{\link{CRSSNFInputNames}()}, oFiles should contain 29 strings:
 one for each of the natural inflow locations, and should be specified in the
