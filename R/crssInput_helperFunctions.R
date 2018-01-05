@@ -142,6 +142,12 @@ writeTraceSupplyNumbers <- function(traceNum, supplyScenNum, folderPath)
 #' @noRd
 
 writeHydroIncrement <- function(traceNum, nYrs, startDate, folderPath){
+  
+  folderName <- file.path(folderPath, paste0('trace', traceNum))
+  if(!dir.exists(folderName))
+    stop("folderName does not exist", "\n", 
+         "writeHydroIncrement() expects the directory to already exist")
+  
   # the hydrology increment data starts with the trace number, and increments
   # by one every year until the end of the simulation
   # it is monthly data, so each index repeats 12 times
@@ -150,7 +156,7 @@ writeHydroIncrement <- function(traceNum, nYrs, startDate, folderPath){
     byrow = FALSE, 
     ncol = 12
   )))
-  folderName <- file.path(folderPath, paste0('trace', traceNum))
+  
   startInfo <- paste('start_date:', startDate, '24:00')
   tt <- matrix(c(startInfo, 'units: NONE', as.character(tt)), ncol = 1)
   utils::write.table(
