@@ -150,8 +150,6 @@ sysCondSALMatrix <- function()
 #' sysCondTable[['limitedTable']]
 #' 
 #' @seealso \code{\link{sysCondSALMatrix}}
-#' @importFrom magrittr "%>%"
-#' @importFrom rlang .data
 #' @export
 createSysCondTable <- function(zz, yrs)
 {
