@@ -24,9 +24,11 @@ Imports:
     rstudioapi (>= 0.5),
     shiny (>= 0.13),
     stats,
+    tibble,
     tidyr,
     tools,
     utils,
+    writexl,
     xlsx,
     xts (>= 0.10.0),
     zoo
