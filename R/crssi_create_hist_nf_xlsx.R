@@ -78,19 +78,13 @@ crssi_create_hist_nf_xlsx <- function(modelStartYear, nYearAvg = 5, oFolder = ".
   # the beginning of the model run
   if (fillEnd >= fillBegin){
     # call get_monthly_average_by_site for all sites
-    tmp <- lapply(
+    t2 <- lapply(
       lbSites, 
       function(site) get_monthly_average_by_site(lb, site, nYearAvg)
-    )
-    
-    # and then join together to get out of list
-    t2 <- dplyr::full_join(tmp[[1]], tmp[[2]], by = "month")
-    if (length(lbSites) > 2) {
-      for (i in seq(3, length(lbSites))) {
-        t2 <- dplyr::full_join(t2, tmp[[i]], by = "month")
-      }
-    }
-    
+    ) %>%
+      Reduce(function(dtf1, dtf2) dplyr::full_join(dtf1, dtf2, by = "month"), .)
+
+        
     # for all the fill years, use t2, create the tmp year and bind it to lb
     fillYrs <- seq(fillBegin, fillEnd)
     
