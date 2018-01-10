@@ -42,14 +42,7 @@
 crssi_create_hist_nf_xlsx <- function(modelStartYear, nYearAvg = 5, oFolder = ".")
 {
   # Lees Ferry total natural flow -----------------------
-  lf <- CoRiverNF::monthlyTot$LeesFerry %>%
-    as.data.frame() %>%
-    tibble::rownames_to_column(var = "ym") %>%
-    dplyr::mutate_at(.vars = "ym", .funs = zoo::as.yearmon) %>%
-    dplyr::mutate_at(.vars = "ym", .funs = dplyr::funs(
-      "year" = as.numeric(format(., "%Y")),
-      "month" = as.numeric(format(., "%m"))
-    )) %>%
+  lf <- nf_xts_to_df(CoRiverNF::monthlyTot, "LeesFerry") %>%
     tidyr::unite_("month", from = c("month", "year"), sep = "/1/") %>%
     dplyr::select_at(c("month", "LeesFerry")) %>%
     dplyr::rename_at(
@@ -60,16 +53,7 @@ crssi_create_hist_nf_xlsx <- function(modelStartYear, nYearAvg = 5, oFolder = ".
   # LB nodes intervening natural flow -------------------
   lbSites <- c("Hoover", "Davis", "Alamo", "Parker", "Imperial")
   
-  lb <- CoRiverNF::monthlyInt %>%
-    as.data.frame() %>%
-    tibble::rownames_to_column(var = "ym") %>%
-    dplyr::select_at(.vars = c("ym",lbSites)) %>%
-    dplyr::mutate_at(.vars = "ym", .funs = zoo::as.yearmon) %>%
-    dplyr::mutate_at(.vars = "ym", .funs = dplyr::funs(
-      "year" = as.numeric(format(., "%Y")),
-      "month" = as.numeric(format(., "%m"))
-    )) %>%
-    dplyr::select(-dplyr::matches("ym"))
+  lb <- nf_xts_to_df(CoRiverNF::monthlyInt, lbSites)
   
   # fill the necessary years with avg data -------------------
   fillBegin <- max(lb$year) + 1
@@ -120,6 +104,27 @@ crssi_create_hist_nf_xlsx <- function(modelStartYear, nYearAvg = 5, oFolder = ".
     path = file.path(oFolder, getOption("crssio.histNfFile"))
   )
   invisible(otxt)
+}
+
+#' Convert natural flow xts data to data frame
+#' 
+#' `nf_xts_to_df` takes in the natural flow xts objects from CoRiverNF and 
+#' converts them to a data frame with `year` and `month` columns. The function
+#' also filters by the natural flow gage names (`nfGages`). The natural flow 
+#' gages are left as columns (variables).
+
+nf_xts_to_df <- function(x, nfGages = nfShortNames())
+{
+  x %>%
+    as.data.frame() %>%
+    tibble::rownames_to_column(var = "ym") %>%
+    dplyr::select_at(.vars = c("ym", nfGages)) %>%
+    dplyr::mutate_at(.vars = "ym", .funs = zoo::as.yearmon) %>%
+    dplyr::mutate_at(.vars = "ym", .funs = dplyr::funs(
+      "year" = as.numeric(format(., "%Y")),
+      "month" = as.numeric(format(., "%m"))
+    )) %>%
+    dplyr::select(-dplyr::matches("ym"))
 }
 
 get_monthly_average_by_site <- function(x, site, nYearAvg)
