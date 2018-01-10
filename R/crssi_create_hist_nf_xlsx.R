@@ -109,9 +109,20 @@ crssi_create_hist_nf_xlsx <- function(modelStartYear, nYearAvg = 5, oFolder = ".
 #' Convert natural flow xts data to data frame
 #' 
 #' `nf_xts_to_df` takes in the natural flow xts objects from CoRiverNF and 
-#' converts them to a data frame with `year` and `month` columns. The function
+#' converts them to a data frame with `"year"` and `"month"` columns. The function
 #' also filters by the natural flow gage names (`nfGages`). The natural flow 
 #' gages are left as columns (variables).
+#' 
+#' @param x The natural flow data as an xts matrix. Likely from the CoRiverNF 
+#'   package.
+#' @param nfGages A vector of strings that will limit the natural flow gages
+#'   returned by this function.
+#' 
+#' @return A data frame with `"year"` and `"month"` columns, as well as columns for
+#'   all of the natural flow gages specified by `nfGages`
+#' 
+#' @keywords internal
+#' @noRd
 
 nf_xts_to_df <- function(x, nfGages = nfShortNames())
 {
