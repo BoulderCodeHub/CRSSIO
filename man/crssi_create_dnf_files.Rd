@@ -5,7 +5,7 @@
 \alias{createCRSSDNFInputFiles}
 \title{Create CRSS Natural Flow Input Files}
 \usage{
-crssi_create_dnf_files(iFile, oFolder, startDate, simYrs,
+crssi_create_dnf_files(iFile, oFolder, startYear, endYear,
   oFiles = CRSSNFInputNames(), recordToUse = NA)
 
 createCRSSDNFInputFiles(iFile, oFolder, startDate, simYrs,
@@ -19,10 +19,10 @@ Excel workbook.}
 
 \item{oFolder}{The location to write out all trace files.}
 
-\item{startDate}{The start date to be listed in each trace file; should be in 2014-1-31 format}
+\item{startYear}{The year to start the trace files in. Data will be trimmed
+to start in this year.}
 
-\item{simYrs}{The number of years of data each file should contain. Should be
-no longer than the number of years in the input data.}
+\item{endYear}{The final year of data the trace files will contain.}
 
 \item{oFiles}{A matrix of the file names (input into CRSS). The default uses
 \code{\link{CRSSNFInputNames}}. This must be specified in the correct order, i.e.,
@@ -33,6 +33,11 @@ something besides the full record. If it is \code{NA}, the full record will be u
 should be a vector of length 2, where the first entry is the start date and the second entry
 is the end date. The vector should be of type \code{\link[zoo]{yearmon}}, or something that will sucessfully
 convert to a \code{\link[zoo]{yearmon}} object.}
+
+\item{startDate}{The start date to be listed in each trace file; should be in 2014-1-31 format}
+
+\item{simYrs}{The number of years of data each file should contain. Should be
+no longer than the number of years in the input data.}
 }
 \value{
 Nothing is returned by the function, but it writes out many files.

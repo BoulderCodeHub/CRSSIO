@@ -43,21 +43,26 @@
 #' defaults to "MWD ICS.SacWYType".
 #' 
 #' @param iFile Either the string "CoRiverNF", or the relative or absolute path 
-#' to the excel workbook. When "CoRiverNF" is used, the data from the \code{CoRiverNF}
-#' data package is used. Otherwise, it should be a valid path to the natural flow
-#' Excel workbook. 
+#' to the excel workbook. When "CoRiverNF" is used, the data from the `CoRiverNF`
+#' data package is used. Otherwise, it should be a valid path to the natural 
+#' flow Excel workbook. 
 #' @param oFolder The location to write out all trace files.
-#' @param startDate The start date to be listed in each trace file; should be in 2014-1-31 format
+#' @param startYear The year to start the trace files in. Data will be trimmed 
+#'   to start in this year.
+#' @param startDate The start date to be listed in each trace file; should be in 
+#'   2014-1-31 format
+#' @param endYear The final year of data the trace files will contain.
 #' @param simYrs The number of years of data each file should contain. Should be
 #' no longer than the number of years in the input data.
 #' @param oFiles A matrix of the file names (input into CRSS). The default uses
-#' \code{\link{CRSSNFInputNames}}. This must be specified in the correct order, i.e.,
-#' the same order as the nodes in the input Excel file.
-#' @param recordToUse The start and end dates of the natural flow record to perform ISM, if using
-#' something besides the full record. If it is \code{NA}, the full record will be used. Otherwise, it
-#' should be a vector of length 2, where the first entry is the start date and the second entry
-#' is the end date. The vector should be of type \code{\link[zoo]{yearmon}}, or something that will sucessfully 
-#' convert to a \code{\link[zoo]{yearmon}} object.
+#'   \code{\link{CRSSNFInputNames}}. This must be specified in the correct 
+#'   order, i.e., the same order as the nodes in the input Excel file.
+#' @param recordToUse The start and end dates of the natural flow record to 
+#'   perform ISM, if using something besides the full record. If it is `NA`, the 
+#'   full record will be used. Otherwise, it should be a vector of length 2, 
+#'   where the first entry is the start date and the second entry is the end 
+#'   date. The vector should be of type \code{\link[zoo]{yearmon}}, or something 
+#'   that will sucessfully convert to a \code{\link[zoo]{yearmon}} object.
 #' 
 #' @return Nothing is returned by the function, but it writes out many files.
 #' @examples
@@ -83,8 +88,8 @@
 #' @export
 crssi_create_dnf_files <- function(iFile, 
                                     oFolder, 
-                                    startDate, 
-                                    simYrs, 
+                                    startYear, 
+                                    endYear, 
                                     oFiles = CRSSNFInputNames(),
                                     recordToUse = NA)
 {
@@ -131,6 +136,9 @@ crssi_create_dnf_files <- function(iFile,
     periodToUse <- paste('period used: 1906', y2, sep = '-')
     supplyScenario <- as.numeric(paste0('1.1906',y2))
   }
+  
+  startDate <- paste0(startYear, "-01-31")
+  simYrs <- endYear - startYear + 1
   
   nf <- getAllISMMatrices(nf, startDate, simYrs)
   
@@ -194,5 +202,8 @@ createCRSSDNFInputFiles <- function(iFile,
 {
   .Deprecated("crssi_create_dnf_files")
   
-  crssi_create_dnf_files(iFile, oFolder, startDate, simYrs, oFiles, recordToUse)
+  startYear <- as.numeric(strsplit(startDate, "-")[[1]][1])
+  endYear <- startYear + simYrs - 1
+  
+  crssi_create_dnf_files(iFile, oFolder, startYear, endYear, oFiles, recordToUse)
 }

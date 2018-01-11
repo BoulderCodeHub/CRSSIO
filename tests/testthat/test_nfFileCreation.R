@@ -31,8 +31,8 @@ test_that('can create files',{
     crssi_create_dnf_files(
       'CoRiverNF', 
       oFolder = 'tmp2', 
-      startDate = '2017-1-31', 
-      simYrs = 5, 
+      startYear = 2017, 
+      endYear = 2021, 
       recordToUse = c('1950-01','1954-12')
     )
   )
