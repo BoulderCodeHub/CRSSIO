@@ -103,7 +103,12 @@
 #' # or same from other function:
 #' createCRSSDNFInputFiles(iFile,'NFSinput/','2015-1-31',50)
 #' # will create 20 years for 25 traces based on the 1988-2012 record:
-#' createCRSSDNFInputFiles(iFile,'scratch/','2016-1-31', 20, recordToUse = c('1988-1-31','2012-12-31'))
+#' createCRSSDNFInputFiles(iFile,
+#'   'scratch/',
+#'   '2016-1-31', 
+#'   20, 
+#'   recordToUse = c('1988-1-31','2012-12-31')
+#' )
 #' }
 #' @seealso
 #' \code{\link{CRSSNFInputNames}}
