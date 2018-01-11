@@ -2,7 +2,7 @@
 get_cc_readme_vals <- function(nc, iFile, startYear, endYear)
 {
   simYrs <- endYear - startYear + 1
-  startDate <- paste0(startYear, "-1-31")
+  startDate <- paste0(startYear, "-01-31")
   fName <- basename(iFile)
   
   vNum <- ncdf4::ncatt_get(nc, varid = 0, attname = "version")
