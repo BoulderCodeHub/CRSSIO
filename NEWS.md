@@ -10,6 +10,10 @@
 * New function: `crssi_create_cmip_nf_files()` to create natural flow files from a netcdf file that contains cmip3/5 data. (#30)
 * Changed the default slot name for the Sacramento Year Type Index, which is set by the `crssio.sacYTSlot` option. The default is now "MWD_ICS.SacWYType".
 * New function: `crssi_create_hist_nf_xlsx()` to create the HistoricalNaturalFlows.xlsx file that CRSS relies on. (#29)
+* new function: `crssi_create_dnf_files()` (#34)
+    * replaces `createCRSSDNFInputFiles()`, which is deprecated
+    * `startDate` and `simYrs` are replaced by `startYear` and `endYear`
+    * gains an `overwriteFiles` argument 
 
 # CRSSIO 0.5.0
 

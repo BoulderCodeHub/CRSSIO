@@ -190,21 +190,23 @@ crssi_create_dnf_files <- function(iFile,
 	  1:29, 
 	  function(x) writeNFFilesByNode(nf[[x]], oFiles[x], oFolder, headerInfo)
 	)
-
-	# for each trace, write out all of the trace and supply scenario number files
-	message("Beginning to write node: supply scenario and trace number")
-	lapply(1:nT, function(x) writeTraceSupplyNumbers(x, supplyScenario, oFolder))
 	
-	# for each trace, write out the hydrology increment slot
-	message('Beginning to write node: hydrologyIncrement')
-	lapply(1:nT, function(x) writeHydroIncrement(x, simYrs, startDate, oFolder))
-	
-	# for each trace, write out the sacramento year type file
-	# convert from january to december
-	eoyDate <- paste0(format(zoo::as.yearmon(startDate), "%Y"), "-12-31")
+	# get sacramento year type ism data ----------
+	eoyDate <- paste0(startYear, "-12-31")
 	ytData <- getYTISMData(eoyDate, simYrs, y1, y2)
-	message("Beginning to write node: Sacramento year type")
-	lapply(1:nT, function(x) writeSacYT(x, ytData, eoyDate, oFolder))
+
+	# write out additional trace files ----------
+	message("Beginning to write additional trace files")
+	lapply(1:nT, function(x) {
+	  # write out all of the trace and supply scenario number files
+	  writeTraceSupplyNumbers(x, supplyScenario, oFolder)
+	  
+	  # write out the hydrology increment slot
+	  writeHydroIncrement(x, simYrs, startDate, oFolder)
+	  
+	  # write out the sacramento year type file
+	  writeSacYT(x, ytData, eoyDate, oFolder)
+	})
 	
 	# create the README
 	write_nf_readme(
@@ -220,12 +222,14 @@ createCRSSDNFInputFiles <- function(iFile,
                                     startDate, 
                                     simYrs, 
                                     oFiles = CRSSNFInputNames(),
-                                    recordToUse = NA)
+                                    recordToUse = NA,
+                                    overwriteFiles = FALSE)
 {
   .Deprecated("crssi_create_dnf_files")
   
   startYear <- as.numeric(strsplit(startDate, "-")[[1]][1])
   endYear <- startYear + simYrs - 1
   
-  crssi_create_dnf_files(iFile, oFolder, startYear, endYear, oFiles, recordToUse)
+  crssi_create_dnf_files(iFile, oFolder, startYear, endYear, oFiles, 
+                         recordToUse, overwriteFiles)
 }

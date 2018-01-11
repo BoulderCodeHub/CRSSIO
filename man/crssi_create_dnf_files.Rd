@@ -9,7 +9,7 @@ crssi_create_dnf_files(iFile, oFolder, startYear, endYear,
   oFiles = CRSSNFInputNames(), recordToUse = NA, overwriteFiles = FALSE)
 
 createCRSSDNFInputFiles(iFile, oFolder, startDate, simYrs,
-  oFiles = CRSSNFInputNames(), recordToUse = NA)
+  oFiles = CRSSNFInputNames(), recordToUse = NA, overwriteFiles = FALSE)
 }
 \arguments{
 \item{iFile}{Either the string "CoRiverNF", or the relative or absolute path
