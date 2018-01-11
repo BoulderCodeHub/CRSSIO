@@ -1,8 +1,15 @@
 library(CRSSIO)
 context('check that Natural Flow files are created correctly.')
 
-dir.create('tmp')
-on.exit(unlink('tmp',recursive = T))
+setup({
+  dir.create('tmp')
+  dir.create("tmp2")
+})
+teardown({
+  unlink('tmp',recursive = TRUE)
+  unlink("tmp2", recursive = TRUE)
+})
+
 p1 <- '..'
 rr <- sample(1:29, 4) # get 4 random nodes
 message(cat('\n4 random nodes are:',rr))
@@ -10,10 +17,43 @@ message(cat('\n4 random nodes are:',rr))
 # because we are using pre- 1971 data, we do not need to regenerate the data
 # in the provided trace folders each time the natural flow are updated
 test_that('can create files',{
-  expect_message(createCRSSDNFInputFiles('CoRiverNF', oFolder = 'tmp', 
-                                         startDate = '2017-1-31', simYrs = 5, 
-                                         recordToUse = c('1950-01','1954-12')))
+  expect_warning(expect_message(
+    createCRSSDNFInputFiles(
+      'CoRiverNF', 
+      oFolder = 'tmp', 
+      startDate = '2017-1-31', 
+      simYrs = 5, 
+      recordToUse = c('1950-01','1954-12')
+    )
+  ))
+  
+  expect_message(
+    crssi_create_dnf_files(
+      'CoRiverNF', 
+      oFolder = 'tmp2', 
+      startDate = '2017-1-31', 
+      simYrs = 5, 
+      recordToUse = c('1950-01','1954-12')
+    )
+  )
 })
+
+# check that all files in the two directories are the same
+
+dirs <- list.dirs('tmp', recursive = FALSE, full.names = FALSE)
+for(curDir in dirs){
+  allFiles <- list.files(file.path("tmp", curDir))
+  for(ff in allFiles){
+    message(curDir, "/", ff)
+    test_that("all files are the same", {
+      expect_identical(
+        scan(file.path("tmp", curDir, ff), what = "character", quiet = TRUE),
+        scan(file.path("tmp2", curDir, ff), what = "character", quiet = TRUE),
+        info = paste(curDir, ff)
+      )
+    })
+  }
+}
 
 allFiles <- c(CRSSNFInputNames(), "MWD_ICS.SacWYType", 
               "MeadFloodControlData.hydrologyIncrement", "HydrologyParameters.TraceNumber",

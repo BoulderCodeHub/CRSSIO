@@ -81,7 +81,7 @@
 #' \code{\link{CRSSNFInputNames}}
 #' 
 #' @export
-createCRSSDNFInputFiles <- function(iFile, 
+crssi_create_dnf_files <- function(iFile, 
                                     oFolder, 
                                     startDate, 
                                     simYrs, 
@@ -181,4 +181,18 @@ createCRSSDNFInputFiles <- function(iFile,
 	# write out the README in the top level folder
 	utils::write.table(oText, file.path(oFolder, 'README.txt'), quote = FALSE, 
 	                   row.names = FALSE, col.names = FALSE)
+}
+
+#' @export
+#' @rdname crssi_create_dnf_files
+createCRSSDNFInputFiles <- function(iFile, 
+                                    oFolder, 
+                                    startDate, 
+                                    simYrs, 
+                                    oFiles = CRSSNFInputNames(),
+                                    recordToUse = NA)
+{
+  .Deprecated("crssi_create_dnf_files")
+  
+  crssi_create_dnf_files(iFile, oFolder, startDate, simYrs, oFiles, recordToUse)
 }
