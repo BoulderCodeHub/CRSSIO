@@ -102,8 +102,6 @@ crssi_create_dnf_files <- function(iFile,
     } else{
       nf <- nf['1906-01/'] # trim off OND 1905
     }
-    createFrom <- paste0('Created from: CoRiverNF (v',
-                         utils::packageVersion('CoRiverNF'), ')')
   } else{
     # use the data in the Excel workbook, if it exists.
     if(!file.exists(iFile)){
@@ -116,24 +114,22 @@ crssi_create_dnf_files <- function(iFile,
       # trim data
       nf <- nf[paste(recordToUse[1], recordToUse[2],sep = '/')]
     }
-    
-    createFrom <- paste('Created from:', iFile)
   }
   
   # get the years used before changing nf
-  if(!anyNA(recordToUse)){
+  if (!anyNA(recordToUse)) {
     y1 <- format(zoo::as.yearmon(recordToUse[1]), "%Y")
     y2 <- format(zoo::as.yearmon(recordToUse[2]), "%Y")
-    periodToUse <- paste0('period used: ', y1, '-', y2)
+    periodToUse <- paste0(y1, '-', y2)
     # this only deals with historical observed NF, so that is supply scenario 
     # 1.xxxxxxxx, where the .xxxxxxxx are the beginning and ending years used
     # for ISM
     supplyScenario <- as.numeric(paste0(1,'.',y1,y2))
-  } else{
+  } else {
     # uses the full record, so it's 1906 - some year. figure out some year
     y1 <- 1906
     y2 <- format(zoo::index(nf)[nrow(nf)], "%Y")
-    periodToUse <- paste('period used: 1906', y2, sep = '-')
+    periodToUse <- paste0(y1, '-', y2)
     supplyScenario <- as.numeric(paste0('1.1906',y2))
   }
   
@@ -146,7 +142,7 @@ crssi_create_dnf_files <- function(iFile,
   
 	# number of months in each trace
 	nM <- simYrs * 12
-	headerInfo <- paste0("start_date: ",startDate, " 24:00\nunits: acre-ft/month")
+	headerInfo <- get_trace_file_header(startYear)
 	
 	# create all directories
 	for(i in 1:nT){
@@ -175,20 +171,11 @@ crssi_create_dnf_files <- function(iFile,
 	message("Beginning to write node: Sacramento year type")
 	lapply(1:nT, function(x) writeSacYT(x, ytData, eoyDate, oFolder))
 	
-	# data for writing out the README file
-	intro <- paste0('Created From Observed Hydrology with ISM from CRSSIO (v', 
-	                utils::packageVersion('CRSSIO'),') package')
-	dateCreate <- paste('date created:', Sys.Date())
-	createBy <- paste('created by:', Sys.info()[["user"]])
-	traceLength <- paste('trace length:', simYrs, 'years')
-	startYear <- paste('original start date:', startDate)
-	oText <- paste('Natural Flow Data', intro, '----------', dateCreate, 
-	               createBy, periodToUse, traceLength, startYear, createFrom, 
-	               sep = '\n')
-	
-	# write out the README in the top level folder
-	utils::write.table(oText, file.path(oFolder, 'README.txt'), quote = FALSE, 
-	                   row.names = FALSE, col.names = FALSE)
+	# create the README
+	write_nf_readme(
+	  get_dnf_readme_vals(iFile, startYear, endYear, recordToUse), 
+	  oFolder = oFolder
+	)
 }
 
 #' @export

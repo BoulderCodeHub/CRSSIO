@@ -281,3 +281,24 @@ write_nf_readme <- function(vals, oFolder)
   )
   invisible(oText)
 }
+
+get_dnf_readme_vals <- function(iFile, startYear, endYear, periodToUse)
+{
+  simYrs <- endYear - startYear + 1
+  startDate <- paste0(startYear, "-01-31")
+  
+  if (iFile == "CoRiverNF") {
+    createFrom <- paste0("CoRiverNF (v",
+                         utils::packageVersion("CoRiverNF"), ")")
+  } else{
+    createFrom <- iFile
+  }
+  
+  list(
+    intro = "Created From Observed Hydrology with ISM",
+    simYrs = simYrs,
+    periodToUse = periodToUse,
+    startDate = startDate,
+    createFrom = createFrom
+  )
+}
