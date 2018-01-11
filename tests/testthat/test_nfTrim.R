@@ -43,13 +43,32 @@ test_that('trimSingleFile errors out correctly', {
   )
 })
 
+test_that("trimCCNFFiles only proceeds if force = TRUE", {
+  expect_warning(
+    expect_error(
+      trimCCNFFiles(1940, 2060, 'dummy/folder', 112),
+      paste0("crssi_create_cmip_nf_files is prefered.\n", 
+         "Re-run trimCCNFFiles() with 'force = TRUE', if you must use it."),
+      fixed = TRUE
+    )
+  )
+})
+
 test_that(
   'trimCCNFFiles errors out if startYear or endYear are outside of 1950-2099', 
   {
-    expect_error(trimCCNFFiles(1940, 2060, 'dummy/folder', 112), 
-               "startYear should not be before 1950")
-    expect_error(trimCCNFFiles(2010, 2100, 'dummy/folder', 112),
-               "endYear should not be after 2099")
+    expect_warning(
+      expect_error(
+        trimCCNFFiles(1940, 2060, 'dummy/folder', 112, force = TRUE), 
+        "startYear should not be before 1950"
+      )
+    )
+    expect_warning(
+      expect_error(
+        trimCCNFFiles(2010, 2100, 'dummy/folder', 112, force = TRUE), 
+        "endYear should not be after 2099"
+      )
+    )
   }
 )
 
@@ -96,12 +115,12 @@ file.copy(file.path(p1,'trace1'),'tmp', recursive = T)
 file.copy(file.path(p1,'trace2'),'tmp', recursive = T)
 
 test_that('all files are trimmed', {
-  expect_equal(trimCCNFFiles(2018,2020,'tmp',2),58)
+  expect_warning(tmp <- trimCCNFFiles(2018,2020,'tmp',2, force = TRUE))
+  expect_equal(tmp, 58)
 })
 
-zz <- trimCCNFFiles(2018,2020,'tmp',2)
-
 test_that('files are all trimmed as expected', {
+  expect_warning(zz <- trimCCNFFiles(2018,2020,'tmp',2, force = TRUE))
   expect_equal(length(readNF(f1)), 36)
   expect_equal(length(readNF(f2)), 36)
 })

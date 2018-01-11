@@ -4,7 +4,7 @@
 \alias{trimCCNFFiles}
 \title{Trim Climate Change Natural Flow Files}
 \usage{
-trimCCNFFiles(startYear, endYear, iFolder, nTraces = 112)
+trimCCNFFiles(startYear, endYear, iFolder, nTraces = 112, force = FALSE)
 }
 \arguments{
 \item{startYear}{The desired start year. Should be after 1950 and before 2099.}
@@ -15,6 +15,9 @@ trimCCNFFiles(startYear, endYear, iFolder, nTraces = 112)
 
 \item{nTraces}{The number of traces to process. The default is 112, which is
 the number of traces in the CMIP3 climate change hydrology.}
+
+\item{force}{Boolean. If \code{TRUE} the function will trim the files as specified,
+but if it is \code{FALSE}, then the function stops without trimming any files.}
 }
 \value{
 The number of files that were processed

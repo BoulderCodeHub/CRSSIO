@@ -24,6 +24,8 @@
 #' @param iFolder The path to the trace files, e.g., '/dmi/VIC/'.
 #' @param nTraces The number of traces to process. The default is 112, which is 
 #'   the number of traces in the CMIP3 climate change hydrology.
+#' @param force Boolean. If `TRUE` the function will trim the files as specified,
+#'   but if it is `FALSE`, then the function stops without trimming any files.
 #' 
 #' @return The number of files that were processed
 #' 
@@ -35,8 +37,17 @@
 #' }
 #' 
 #' @export
-trimCCNFFiles <- function(startYear, endYear, iFolder, nTraces = 112)
+trimCCNFFiles <- function(startYear, 
+                          endYear, 
+                          iFolder, 
+                          nTraces = 112, 
+                          force = FALSE)
 {
+  .Deprecated("crssi_create_cmip_nf_files")
+  if (!force)
+    stop("crssi_create_cmip_nf_files is prefered.\n",
+         "Re-run trimCCNFFiles() with 'force = TRUE', if you must use it.")
+  
   if (endYear < startYear){
     stop("In trimCCNFFiles, endYear cannot be before startYear.")
   }

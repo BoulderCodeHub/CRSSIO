@@ -3,7 +3,10 @@
 *In development*
 
 * Formatting and other updates to conform to `goodpractice::gp()`
-* `trimCCNFFiles()` only trims natural flow and salt files, not all files in the directory. (#31)
+* `trimCCNFFiles()` 
+    * only trims natural flow and salt files, not all files in the directory. (#31)
+    * it is also deprecated in favor of `crssi_create_cmip_nf_files()`
+    * it gains a `force` argument that must be `TRUE` to proceed. If it's `FALSE` (default), it won't work, which will hopefully encourage the use of `crssi_create_cmip_nf_files()`
 * New function: `crssi_create_cmip_nf_files()` to create natural flow files from a netcdf file that contains cmip3/5 data. (#30)
 * Changed the default slot name for the Sacramento Year Type Index, which is set by the `crssio.sacYTSlot` option. The default is now "MWD_ICS.SacWYType".
 * New function: `crssi_create_hist_nf_xlsx()` to create the HistoricalNaturalFlows.xlsx file that CRSS relies on. (#29)
