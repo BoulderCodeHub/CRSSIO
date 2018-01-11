@@ -6,7 +6,7 @@
 \title{Create CRSS Natural Flow Input Files}
 \usage{
 crssi_create_dnf_files(iFile, oFolder, startYear, endYear,
-  oFiles = CRSSNFInputNames(), recordToUse = NA)
+  oFiles = CRSSNFInputNames(), recordToUse = NA, overwriteFiles = FALSE)
 
 createCRSSDNFInputFiles(iFile, oFolder, startDate, simYrs,
   oFiles = CRSSNFInputNames(), recordToUse = NA)
@@ -14,10 +14,12 @@ createCRSSDNFInputFiles(iFile, oFolder, startDate, simYrs,
 \arguments{
 \item{iFile}{Either the string "CoRiverNF", or the relative or absolute path
 to the excel workbook. When "CoRiverNF" is used, the data from the \code{CoRiverNF}
-data package is used. Otherwise, it should be a valid path to the natural flow
-Excel workbook.}
+data package is used. Otherwise, it should be a valid path to the natural
+flow Excel workbook.}
 
-\item{oFolder}{The location to write out all trace files.}
+\item{oFolder}{Path to the top level directory where the trace folders and
+input files will be created. This folder should exist before using this
+function.}
 
 \item{startYear}{The year to start the trace files in. Data will be trimmed
 to start in this year.}
@@ -25,16 +27,21 @@ to start in this year.}
 \item{endYear}{The final year of data the trace files will contain.}
 
 \item{oFiles}{A matrix of the file names (input into CRSS). The default uses
-\code{\link{CRSSNFInputNames}}. This must be specified in the correct order, i.e.,
-the same order as the nodes in the input Excel file.}
+\code{\link{CRSSNFInputNames}}. This must be specified in the correct
+order, i.e., the same order as the nodes in the input Excel file.}
 
-\item{recordToUse}{The start and end dates of the natural flow record to perform ISM, if using
-something besides the full record. If it is \code{NA}, the full record will be used. Otherwise, it
-should be a vector of length 2, where the first entry is the start date and the second entry
-is the end date. The vector should be of type \code{\link[zoo]{yearmon}}, or something that will sucessfully
-convert to a \code{\link[zoo]{yearmon}} object.}
+\item{recordToUse}{The start and end dates of the natural flow record to
+perform ISM, if using something besides the full record. If it is \code{NA}, the
+full record will be used. Otherwise, it should be a vector of length 2,
+where the first entry is the start date and the second entry is the end
+date. The vector should be of type \code{\link[zoo]{yearmon}}, or something
+that will sucessfully convert to a \code{\link[zoo]{yearmon}} object.}
 
-\item{startDate}{The start date to be listed in each trace file; should be in 2014-1-31 format}
+\item{overwriteFiles}{A boolean that determines whether or not the function
+should overwrite existing files. See 'Details'.}
+
+\item{startDate}{The start date to be listed in each trace file; should be in
+2014-1-31 format}
 
 \item{simYrs}{The number of years of data each file should contain. Should be
 no longer than the number of years in the input data.}
@@ -47,8 +54,8 @@ Creates the CRSS natural flow input files used by the Colorado River Simulation
 System (CRSS)
 }
 \details{
-\code{createCRSSDNFInputFiles} creates individual trace files for the observed
-natural flow on the Colorado River Basin using the
+\code{crssi_create_dnf_files()} and \code{createCRSSDNFInputFiles()} create individual
+trace files for the observed natural flow on the Colorado River Basin using the
 \href{http://onlinelibrary.wiley.com/doi/10.1111/j.1752-1688.1997.tb03557.x/abstract}{Index Sequential Method}.
 Trace files are formated and saved in a format expected
 by the Colorado River Simulation System (CRSS). Data is read from the natural
@@ -84,21 +91,40 @@ index are necessary. The historical Sacramento year type data (available at
 ISM with the same years as the historical natural flows. This function also
 creates an input file for each trace that includes the Sacramento year type
 index. This file name is controlled by the \code{crssio.sacYTSlot} option and
-defaults to "MWD ICS.SacWYType".
+defaults to "MWD ICS.SacWYType"
+
+\code{overwriteFiles} allows the user to control whether existing files within the
+trace folders should be overwritten (default is they are not).
 }
 \examples{
 
-dir.create('tmp')
+\dontrun{
 # create 107 traces of 107 years using the CoRiverNF R data package
 createCRSSDNFInputFiles("CoRiverNF", 'tmp','2017-1-31',107)
 # will create 20 years for 25 traces based on the 1988-2012 record:
-createCRSSDNFInputFiles("CoRiverNF", 'tmp','2017-1-31',20, 
-  CRSSNFInputNames(version=2),recordToUse=c('1988-1','2012-12'))
+crssi_create_dnf_files("CoRiverNF", 
+  "tmp", 
+  startYear = 2017, 
+  endYear = 2036, 
+  recordToUse=c('1988-1','2012-12')
+)
+# or identical using other function:
+createCRSSDNFInputFiles("CoRiverNF", 
+  "tmp",
+  startDate = "2017-1-31",
+  nYrs = 20, 
+  recordToUse=c('1988-1','2012-12')
+)
 
-\dontrun{
 # path to excel file
 iFile <- 'user/docs/NaturalFlows1906-2012_withExtensions_1.8.15.xlsx'
 # will create 50 years for 107 traces based on the full (1906-2012) record:
+crssi_create_dnf_files(iFile, 
+  'NFSinput/', 
+  startYear = 2015, 
+  endYear = 2064
+)
+# or same from other function:
 createCRSSDNFInputFiles(iFile,'NFSinput/','2015-1-31',50)
 # will create 20 years for 25 traces based on the 1988-2012 record:
 createCRSSDNFInputFiles(iFile,'scratch/','2016-1-31', 20, recordToUse = c('1988-1-31','2012-12-31'))

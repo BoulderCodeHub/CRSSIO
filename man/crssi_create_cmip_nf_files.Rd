@@ -12,7 +12,8 @@ crssi_create_cmip_nf_files(iFile, oFolder, startYear, endYear = 2060,
 data. See 'Details'.}
 
 \item{oFolder}{Path to the top level directory where the trace folders and
-input files will be created.}
+input files will be created. This folder should exist before using this
+function.}
 
 \item{startYear}{The year to start the trace files in. Data will be trimmed
 to start in this year.}

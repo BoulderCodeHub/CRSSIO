@@ -74,17 +74,33 @@
 #' @return Nothing is returned by the function, but it writes out many files.
 #' @examples
 #' 
-#' dir.create('tmp')
+#' \dontrun{
 #' # create 107 traces of 107 years using the CoRiverNF R data package
 #' createCRSSDNFInputFiles("CoRiverNF", 'tmp','2017-1-31',107)
 #' # will create 20 years for 25 traces based on the 1988-2012 record:
-#' createCRSSDNFInputFiles("CoRiverNF", 'tmp','2017-1-31',20, 
-#'   CRSSNFInputNames(version=2),recordToUse=c('1988-1','2012-12'))
+#' crssi_create_dnf_files("CoRiverNF", 
+#'   "tmp", 
+#'   startYear = 2017, 
+#'   endYear = 2036, 
+#'   recordToUse=c('1988-1','2012-12')
+#' )
+#' # or identical using other function:
+#' createCRSSDNFInputFiles("CoRiverNF", 
+#'   "tmp",
+#'   startDate = "2017-1-31",
+#'   nYrs = 20, 
+#'   recordToUse=c('1988-1','2012-12')
+#' )
 #' 
-#' \dontrun{
 #' # path to excel file
 #' iFile <- 'user/docs/NaturalFlows1906-2012_withExtensions_1.8.15.xlsx'
 #' # will create 50 years for 107 traces based on the full (1906-2012) record:
+#' crssi_create_dnf_files(iFile, 
+#'   'NFSinput/', 
+#'   startYear = 2015, 
+#'   endYear = 2064
+#' )
+#' # or same from other function:
 #' createCRSSDNFInputFiles(iFile,'NFSinput/','2015-1-31',50)
 #' # will create 20 years for 25 traces based on the 1988-2012 record:
 #' createCRSSDNFInputFiles(iFile,'scratch/','2016-1-31', 20, recordToUse = c('1988-1-31','2012-12-31'))
