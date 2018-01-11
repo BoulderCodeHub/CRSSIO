@@ -302,3 +302,18 @@ get_dnf_readme_vals <- function(iFile, startYear, endYear, periodToUse)
     createFrom = createFrom
   )
 }
+
+check_nf_oFolder <- function(oFolder, overwriteFiles, calledBy)
+{
+  if (!dir.exists(oFolder))
+    stop(oFolder, " folder does not exist.", "\n",
+         "Create the directory before calling ", calledBy, "()")
+  
+  # check that all folders are empty. If they are empty, then proceed no matter
+  # what; if they are not empty, then check the overwrite argument. if overwrite
+  # is false the throw error, if overwrite is true, then proceed
+  if (length(list.files(oFolder, recursive = TRUE)) != 0 & !overwriteFiles){
+    stop("Trace files exist in ", oFolder, "\n",
+         "  Choose a different folder, delete the files, or use overwriteFiles = TRUE")
+  }
+}

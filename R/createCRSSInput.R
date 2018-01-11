@@ -3,8 +3,8 @@
 #' Creates the CRSS natural flow input files used by the Colorado River Simulation
 #' System (CRSS)
 #' 
-#' \code{createCRSSDNFInputFiles} creates individual trace files for the observed
-#' natural flow on the Colorado River Basin using the 
+#' `crssi_create_dnf_files()` and `createCRSSDNFInputFiles()` create individual 
+#' trace files for the observed natural flow on the Colorado River Basin using the 
 #' \href{http://onlinelibrary.wiley.com/doi/10.1111/j.1752-1688.1997.tb03557.x/abstract}{Index Sequential Method}. 
 #' Trace files are formated and saved in a format expected
 #' by the Colorado River Simulation System (CRSS). Data is read from the natural
@@ -40,13 +40,18 @@
 #' ISM with the same years as the historical natural flows. This function also
 #' creates an input file for each trace that includes the Sacramento year type
 #' index. This file name is controlled by the \code{crssio.sacYTSlot} option and
-#' defaults to "MWD ICS.SacWYType".
+#' defaults to "MWD ICS.SacWYType"
+#' 
+#' `overwriteFiles` allows the user to control whether existing files within the
+#' trace folders should be overwritten (default is they are not). 
 #' 
 #' @param iFile Either the string "CoRiverNF", or the relative or absolute path 
 #' to the excel workbook. When "CoRiverNF" is used, the data from the `CoRiverNF`
 #' data package is used. Otherwise, it should be a valid path to the natural 
 #' flow Excel workbook. 
-#' @param oFolder The location to write out all trace files.
+#' @param oFolder Path to the top level directory where the trace folders and
+#'   input files will be created. This folder should exist before using this
+#'   function.
 #' @param startYear The year to start the trace files in. Data will be trimmed 
 #'   to start in this year.
 #' @param startDate The start date to be listed in each trace file; should be in 
@@ -63,6 +68,8 @@
 #'   where the first entry is the start date and the second entry is the end 
 #'   date. The vector should be of type \code{\link[zoo]{yearmon}}, or something 
 #'   that will sucessfully convert to a \code{\link[zoo]{yearmon}} object.
+#' @param overwriteFiles A boolean that determines whether or not the function
+#'   should overwrite existing files. See 'Details'.
 #' 
 #' @return Nothing is returned by the function, but it writes out many files.
 #' @examples
@@ -87,12 +94,15 @@
 #' 
 #' @export
 crssi_create_dnf_files <- function(iFile, 
-                                    oFolder, 
-                                    startYear, 
-                                    endYear, 
-                                    oFiles = CRSSNFInputNames(),
-                                    recordToUse = NA)
+                                   oFolder, 
+                                   startYear, 
+                                   endYear, 
+                                   oFiles = CRSSNFInputNames(),
+                                   recordToUse = NA,
+                                   overwriteFiles = FALSE)
 {
+  check_nf_oFolder(oFolder, overwriteFiles, "crssi_create_dnf_files")
+  
   if(iFile == 'CoRiverNF'){
     # use the data in CoRiverNF::monthlyInt
     nf <- CoRiverNF::monthlyInt

@@ -14,6 +14,20 @@ p1 <- '..'
 rr <- sample(1:29, 4) # get 4 random nodes
 message(cat('\n4 random nodes are:',rr))
 
+test_that("Upfront errors post correctly", {
+  expect_error(
+    crssi_create_dnf_files(
+      'CoRiverNF', 
+      oFolder = 'doesNotExist', 
+      startYear = 2017, 
+      endYear = 2021, 
+      recordToUse = c('1950-01','1954-12')
+    ),
+    paste0(file.path("doesNotExist"), " folder does not exist.", "\n", 
+           "Create the directory before calling crssi_create_dnf_files()")
+  )
+})
+
 # because we are using pre- 1971 data, we do not need to regenerate the data
 # in the provided trace folders each time the natural flow are updated
 test_that('can create files',{
