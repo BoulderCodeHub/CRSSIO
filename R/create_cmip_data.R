@@ -173,7 +173,8 @@ write_nc_single_trace <- function(nc,
 #' @param iFile Path to netcdf file containing the CMIP based natural inflow
 #'   data. See 'Details'.
 #' @param oFolder Path to the top level directory where the trace folders and
-#'   input files will be created.
+#'   input files will be created. This folder should exist before using this
+#'   function.
 #' @param startYear The year to start the trace files in. Data will be trimmed 
 #'   to start in this year. 
 #' @param endYear The final year of data the trace files will contain.
@@ -216,17 +217,7 @@ crssi_create_cmip_nf_files <- function(iFile,
   if (tools::file_ext(iFile) != "nc")
     stop(iFile, " does not appear to be a netcdf file.")
   
-  if (!dir.exists(oFolder))
-    stop(oFolder, " folder does not exist.", "\n",
-         "Create the directory before calling crssi_create_cmip_nf_files()")
-  
-  # check that all folders are empty. If they are empty, then proceed no matter
-  # what; if they are not empty, then check the overwrite argument. if overwrite
-  # is false the throw error, if overwrite is true, then proceed
-  if (length(list.files(oFolder, recursive = TRUE)) != 0 & !overwriteFiles){
-    stop("Trace files exist in ", oFolder, "\n",
-         "  Choose a different folder, delete the files, or use overwriteFiles = TRUE")
-  }
+  check_nf_oFolder(oFolder, overwriteFiles, "crssi_create_cmip_nf_files")
   
   if (endYear < startYear)
     stop("EndYear cannot be before startYear.")
