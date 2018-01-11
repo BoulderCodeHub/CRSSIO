@@ -53,37 +53,10 @@ crssi_create_hist_nf_xlsx <- function(modelStartYear, nYearAvg = 5, oFolder = ".
   # LB nodes intervening natural flow -------------------
   lbSites <- c("Hoover", "Davis", "Alamo", "Parker", "Imperial")
   
-  lb <- nf_xts_to_df(CoRiverNF::monthlyInt, lbSites)
-  
+  lb <- nf_xts_to_df(CoRiverNF::monthlyInt, lbSites) %>%
   # fill the necessary years with avg data -------------------
-  fillBegin <- max(lb$year) + 1
-  fillEnd <- modelStartYear - 1
-  # don't have to create fill data if the nf data extends up through or past
-  # the beginning of the model run
-  if (fillEnd >= fillBegin){
-    # call get_monthly_average_by_site for all sites
-    t2 <- lapply(
-      lbSites, 
-      function(site) get_monthly_average_by_site(lb, site, nYearAvg)
-    ) %>%
-      Reduce(function(dtf1, dtf2) dplyr::full_join(dtf1, dtf2, by = "month"), .)
-
-        
-    # for all the fill years, use t2, create the tmp year and bind it to lb
-    fillYrs <- seq(fillBegin, fillEnd)
-    
-    for (tmpYr in fillYrs) {
-      lb <- dplyr::bind_rows(
-        lb, 
-        t2 %>%
-          tibble::add_column("year" = tmpYr) %>%
-          dplyr::select_at(.vars = colnames(lb))
-      )
-    }
-  }
-  
-  # prepare lb for formatting
-  lb <- lb %>%
+    fill_nf_data_with_avg(lbSites, modelStartYear, nYearAvg) %>%
+    # prepare lb for formatting
     dplyr::arrange_at(c("year", "month")) %>%
     tidyr::unite_("month", from = c("month", "year"), sep = "/1/") %>%
     dplyr::select_at(c("month", lbSites)) %>%
@@ -136,6 +109,37 @@ nf_xts_to_df <- function(x, nfGages = nfShortNames())
       "month" = as.numeric(format(., "%m"))
     )) %>%
     dplyr::select(-dplyr::matches("ym"))
+}
+
+fill_nf_data_with_avg <- function(x, nfGages, modelStartYear, nYearAvg)
+{
+  fillBegin <- max(x$year) + 1
+  fillEnd <- modelStartYear - 1
+  # don't have to create fill data if the nf data extends up through or past
+  # the beginning of the model run
+  if (fillEnd >= fillBegin){
+    # call get_monthly_average_by_site for all sites
+    t2 <- lapply(
+      nfGages, 
+      function(site) get_monthly_average_by_site(x, site, nYearAvg)
+    ) %>%
+      Reduce(function(dtf1, dtf2) dplyr::full_join(dtf1, dtf2, by = "month"), .)
+    
+    
+    # for all the fill years, use t2, create the tmp year and bind it to lb
+    fillYrs <- seq(fillBegin, fillEnd)
+    
+    for (tmpYr in fillYrs) {
+      x <- dplyr::bind_rows(
+        x, 
+        t2 %>%
+          tibble::add_column("year" = tmpYr) %>%
+          dplyr::select_at(.vars = colnames(x))
+      )
+    }
+  }
+  
+  x
 }
 
 get_monthly_average_by_site <- function(x, site, nYearAvg)
