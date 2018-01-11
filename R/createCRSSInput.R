@@ -117,6 +117,10 @@ crssi_create_dnf_files <- function(iFile,
                                    recordToUse = NA,
                                    overwriteFiles = FALSE)
 {
+  if (tools::file_ext(iFile) != "xlsx" & iFile != "CoRiverNF")
+    stop(iFile, " does not appear to be valid.\n", 
+      "It should be either an Excel (xlsx) file or 'CoRiverNF'")
+  
   check_nf_oFolder(oFolder, overwriteFiles, "crssi_create_dnf_files")
   
   if(iFile == 'CoRiverNF'){

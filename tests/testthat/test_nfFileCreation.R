@@ -14,6 +14,7 @@ p1 <- '..'
 rr <- sample(1:29, 4) # get 4 random nodes
 message(cat('\n4 random nodes are:',rr))
 
+# check errors -------------------
 test_that("Upfront errors post correctly", {
   expect_error(
     crssi_create_dnf_files(
@@ -26,8 +27,21 @@ test_that("Upfront errors post correctly", {
     paste0(file.path("doesNotExist"), " folder does not exist.", "\n", 
            "Create the directory before calling crssi_create_dnf_files()")
   )
+  expect_error(
+    crssi_create_dnf_files(
+      "CoRiverNF.txt", 
+      oFolder = 'doesNotExist', 
+      startYear = 2017, 
+      endYear = 2021, 
+      recordToUse = c('1950-01','1954-12')
+    ),
+    paste0("CoRiverNF.txt does not appear to be valid.\n", 
+         "It should be either an Excel (xlsx) file or 'CoRiverNF'"),
+    fixed = TRUE
+  )
 })
 
+# check the two different fucntions create data -------
 # because we are using pre- 1971 data, we do not need to regenerate the data
 # in the provided trace folders each time the natural flow are updated
 test_that('can create files',{
@@ -52,7 +66,7 @@ test_that('can create files',{
   )
 })
 
-# check that all files in the two directories are the same
+# check that all files in the two directories are the same -------------
 
 dirs <- list.dirs('tmp', recursive = FALSE, full.names = FALSE)
 for(curDir in dirs){
