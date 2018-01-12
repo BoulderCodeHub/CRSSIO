@@ -88,39 +88,12 @@ shortOrderLimit <- function()
 	r
 }
 
-#' Matrix for slot aggregation list for system conditions
-#' 
-#' \code{sysCondSALMatrix} returns a matrix for use in creating the slot aggregation
-#' list to get the variables necessary to create the system conditions table.
-#' 
-#' The matrix returned by \code{sysCondSALMatrix} contains all of the slots and
-#' their corresponding variable names that are expected in 
-#' \code{\link{createSysCondTable}}. This matrix should be passed to
-#' \code{RWDataPlyr::\link[RWDataPlyr]{createSlotAggList}} to create the necessary
-#' slot aggregation list that \code{RWDataPlyr::\link[RWDataPlyr]{getDataForAllScens}}
-#' uses. See the example in \code{\link{createSysCondTable}} for an example of
-#' using all of these functions together. 
-#' 
-#' This is a convenience function to save the user from having to routinely 
-#' recreate the information to pass to \code{RWDataPlyr::createSlotAggList} for
-#' the system conditions table. Additionally, since \code{createSysCondTable}
-#' expects a specific set of variable names, this ensures the slots from CRSS
-#' are correctly mapped to these variables. 
-#' 
-#' @return 17x5 character matrix
-#' @seealso \code{\link{createSysCondTable}}
-#' @export
-
-sysCondSALMatrix <- function()
-{
-  n <- length(slotNames())
-  r <- cbind(rep('SystemConditions.rdf',n), slotNames(), rep('AnnualRaw',n), 
-             rep(NA, n), vShort())
-  r
-}
-
 #' Create standard CRSS system conditions table
 #' 
+#' Create the standard system conditions table (`crsso_get_sys_cond_table()`) 
+#' using the prespecified set of CRSS slots (`sys_cond_matrix()`)
+#' 
+#' @details
 #' `crsso_get_sys_cond_table()` creates the standard system conditions table 
 #' that is commonly created from CRSS results, e.g., slide 6 at
 #' \url{https://www.usbr.gov/lc/region/g4000/crss-5year.pdf}. The table reports 
@@ -129,31 +102,34 @@ sysCondSALMatrix <- function()
 #' 
 #' @param zz Full data for all years/traces necessary for creating System 
 #'   Conditions table. `zz` should be a data frame returned from 
-#'   \code{RWDataPlot::\link[RWDataPlyr]{getDataForAllScens}} that contains all
+#'   [RWDataPlyr::getDataForAllScens()] that contains all
 #'   of the 17 variables necessary to create the system conditions table.
 #' @param yrs Vector of years to provide the system conditions for. 
-#'   Ex: `2017:2020``
+#'   Ex: `2017:2020`
 #' 
-#' @return Named list with two matrices. The first matrix (\code{'fullTable'}) 
+#' @return `crsso_get_sys_cond_table()` returns a named list with two matrices, 
+#'   i.e., system condition tables. The first matrix (`fullTable`) 
 #'   includes the system conditions for the specified years including the 
 #'   breakout of Lower Elevation Balancing releases.  The second matrix 
-#'   (`"limitedTable"`) includes the system conditions without the Lower 
+#'   (`limitedTable`) includes the system conditions without the Lower 
 #'   Elevation Balancing breakout.
 #' 
 #' @examples
 #' # use RWDataPlyr package to get the data to create the system conditions table
 #' require(RWDataPlyr)
-#' slotAggList <- RWDataPlyr::createSlotAggList(CRSSIO::sysCondSALMatrix())
+#' slotAggList <- RWDataPlyr::createSlotAggList(CRSSIO::sys_cond_matrix())
 #' scenFolder <- 'DNF,CT,IG'
 #' scenName <- 'DNF Hydrology'
 #' scenPath <- system.file('extdata','Scenario/',package = 'RWDataPlyr')
 #' sysData <- RWDataPlyr::getDataForAllScens(scenFolder, scenName, slotAggList,
 #'                                           scenPath, 'tmp.feather', TRUE)
 #' sysCondTable <- crsso_get_sys_cond_table(sysData, 2018:2022)
-#' sysCondTable[['limitedTable']]
 #' 
-#' @seealso \code{\link{sysCondSALMatrix}}
+#' # print out the limited table
+#' sysCondTable$limitedTable
+#' 
 #' @export
+#' @rdname sys_cond_table
 crsso_get_sys_cond_table <- function(zz, yrs)
 {
   # if there there is a "Scenario" dimension and there are more than 1 scenarios, 
@@ -231,11 +207,45 @@ crsso_get_sys_cond_table <- function(zz, yrs)
 }
 
 #' @export
-#' @rdname crsso_get_sys_cond_table
+#' @rdname sys_cond_table
 
 createSysCondTable <- function(zz, yrs)
 {
   .Deprecated("createSysCondTable")
   
   crsso_get_sys_cond_table(zz, yrs)
+}
+
+#' @details
+#' `sys_cond_matrix()` is a convenience function to save the user from having to 
+#' routinely recreate the information to pass to 
+#' [RWDataPlyr::createSlotAggList()] when creating the system conditions table.
+#' The matrix returned by `sys_cond_matrix()` contains all of the slots and
+#' their corresponding variable names that are expected in 
+#' `crsso_get_sys_cond_table()`. This matrix should be passed to
+#' [RWDataPlyr::createSlotAggList()] to create the necessary
+#' slot aggregation list that [RWDataPlyr::getDataForAllScens()]
+#' uses. Since `crsso_get_sys_cond_table()` expects a specific set of variable 
+#' names, this function ensures the slots from CRSS are correctly mapped to 
+#' those expected variables. 
+#' 
+#' @return `sys_cond_matrix()` returns a 17x5 character matrix.
+#' 
+#' @export
+#' @rdname sys_cond_table
+
+sys_cond_matrix <- function()
+{
+  n <- length(slotNames())
+  r <- cbind(rep('SystemConditions.rdf',n), slotNames(), rep('AnnualRaw',n), 
+             rep(NA, n), vShort())
+  r
+}
+
+#' @export
+#' @rdname sys_cond_table
+sysCondSALMatrix <- function()
+{
+  .Deprecated("sys_cond_matrix")
+  sys_cond_matrix()
 }

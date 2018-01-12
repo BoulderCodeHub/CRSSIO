@@ -3,7 +3,7 @@ library(dplyr)
 
 context('Check system condition table creation')
 
-slotAggList <- RWDataPlyr::createSlotAggList(CRSSIO::sysCondSALMatrix())
+slotAggList <- RWDataPlyr::createSlotAggList(CRSSIO::sys_cond_matrix())
 scenFolder <- "DNF,CT,IG"
 scenName <- 'scen1'
 scenPath <- system.file('extdata','Scenario/',package = 'RWDataPlyr')

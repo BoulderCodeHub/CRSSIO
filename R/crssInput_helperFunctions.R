@@ -17,8 +17,8 @@ getAllISMMatrices <- function(nfMat, startMonth, nYrs)
   # make sure matrix is correct dimension
   if(ncol(nfMat) != 29)
     stop('nfMat does not contain 29 columns (natural flow nodes).')
-  # then call createISMMatrix for every node
-  lapply(1:29, function(x) createISMMatrix(nfMat[,x], startMonth, nYrs))
+  # then call ism_get_site_matrix for every node
+  lapply(1:29, function(x) ism_get_site_matrix(nfMat[,x], startMonth, nYrs))
 }
 
 #' Read in NF Excel file and format it
@@ -218,7 +218,7 @@ writeSacYT <- function(traceNum, ytData, startDate, folderPath)
 
 getYTISMData <- function(startDate, simYrs, y1, y2)
 {
-  yt <- createISMMatrix(
+  yt <- ism_get_site_matrix(
     sacYT[paste0(y1, "/", y2)], 
     startMonth = zoo::as.yearmon(startDate),
     nYrs = simYrs, 

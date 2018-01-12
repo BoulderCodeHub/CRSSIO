@@ -1,8 +1,8 @@
 
 #' Compute Volume from Elevation for a Reservoir
 #' 
-#' \code{elevation2Volume} computes the volume for a given elevation for a 
-#' particular reservoir.
+#' `elevation_to_storage()` computes the storage (volume) for a given elevation 
+#' for a particular reservoir included in CRSS.
 #' 
 #' Elevation is assumed to be provided in feet, and the volume will be returned 
 #' in acre-feet. Currently, the function will work for Flaming Gorge, Navajo, 
@@ -21,14 +21,14 @@
 #' reservoir.
 #' 
 #' @examples 
-#' elevation2Volume(1075, "mead")
-#' elevation2Volume(6000, "Flaming Gorge")
-#' elevation2Volume(c(6000, 6001, 6004.6), "flamingGorge")
+#' elevation_to_storage(1075, "mead")
+#' elevation_to_storage(6000, "Flaming Gorge")
+#' elevation_to_storage(c(6000, 6001, 6004.6), "flamingGorge")
 #' 
 #' @export
 #' 
 
-elevation2Volume <- function(elevation, reservoir)
+elevation_to_storage <- function(elevation, reservoir)
 {
   reservoir <- tolower(gsub(" ", "", reservoir))
   resNames <- c("navajo", "bluemesa", "flaminggorge", "powell", "mead")
@@ -42,4 +42,12 @@ elevation2Volume <- function(elevation, reservoir)
   )
   
   e2vFunc(elevation)
+}
+
+#' @export
+#' @rdname elevation_to_storage
+elevation2Volume <- function(elevation, reservoir)
+{
+  .Deprecated("elevation_to_storage")
+  elevation_to_storage(elevation, reservoir)
 }
