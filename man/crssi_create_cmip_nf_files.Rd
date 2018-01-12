@@ -5,7 +5,7 @@
 \title{Create CRSS natural flow input files from CMIP data}
 \usage{
 crssi_create_cmip_nf_files(iFile, oFolder, startYear, endYear = 2060,
-  scenarioNumber, oFiles = CRSSNFInputNames(), overwriteFiles = FALSE)
+  scenarioNumber, oFiles = nf_file_names(), overwriteFiles = FALSE)
 }
 \arguments{
 \item{iFile}{Path to netcdf file containing the CMIP based natural inflow
@@ -77,9 +77,9 @@ a README file is created in \code{oFolder} that provides some metadata on the
 creation of the trace files.
 
 \code{oFiles} sets the individual file names for the natural inflow locations. If
-you do not use \code{\link{CRSSNFInputNames}()}, oFiles should contain 29 strings:
+you do not use \code{\link{nf_file_names()}()}, oFiles should contain 29 strings:
 one for each of the natural inflow locations, and should be specified in the
-default order corresponding to the gages in \code{\link{nfGageNames}()}.
+default order corresponding to the gages in \code{\link{nf_gage_names}()}.
 
 \code{overwriteFiles} allows the user to control whether existing files within the
 trace folders should be overwritten (default is they are not).

@@ -6,10 +6,10 @@
 \title{Create CRSS Natural Flow Input Files}
 \usage{
 crssi_create_dnf_files(iFile, oFolder, startYear, endYear,
-  oFiles = CRSSNFInputNames(), recordToUse = NA, overwriteFiles = FALSE)
+  oFiles = nf_file_names(), recordToUse = NA, overwriteFiles = FALSE)
 
 createCRSSDNFInputFiles(iFile, oFolder, startDate, simYrs,
-  oFiles = CRSSNFInputNames(), recordToUse = NA, overwriteFiles = FALSE)
+  oFiles = nf_file_names(), recordToUse = NA, overwriteFiles = FALSE)
 }
 \arguments{
 \item{iFile}{Either the string "CoRiverNF", or the relative or absolute path
@@ -27,7 +27,7 @@ to start in this year.}
 \item{endYear}{The final year of data the trace files will contain.}
 
 \item{oFiles}{A matrix of the file names (input into CRSS). The default uses
-\code{\link{CRSSNFInputNames}}. This must be specified in the correct
+\code{\link{nf_file_names}()}. This must be specified in the correct
 order, i.e., the same order as the nodes in the input Excel file.}
 
 \item{recordToUse}{The start and end dates of the natural flow record to

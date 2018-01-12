@@ -163,9 +163,9 @@ write_nc_single_trace <- function(nc,
 #' creation of the trace files.
 #' 
 #' `oFiles` sets the individual file names for the natural inflow locations. If
-#' you do not use `\link{CRSSNFInputNames}()`, oFiles should contain 29 strings:
+#' you do not use `\link{nf_file_names()}()`, oFiles should contain 29 strings:
 #' one for each of the natural inflow locations, and should be specified in the
-#' default order corresponding to the gages in `\link{nfGageNames}()`. 
+#' default order corresponding to the gages in `\link{nf_gage_names}()`. 
 #' 
 #' `overwriteFiles` allows the user to control whether existing files within the
 #' trace folders should be overwritten (default is they are not). 
@@ -207,7 +207,7 @@ crssi_create_cmip_nf_files <- function(iFile,
                                       startYear, 
                                       endYear = 2060, 
                                       scenarioNumber,
-                                      oFiles = CRSSNFInputNames(),
+                                      oFiles = nf_file_names(),
                                       overwriteFiles = FALSE)
 {
   # check arguments are valid ---------------

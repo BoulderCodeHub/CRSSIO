@@ -8,14 +8,14 @@ context("test the internal fuctions for crssi_create_hist_nf_xlsx()")
 # version of CoRiverNF
 
 zz <- CoRiverNF::monthlyInt["/1971"]
-nf1 <- sample(nfShortNames(), 8, replace = FALSE)
-nf2 <- sample(nfShortNames(), 12, replace = FALSE)
+nf1 <- sample(nf_gage_abbrv(), 8, replace = FALSE)
+nf2 <- sample(nf_gage_abbrv(), 12, replace = FALSE)
 
 test_that("nf_xts_to_df() returns correct data.frame", {
   expect_s3_class(CRSSIO:::nf_xts_to_df(zz), "data.frame")
   expect_length(colnames(CRSSIO:::nf_xts_to_df(zz)), 29 + 2)
   expect_length(
-    colnames(CRSSIO:::nf_xts_to_df(zz, nfShortNames()[1:10])),
+    colnames(CRSSIO:::nf_xts_to_df(zz, nf_gage_abbrv()[1:10])),
     10 + 2
   )
   expect_true(
@@ -54,7 +54,7 @@ test_that("fill_nf_data_with_avg() returns correct average", {
   # if model start year is at or before the end of the nf data, or just one year
   # after, then nothing should be done, and it just returns the original data 
   # frame
-  expect_equal(CRSSIO:::fill_nf_data_with_avg(zz, nfShortNames(), 1972, 5), zz)
+  expect_equal(CRSSIO:::fill_nf_data_with_avg(zz, nf_gage_abbrv(), 1972, 5), zz)
   expect_equal(CRSSIO:::fill_nf_data_with_avg(zz, nf1, 1965, 10), zz)
   # check the data frame returned for a 10-year average
   expect_s3_class(

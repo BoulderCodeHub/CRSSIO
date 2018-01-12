@@ -38,9 +38,9 @@ seperateHeaderFromData <- function(x) {
 #' @param startDate string of new starting date. Should be in 2012-1-31 format. 
 #' 
 #' @export
-changeStartDate <- function(nTrace, folder, startDate)
+crssi_change_nf_start_date <- function(nTrace, folder, startDate)
 {
-	timeInfo <- paste(startDate,' 24:00', sep = '')
+  timeInfo <- paste(startDate,' 24:00', sep = '')
 	
 	# if the new start date is before the old start date, issue a warning
 	# but only issue the warning once per call of this function, b/c issuing 
@@ -94,10 +94,18 @@ changeStartDate <- function(nTrace, folder, startDate)
 	  warning(
 	    "The new start date is before the original start date.\n",
 	    "  This may result in not a long enough time series in the new run.\n",
-	    "  Consider using createCRSSDNFInputFiles() instead."
+	    "  Consider using crssi_create_dnf_files() instead."
 	  )
 	
 	invisible(nTrace)
+}
+
+#' @export
+#' @rdname crssi_change_nf_start_date
+changeStartDate <- function(nTrace, folder, startDate)
+{
+  .Deprecated("crssi_change_nf_start_date")
+  crssi_change_nf_start_date(nTrace, folder, startDate)
 }
 
 #' Change Start Date of Evap Files
@@ -115,7 +123,7 @@ changeStartDate <- function(nTrace, folder, startDate)
 #' @param NZeros is the number of zeros to add to the data that is read in
 #' 
 #' @export
-changeStartDateForEvapAndAddZeros <- function(nTrace, folder, startDate, NZeros)
+crssi_change_evap_files <- function(nTrace, folder, startDate, NZeros)
 {
 	timeInfo <- paste('start_date: ',startDate,' 24:00\n', sep = '')
   powellFiles <- c(
@@ -159,5 +167,13 @@ changeStartDateForEvapAndAddZeros <- function(nTrace, folder, startDate, NZeros)
 			}
 		}
 	}
+}
+
+#' @export
+#' @rdname crssi_change_evap_files
+changeStartDateForEvapAndAddZeros <- function(nTrace, folder, startDate, NZeros)
+{
+  .Deprecated("crssi_change_evap_files")
+  crssi_change_evap_files(nTrace, folder, startDate, NZeros)
 }
 

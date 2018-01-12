@@ -16,8 +16,8 @@
 #' @note 
 #' Assumes folder numbers will always start at 1. Additionally, it only attempts 
 #' to trim files that have expected natural flow or natural salt file names. 
-#' These are the file names returned by `\link{CRSSNFInputNames}()` and 
-#' `\link{CRSSNatSaltInputNames}()`.
+#' These are the file names returned by `\link{nf_file_names}()` and 
+#' `\link{natsalt_file_names}()`.
 #' 
 #' @param startYear The desired start year. Should be after 1950 and before 2099.
 #' @param endYear The desired end year. Should be after 1950 and before 2099.
@@ -77,7 +77,7 @@ trimFilesInFolder <- function(folder, startYear, endYear)
   allFiles <- list.files(folder)
   # remove the files that aren't either natural flow, or natural salt files, or 
   # hydrology increment
-  validFiles <- c(CRSSNFInputNames(), CRSSNatSaltInputNames())
+  validFiles <- c(nf_file_names(), natsalt_file_names())
   allFiles <- allFiles[allFiles %in% validFiles]
   allFiles <- file.path(folder, allFiles)
   message(paste('Processing:',folder))

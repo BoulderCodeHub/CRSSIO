@@ -13,7 +13,7 @@ p1 <- '..' # for automated tests
 #p1 <- 'tests'
 rr <- sample(1:29, 4) # get 4 random nodes
 message(cat('4 random nodes are:',rr))
-rr <- CRSSNFInputNames()[rr]
+rr <- nf_file_names()[rr]
 
 f1 <- file.path('tmp/trace1',rr[1])
 f2 <- file.path('tmp/trace2',rr[2])

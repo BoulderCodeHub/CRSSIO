@@ -97,7 +97,7 @@ crssi_create_hist_nf_xlsx <- function(modelStartYear, nYearAvg = 5, oFolder = ".
 #' @keywords internal
 #' @noRd
 
-nf_xts_to_df <- function(x, nfGages = nfShortNames())
+nf_xts_to_df <- function(x, nfGages = nf_gage_abbrv())
 {
   x %>%
     as.data.frame() %>%

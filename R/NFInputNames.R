@@ -1,35 +1,34 @@
-#' Get vector of CRSS natural inflow file names
+#' Get vector of natural flow and salt gage names, filenames, and abbreviations
 #' 
-#' \code{CRSSNFInputNames} returns a vector with the CRSS natural inflow file
-#' names in the correct node order.
+#' These functions return the natural flow and salt file names (`nf_file_names()` 
+#' and `natsalt_file_names()`), the natural flow gage names (`nf_gage_names()`), and 
+#' the abbreviations (`nf_gage_abbrv()`) of the natural flow gage names in the 
+#' standard node order used by Reclamation and expected by CRSS. 
 #' 
-#' This function returns a vector with the file names used by CRSS to import
-#' the natural flows. The order matches the node order used by Reclamation and
-#' CRSS and thus should not be modified. As the structure to CRSS changes, 
-#' the file names also may change. If this occurs in the future, the function
-#' will be modified to return different values for different versions of CRSS.
-#' 
-#' This is the default function used by \code{\link{createCRSSDNFInputFiles}} 
-#' for creating the input files for CRSS.
-#' 
-#' @return Vector of characters (file names).
+#' @details 
+#' `nf_file_names()` and `natsalt_file_names()` return file names that
+#' CRSS is expecting to read in for natural flow and salt input data.
 #' 
 #' @param version The CRSS version number. Current version of CRSS is 2. Valid 
-#' versions are 1 or 2.
+#'   versions are 1 or 2.
+#'   
+#' @return Vector of characters with 29 entries (file names, gage names, gage 
+#'   abbreviations).
 #' 
 #' @examples
-#' fileNames <- CRSSNFInputNames()
+#' fileNames <- nf_file_names()
 #' \dontrun{
 #' iFiles <- 'NaturalFlows1906-2012_withExtensions_1.8.15.xlsx'
-#' createCRSSDNFInputFiles(iFile,'NFSinput/','2015-1-31',50,fileNames)
+#' crssi_create_dnf_files(iFile,'NFSinput/','2015-1-31',50,fileNames)
 #' }
 #' @seealso
-#' \code{\link{createCRSSDNFInputFiles}}, \code{\link{CRSSNatSaltInputNames}}
+#' \code{\link{crssi_create_dnf_files}}
 #' 
 #' @export
-CRSSNFInputNames <- function(version=2)
+#' @rdname nf_natsalt_names
+nf_file_names <- function(version = 2)
 {
-	if(version ==2){
+	if (version == 2 ) {
 	  return(c('UpperColoradoReach.Inflow',
 		'UpperColoradoAboveCameo_GainsAboveCameo.Local_Inflow',
 		'TaylorPark.Inflow',
@@ -90,36 +89,15 @@ CRSSNFInputNames <- function(version=2)
 	  'CoRivMohaveToHavasu_GainsAboveParker.Local_Inflow',                              
 	  'AboveImperialDamColoradoR_GainsOnColoRAboveImperialDam.Local_Inflow')) 
 	} else{
-	  stop('Invalid version number in CRSSNFInputNames')
+	  stop('Invalid version number in nf_file_names')
 	}
 }
 
-
-#' Get vector of CRSS natural salt input file names
-#' 
-#' \code{CRSSNatSaltInputNames} returns a vector with the CRSS natural salt file
-#' names in the correct node order.
-#' 
-#' This function returns a vector with the file names used by CRSS to import
-#' the natural salt. The order matches the node order used by Reclamation and
-#' CRSS and thus should not be modified. As the structure to CRSS changes, 
-#' the file names also may change. If this occurs in the future, the function
-#' will be modified to return different values for different versions of CRSS.
-#' 
-#' @return Vector of characters (file names).
-#' 
-#' @param version The CRSS version number. Current version of CRSS is 2. Valid 
-#' versions are 1 or 2.
-#' 
-#' @examples
-#' fileNames <- CRSSNatSaltInputNames(2)
-#' @seealso
-#' \code{\link{CRSSNFInputNames}}
-#' 
 #' @export
-CRSSNatSaltInputNames <- function(version=2)
+#' @rdname nf_natsalt_names
+natsalt_file_names <- function(version=2)
 {
-	if(version == 2){
+	if (version == 2) {
 	  return(c('UpperColoradoReach.Inflow_Salt_Concentration',
       'UpperColoradoAboveCameo_GainsAboveCameo.Local_Inflow_Salt_Concentration',
       'TaylorPark.Inflow_Salt_Concentration',
@@ -148,7 +126,7 @@ CRSSNatSaltInputNames <- function(version=2)
       'CoRivMohaveToHavasu_BillWilliamsRiver.Local_Inflow_Salt_Concentration',
       'CoRivMohaveToHavasu_GainsAboveParker.Local_Inflow_Salt_Concentration',
       'AboveImperialDamColoradoR_GainsOnColoRAboveImperialDam.Local_Inflow_Salt_Concentration'))
-	} else if(version == 1){
+	} else if (version == 1) {
   return(c('UpperColoradoReach.Inflow_Salt_Concentration',
 		'UpperColoradoReach_GainsAboveCameo.Local_Inflow_Salt_Concentration',
 		'TaylorPark.Inflow_Salt_Concentration',
@@ -184,29 +162,14 @@ CRSSNatSaltInputNames <- function(version=2)
 
 }
 
-#' Get vector of CRSS natural inflow USGS gage names
-#' 
-#' \code{nfGageNames} returns a vector with the CRSS natural flow node USGS gage
-#' names in the correct node order.
-#' 
-#' This function returns a vector with the USGS gage names used by CRSS 
-#' corresponding to the natural flow basins. The order matches the node order 
-#' used by Reclamation and CRSS and thus should not be modified.
-#' 
-#' The gage names returned here, match the CRSS natural inflow slot names 
-#' returned by \code{\link{CRSSNFInputNames}}
-#' 
-#' @return Vector of characters (file names).
-#' @examples
-#' # get the gage name for node 20 
-#' nfGageNames()[20]
-#' # and then see the CRSS natural inflow slot name corresponding to this gage
-#' CRSSNFInputNames()[20]
-#' @seealso
-#' \code{\link{CRSSNFInputNames}}
+#' @details
+#' `nf_gage_names()` returns a vector with the USGS gage names used by 
+#' CRSS  corresponding to the natural flow basins. The order matches the node 
+#' order used by Reclamation and CRSS and thus should not be modified.
 #' 
 #' @export
-nfGageNames <- function()
+#' @rdname nf_natsalt_names
+nf_gage_names <- function()
 {
   c("Colorado River At Glenwood Springs, CO", 
     "Colorado River Near Cameo, CO",
@@ -240,33 +203,23 @@ nfGageNames <- function()
   )
 }
 
-#' Get vector of CRSS natural inflow shorthand names
+#' @details 
+#' `nf_gage_abbrv()` returns an abbreviated shorthand name for the natural flow
+#' gages/nodes, because it is it is desirable to have shorthand names for many 
+#' purposes, i.e., variable names.
 #' 
-#' \code{nfShortNames} returns a vector with the CRSS natural flow node 
-#' shorthand names in the correct node order.
-#' 
-#' For many purposes, it is desirable to have shorthand names for the natural 
-#' flow nodes used in CRSS. This function returns a vector with the shorthand 
-#' names used by CRSS corresponding to the the natural flow basins. The order 
-#' matches the node order used by Reclamation and CRSS and thus should not be 
-#' modified.
-#' 
-#' The shorthand names returned here, match the CRSS natural inflow slot names 
-#' returned by \code{\link{CRSSNFInputNames}}
-#' 
-#' @return Vector of characters (file names).
 #' @examples
+#' 
 #' # get the gage name for node 20 
-#' nfGageNames()[20]
+#' nf_gage_name()[20]
 #' # and its shorthand name
-#' nfShortNames()[20]
-#' # and then see the CRSS natural inflow slot name corresponding to this gage
-#' CRSSNFInputNames()[20]
-#' @seealso
-#' \code{\link{CRSSNFInputNames}}, \code{\link{nfGageNames}}
+#' nf_gage_abbrv()[20]
+#' # and then see the CRSS natural inflow file name corresponding to this gage
+#' nf_file_names()[20]
 #' 
 #' @export
-nfShortNames <- function()
+#' @rdname nf_natsalt_names
+nf_gage_abbrv <- function()
 {
   c("GlenwoodSprings", "Cameo", "TaylorPark", "BlueMesa", "Crystal", 
     "GrandJunction", "CiscoDolores", "CiscoColorado", "Fontenelle", 
@@ -274,4 +227,36 @@ nfShortNames <- function()
     "GreenRiverUTGreen", "GreenRiverUTSanRafael", "Archuleta", "Bluff", 
     "LeesFerry", "LeesFerryParia", "Cameron", "GrandCanyon", "Littlefield",
     "Hoover", "Davis", "Alamo", "Parker", "Imperial")
+}
+
+#' @export
+#' @rdname nf_natsalt_names
+CRSSNFInputNames <- function(version = 2)
+{
+  .Deprecated("nf_file_names")
+  nf_file_names(version)
+}
+
+#' @export
+#' @rdname nf_natsalt_names
+CRSSNatSaltInputNames <- function(version = 2)
+{
+  .Deprecated("natsalt_file_names")
+  natsalt_file_names(version)
+}
+
+#' @export
+#' @rdname nf_natsalt_names
+nfGageNames <- function()
+{
+  .Deprecated("nf_gage_names")
+  nf_gage_names()
+}
+
+#' @export
+#' @rdname nf_natsalt_names
+nfShortNames <- function()
+{
+  .Deprecated("nf_gage_abbrv")
+  nf_gage_abbrv()
 }

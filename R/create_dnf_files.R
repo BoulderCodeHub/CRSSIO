@@ -60,7 +60,7 @@
 #' @param simYrs The number of years of data each file should contain. Should be
 #' no longer than the number of years in the input data.
 #' @param oFiles A matrix of the file names (input into CRSS). The default uses
-#'   \code{\link{CRSSNFInputNames}}. This must be specified in the correct 
+#'   \code{\link{nf_file_names}()}. This must be specified in the correct 
 #'   order, i.e., the same order as the nodes in the input Excel file.
 #' @param recordToUse The start and end dates of the natural flow record to 
 #'   perform ISM, if using something besides the full record. If it is `NA`, the 
@@ -118,7 +118,7 @@ crssi_create_dnf_files <- function(iFile,
                                    oFolder, 
                                    startYear, 
                                    endYear, 
-                                   oFiles = CRSSNFInputNames(),
+                                   oFiles = nf_file_names(),
                                    recordToUse = NA,
                                    overwriteFiles = FALSE)
 {
@@ -221,7 +221,7 @@ createCRSSDNFInputFiles <- function(iFile,
                                     oFolder, 
                                     startDate, 
                                     simYrs, 
-                                    oFiles = CRSSNFInputNames(),
+                                    oFiles = nf_file_names(),
                                     recordToUse = NA,
                                     overwriteFiles = FALSE)
 {

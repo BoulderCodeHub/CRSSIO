@@ -67,7 +67,7 @@ test_that('correct errors post',{
 
 # ** uncomment after we update the function to create these supplementary files
 sacFile <- getOption("crssio.sacYTSlot")
-allFiles <- c(CRSSNFInputNames(), sacFile, 
+allFiles <- c(nf_file_names(), sacFile, 
               "MeadFloodControlData.hydrologyIncrement", 
               "HydrologyParameters.TraceNumber",
               "HydrologyParameters.SupplyScenario")
@@ -154,7 +154,7 @@ rr <- sample(1:29, 4) # get 4 random nodes
 message(cat("\n4 random nodes are:" ,rr),"\n")
 rr <- file.path(
   c("trace1", "trace1", "trace2", "trace2"), 
-  CRSSNFInputNames()[rr]
+  nf_file_names()[rr]
 )
 f1 <- file.path(dmi1, rr) # full data
 f2 <- file.path(dmi2, rr) # trimmed data
@@ -174,7 +174,7 @@ rr <- sample(1:29, 4) # get 4 random nodes
 message(cat("\n4 random nodes are:" ,rr),"\n")
 rr <- file.path(
   c("trace1", "trace1", "trace2", "trace2"), 
-  CRSSNFInputNames()[rr]
+  nf_file_names()[rr]
 )
 f1 <- file.path(dmi1, rr) # full data
 f2 <- file.path("../ccOrig", rr) # trimmed data
