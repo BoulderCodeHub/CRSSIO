@@ -14,6 +14,18 @@
     * replaces `createCRSSDNFInputFiles()`, which is deprecated
     * `startDate` and `simYrs` are replaced by `startYear` and `endYear`
     * gains an `overwriteFiles` argument 
+* new functions that move away from camel-case. Deprecated old versions.
+    - `crsso_get_sys_cond_table()` = `createSysCondTable()`
+    - `sys_cond_matrix()` = `sysCondSALMatrix()`
+    - `crssi_change_nf_start_date()` = `changeStartDate()`
+    - `crssi_change_evap_files()` = `changeStartDateForEvapAndAddZeros()`
+    - `nf_file_names()` = `CRSSNFInputNames()`
+    - `natsalt_file_names()` = `CRSSNatSaltInputNames()`
+    - `nf_gage_names()` = `nfGageNames()`
+    - `nf_gage_abbrv()` = `nfShortNames()`
+    - `crssi_change_nf_file_names()` = `copyAndChangeNFFileNames()`
+    - `ism_get_site_matrix()` = `createISMMatrix()`
+    - `elevation_to_storage()` = `elevation2Volume()`
 
 # CRSSIO 0.5.0
 
