@@ -66,8 +66,8 @@
 #'   perform ISM, if using something besides the full record. If it is `NA`, the 
 #'   full record will be used. Otherwise, it should be a vector of length 2, 
 #'   where the first entry is the start date and the second entry is the end 
-#'   date. The vector should be of type \code{\link[zoo]{yearmon}}, or something 
-#'   that will sucessfully convert to a \code{\link[zoo]{yearmon}} object.
+#'   date. The vector should be of type [zoo::yearmon], or something 
+#'   that will sucessfully convert to a [zoo::yearmon] object.
 #' @param overwriteFiles A boolean that determines whether or not the function
 #'   should overwrite existing files. See 'Details'.
 #' 
@@ -111,7 +111,7 @@
 #' )
 #' }
 #' @seealso
-#' \code{\link{CRSSNFInputNames}}
+#' \code{\link{nf_file_names}()}
 #' 
 #' @export
 crssi_create_dnf_files <- function(iFile, 

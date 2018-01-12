@@ -34,8 +34,8 @@ order, i.e., the same order as the nodes in the input Excel file.}
 perform ISM, if using something besides the full record. If it is \code{NA}, the
 full record will be used. Otherwise, it should be a vector of length 2,
 where the first entry is the start date and the second entry is the end
-date. The vector should be of type \code{\link[zoo]{yearmon}}, or something
-that will sucessfully convert to a \code{\link[zoo]{yearmon}} object.}
+date. The vector should be of type \link[zoo:yearmon]{zoo::yearmon}, or something
+that will sucessfully convert to a \link[zoo:yearmon]{zoo::yearmon} object.}
 
 \item{overwriteFiles}{A boolean that determines whether or not the function
 should overwrite existing files. See 'Details'.}
@@ -136,5 +136,5 @@ createCRSSDNFInputFiles(iFile,
 }
 }
 \seealso{
-\code{\link{CRSSNFInputNames}}
+\code{\link{nf_file_names}()}
 }

@@ -61,7 +61,7 @@ crssi_create_dnf_files(iFile,'NFSinput/','2015-1-31',50,fileNames)
 }
 
 # get the gage name for node 20 
-nf_gage_name()[20]
+nf_gage_names()[20]
 # and its shorthand name
 nf_gage_abbrv()[20]
 # and then see the CRSS natural inflow file name corresponding to this gage

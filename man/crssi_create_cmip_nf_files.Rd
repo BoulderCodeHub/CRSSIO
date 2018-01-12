@@ -77,9 +77,9 @@ a README file is created in \code{oFolder} that provides some metadata on the
 creation of the trace files.
 
 \code{oFiles} sets the individual file names for the natural inflow locations. If
-you do not use \code{\link{nf_file_names()}()}, oFiles should contain 29 strings:
+you do not use \code{\link[=nf_file_names]{nf_file_names()}}, oFiles should contain 29 strings:
 one for each of the natural inflow locations, and should be specified in the
-default order corresponding to the gages in \code{\link{nf_gage_names}()}.
+default order corresponding to the gages in \code{\link[=nf_gage_names]{nf_gage_names()}}.
 
 \code{overwriteFiles} allows the user to control whether existing files within the
 trace folders should be overwritten (default is they are not).
