@@ -12,7 +12,7 @@ sysData <- RWDataPlyr::getDataForAllScens(scenFolder, scenName, slotAggList,
 on.exit(file.remove("tmp.feather"))
 
 yrs <- 2018:2022
-sysCondTable <- createSysCondTable(sysData, yrs)
+sysCondTable <- crsso_get_sys_cond_table(sysData, yrs)
 
 test_that('object dimensions and attributes are correct', {
   expect_equal(length(sysCondTable), 2)
@@ -27,7 +27,7 @@ test_that('object dimensions and attributes are correct', {
   )
   # test that when using too few years, you only get back one year of data
   # warning text is checked below
-  expect_warning(s2 <- createSysCondTable(sysData, 2016:2018)) 
+  expect_warning(s2 <- crsso_get_sys_cond_table(sysData, 2016:2018)) 
   expect_equal(dim(s2$fullTable), c(length(CRSSIO:::slotNames()) + 4, 2))
 })
 
@@ -37,33 +37,33 @@ s2 <- sysData %>%
 
 test_that("warnings and errors are as expected", {
   expect_warning(
-    createSysCondTable(s2, yrs),
+    crsso_get_sys_cond_table(s2, yrs),
     paste(
       "There are 2 Scenarios in the data.\n",
       "Please note, these scenarios will be averaged together when creating the system conditions table."
     )
   )
   expect_error(
-    sysData %>% filter(Variable != "mer748") %>% createSysCondTable(yrs),
-    "The following variables are not found in the data frame passed to createSysCondTable():\nmer748",
+    sysData %>% filter(Variable != "mer748") %>% crsso_get_sys_cond_table(yrs),
+    "The following variables are not found in the data frame passed to crsso_get_sys_cond_table():\nmer748",
     fixed = TRUE
   )
   expect_error(
-    sysData %>% filter(Variable != "mer748", Variable != "eq") %>% createSysCondTable(yrs),
-    "The following variables are not found in the data frame passed to createSysCondTable():\nmer748, eq",
+    sysData %>% filter(Variable != "mer748", Variable != "eq") %>% crsso_get_sys_cond_table(yrs),
+    "The following variables are not found in the data frame passed to crsso_get_sys_cond_table():\nmer748, eq",
     fixed = TRUE
   )
   expect_warning(
-    createSysCondTable(sysData, 2016:2018),
+    crsso_get_sys_cond_table(sysData, 2016:2018),
     paste(
-      "All years (yrs) are not in the data frame passed to createSysCondTable()",
+      "All years (yrs) are not in the data frame passed to crsso_get_sys_cond_table()",
       "Will only evaluate for the years that are in the data frame",
       sep = "\n"
     ),
     fixed = TRUE
   )
   expect_error(
-    createSysCondTable(sysData, 1999:2005), 
+    crsso_get_sys_cond_table(sysData, 1999:2005), 
     "None of the yrs exist in the data"
   )
 })
@@ -173,4 +173,10 @@ test_that("rows sum together correctly", {
     apply(sysCondTable$fullTable[c(15,19,21),], 2, sum)
   )
   expect_true(all(sysCondTable$fullTable[20,] <= sysCondTable$fullTable[19,]))
+})
+
+# compare both versions of the function ---------------------
+test_that("both functions are equal", {
+  expect_warning(tmp <- createSysCondTable(sysData, yrs))
+  expect_identical(crsso_get_sys_cond_table(sysData, yrs), tmp)
 })

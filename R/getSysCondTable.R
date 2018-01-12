@@ -121,21 +121,24 @@ sysCondSALMatrix <- function()
 
 #' Create standard CRSS system conditions table
 #' 
-#' \code{createSysCondTable} creates the standard system conditions table that 
-#' is commonly created from CRSS results, e.g., slide 6 at
+#' `crsso_get_sys_cond_table()` creates the standard system conditions table 
+#' that is commonly created from CRSS results, e.g., slide 6 at
 #' \url{https://www.usbr.gov/lc/region/g4000/crss-5year.pdf}. The table reports 
 #' the percent of traces that simulate various system conditions, e.g., Lake 
 #' Powell operating tiers, through time.
 #' 
-#' @param zz Full data for all years/traces necessary for creating System Conditions 
-#' table. \code{zz} should be a data frame returned from 
-#' \code{RWDataPlot::\link[RWDataPlyr]{getDataForAllScens}} that contains all of 
-#' the 17 variables necessary to create the system conditions table.
-#' @param yrs Vector of years to provide the system conditions for. Ex: \code{2017:2020}
+#' @param zz Full data for all years/traces necessary for creating System 
+#'   Conditions table. `zz` should be a data frame returned from 
+#'   \code{RWDataPlot::\link[RWDataPlyr]{getDataForAllScens}} that contains all
+#'   of the 17 variables necessary to create the system conditions table.
+#' @param yrs Vector of years to provide the system conditions for. 
+#'   Ex: `2017:2020``
+#' 
 #' @return Named list with two matrices. The first matrix (\code{'fullTable'}) 
-#' includes the system conditions for the specified years including the breakout 
-#' of Lower Elevation Balancing releases.  The second matrix (\code{'limitedTable'}) 
-#' includes the system conditions without the Lower Elevation Balancing breakout.
+#'   includes the system conditions for the specified years including the 
+#'   breakout of Lower Elevation Balancing releases.  The second matrix 
+#'   (`"limitedTable"`) includes the system conditions without the Lower 
+#'   Elevation Balancing breakout.
 #' 
 #' @examples
 #' # use RWDataPlyr package to get the data to create the system conditions table
@@ -146,12 +149,12 @@ sysCondSALMatrix <- function()
 #' scenPath <- system.file('extdata','Scenario/',package = 'RWDataPlyr')
 #' sysData <- RWDataPlyr::getDataForAllScens(scenFolder, scenName, slotAggList,
 #'                                           scenPath, 'tmp.feather', TRUE)
-#' sysCondTable <- createSysCondTable(sysData, 2018:2022)
+#' sysCondTable <- crsso_get_sys_cond_table(sysData, 2018:2022)
 #' sysCondTable[['limitedTable']]
 #' 
 #' @seealso \code{\link{sysCondSALMatrix}}
 #' @export
-createSysCondTable <- function(zz, yrs)
+crsso_get_sys_cond_table <- function(zz, yrs)
 {
   # if there there is a "Scenario" dimension and there are more than 1 scenarios, 
   # then post a warning message that the scenarios will be averaged together 
@@ -169,7 +172,7 @@ createSysCondTable <- function(zz, yrs)
   if(!all(vShort() %in% as.character(levels(as.factor(zz$Variable))))) {
     tmp <- vShort()[!(vShort() %in% as.character(levels(as.factor(zz$Variable))))]
     stop(
-      "The following variables are not found in the data frame passed to createSysCondTable():\n",
+      "The following variables are not found in the data frame passed to crsso_get_sys_cond_table():\n",
       paste(tmp, collapse = ", ")
     )
   }
@@ -182,7 +185,7 @@ createSysCondTable <- function(zz, yrs)
       stop("None of the yrs exist in the data")
     
     warning(
-      "All years (yrs) are not in the data frame passed to createSysCondTable()\n",
+      "All years (yrs) are not in the data frame passed to crsso_get_sys_cond_table()\n",
       "Will only evaluate for the years that are in the data frame"
     )
    
@@ -227,4 +230,12 @@ createSysCondTable <- function(zz, yrs)
   rr
 }
 
+#' @export
+#' @rdname crsso_get_sys_cond_table
 
+createSysCondTable <- function(zz, yrs)
+{
+  .Deprecated("createSysCondTable")
+  
+  crsso_get_sys_cond_table(zz, yrs)
+}
