@@ -61,6 +61,39 @@ readAndFormatNFExcel <- function(iFile)
   nf
 }
 
+read_and_format_nf_excel <- function(iFile)
+{
+  ymJan1906 <- zoo::as.yearmon("Jan 1906")
+  
+  nf <- readxl::read_xlsx(iFile, sheet = 'Intervening Natural Flow', skip = 3) %>%
+  # going to take a lot of trimming, etc. to get rid of all the labels we don't 
+  # need for the flow matrix
+    dplyr::rename_at(
+      .vars = "Natural Flow And Salt Calc model Object.Slot", 
+      .funs = function(x) "date"
+    ) %>%
+    dplyr::mutate_at("date", .funs = zoo::as.yearmon) %>%
+    # get rid of the filler row at top, and the rows containing averages on 
+    # bottom
+    dplyr::filter_at("date", dplyr::any_vars(!is.na(.))) %>%
+    dplyr::filter_at("date", dplyr::any_vars(. >= ymJan1906)) %>%
+    dplyr::select(-dplyr::matches("X__1")) %>%
+    dplyr::mutate_if(is.character, as.numeric) %>%
+    as.data.frame()
+ 
+  # 1. potential update the other column names
+  # then convert to xts
+  
+  if(nrow(nf) %% 12 != 0){
+    stop('error in formatting the table resulted in a matrix that is not divisible by 12 months')
+  }
+  
+  Sys.setenv(TZ = 'UTC') # set the system timezone to UTC
+  nf <- xts::as.xts(zoo::read.zoo(nf))
+  colnames(nf) <- paste0("X", seq(1, ncol(nf)))
+  nf
+}
+
 #' write out a single trace of data
 #' @keywords internal
 #' @noRd
