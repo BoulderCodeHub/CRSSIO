@@ -2,15 +2,17 @@ library(CRSSIO)
 context('check that Natural Flow files are created correctly.')
 
 setup({
-  dir.create('tmp')
+  dir.create("tmp")
   dir.create("tmp2")
+  dir.create("tmp3")
 })
 teardown({
-  unlink('tmp',recursive = TRUE)
+  unlink("tmp", recursive = TRUE)
   unlink("tmp2", recursive = TRUE)
+  unlink("tmp3", recursive = TRUE)
 })
 
-p1 <- '..'
+p1 <- ".."
 rr <- sample(1:29, 4) # get 4 random nodes
 message(cat('\n4 random nodes are:',rr))
 
@@ -64,9 +66,19 @@ test_that('can create files',{
       recordToUse = c('1950-01','1954-12')
     )
   )
+  
+  expect_warning(expect_message(
+    crssi_create_dnf_files(
+      "../NaturalFlows_Sample.xlsx",
+      oFolder = "tmp3",
+      startYear = 2017,
+      endYear = 2021,
+      recordToUse = c("1950-01", "1954-12")
+    )
+  ))
 })
 
-# check that all files in the two directories are the same -------------
+# check that all files in the three directories are the same -------------
 
 dirs <- list.dirs('tmp', recursive = FALSE, full.names = FALSE)
 for(curDir in dirs){
@@ -77,6 +89,21 @@ for(curDir in dirs){
       expect_identical(
         scan(file.path("tmp", curDir, ff), what = "character", quiet = TRUE),
         scan(file.path("tmp2", curDir, ff), what = "character", quiet = TRUE),
+        info = paste(curDir, ff)
+      )
+    })
+  }
+}
+
+dirs <- list.dirs("tmp2", recursive = FALSE, full.names = FALSE)
+for(curDir in dirs){
+  allFiles <- list.files(file.path("tmp2", curDir))
+  for(ff in allFiles){
+    message(curDir, "/", ff)
+    test_that("all files are the same", {
+      expect_identical(
+        scan(file.path("tmp2", curDir, ff), what = "character", quiet = TRUE),
+        scan(file.path("tmp3", curDir, ff), what = "character", quiet = TRUE),
         info = paste(curDir, ff)
       )
     })
@@ -168,5 +195,18 @@ test_that('ism files match each other as expected', {
       skip = 1
     ))[1:12]
   )
+})
+
+# internal format excel function -------------------
+
+test_that("Excel formatting works", {
+  expect_warning(expect_s3_class(
+    tmp <- CRSSIO:::read_and_format_nf_excel("../NaturalFlows_Sample.xlsx"),
+    c("xts", "zoo")
+  ))
+  expect_equal(ncol(tmp), 29)
+  expect_equal(nrow(tmp) %% 12, 0)
+  expect_equal(zoo::index(tmp)[1], zoo::as.yearmon("Jan 1906"))
+  expect_equal(format(tail(zoo::index(tmp),1), "%b"), "Dec")
 })
 
