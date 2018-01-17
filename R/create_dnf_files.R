@@ -143,7 +143,7 @@ crssi_create_dnf_files <- function(iFile,
       stop('iFile does not exist')
     }
   
-    nf <- readAndFormatNFExcel(iFile)
+    nf <- read_and_format_nf_excel(iFile)
 
     if(!anyNA(recordToUse)){
       # trim data

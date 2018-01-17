@@ -18,6 +18,7 @@ Imports:
     magrittr,
     miniUI (>= 0.1.1),
     ncdf4,
+    readxl,
     rlang,
     rstudioapi (>= 0.5),
     shiny (>= 0.13),
@@ -27,7 +28,6 @@ Imports:
     tools,
     utils,
     writexl,
-    xlsx,
     xts (>= 0.10.0),
     zoo
 Remotes:

@@ -92,13 +92,13 @@ nfFile <- getOption("crssio.histNfFile")
 teardown(unlink(nfFile))
 
 test_that("Excel file includes proper columns and sheets", {
-  expect_error(xlsx::read.xlsx(
-    "HistoricalNaturalFlow_.xlsx", 
-    sheetName = "badname"
+  expect_error(readxl::read_xlsx(
+    "HistoricalNaturalFlow.xlsx", 
+    sheet = "badname"
   ))
-  expect_equal(ncol(tmp <- xlsx::read.xlsx(nfFile, sheetName = "README")), 1)
+  expect_equal(ncol(tmp <- readxl::read_xlsx(nfFile, sheet = "README")), 1)
   expect_equal(
-    ncol(tmp <- xlsx::read.xlsx(nfFile, sheetName = "Intervening Natural Flow")),
+    ncol(tmp <- readxl::read_xlsx(nfFile, sheet = "Intervening Natural Flow")),
     6
   )
   expect_equal(
@@ -109,7 +109,7 @@ test_that("Excel file includes proper columns and sheets", {
     )
   )
   expect_equal(
-    ncol(tmp <- xlsx::read.xlsx(nfFile, sheetName = "Total Natural Flow")),
+    ncol(tmp <- readxl::read_xlsx(nfFile, sheet = "Total Natural Flow")),
     2
   )
   expect_equal(
