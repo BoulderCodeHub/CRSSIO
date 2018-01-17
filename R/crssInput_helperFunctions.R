@@ -29,37 +29,6 @@ getAllISMMatrices <- function(nfMat, startMonth, nYrs)
 #' @return An xts matrix beginning in January 1906 with 29 columns. 
 #' @keywords internal
 #' @noRd
-#' 
-readAndFormatNFExcel <- function(iFile)
-{
-  message("Starting to read in natural flow Excel file.", "\n",
-          "Please be patient this may take several minutes.")
-
-  nf <- xlsx::read.xlsx(iFile, sheetName = 'Intervening Natural Flow')
-  # going to take a lot of trimming, etc. to get rid of all the labels we don't 
-  # need for the flow matrix
-  message('Finished reading in natural flow Excel file.')
-
-  # trim off extraneous data
-  # know the first 7 rows are not needed
-  nf <- as.matrix(nf[8:(nrow(nf)),2:31]) 
-  # remove any rows that are NA since there could be one or more at the 
-  # bottom of the file
-  notNaRows <- which(!is.na(nf[,1]))
-  nf <- nf[notNaRows,]
-  # now remove the bottom row since this is the average for the period
-  nf <- nf[1:(nrow(nf)-1),]
-  if(nrow(nf) %% 12 != 0){
-    stop('error in formatting the table resulted in a matrix that is not divisible by 12 months')
-  }
-
-  # remove gap column
-  nf <- matrix(as.numeric(nf[,c(1:20,22:30)]),ncol = 29, byrow = FALSE)
-  Sys.setenv(TZ = 'UTC') # set the system timezone to UTC
-  nf.YearMon <- zoo::as.yearmon('1906-01-31') + seq(0,nrow(nf)-1)/12
-  nf <- xts::as.xts(zoo::read.zoo(data.frame(nf.YearMon,nf)))
-  nf
-}
 
 read_and_format_nf_excel <- function(iFile)
 {
