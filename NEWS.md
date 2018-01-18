@@ -2,6 +2,8 @@ CRSSIO 0.6.0.9000
 
 *In development*
 
+* Fixed Deprecated message in `createSysCondTable()` to state that `crsso_get_sys_cond_table` should be used.
+
 CRSSIO 0.6.0
 ==============
 
