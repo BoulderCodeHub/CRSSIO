@@ -1,15 +1,17 @@
 
 #' RStudio Addin to Create CRSS Input Files
 #' 
-#' `crss_input_addin()` is accessed via a RStudio Addin. It is a GUI 
-#' (Shiny Gadget) used to set key parameters of [crssi_create_dnf_files()]
-#' before running it.
+#' `crss_input_addin()` is an RStudio Addin that sets key parameters of 
+#' [crssi_create_dnf_files()] and [crssi_create_hist_nf_xlsx()] before running it.
 #' 
 #' To use the Addin, RStudio v0.99.878 or later must be used. The key user input
-#' to \code{createCRSSDNFInputFiles} can be set in the GUI. The \code{oFiles}
-#' arguement uses the default value of \code{\link{CRSSNFInputNames}}.
+#' to `crssi_create_dnf_files()` can be set in the GUI. The `oFiles`
+#' arguement uses the default value of [nf_file_names()].
 #' 
-#' @seealso [crssi_create_dnf_files()], [nf_file_names()]
+#' Additionally, there is an option to also create the HistoricalNaturalFlows.xlsx
+#' file necessary for CRSS runs via `crssi_create_hist_nf_xlsx()`. 
+#' 
+#' @seealso [crssi_create_dnf_files()], [crssi_create_hist_nf_xlsx()]
 #' 
 #' @import shiny
 #' @import miniUI
@@ -107,8 +109,11 @@ crss_input_addin <- function() {
             label = "Create HistoricalNaturalFlows.xlsx?",
             choices = c("No" = FALSE, "Yes" = TRUE),
             selected = TRUE
-          )
+          ),
+          uiOutput("xlAvg"),
+          uiOutput("xlPath")
         ),
+        fillRow(htmlOutput("checkXlFolder")),
         
         htmlOutput('checkAllErrors')
       )
@@ -171,18 +176,6 @@ crss_input_addin <- function() {
         HTML("")
     })
     
-    # isTraceStartValid <- reactive({
-    #   format(zoo::as.Date(input$traceStartYear),"%m-%d") == "01-31"
-    # })
-    
-    # output$traceStartCheck <- renderUI({
-    #   if(!isTraceStartValid())
-    #     div(class = "errorMessage", 
-    #         HTML("Traces need to start on January 31 of some year."))
-    #   else
-    #     HTML("")
-    # })
-    
     isOutputFolderValid <- reactive({
       file.exists(input$selectFolder)
     })
@@ -194,12 +187,51 @@ crss_input_addin <- function() {
       else
         HTML("")
     })
-  
+    
+    # check the natural flow xlsx creation options -------------
+    output$xlAvg <- renderUI({
+      if (as.logical(input$createHistNF))
+        sliderInput(
+          "xlAvg", 
+          "Select number of years to average when filling LB flow data",
+          min = 1, 
+          max = 20, 
+          value = 5
+        )
+      else
+        return()
+    })
+    
+    output$xlPath <- renderUI({
+      if (as.logical(input$createHistNF))
+        textInput("xlPath", "Select folder to save file in:", value = "C:/")
+      else
+        return()
+    })
+    
+    isXlPathValid <- reactive({
+      if (is.null(input$xlPath))
+        return(TRUE)
+      
+      if (as.logical(input$createHistNF))
+        return(dir.exists(input$xlPath))
+      else
+        # if you aren't creating the excel file, always return true for this
+        return(TRUE)
+    })
+    
+    output$checkXlFolder <- renderUI({
+      if(!isXlPathValid())
+        div(class = "errorMessage", 
+            HTML("Folder does not exist"))
+      else
+        HTML("")
+    })
     
     isAllInputValid <- reactive({
       #isTraceStartValid() & 
       isSimYrsValid() & isOutputFolderValid() & isStartYearValid() & 
-        isEndAfterStart()
+        isEndAfterStart() & isXlPathValid()
     })
     
     output$checkAllErrors <- renderUI({
@@ -223,7 +255,16 @@ crss_input_addin <- function() {
           recordToUse = rr,
           overwriteFiles = as.logical(input$overwrite)
         )
-        message(paste('All trace files have been saved to: ',input$selectFolder))
+        message(paste('All trace files have been saved to:',input$selectFolder))
+        if(as.logical(input$createHistNF)){
+          crssi_create_hist_nf_xlsx(
+            as.integer(input$traceStartYear), 
+            nYearAvg = as.integer(input$xlAvg), 
+            oFolder = input$xlPath
+          )
+          message(paste("HistoricalNaturalFlow.xlsx saved to:", input$xlPath))
+        }
+        
         stopApp()
       }
     })
