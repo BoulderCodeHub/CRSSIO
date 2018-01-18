@@ -1,20 +1,12 @@
-# CRSSIO 0.5.0.9000
+CRSSIO 0.6.0
+==============
 
-*In development*
+*Released January 17, 2018*
 
-* Formatting and other updates to conform to `goodpractice::gp()`
-* `trimCCNFFiles()` 
-    * only trims natural flow and salt files, not all files in the directory. (#31)
-    * it is also deprecated in favor of `crssi_create_cmip_nf_files()`
-    * it gains a `force` argument that must be `TRUE` to proceed. If it's `FALSE` (default), it won't work, which will hopefully encourage the use of `crssi_create_cmip_nf_files()`
-* New function: `crssi_create_cmip_nf_files()` to create natural flow files from a netcdf file that contains cmip3/5 data. (#30)
-* Changed the default slot name for the Sacramento Year Type Index, which is set by the `crssio.sacYTSlot` option. The default is now "MWD_ICS.SacWYType".
-* New function: `crssi_create_hist_nf_xlsx()` to create the HistoricalNaturalFlows.xlsx file that CRSS relies on. (#29)
-* new function: `crssi_create_dnf_files()` (#34)
-    * replaces `createCRSSDNFInputFiles()`, which is deprecated
-    * `startDate` and `simYrs` are replaced by `startYear` and `endYear`
-    * gains an `overwriteFiles` argument 
-* new functions that move away from camel-case. Deprecated old versions.
+## New Features and Functions
+
+* This release implements a new naming system for most functions that includes a "prefix_verb_noun" for most functions. (#38) Functions that create input for CRSS are prefixed with `crssi_` while those that process CRSS output use the `crsso_` prefix. The `nf_` and `ism_` prefixes are also used for multiple functions that deal with natural flow (nf) names and with ISM related functions. This results in deprecating many functions in favor of their newer version. The new and their respective old functions are:
+    - `crssi_create_dnf_files()` = `createCRSSDNFInputFiles()`
     - `crsso_get_sys_cond_table()` = `createSysCondTable()`
     - `sys_cond_matrix()` = `sysCondSALMatrix()`
     - `crssi_change_nf_start_date()` = `changeStartDate()`
@@ -26,8 +18,23 @@
     - `crssi_change_nf_file_names()` = `copyAndChangeNFFileNames()`
     - `ism_get_site_matrix()` = `createISMMatrix()`
     - `elevation_to_storage()` = `elevation2Volume()`
+* Additionally, `crssi_create_dnf_files()`, which replaces `createCRSSDNFInputFiles()`, gains an `overwriteFiles` argument that will ensure users do not accidently overwrite existing natural flow files. (#34) 
+    - `startDate` and `simYrs` are replaced by `startYear` and `endYear`
+* `crssi_create_hist_nf_xlsx()` is a new function that will standardize the creation of the HistoricalNaturalFlows.xlsx file that CRSS relies on. (#29)
+* `crssi_create_cmip_nf_files()` is a new function that will create natural flow files from a netcdf file that contains cmip3/5 data. (#30)
+    - The netcdf file is provided by the user (not included in the package).
+* The RStudio AddIn that creates natural flow files from the observed natural flow record using the ISM was updated to use `crssi_create_dnf_files()`. The ability to create the HistoricalNaturalFlows.xlsx file was also added. (#35)
 
-# CRSSIO 0.5.0
+## Minor Updates and Bug Fixes
+
+* `trimCCNFFiles()` now only trims natural flow and salt files, not all files in the directory. (#31)
+    * it is also deprecated in favor of `crssi_create_cmip_nf_files()`. (#32)
+    * it gains a `force` argument that must be `TRUE` to proceed. If it's `FALSE` (default), it won't work, which will hopefully encourage the use of `crssi_create_cmip_nf_files()`.
+* Changed the default slot name for the Sacramento Year Type Index, which is set by the `crssio.sacYTSlot` option. The default is now "MWD_ICS.SacWYType". (#33)
+* Formatting and other updates to conform to `goodpractice::gp()`.
+
+CRSSIO 0.5.0
+===============
 
 *Released August 30, 2017* 
 
