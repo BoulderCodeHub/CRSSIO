@@ -1,3 +1,7 @@
+CRSSIO 0.6.0.9000
+
+*In development*
+
 CRSSIO 0.6.0
 ==============
 
