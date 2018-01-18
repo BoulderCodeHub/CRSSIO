@@ -1,23 +1,21 @@
 
 #' RStudio Addin to Create CRSS Input Files
 #' 
-#' \code{createCRSSInputAddIn} is accessed via a RStudio Addin. It is a GUI 
-#' (Shiny Gadget) used to set key parameters of \code{\link{createCRSSDNFInputFiles}} 
+#' `crss_input_addin()` is accessed via a RStudio Addin. It is a GUI 
+#' (Shiny Gadget) used to set key parameters of [crssi_create_dnf_files()]
 #' before running it.
 #' 
 #' To use the Addin, RStudio v0.99.878 or later must be used. The key user input
 #' to \code{createCRSSDNFInputFiles} can be set in the GUI. The \code{oFiles}
 #' arguement uses the default value of \code{\link{CRSSNFInputNames}}.
 #' 
-#' @seealso \code{\link{createCRSSDNFInputFiles}}, \code{\link{CRSSNFInputNames}}
+#' @seealso [crssi_create_dnf_files()], [nf_file_names()]
 #' 
 #' @import shiny
 #' @import miniUI
 
-createCRSSInputAddIn <- function() {
+crss_input_addin <- function() {
   
-  # Our ui will be a simple gadget page, which
-  # simply displays the time in a 'UI' output.
   ui <- miniPage(
     tags$head(
       tags$style(HTML("
@@ -35,51 +33,82 @@ createCRSSInputAddIn <- function() {
       fillCol(
         h4('Create CRSS Input Files from Observed Natural Flow Record Using the ISM Method'),
         
-        h5('1. Select the start and end months of the natural flow record to use the ISM method on. This should be January 1 of some year through December 31 of some year.'),
-        fillRow(flex = c(NA,1),
-                dateRangeInput(
-                  'nfInputYrs', 
-                  'Start and End Months:',
-                  start = '1906-01-01',
-                  end = '2012-12-31', 
-                  startview = 'decade'
-                ),
-                htmlOutput('startEndErrors')
-                ),
+        h5('1. Select the start and end years of the natural flow record to apply the ISM to.'),
+        fillRow(
+          flex = c(NA,1),
+          selectInput(
+            'nfInputStartYear', 
+            'Start Year:',
+            choices = 1906:2020,
+            selected = 1906
+          ),
+          selectInput(
+            "nfInputEndYear",
+            'End Year',
+            choices = 1906:2020,
+            selected = 2015
+          )
+        ),
+        fillRow(htmlOutput('startEndErrors')),
         br(),
         
-        h5('2. Select the number of years in the simulation period, i.e., the number of years each trace of data will contain'),
-        fillRow(flex = c(NA,1),
-                numericInput(
-                  'simYrs', 
-                  'Simulation Years:',
-                  50, 
-                  min = 1, 
-                  max = 107, 
-                  step = 1
-                ),
-                htmlOutput('simYrsCheck')
-                ),
+        # h5('2. Select the number of years in the simulation period, i.e., the number of years each trace of data will contain'),
+        # fillRow(flex = c(NA,1),
+        #         numericInput(
+        #           'simYrs', 
+        #           'Simulation Years:',
+        #           50, 
+        #           min = 1, 
+        #           max = 107, 
+        #           step = 1
+        #         ),
+        #         htmlOutput('simYrsCheck')
+        #         ),
+        # br(),
+        
+        h5('2. Select the simulation start and end years of the CRSS simulations.'),
+        fillRow(
+          flex = c(NA,1),
+          selectInput(
+            'traceStartYear',
+            'Traces Start In:',
+            choices = seq(2000, 2099),
+            selected = 2018
+          ),
+          selectInput(
+            "endYear", 
+            "Traces End In:", 
+            choices = seq(2000, 2099), 
+            selected = 2060
+          )
+        ),
+        fillRow(htmlOutput('simYrsCheck')),
         br(),
         
-        h5('3. Select the start date of the trace files. (Should be January 31 of some year.)'),
-        fillRow(flex = c(NA,1),
-                dateInput(
-                  'traceStartYear',
-                  'Traces Start In:',
-                  value = '2017-01-31',
-                  startview = "decade"
-                ), 
-                htmlOutput('traceStartCheck')
-                ),
+        h5('3. Select the folder to save the trace files in. The folder should already exist. Leave off the trailing "/".'),
+        fillRow(
+          flex = c(NA,1),
+          textInput('selectFolder', 'Select Folder', value = 'C:/'), 
+          radioButtons(
+            "overwrite", 
+            label = "Overwrite existing files?",
+            choices = c("No" = FALSE, "Yes" = TRUE),
+            selected = FALSE
+          )      
+        ),
+        fillRow(htmlOutput('checkInputFolder')),
         br(),
         
-        h5('4. Select the folder to save the trace files in. The folder should already exist.'),
-        fillRow(flex = c(NA,1),
-                textInput('selectFolder', 'Select Folder', value = 'C:/'), 
-                htmlOutput('checkInputFolder')
-                ),
-        br(),
+        h5("4. Do you want to create the HistoricalNaturalFlows.xlsx file?"),
+        fillRow(
+          flex = NA,
+          radioButtons(
+            "createHistNF", 
+            label = "Create HistoricalNaturalFlows.xlsx?",
+            choices = c("No" = FALSE, "Yes" = TRUE),
+            selected = TRUE
+          )
+        ),
         
         htmlOutput('checkAllErrors')
       )
@@ -88,42 +117,20 @@ createCRSSInputAddIn <- function() {
   )
   
   server <- function(input, output, session) {
-
-    isStartDateValid <- reactive({
-      format(zoo::as.Date(input$nfInputYrs[1]), "%m-%d") == "01-01"
-    })
     
     isStartYearValid <- reactive({
-      as.numeric(format(zoo::as.Date(input$nfInputYrs[1]),"%Y")) >= 1906
-    })
-    
-    isEndDateValid <- reactive({
-      format(zoo::as.Date(input$nfInputYrs[2]), "%m-%d") == "12-31"
+      as.integer(input$nfInputStartYear) >= 1906
     })
     
     isEndAfterStart <- reactive({
-      !(as.numeric(format(zoo::as.Date(input$nfInputYrs[2]),"%Y")) < 
-        as.numeric(format(zoo::as.Date(input$nfInputYrs[1]),"%Y")))
+      as.integer(input$nfInputStartYear) <= as.integer(input$nfInputEndYear)
     })
     
     output$startEndErrors <- renderUI({
       errMsg <- ''
-      if(!isStartDateValid())
-        errMsg <- paste0(
-          errMsg,
-          "Start date needs to be January 1, some year.",
-          br()
-        )
       
       if(!isStartYearValid())
         errMsg <- paste0(errMsg, "Start year should be after 1906", br())
-      
-      if(!isEndDateValid())
-        errMsg <- paste0(
-          errMsg,
-          "End date needs to be December 31, some year.", 
-          br()
-        )
       
       if(!isEndAfterStart())
         errMsg <- paste0(
@@ -136,33 +143,45 @@ createCRSSInputAddIn <- function() {
     })
     
     ismRange <- reactive({
-      as.numeric(format(zoo::as.Date(input$nfInputYrs[2]),"%Y")) -
-        as.numeric(format(zoo::as.Date(input$nfInputYrs[1]),"%Y")) + 1
+      as.integer(input$nfInputEndYear) -
+        as.integer(input$nfInputStartYear) + 1
     })
     
     isSimYrsValid <- reactive({
-      input$simYrs <= ismRange()
+      as.integer(input$endYear) - as.integer(input$traceStartYear) + 1 <= 
+        ismRange()
+    })
+    
+    isEndYearValid <- reactive({
+      as.integer(input$endYear) >= as.integer(input$traceStartYear)
     })
     
     output$simYrsCheck <- renderUI({
-      if(!isSimYrsValid())
-        div(class = "errorMessage",
-            HTML("Simulation Years cannot be longer than the number of years in the record from step 1."))
+      if (!isSimYrsValid())
+        div(
+          class = "errorMessage",
+          HTML("Simulation Years cannot be longer than the number of years in the record from step 1.")
+        )
+      else if (!isEndYearValid())
+        div(
+          class = "errorMessage",
+          HTML("The model run end year should be >= the model run start year.")
+        )
       else
         HTML("")
     })
     
-    isTraceStartValid <- reactive({
-      format(zoo::as.Date(input$traceStartYear),"%m-%d") == "01-31"
-    })
+    # isTraceStartValid <- reactive({
+    #   format(zoo::as.Date(input$traceStartYear),"%m-%d") == "01-31"
+    # })
     
-    output$traceStartCheck <- renderUI({
-      if(!isTraceStartValid())
-        div(class = "errorMessage", 
-            HTML("Traces need to start on January 31 of some year."))
-      else
-        HTML("")
-    })
+    # output$traceStartCheck <- renderUI({
+    #   if(!isTraceStartValid())
+    #     div(class = "errorMessage", 
+    #         HTML("Traces need to start on January 31 of some year."))
+    #   else
+    #     HTML("")
+    # })
     
     isOutputFolderValid <- reactive({
       file.exists(input$selectFolder)
@@ -178,8 +197,8 @@ createCRSSInputAddIn <- function() {
   
     
     isAllInputValid <- reactive({
-      isTraceStartValid() & isSimYrsValid() & isOutputFolderValid() &
-        isStartDateValid() & isStartYearValid() & isEndDateValid() & 
+      #isTraceStartValid() & 
+      isSimYrsValid() & isOutputFolderValid() & isStartYearValid() & 
         isEndAfterStart()
     })
     
@@ -194,12 +213,15 @@ createCRSSInputAddIn <- function() {
     # Listen for 'done' events.
     observeEvent(input$done, {
       if(isAllInputValid()){
-        createCRSSDNFInputFiles(
+        rr <- zoo::as.yearmon(c(paste0(input$nfInputStartYear, "-1"),
+                                paste0(input$nfInputEndYear, "-12")))
+        crssi_create_dnf_files(
           'CoRiverNF',
           oFolder = input$selectFolder,
-          startDate = input$traceStartYear, 
-          simYrs = input$simYrs,
-          recordToUse = input$nfInputYrs
+          startYear = as.integer(input$traceStartYear), 
+          endYear = as.integer(input$endYear),
+          recordToUse = rr,
+          overwriteFiles = as.logical(input$overwrite)
         )
         message(paste('All trace files have been saved to: ',input$selectFolder))
         stopApp()
