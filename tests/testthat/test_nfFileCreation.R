@@ -15,6 +15,7 @@ teardown({
 p1 <- ".."
 rr <- sample(1:29, 4) # get 4 random nodes
 message(cat('\n4 random nodes are:',rr))
+r2u <- zoo::as.yearmon(c('1950-01','1954-12'))
 
 # check errors -------------------
 test_that("Upfront errors post correctly", {
@@ -24,7 +25,7 @@ test_that("Upfront errors post correctly", {
       oFolder = 'doesNotExist', 
       startYear = 2017, 
       endYear = 2021, 
-      recordToUse = c('1950-01','1954-12')
+      recordToUse = r2u
     ),
     paste0(file.path("doesNotExist"), " folder does not exist.", "\n", 
            "Create the directory before calling crssi_create_dnf_files()")
@@ -35,11 +36,88 @@ test_that("Upfront errors post correctly", {
       oFolder = 'doesNotExist', 
       startYear = 2017, 
       endYear = 2021, 
-      recordToUse = c('1950-01','1954-12')
+      recordToUse = r2u
     ),
     paste0("CoRiverNF.txt does not appear to be valid.\n", 
          "It should be either an Excel (xlsx) file or 'CoRiverNF'"),
     fixed = TRUE
+  )
+  
+  expect_error(
+    crssi_create_dnf_files(
+      'CoRiverNF', 
+      oFolder = 'tmp2', 
+      startYear = 2017, 
+      endYear = 2021, 
+      recordToUse = c("1906-01", "1997-12")
+    ),
+    "recordToUse must be class 'yearmon'."
+  )
+  
+  expect_error(
+    crssi_create_dnf_files(
+      'CoRiverNF', 
+      oFolder = 'tmp2', 
+      startYear = 2017, 
+      endYear = 2021, 
+      recordToUse = zoo::as.yearmon(c("1906-01", "1997-12", "1999-12"))
+    ),
+    "recordToUse should only contain two entries, or be 'NA'."
+  )
+  
+  expect_error(
+    crssi_create_dnf_files(
+      'CoRiverNF', 
+      oFolder = 'tmp2', 
+      startYear = 2017, 
+      endYear = 2021, 
+      recordToUse = zoo::as.yearmon(c("1906-2", "1997-12"))
+    ),
+    "The first entry to recordToUse should be January of some year."
+  )
+  
+  expect_error(
+    crssi_create_dnf_files(
+      'CoRiverNF', 
+      oFolder = 'tmp2', 
+      startYear = 2017, 
+      endYear = 2021, 
+      recordToUse = zoo::as.yearmon(c("1906-1", "1997-11"))
+    ),
+    "The second entry to recordToUse should be December of some year."
+  )
+  
+  expect_error(
+    crssi_create_dnf_files(
+      'CoRiverNF', 
+      oFolder = 'tmp2', 
+      startYear = 2017, 
+      endYear = 2021, 
+      recordToUse = zoo::as.yearmon(c("1905-1", "1997-12"))
+    ),
+    "Years in recordToUse should not be before 1906."
+  )
+  
+  expect_error(
+    crssi_create_dnf_files(
+      'CoRiverNF', 
+      oFolder = 'tmp2', 
+      startYear = 2017, 
+      endYear = 2021, 
+      recordToUse = zoo::as.yearmon(c("1906-1", "1905-12"))
+    ),
+    "Years in recordToUse should not be before 1906."
+  )
+  
+  expect_error(
+    crssi_create_dnf_files(
+      'CoRiverNF', 
+      oFolder = 'tmp2', 
+      startYear = 2017, 
+      endYear = 2021, 
+      recordToUse = zoo::as.yearmon(c("1988-1", "1980-12"))
+    ),
+    "The second entry in recordToUse should be after the first entry."
   )
 })
 
@@ -53,7 +131,7 @@ test_that('can create files',{
       oFolder = 'tmp', 
       startDate = '2017-1-31', 
       simYrs = 5, 
-      recordToUse = c('1950-01','1954-12')
+      recordToUse = r2u
     )
   ))
   
@@ -63,7 +141,7 @@ test_that('can create files',{
       oFolder = 'tmp2', 
       startYear = 2017, 
       endYear = 2021, 
-      recordToUse = c('1950-01','1954-12')
+      recordToUse = r2u
     )
   )
   
@@ -73,7 +151,7 @@ test_that('can create files',{
       oFolder = "tmp3",
       startYear = 2017,
       endYear = 2021,
-      recordToUse = c("1950-01", "1954-12")
+      recordToUse = r2u
     )
   ))
 })

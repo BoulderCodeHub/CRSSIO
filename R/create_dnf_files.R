@@ -66,8 +66,8 @@
 #'   perform ISM, if using something besides the full record. If it is `NA`, the 
 #'   full record will be used. Otherwise, it should be a vector of length 2, 
 #'   where the first entry is the start date and the second entry is the end 
-#'   date. The vector should be of type [zoo::yearmon], or something 
-#'   that will sucessfully convert to a [zoo::yearmon] object.
+#'   date. The vector should be of type [zoo::yearmon], and begin in January of
+#'   some year, and end in December of some year.
 #' @param overwriteFiles A boolean that determines whether or not the function
 #'   should overwrite existing files. See 'Details'.
 #' 
@@ -82,14 +82,14 @@
 #'   "tmp", 
 #'   startYear = 2017, 
 #'   endYear = 2036, 
-#'   recordToUse=c('1988-1','2012-12')
+#'   recordToUse = zoo::as.yearmon(c('1988-1','2012-12'))
 #' )
 #' # or identical using other function:
 #' createCRSSDNFInputFiles("CoRiverNF", 
 #'   "tmp",
 #'   startDate = "2017-1-31",
 #'   nYrs = 20, 
-#'   recordToUse=c('1988-1','2012-12')
+#'   recordToUse = zoo::as.yearmon(c('1988-1','2012-12'))
 #' )
 #' 
 #' # path to excel file
@@ -107,7 +107,7 @@
 #'   'scratch/',
 #'   '2016-1-31', 
 #'   20, 
-#'   recordToUse = c('1988-1-31','2012-12-31')
+#'   recordToUse = zoo::as.yearmon(('1988-1','2012-12'))
 #' )
 #' }
 #' @seealso
@@ -127,6 +127,9 @@ crssi_create_dnf_files <- function(iFile,
       "It should be either an Excel (xlsx) file or 'CoRiverNF'")
   
   check_nf_oFolder(oFolder, overwriteFiles, "crssi_create_dnf_files")
+  
+  if(!anyNA(recordToUse))
+    recordToUse <- check_recordToUse(recordToUse)
   
   if(iFile == 'CoRiverNF'){
     # use the data in CoRiverNF::monthlyInt
@@ -170,7 +173,7 @@ crssi_create_dnf_files <- function(iFile,
   
   startDate <- paste0(startYear, "-01-31")
   simYrs <- endYear - startYear + 1
-  
+ 
   nf <- getAllISMMatrices(nf, startDate, simYrs)
   
   nT <- ncol(nf[[1]]) # number of traces
@@ -180,10 +183,14 @@ crssi_create_dnf_files <- function(iFile,
 	headerInfo <- get_trace_file_header(startYear)
 	
 	# create all directories
-	for(i in 1:nT){
-	  fold <- paste(oFolder,'/trace',i,sep = '')
-	  dir.create(fold)
-	}
+	lapply(
+	  1:nT,
+	  function(x){
+	    fold <- paste(oFolder, '/trace', x, sep = '')
+	    if(!dir.exists(fold))
+	      dir.create(fold)
+	  }
+	)
 
 	# for each node, write out all of the trace files
 	lapply(
@@ -210,7 +217,7 @@ crssi_create_dnf_files <- function(iFile,
 	
 	# create the README
 	write_nf_readme(
-	  get_dnf_readme_vals(iFile, startYear, endYear, recordToUse), 
+	  get_dnf_readme_vals(iFile, startYear, endYear, periodToUse), 
 	  oFolder = oFolder
 	)
 }

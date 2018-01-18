@@ -34,8 +34,8 @@ order, i.e., the same order as the nodes in the input Excel file.}
 perform ISM, if using something besides the full record. If it is \code{NA}, the
 full record will be used. Otherwise, it should be a vector of length 2,
 where the first entry is the start date and the second entry is the end
-date. The vector should be of type \link[zoo:yearmon]{zoo::yearmon}, or something
-that will sucessfully convert to a \link[zoo:yearmon]{zoo::yearmon} object.}
+date. The vector should be of type \link[zoo:yearmon]{zoo::yearmon}, and begin in January of
+some year, and end in December of some year.}
 
 \item{overwriteFiles}{A boolean that determines whether or not the function
 should overwrite existing files. See 'Details'.}
@@ -106,14 +106,14 @@ crssi_create_dnf_files("CoRiverNF",
   "tmp", 
   startYear = 2017, 
   endYear = 2036, 
-  recordToUse=c('1988-1','2012-12')
+  recordToUse = zoo::as.yearmon(c('1988-1','2012-12'))
 )
 # or identical using other function:
 createCRSSDNFInputFiles("CoRiverNF", 
   "tmp",
   startDate = "2017-1-31",
   nYrs = 20, 
-  recordToUse=c('1988-1','2012-12')
+  recordToUse = zoo::as.yearmon(c('1988-1','2012-12'))
 )
 
 # path to excel file
@@ -131,7 +131,7 @@ createCRSSDNFInputFiles(iFile,
   'scratch/',
   '2016-1-31', 
   20, 
-  recordToUse = c('1988-1-31','2012-12-31')
+  recordToUse = zoo::as.yearmon(('1988-1','2012-12'))
 )
 }
 }

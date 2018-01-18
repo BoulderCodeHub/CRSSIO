@@ -319,3 +319,35 @@ check_nf_oFolder <- function(oFolder, overwriteFiles, calledBy)
          "  Choose a different folder, delete the files, or use overwriteFiles = TRUE")
   }
 }
+
+check_recordToUse <- function(recordToUse)
+{
+  if (class(recordToUse) != "yearmon")
+    stop("recordToUse must be class 'yearmon'.")
+  
+  if (length(recordToUse) != 2)
+    stop("recordToUse should only contain two entries, or be 'NA'.")
+  
+  m1 <- as.integer(format(recordToUse[1], "%m"))
+  m2 <- as.integer(format(recordToUse[2], "%m"))
+  
+  if (m1 != 1)
+    stop("The first entry to recordToUse should be January of some year.")
+  
+  if (m2 != 12)
+    stop("The second entry to recordToUse should be December of some year.")
+  
+  y1 <- as.integer(format(recordToUse[1], "%Y"))
+  y2 <- as.integer(format(recordToUse[2], "%Y"))
+  
+  if (y1 < 1906 | y2 < 1906)
+    stop("Years in recordToUse should not be before 1906.")
+  
+  if (y2 < y1)
+    stop("The second entry in recordToUse should be after the first entry.")
+  
+  # if all checks pass, then convert to a string that works with xts matrices
+  # and return that
+  
+  c(paste(y1, m1, sep = "-"), paste(y2, m2, sep = "-"))
+}
