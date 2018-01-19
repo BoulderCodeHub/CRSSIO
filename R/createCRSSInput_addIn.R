@@ -54,20 +54,6 @@ crss_input_addin <- function() {
         fillRow(htmlOutput('startEndErrors')),
         br(),
         
-        # h5('2. Select the number of years in the simulation period, i.e., the number of years each trace of data will contain'),
-        # fillRow(flex = c(NA,1),
-        #         numericInput(
-        #           'simYrs', 
-        #           'Simulation Years:',
-        #           50, 
-        #           min = 1, 
-        #           max = 107, 
-        #           step = 1
-        #         ),
-        #         htmlOutput('simYrsCheck')
-        #         ),
-        # br(),
-        
         h5('2. Select the simulation start and end years of the CRSS simulations.'),
         fillRow(
           flex = c(NA,1),
@@ -95,7 +81,8 @@ crss_input_addin <- function() {
             "overwrite", 
             label = "Overwrite existing files?",
             choices = c("No" = FALSE, "Yes" = TRUE),
-            selected = FALSE
+            selected = FALSE,
+            inline = TRUE
           )      
         ),
         fillRow(htmlOutput('checkInputFolder')),
@@ -108,7 +95,8 @@ crss_input_addin <- function() {
             "createHistNF", 
             label = "Create HistoricalNaturalFlows.xlsx?",
             choices = c("No" = FALSE, "Yes" = TRUE),
-            selected = TRUE
+            selected = TRUE,
+            inline = TRUE
           ),
           uiOutput("xlAvg"),
           uiOutput("xlPath")
