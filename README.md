@@ -3,7 +3,9 @@
 CRSSIO
 ======
 
-[![Travis-CI Build Status](https://travis-ci.org/rabutler/CRSSIO.svg?branch=master)](https://travis-ci.org/rabutler/CRSSIO) [![AppVeyor Build status](https://ci.appveyor.com/api/projects/status/88fep06n341s4kdb?svg=true)](https://ci.appveyor.com/project/BoulderCodeHub/crssio-kvvpl) [![codecov](https://codecov.io/gh/rabutler/CRSSIO/branch/master/graphs/badge.svg)](https://codecov.io/gh/rabutler/CRSSIO)
+*Stable version (v0.6.0):* [![Travis-CI Build Status](https://travis-ci.org/BoulderCodeHub/CRSSIO.svg?branch=master)](https://travis-ci.org/BouldercodeHub/CRSSIO) [![AppVeyor Build status](https://ci.appveyor.com/api/projects/status/tkbmrk4hosv96rin?svg=true)](https://ci.appveyor.com/project/BoulderCodeHub/crssio) [![codecov](https://codecov.io/gh/BoulderCodeHub/CRSSIO/branch/master/graphs/badge.svg)](https://codecov.io/gh/BoulderCodeHub/CRSSIO)
+
+*Development version:* [![Travis-CI Build Status](https://travis-ci.org/rabutler/CRSSIO.svg?branch=master)](https://travis-ci.org/rabutler/CRSSIO) [![AppVeyor Build status](https://ci.appveyor.com/api/projects/status/88fep06n341s4kdb?svg=true)](https://ci.appveyor.com/project/BoulderCodeHub/crssio-kvvpl) [![codecov](https://codecov.io/gh/rabutler/CRSSIO/branch/master/graphs/badge.svg)](https://codecov.io/gh/rabutler/CRSSIO)
 
 R Package to manage code for manipulating the input and output data for CRSS.
 
