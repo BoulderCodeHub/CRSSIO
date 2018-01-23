@@ -59,7 +59,7 @@ crss_input_addin <- function() {
         "style" = padLeft
       ),
       
-      # show observed record to use -----------------
+      # show observed record options -----------------
       h4(htmlOutput("dnfSectionHeader"), "style" = padLeft),
       h5(htmlOutput("nfRecordHeader"), "style" = padLeft),
       fillRow(
@@ -75,6 +75,26 @@ crss_input_addin <- function() {
         uiOutput("dnfFolderOut"), 
         uiOutput("dnfOverwriteUI"),
         htmlOutput("checkInputFolder"),
+        height = divHeight,
+        "style" = padLeft
+      ),
+      
+      # show CMIP options -------------------------------
+      h4(htmlOutput("cmipSectionHeader"), "style" = padLeft),
+      h5(htmlOutput("cmipInputHeader"), "style" = padLeft),
+      fillRow(
+        uiOutput("cmipIFileUI"),
+        uiOutput("cmipScenNumUI"),
+        htmlOutput("checkCmip5IFile"),
+        height = divHeight,
+        "style" = padLeft
+      ),
+      
+      h5(htmlOutput("cmipInputHeader2"), "style" = padLeft),
+      fillRow(
+        uiOutput("cmipOFolderUI"),
+        uiOutput("cmipOverwriteUI"),
+        htmlOutput("checkCmip5OFolder"),
         height = divHeight,
         "style" = padLeft
       ),
@@ -310,6 +330,96 @@ crss_input_addin <- function() {
       !is.null(input$createFiles) & "cmip5" %in% input$createFiles
     })
     
+    isCmipFileValid <- reactive({
+      if (isCmipSelected() & !is.null(input$cmipFile))
+        file.exists(input$cmipFile)
+      else
+        TRUE
+    })
+    
+    isCmipNCFile <- reactive({
+      if (isCmipSelected() & !is.null(input$cmipFile))
+        tools::file_ext(input$cmipFile) == "nc"
+      else
+        TRUE
+    })
+    
+    output$checkCmip5IFile <- renderUI({
+      errMsg <- ""
+      
+      if (!isCmipFileValid())
+        errMsg <- paste(errMsg, "Netcdf file does not exist.")
+      
+      if (!isCmipNCFile())  
+        errMsg <- paste(errMsg, "Please specify a '.nc' file.")
+      
+      div(class = "errorMessage", HTML(errMsg))
+    })
+    
+    output$cmipSectionHeader <- renderText({
+      if (isCmipSelected())
+        "Create CMIP Natural Flow File Options"
+      else
+        ""
+    })
+    
+    output$cmipInputHeader <- renderText({
+      if (isCmipSelected())
+        "Select the input netcdf file and the scenario number you wish to use."
+      else
+        ""
+    })
+    
+    output$cmipInputHeader2 <- renderText({
+      if (isCmipSelected())
+        "Select folder to save CMIP natural flow files to."
+      else
+        ""
+    })
+    
+    output$cmipIFileUI <- renderUI({
+      if (isCmipSelected())
+        textInput("cmipFile", "Select CMIP netcdf file to use:", value = "C:/test.nc")
+    })
+    
+    output$cmipScenNumUI <- renderUI({
+      if (isCmipSelected())
+        textInput("cmipScenNum", label = "Scenario number:", value = "5")
+    })
+    
+    output$cmipOFolderUI <- renderUI({
+      if (isCmipSelected())
+        textInput("cmipOFolder", "Select folder:", value = "C:/")
+    })
+    
+    output$cmipOverwriteUI <- renderUI({
+      if (isCmipSelected())
+        radioButtons(
+          "overwriteCmip", 
+          label = "Overwrite existing files?",
+          choices = c("No" = FALSE, "Yes" = TRUE),
+          selected = FALSE,
+          inline = TRUE
+        )
+      else
+        return()
+    })
+    
+    isCmipOutputFolderValid <- reactive({
+      if (isCmipSelected() & !is.null(input$cmipOFolder))
+        dir.exists(input$cmipOFolder)
+      else
+        TRUE
+    })
+    
+    output$checkCmip5OFolder <- renderUI({
+      if(!isCmipOutputFolderValid())
+        div(class = "errorMessage", 
+            HTML("Folder does not exist"))
+      else
+        HTML("")
+    })
+    
     # check the natural flow xlsx creation options -------------
     isHistNfSelected <- reactive({
       !is.null(input$createFiles) & "histNF" %in% input$createFiles
@@ -362,7 +472,8 @@ crss_input_addin <- function() {
     
     isAllInputValid <- reactive({
       isSimYrsValid() & isOutputFolderValid() & isDnfStartYearValid() & 
-        isDnfEndAfterStart() & isXlPathValid()
+        isDnfEndAfterStart() & isXlPathValid() & isCmipFileValid() &
+        isCmipOutputFolderValid() & isCmipNCFile()
     })
     
     output$checkAllErrors <- renderUI({
@@ -390,7 +501,21 @@ crss_input_addin <- function() {
             recordToUse = rr,
             overwriteFiles = as.logical(input$overwriteDnf)
           )
-          message(paste("All trace files have been saved to:", 
+          message(paste("All DNF trace files have been saved to:", 
+                        input$selectFolder))
+        }
+        
+        if (isCmipSelected()){
+          crssi_create_cmip_nf_files(
+            input$cmipFile, 
+            oFolder = input$cmipOFolder,
+            startYear = as.integer(input$traceStartYear),
+            endYear = as.integer(input$simEndYear),
+            scenarioNumber = input$cmipScenNum ,
+            overwriteFiles = as.logical(input$overwriteCmip)
+          )
+          
+          message(paste("All CMIP trace files have been saved to:", 
                         input$selectFolder))
         }
         
