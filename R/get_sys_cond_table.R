@@ -211,7 +211,7 @@ crsso_get_sys_cond_table <- function(zz, yrs)
 
 createSysCondTable <- function(zz, yrs)
 {
-  .Deprecated("createSysCondTable")
+  .Deprecated("crsso_get_sys_cond_table")
   
   crsso_get_sys_cond_table(zz, yrs)
 }
