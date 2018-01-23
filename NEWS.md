@@ -1,5 +1,12 @@
+CRSSIO 0.6.1.9000
+===================
+
+*In development*
+
 CRSSIO 0.6.1
 ==============
+
+*Released January 23, 2018*
 
 ## Minor Updates and Bug Fixes
 
