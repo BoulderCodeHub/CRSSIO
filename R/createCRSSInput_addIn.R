@@ -18,6 +18,8 @@
 
 crss_input_addin <- function() {
   divHeight <- "50px"
+  padLeft <- "padding-left: 10px;"
+  
   ui <- miniPage(
     tags$head(
       tags$style(HTML("
@@ -32,134 +34,141 @@ crss_input_addin <- function() {
       right = miniTitleBarButton("done","Close and Run", primary = TRUE)
     ),
     miniContentPanel(padding = 0,
-      fillRow(checkboxGroupInput(
-        "createFiles",
-        label = "Select files to create:",
-        choices = c("DNF Files" = "dnf", "CMIP5 Files" = "cmip5", 
-                    "HistoricalNaturalFlows.xlsx" = "histNF"),
-        selected = c("dnf", "cmip5", "histNF"), 
-        inline = TRUE
-      ), height = divHeight),
-      br(),
-      
-      #h5('1. Select the start and end years of the natural flow record to apply the ISM to.'),
+      # select files to create -------------------------                     
       fillRow(
-        flex = c(NA,1),
-        selectInput(
-          'nfInputStartYear', 
-          'Start Year:',
-          choices = 1906:2020,
-          selected = 1906
-        ),
-        selectInput(
-          "nfInputEndYear",
-          'End Year',
-          choices = 1906:2020,
-          selected = 2015
-        ),
-        height = divHeight
-      ),
-      fillRow(htmlOutput('startEndErrors'), height = divHeight),
-      br(),
-      
-      h5('2. Select the simulation start and end years of the CRSS simulations.'),
-      fillRow(
-        flex = c(NA,1),
-        selectInput(
-          'traceStartYear',
-          'Traces Start In:',
-          choices = seq(2000, 2099),
-          selected = 2018
-        ),
-        selectInput(
-          "endYear", 
-          "Traces End In:", 
-          choices = seq(2000, 2099), 
-          selected = 2060
-        ),
-        height = divHeight
-      ),
-      fillRow(htmlOutput('simYrsCheck'), height = divHeight),
-      br(),
-      
-      h5('3. Select the folder to save the trace files in. The folder should already exist. Leave off the trailing "/".'),
-      fillRow(
-        flex = c(NA,1),
-        textInput('selectFolder', 'Select Folder', value = 'C:/'), 
-        radioButtons(
-          "overwrite", 
-          label = "Overwrite existing files?",
-          choices = c("No" = FALSE, "Yes" = TRUE),
-          selected = FALSE,
+        checkboxGroupInput(
+          "createFiles",
+          label = "Select files to create:",
+          choices = c("DNF Files" = "dnf", "CMIP5 Files" = "cmip5", 
+                      "HistoricalNaturalFlows.xlsx" = "histNF"),
+          selected = c("dnf", "cmip5", "histNF"), 
           inline = TRUE
-        ),
-        height = divHeight
+        ), 
+        height = divHeight,
+        style = padLeft
       ),
-      fillRow(htmlOutput('checkInputFolder'), height = divHeight),
-      br(),
       
-      h5("4. Do you want to create the HistoricalNaturalFlows.xlsx file?"),
+      # simulation start and end years ------------
+      h4(htmlOutput("simYearTitle"), "style" = padLeft),
+      h5(htmlOutput("simYearHeader"), "style" = padLeft),
       fillRow(
-        flex = NA,
-        radioButtons(
-          "createHistNF", 
-          label = "Create HistoricalNaturalFlows.xlsx?",
-          choices = c("No" = FALSE, "Yes" = TRUE),
-          selected = TRUE,
-          inline = TRUE
-        ),
+        uiOutput("simStartYearUI"),
+        uiOutput("simEndYearUI"),
+        htmlOutput("simYrsCheck"),
+        height = divHeight,
+        "style" = padLeft
+      ),
+      
+      # show observed record to use -----------------
+      h4(htmlOutput("dnfSectionHeader"), "style" = padLeft),
+      h5(htmlOutput("nfRecordHeader"), "style" = padLeft),
+      fillRow(
+        uiOutput("nfRecordStart"),
+        uiOutput("nfRecordEnd"),
+        htmlOutput("dnfStartEndErrors"), 
+        height = divHeight,
+        "style" = padLeft
+      ),
+      
+      h5(htmlOutput("dnfFolderHeader"), "style" = padLeft),
+      fillRow(
+        uiOutput("dnfFolderOut"), 
+        uiOutput("dnfOverwriteUI"),
+        htmlOutput("checkInputFolder"),
+        height = divHeight,
+        "style" = padLeft
+      ),
+
+      # if xlsx, select the parameters of that file -------------------
+      h4(htmlOutput("histNfSectionHeader"), "style" = padLeft),
+      fillRow(
         uiOutput("xlAvg"),
         uiOutput("xlPath"),
-        height = divHeight
+        htmlOutput("checkXlFolder"),
+        height = divHeight,
+        "style" = padLeft
       ),
-      fillRow(htmlOutput("checkXlFolder"), height = divHeight),
+      br(), br(), br(), br(),
       
-      fillRow(htmlOutput("checkAllErrors"), height = divHeight)
-
+      # final validation ----------------
+      fillRow(
+        htmlOutput("checkAllErrors"), 
+        height = divHeight, 
+        "style" = "padding-left: 10px; padding-top: 50px"
+      )
+    
     )
   )
   
   server <- function(input, output, session) {
     
-    isStartYearValid <- reactive({
-      as.integer(input$nfInputStartYear) >= 1906
+    isDnfStartYearValid <- reactive({
+      if (is.null(input$nfInputStartYear))
+        return(TRUE)
+      else
+        as.integer(input$nfInputStartYear) >= 1906
     })
     
-    isEndAfterStart <- reactive({
-      as.integer(input$nfInputStartYear) <= as.integer(input$nfInputEndYear)
+    isDnfEndAfterStart <- reactive({
+      if (is.null(input$nfInputStartYear) | is.null(input$nfInputEndYear))
+        return(TRUE)
+      else
+        as.integer(input$nfInputStartYear) <= as.integer(input$nfInputEndYear)
     })
     
-    output$startEndErrors <- renderUI({
-      errMsg <- ''
+    output$dnfStartEndErrors <- renderUI({
+      errMsg <- ""
       
-      if(!isStartYearValid())
-        errMsg <- paste0(errMsg, "Start year should be after 1906", br())
-      
-      if(!isEndAfterStart())
-        errMsg <- paste0(
-          errMsg,
-          "The end date should be after the start date.", 
-          br()
-        )
+      if (!(is.null(input$nfInputStartYear) | is.null(input$nfInputEndYear))) {
+        if (!isDnfStartYearValid())
+          errMsg <- paste0(errMsg, "Start year should be after 1906", br())
+        
+        if(!isDnfEndAfterStart())
+          errMsg <- paste0(
+            errMsg,
+            "The end date should be after the start date.", 
+            br()
+          )
+      }
    
       div(class = "errorMessage", HTML(errMsg))
     })
     
     ismRange <- reactive({
-      as.integer(input$nfInputEndYear) -
-        as.integer(input$nfInputStartYear) + 1
+      if(is.null(input$nfInputStartYear) | is.null(input$nfInputEndYear))
+        return(10000)
+      else
+        as.integer(input$nfInputEndYear) -
+          as.integer(input$nfInputStartYear) + 1
     })
     
     isSimYrsValid <- reactive({
-      as.integer(input$endYear) - as.integer(input$traceStartYear) + 1 <= 
-        ismRange()
+
+      if ( all(
+        isDnfSelected(), 
+        !is.null(input$simEndYear), 
+        !is.null(input$traceStartYear)
+      )){
+        as.integer(input$simEndYear) - as.integer(input$traceStartYear) + 1 <= 
+          ismRange()
+      } else{
+        TRUE
+      }
     })
     
     isEndYearValid <- reactive({
-      as.integer(input$endYear) >= as.integer(input$traceStartYear)
+      if ( all(
+        isDnfSelected() | isCmipSelected(),
+        !is.null(input$simEndYear),
+        !is.null(input$traceStartYear)
+      ))
+        as.integer(input$simEndYear) >= as.integer(input$traceStartYear)
+      else
+        TRUE
     })
     
     output$simYrsCheck <- renderUI({
+
       if (!isSimYrsValid())
         div(
           class = "errorMessage",
@@ -175,7 +184,10 @@ crss_input_addin <- function() {
     })
     
     isOutputFolderValid <- reactive({
-      file.exists(input$selectFolder)
+      if (isDnfSelected() & !is.null(input$selectFolder))
+        dir.exists(input$selectFolder)
+      else
+        TRUE
     })
     
     output$checkInputFolder <- renderUI({
@@ -186,9 +198,125 @@ crss_input_addin <- function() {
         HTML("")
     })
     
+    # check the simulation options ------------------------
+    
+    output$simStartYearUI <- renderUI({
+      if (isDnfSelected() | isCmipSelected())
+        selectInput(
+          'traceStartYear',
+          'Traces Start In:',
+          choices = seq(2000, 2099),
+          selected = 2018
+        )
+    })
+    
+    output$simEndYearUI <- renderUI({
+      if (isDnfSelected() | isCmipSelected())
+        selectInput(
+          "simEndYear", 
+          "Traces End In:", 
+          choices = seq(2000, 2099), 
+          selected = 2060
+        )
+    })
+    
+    output$simYearHeader <- renderText({
+      if (isDnfSelected() | isCmipSelected())
+        "Select the simulation start and end years of the CRSS simulations."
+      else
+        ""
+    })
+    
+    output$simYearTitle <- renderText({
+      if (isDnfSelected() | isCmipSelected())
+        "DNF and/or CMIP Options"
+      else
+        ""
+    })
+    
+    # check the DNF creation options ----------------------
+    isDnfSelected <- reactive({
+      !is.null(input$createFiles) & "dnf" %in% input$createFiles
+    })
+    
+    output$nfRecordStart <- renderUI({
+
+      if (isDnfSelected()) {
+        selectInput(
+          "nfInputStartYear", 
+          "Start Year:",
+          choices = 1906:2020,
+          selected = 1906
+        )
+      } else 
+        return()
+    })
+    
+    output$nfRecordEnd <- renderUI({
+      if (isDnfSelected()) {
+        selectInput(
+          "nfInputEndYear",
+          'End Year',
+          choices = 1906:2020,
+          selected = 2015
+        )
+      } else
+        return()
+    })
+    
+    output$nfRecordHeader <- renderText({
+      if (isDnfSelected())
+          "Select the years to apply ISM to:"
+      else
+        return("")
+    })
+    
+    output$dnfFolderOut <- renderUI({
+      if (isDnfSelected())
+        textInput('selectFolder', 'Select Folder', value = 'C:/')
+      else
+        return()
+    })
+    
+    output$dnfOverwriteUI <- renderUI({
+      if (isDnfSelected())
+        radioButtons(
+          "overwriteDnf", 
+          label = "Overwrite existing files?",
+          choices = c("No" = FALSE, "Yes" = TRUE),
+          selected = FALSE,
+          inline = TRUE
+        )
+      else
+        return()
+    })
+    
+    output$dnfFolderHeader <- renderText({
+      if (isDnfSelected())
+        "Select the folder to save the trace files in. The folder should already exist."
+      else
+        return("")
+    })
+    
+    output$dnfSectionHeader <- renderText({
+      if (isDnfSelected())
+        "Create Direct Natural Flow Options"
+      else
+        return("")
+    })
+    
+    # check CMIP creation options ------------------------
+    isCmipSelected <- reactive({
+      !is.null(input$createFiles) & "cmip5" %in% input$createFiles
+    })
+    
     # check the natural flow xlsx creation options -------------
+    isHistNfSelected <- reactive({
+      !is.null(input$createFiles) & "histNF" %in% input$createFiles
+    })
+    
     output$xlAvg <- renderUI({
-      if (as.logical(input$createHistNF))
+      if (isHistNfSelected())
         sliderInput(
           "xlAvg", 
           "Select number of years to average when filling LB flow data",
@@ -201,60 +329,72 @@ crss_input_addin <- function() {
     })
     
     output$xlPath <- renderUI({
-      if (as.logical(input$createHistNF))
+      if (isHistNfSelected())
         textInput("xlPath", "Select folder to save file in:", value = "C:/")
       else
         return()
     })
     
     isXlPathValid <- reactive({
-      if (is.null(input$xlPath))
-        return(TRUE)
       
-      if (as.logical(input$createHistNF))
+      if (isHistNfSelected() & !is.null(input$xlPath))
         return(dir.exists(input$xlPath))
       else
         # if you aren't creating the excel file, always return true for this
-        return(TRUE)
+        TRUE
     })
     
     output$checkXlFolder <- renderUI({
       if(!isXlPathValid())
-        div(class = "errorMessage", 
-            HTML("Folder does not exist"))
+        div(class = "errorMessage", HTML("Folder does not exist"))
       else
         HTML("")
     })
     
+    output$histNfSectionHeader <- renderUI({
+      if (isHistNfSelected())
+        "Create HistoricalNaturalFlows.xlsx Options"
+      else
+        ""
+    })
+    
+    # check all output errors ----------------------
+    
     isAllInputValid <- reactive({
-      #isTraceStartValid() & 
-      isSimYrsValid() & isOutputFolderValid() & isStartYearValid() & 
-        isEndAfterStart() & isXlPathValid()
+      isSimYrsValid() & isOutputFolderValid() & isDnfStartYearValid() & 
+        isDnfEndAfterStart() & isXlPathValid()
     })
     
     output$checkAllErrors <- renderUI({
       if(!isAllInputValid())
-        div(class="errorMessage",
-            HTML("Please fix errors before clicking run."))
+        div(
+          class = "errorMessage",
+          HTML("Please fix errors before clicking run.")
+        )
       else
         HTML("")
     })
     
+    # done --------------
     # Listen for 'done' events.
     observeEvent(input$done, {
       if(isAllInputValid()){
         rr <- zoo::as.yearmon(c(paste0(input$nfInputStartYear, "-1"),
                                 paste0(input$nfInputEndYear, "-12")))
-        crssi_create_dnf_files(
-          'CoRiverNF',
-          oFolder = input$selectFolder,
-          startYear = as.integer(input$traceStartYear), 
-          endYear = as.integer(input$endYear),
-          recordToUse = rr,
-          overwriteFiles = as.logical(input$overwrite)
-        )
-        message(paste('All trace files have been saved to:',input$selectFolder))
-        if(as.logical(input$createHistNF)){
+        if (isDnfSelected()) {
+          crssi_create_dnf_files(
+            "CoRiverNF",
+            oFolder = input$selectFolder,
+            startYear = as.integer(input$traceStartYear), 
+            endYear = as.integer(input$simEndYear),
+            recordToUse = rr,
+            overwriteFiles = as.logical(input$overwriteDnf)
+          )
+          message(paste("All trace files have been saved to:", 
+                        input$selectFolder))
+        }
+        
+        if (isHistNfSelected()){
           crssi_create_hist_nf_xlsx(
             as.integer(input$traceStartYear), 
             nYearAvg = as.integer(input$xlAvg), 
