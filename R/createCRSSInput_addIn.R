@@ -41,7 +41,7 @@ crss_input_addin <- function() {
           label = "Select files to create:",
           choices = c("DNF Files" = "dnf", "CMIP5 Files" = "cmip5", 
                       "HistoricalNaturalFlows.xlsx" = "histNF"),
-          selected = c("dnf", "cmip5", "histNF"), 
+          selected = c("dnf", "histNF"), 
           inline = TRUE
         ), 
         height = divHeight,

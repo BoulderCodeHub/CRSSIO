@@ -3,6 +3,10 @@ CRSSIO 0.6.0.9000
 *In development*
 
 * Fixed Deprecated message in `createSysCondTable()` to state that `crsso_get_sys_cond_table` should be used.
+* Updated the Addin 
+    - Fixed issues with radio buttons not working
+    - Changed overall layout
+    - Added ability to create CMIP natural flow files
 
 CRSSIO 0.6.0
 ==============
