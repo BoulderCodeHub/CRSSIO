@@ -1,12 +1,14 @@
-CRSSIO 0.6.0.9000
+CRSSIO 0.6.1
+==============
 
-*In development*
+## Minor Updates and Bug Fixes
 
 * Fixed Deprecated message in `createSysCondTable()` to state that `crsso_get_sys_cond_table` should be used.
-* Updated the Addin 
+* Updated the "Create CRSS Input Files) Addin (#35)
     - Fixed issues with radio buttons not working
     - Changed overall layout
     - Added ability to create CMIP natural flow files
+* Added tests for `storage_to_elevation()`
 
 CRSSIO 0.6.0
 ==============
