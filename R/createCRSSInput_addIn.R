@@ -17,7 +17,7 @@
 #' @import miniUI
 
 crss_input_addin <- function() {
-  
+  divHeight <- "50px"
   ui <- miniPage(
     tags$head(
       tags$style(HTML("
@@ -31,81 +31,91 @@ crss_input_addin <- function() {
       "Create CRSS Input Files", 
       right = miniTitleBarButton("done","Close and Run", primary = TRUE)
     ),
-    miniContentPanel(
-      fillCol(
-        h4('Create CRSS Input Files from Observed Natural Flow Record Using the ISM Method'),
-        
-        h5('1. Select the start and end years of the natural flow record to apply the ISM to.'),
-        fillRow(
-          flex = c(NA,1),
-          selectInput(
-            'nfInputStartYear', 
-            'Start Year:',
-            choices = 1906:2020,
-            selected = 1906
-          ),
-          selectInput(
-            "nfInputEndYear",
-            'End Year',
-            choices = 1906:2020,
-            selected = 2015
-          )
-        ),
-        fillRow(htmlOutput('startEndErrors')),
-        br(),
-        
-        h5('2. Select the simulation start and end years of the CRSS simulations.'),
-        fillRow(
-          flex = c(NA,1),
-          selectInput(
-            'traceStartYear',
-            'Traces Start In:',
-            choices = seq(2000, 2099),
-            selected = 2018
-          ),
-          selectInput(
-            "endYear", 
-            "Traces End In:", 
-            choices = seq(2000, 2099), 
-            selected = 2060
-          )
-        ),
-        fillRow(htmlOutput('simYrsCheck')),
-        br(),
-        
-        h5('3. Select the folder to save the trace files in. The folder should already exist. Leave off the trailing "/".'),
-        fillRow(
-          flex = c(NA,1),
-          textInput('selectFolder', 'Select Folder', value = 'C:/'), 
-          radioButtons(
-            "overwrite", 
-            label = "Overwrite existing files?",
-            choices = c("No" = FALSE, "Yes" = TRUE),
-            selected = FALSE,
-            inline = TRUE
-          )      
-        ),
-        fillRow(htmlOutput('checkInputFolder')),
-        br(),
-        
-        h5("4. Do you want to create the HistoricalNaturalFlows.xlsx file?"),
-        fillRow(
-          flex = NA,
-          radioButtons(
-            "createHistNF", 
-            label = "Create HistoricalNaturalFlows.xlsx?",
-            choices = c("No" = FALSE, "Yes" = TRUE),
-            selected = TRUE,
-            inline = TRUE
-          ),
-          uiOutput("xlAvg"),
-          uiOutput("xlPath")
-        ),
-        fillRow(htmlOutput("checkXlFolder")),
-        
-        htmlOutput('checkAllErrors')
-      )
+    miniContentPanel(padding = 0,
+      fillRow(checkboxGroupInput(
+        "createFiles",
+        label = "Select files to create:",
+        choices = c("DNF Files" = "dnf", "CMIP5 Files" = "cmip5", 
+                    "HistoricalNaturalFlows.xlsx" = "histNF"),
+        selected = c("dnf", "cmip5", "histNF"), 
+        inline = TRUE
+      ), height = divHeight),
+      br(),
       
+      #h5('1. Select the start and end years of the natural flow record to apply the ISM to.'),
+      fillRow(
+        flex = c(NA,1),
+        selectInput(
+          'nfInputStartYear', 
+          'Start Year:',
+          choices = 1906:2020,
+          selected = 1906
+        ),
+        selectInput(
+          "nfInputEndYear",
+          'End Year',
+          choices = 1906:2020,
+          selected = 2015
+        ),
+        height = divHeight
+      ),
+      fillRow(htmlOutput('startEndErrors'), height = divHeight),
+      br(),
+      
+      h5('2. Select the simulation start and end years of the CRSS simulations.'),
+      fillRow(
+        flex = c(NA,1),
+        selectInput(
+          'traceStartYear',
+          'Traces Start In:',
+          choices = seq(2000, 2099),
+          selected = 2018
+        ),
+        selectInput(
+          "endYear", 
+          "Traces End In:", 
+          choices = seq(2000, 2099), 
+          selected = 2060
+        ),
+        height = divHeight
+      ),
+      fillRow(htmlOutput('simYrsCheck'), height = divHeight),
+      br(),
+      
+      h5('3. Select the folder to save the trace files in. The folder should already exist. Leave off the trailing "/".'),
+      fillRow(
+        flex = c(NA,1),
+        textInput('selectFolder', 'Select Folder', value = 'C:/'), 
+        radioButtons(
+          "overwrite", 
+          label = "Overwrite existing files?",
+          choices = c("No" = FALSE, "Yes" = TRUE),
+          selected = FALSE,
+          inline = TRUE
+        ),
+        height = divHeight
+      ),
+      fillRow(htmlOutput('checkInputFolder'), height = divHeight),
+      br(),
+      
+      h5("4. Do you want to create the HistoricalNaturalFlows.xlsx file?"),
+      fillRow(
+        flex = NA,
+        radioButtons(
+          "createHistNF", 
+          label = "Create HistoricalNaturalFlows.xlsx?",
+          choices = c("No" = FALSE, "Yes" = TRUE),
+          selected = TRUE,
+          inline = TRUE
+        ),
+        uiOutput("xlAvg"),
+        uiOutput("xlPath"),
+        height = divHeight
+      ),
+      fillRow(htmlOutput("checkXlFolder"), height = divHeight),
+      
+      fillRow(htmlOutput("checkAllErrors"), height = divHeight)
+
     )
   )
   
