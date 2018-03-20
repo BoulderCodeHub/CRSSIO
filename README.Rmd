@@ -39,15 +39,20 @@ The final noun of the function describes what is created or retrieved. Ex: `crss
 ```{r echo=TRUE, warning=FALSE, message=FALSE}
 library(CRSSIO)
 library(RWDataPlyr) # install_github("BoulderCodeHub/RWDataPlyr")
-# create the slot aggregation list
-slotAggList <- RWDataPlyr::createSlotAggList(CRSSIO::sys_cond_matrix())
+# create the RiverWare data aggregator
+rwa <- sys_cond_rwa()
+
 # use example data in RWDataPlyr to create system condition table
 # first get all of the data
-scenFolder <- 'DNF,CT,IG'
-scenName <- 'DNF Hydrology'
+scenFolder <- "ISM1988_2014,2007Dems,IG,Most"
+scenName <- "scenA"
 scenPath <- system.file('extdata','Scenario/',package = 'RWDataPlyr')
-sysData <- RWDataPlyr::getDataForAllScens(scenFolder, scenName, slotAggList,
-                                          scenPath, 'tmp.feather', TRUE)
+sysData <- RWDataPlyr::rdf_aggregate(
+  rwa,
+  rdf_dir = file.path(scenPath, scenFolder),
+  scenario = scenName
+)
+
 # then create the system condition table
 sysCondTable <- crsso_get_sys_cond_table(sysData, 2018:2022)
 # sysCondTable[['limitedTable']] to access results
