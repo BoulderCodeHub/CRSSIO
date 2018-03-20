@@ -3,6 +3,8 @@ CRSSIO 0.6.1.9000
 
 *In development*
 
+* added `sys_cond_rwa()` object for use with RWDataPlyr > v0.5.0
+
 CRSSIO 0.6.1
 ==============
 

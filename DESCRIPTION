@@ -21,6 +21,7 @@ Imports:
     readxl,
     rlang,
     rstudioapi (>= 0.5),
+    RWDataPlyr (> 0.5.0),
     shiny (>= 0.13),
     stats,
     tibble,
@@ -28,14 +29,13 @@ Imports:
     tools,
     utils,
     writexl,
-    xts (>= 0.10.0),
+    xts (> 0.10),
     zoo
 Remotes:
     BoulderCodeHub/CoRiverNF,
     BoulderCodeHub/RWDataPlyr
 Suggests:
     knitr,
-    RWDataPlyr,
     testthat
 VignetteBuilder: knitr
 Roxygen: list(markdown = TRUE)
