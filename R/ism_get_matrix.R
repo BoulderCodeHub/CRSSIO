@@ -83,6 +83,8 @@ ism_get_site_matrix <- function(xtsData, startMonth, nYrs = NA, monthly = TRUE)
   ismMatrix
 }
 
+#' @export
+#' @rdname ism_get_site_matrix
 createISMMatrix <- function(xtsData, startMonth, nYrs = NA, monthly = TRUE)
 {
   .Deprecated("ism_get_site_matrix")

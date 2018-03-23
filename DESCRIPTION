@@ -1,6 +1,6 @@
 Package: CRSSIO
 Title: Package to manage the input/output of CRSS data
-Version: 0.6.1
+Version: 0.6.2
 Authors@R: person("Alan", "Butler", , "r.alan.butler+CRSSIO@gmail.com", c("aut", "cre"))
 Description: Provides functions to generate input files commmonly used by the
     Colorado River Simulation System (CRSS) from publicly available data, as

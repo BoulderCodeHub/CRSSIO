@@ -1,3 +1,12 @@
+CRSSIO 0.6.2
+==============
+
+*Released March 22, 2018*
+
+## Bug Fixes
+
+* `createISMMatrix()` is now exported (it should be until next major release)
+
 CRSSIO 0.6.1
 ==============
 
