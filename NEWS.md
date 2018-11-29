@@ -1,9 +1,20 @@
-CRSSIO 0.6.1.9000
+CRSSIO 0.6.2
 ===================
 
-*In development*
+*Released November 29, 2018*
+
+Released to work with CoRiverNF v0.5.0. It will work with older versions, but to get 2016 natural flow files this patch release is necesary. 
+
+## New Functions
 
 * added `sys_cond_rwa()` object for use with RWDataPlyr > v0.5.0
+
+## Under the hood updates
+
+* updated test files to work with 2016 natural flow files since the Little Snake natural flow changed in the pre-1971 data
+* modified how the CMIP3 tests work
+* updated the Sacramento year type data to go through 2017
+    * ensure that specified years exist in the Sacramento year type data (#55)
 
 CRSSIO 0.6.1
 ==============
