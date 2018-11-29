@@ -1,6 +1,5 @@
-
-#' parseSACData reads and parses the Sacramento year type data and saves it as
-#' internal data for the CRSSIO package.
+library(dplyr)
+#' parseSACData reads and parses the Sacramento year type data
 #' 
 #' It also converts from letter codes to number codes:
 #' 
@@ -14,11 +13,11 @@
 #' @param histYrs The historical years to use
 #' 
 #' @example 
-#' sacYT <- parseSACData("data-raw/sacramentoData.txt", 1906:2015)
+#' sacYT <- parseSACData("data-raw/sacrementoData.txt", 1906:2017)
+#' devtools::use_data(sacYT, internal = TRUE, overwrite = TRUE)
 
 parseSACData <- function(iFile, histYrs)
 {
-  
   zz <- matrix(scan(iFile, what = 'character', skip = 11), ncol = 11, byrow = T)
   
   cn <- scan(iFile, what = 'character', skip = 4, nlines = 1)
