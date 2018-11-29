@@ -17,11 +17,13 @@ Released to work with CoRiverNF v0.5.0. It will work with older versions, but to
     * ensure that specified years exist in the Sacramento year type data (#55)
 
 CRSSIO 0.6.2
-===================
+==============
 
-*Released March 23, 2018*
+*Released March 22, 2018*
 
-`createISMMAtrix()` is again exported
+## Bug Fixes
+
+* `createISMMatrix()` is now exported (it should be until next major release)
 
 CRSSIO 0.6.1
 ==============

@@ -26,6 +26,7 @@ r_packages:
   
 r_binary_packages:
   - ncdf4
+  - xts
   
 after_success:
   - Rscript -e 'library(covr); codecov()'
