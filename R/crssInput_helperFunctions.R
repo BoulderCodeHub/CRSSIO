@@ -224,6 +224,15 @@ writeSacYT <- function(traceNum, ytData, startDate, folderPath)
 
 getYTISMData <- function(startDate, simYrs, y1, y2)
 {
+  if (!all(
+    zoo::as.yearmon(paste("Dec", y1)) %in% zoo::index(sacYT),
+    zoo::as.yearmon(paste("Dec", y2)) %in% zoo::index(sacYT)
+  )) {
+    stop("Specified years do not exist in the Sacramento year type data.\n",
+         "Check the years you specified.\n",
+         "If they are necessary, the package must be updated.")
+  }
+  
   yt <- ism_get_site_matrix(
     sacYT[paste0(y1, "/", y2)], 
     startMonth = zoo::as.yearmon(startDate),
