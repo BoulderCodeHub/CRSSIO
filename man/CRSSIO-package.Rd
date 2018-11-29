@@ -4,7 +4,7 @@
 \name{CRSSIO-package}
 \alias{CRSSIO}
 \alias{CRSSIO-package}
-\title{CRSSIO: Package to manage the input/output of CRSS data}
+\title{CRSSIO: Package to Manage the Input and Output of CRSS Data}
 \description{
 Provides functions to generate input files commmonly used by the
 Colorado River Simulation System (CRSS) from publicly available data, as
