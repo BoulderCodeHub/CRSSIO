@@ -5,7 +5,7 @@ output: github_document
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
 # CRSSIO
-*Stable version (v0.6.2):*
+*Stable version (v0.6.3):*
 [![Travis-CI Build Status](https://travis-ci.org/BoulderCodeHub/CRSSIO.svg?branch=master)](https://travis-ci.org/BouldercodeHub/CRSSIO)
 [![AppVeyor Build status](https://ci.appveyor.com/api/projects/status/tkbmrk4hosv96rin?svg=true)](https://ci.appveyor.com/project/BoulderCodeHub/crssio)
 [![codecov](https://codecov.io/gh/BoulderCodeHub/CRSSIO/branch/master/graphs/badge.svg)](https://codecov.io/gh/BoulderCodeHub/CRSSIO)
@@ -39,15 +39,20 @@ The final noun of the function describes what is created or retrieved. Ex: `crss
 ```{r echo=TRUE, warning=FALSE, message=FALSE}
 library(CRSSIO)
 library(RWDataPlyr) # install_github("BoulderCodeHub/RWDataPlyr")
-# create the slot aggregation list
-slotAggList <- RWDataPlyr::createSlotAggList(CRSSIO::sys_cond_matrix())
+# create the RiverWare data aggregator
+rwa <- sys_cond_rwa()
+
 # use example data in RWDataPlyr to create system condition table
 # first get all of the data
-scenFolder <- 'DNF,CT,IG'
-scenName <- 'DNF Hydrology'
+scenFolder <- "ISM1988_2014,2007Dems,IG,Most"
+scenName <- "scenA"
 scenPath <- system.file('extdata','Scenario/',package = 'RWDataPlyr')
-sysData <- RWDataPlyr::getDataForAllScens(scenFolder, scenName, slotAggList,
-                                          scenPath, 'tmp.feather', TRUE)
+sysData <- RWDataPlyr::rdf_aggregate(
+  rwa,
+  rdf_dir = file.path(scenPath, scenFolder),
+  scenario = scenName
+)
+
 # then create the system condition table
 sysCondTable <- crsso_get_sys_cond_table(sysData, 2018:2022)
 # sysCondTable[['limitedTable']] to access results
@@ -75,7 +80,8 @@ devtools::install_github('BoulderCodeHub/CRSSIO')
 
 For details, see the [News](NEWS.md)
 
-* 2018-03-22: version 0.6.2 available
+* 2018-11-29: version 0.6.3 available
+* 2018-03-23: version 0.6.2 available
 * 2018-01-23: version 0.6.1 available
 * 2018-01-17: version 0.6.0 available
 * 2017-08-30: version 0.5.0 available

@@ -5,6 +5,7 @@
 \alias{createSysCondTable}
 \alias{sys_cond_matrix}
 \alias{sysCondSALMatrix}
+\alias{sys_cond_rwa}
 \title{Create standard CRSS system conditions table}
 \usage{
 crsso_get_sys_cond_table(zz, yrs)
@@ -14,6 +15,8 @@ createSysCondTable(zz, yrs)
 sys_cond_matrix()
 
 sysCondSALMatrix()
+
+sys_cond_rwa()
 }
 \arguments{
 \item{zz}{Full data for all years/traces necessary for creating System
@@ -33,10 +36,12 @@ breakout of Lower Elevation Balancing releases.  The second matrix
 Elevation Balancing breakout.
 
 \code{sys_cond_matrix()} returns a 17x5 character matrix.
+
+\code{sys_cond_rwa()} returns a \link[RWDataPlyr:rwd_agg]{RWDataPlyr::rwd_agg} object.
 }
 \description{
 Create the standard system conditions table (\code{crsso_get_sys_cond_table()})
-using the prespecified set of CRSS slots (\code{sys_cond_matrix()})
+using the prespecified set of CRSS slots (\code{sys_cond_rwa()})
 }
 \details{
 \code{crsso_get_sys_cond_table()} creates the standard system conditions table
@@ -45,7 +50,8 @@ that is commonly created from CRSS results, e.g., slide 6 at
 the percent of traces that simulate various system conditions, e.g., Lake
 Powell operating tiers, through time.
 
-\code{sys_cond_matrix()} is a convenience function to save the user from having to
+\code{sys_cond_matrix()} is included for use with RWDataPlyr <= v0.5.0. It
+is a convenience function to save the user from having to
 routinely recreate the information to pass to
 \code{\link[RWDataPlyr:createSlotAggList]{RWDataPlyr::createSlotAggList()}} when creating the system conditions table.
 The matrix returned by \code{sys_cond_matrix()} contains all of the slots and
@@ -56,16 +62,30 @@ slot aggregation list that \code{\link[RWDataPlyr:getDataForAllScens]{RWDataPlyr
 uses. Since \code{crsso_get_sys_cond_table()} expects a specific set of variable
 names, this function ensures the slots from CRSS are correctly mapped to
 those expected variables.
+
+\code{sys_cond_rwa()} is a convenience function to save the user from having to
+routinely recreate the \link[RWDataPlyr:rwd_agg]{RWDataPlyr::rwd_agg} object that is necessary to
+create the standard CRSS system conditions table.
+The object returned by \code{sys_cond_rwa()} contains all of the slots and
+their corresponding variable names that are expected in
+\code{crsso_get_sys_cond_table()}. This \link[RWDataPlyr:rwd_agg]{RWDataPlyr::rwd_agg} object should be
+passed to \code{\link[RWDataPlyr:rdf_aggregate]{RWDataPlyr::rdf_aggregate()}} to aggregate the necessary data for
+\code{crsso_get_sys_cond_table()}, which expects a specific set of variable
+names. This function ensures the slots from CRSS are correctly mapped to
+those expected variables.
 }
 \examples{
-# use RWDataPlyr package to get the data to create the system conditions table
-require(RWDataPlyr)
-slotAggList <- RWDataPlyr::createSlotAggList(CRSSIO::sys_cond_matrix())
-scenFolder <- 'DNF,CT,IG'
-scenName <- 'DNF Hydrology'
+# use RWDataPlyr package to get the data for the system conditions table
+rwa <- sys_cond_rwa()
+scenFolder <- "ISM1988_2014,2007Dems,IG,Most"
+scenName <- "scenA"
 scenPath <- system.file('extdata','Scenario/',package = 'RWDataPlyr')
-sysData <- RWDataPlyr::getDataForAllScens(scenFolder, scenName, slotAggList,
-                                          scenPath, 'tmp.feather', TRUE)
+sysData <- RWDataPlyr::rdf_aggregate(
+  rwa,
+  rdf_dir = file.path(scenPath, scenFolder),
+  scenario = scenName
+)
+
 sysCondTable <- crsso_get_sys_cond_table(sysData, 2018:2022)
 
 # print out the limited table

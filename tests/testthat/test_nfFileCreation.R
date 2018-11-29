@@ -159,37 +159,39 @@ test_that('can create files',{
 # check that all files in the three directories are the same -------------
 
 dirs <- list.dirs('tmp', recursive = FALSE, full.names = FALSE)
-for(curDir in dirs){
-  allFiles <- list.files(file.path("tmp", curDir))
-  for(ff in allFiles){
-    message(curDir, "/", ff)
-    test_that("all files are the same", {
+test_that("all files are the same", {
+  for(curDir in dirs){
+    allFiles <- list.files(file.path("tmp", curDir))
+    for(ff in allFiles){
+      #message(curDir, "/", ff)
       expect_identical(
         scan(file.path("tmp", curDir, ff), what = "character", quiet = TRUE),
         scan(file.path("tmp2", curDir, ff), what = "character", quiet = TRUE),
         info = paste(curDir, ff)
       )
-    })
+    }
   }
-}
+})
 
+  
 dirs <- list.dirs("tmp2", recursive = FALSE, full.names = FALSE)
-for(curDir in dirs){
-  allFiles <- list.files(file.path("tmp2", curDir))
-  for(ff in allFiles){
-    message(curDir, "/", ff)
-    test_that("all files are the same", {
+test_that("all files are the same", {
+  for(curDir in dirs){
+    allFiles <- list.files(file.path("tmp2", curDir))
+    for(ff in allFiles){
+      #message(curDir, "/", ff)
       expect_identical(
         scan(file.path("tmp2", curDir, ff), what = "character", quiet = TRUE),
         scan(file.path("tmp3", curDir, ff), what = "character", quiet = TRUE),
         info = paste(curDir, ff)
       )
-    })
+    }
   }
-}
+})
 
 allFiles <- c(nf_file_names(), "MWD_ICS.SacWYType", 
-              "MeadFloodControlData.hydrologyIncrement", "HydrologyParameters.TraceNumber",
+              "MeadFloodControlData.hydrologyIncrement", 
+              "HydrologyParameters.TraceNumber",
               "HydrologyParameters.SupplyScenario")
 
 test_that("all files exist", {
@@ -272,6 +274,16 @@ test_that('ism files match each other as expected', {
       file.path(p1,'trace5/', nf_file_names()[rr[2]]),
       skip = 1
     ))[1:12]
+  )
+  expect_equal(
+    as.matrix(read.csv(
+      file.path('tmp/trace1/',nf_file_names()[rr[2]]),
+      skip = 1
+    ))[1:12],
+    as.matrix(read.csv(
+      file.path(p1,'trace4/', nf_file_names()[rr[2]]),
+      skip = 1
+    ))[25:36]
   )
 })
 

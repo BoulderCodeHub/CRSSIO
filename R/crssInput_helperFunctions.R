@@ -23,7 +23,7 @@ getAllISMMatrices <- function(nfMat, startMonth, nYrs)
 
 #' Read in NF Excel file and format it
 #' 
-#' Read in the NF Excel file, removes whitespace and unnecessary rows and columns.
+#' Read in NF Excel file, remove whitespace and unnecessary rows and columns.
 #'
 #' @param iFile Relative or absolute file path to the Excel file
 #' @return An xts matrix beginning in January 1906 with 29 columns. 
@@ -34,7 +34,11 @@ read_and_format_nf_excel <- function(iFile)
 {
   ymJan1906 <- zoo::as.yearmon("Jan 1906")
   
-  nf <- readxl::read_xlsx(iFile, sheet = 'Intervening Natural Flow', skip = 3) %>%
+  nf <- readxl::read_xlsx(
+    iFile, 
+    sheet = getOption("crssio.nf_sheet_name"), 
+    skip = 3
+  ) %>%
   # going to take a lot of trimming, etc. to get rid of all the labels we don't 
   # need for the flow matrix
     dplyr::rename_at(
@@ -220,6 +224,15 @@ writeSacYT <- function(traceNum, ytData, startDate, folderPath)
 
 getYTISMData <- function(startDate, simYrs, y1, y2)
 {
+  if (!all(
+    zoo::as.yearmon(paste("Dec", y1)) %in% zoo::index(sacYT),
+    zoo::as.yearmon(paste("Dec", y2)) %in% zoo::index(sacYT)
+  )) {
+    stop("Specified years do not exist in the Sacramento year type data.\n",
+         "Check the years you specified.\n",
+         "If they are necessary, the package must be updated.")
+  }
+  
   yt <- ism_get_site_matrix(
     sacYT[paste0(y1, "/", y2)], 
     startMonth = zoo::as.yearmon(startDate),

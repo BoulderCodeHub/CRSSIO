@@ -14,6 +14,6 @@ evTables <- lapply(res, getData)
 names(evTables) <- tolower(res)
 
 # and get the sacramento year type data too
-sacYT <- parseSACData("data-raw/sacrementoData.txt", 1906:2015)
+sacYT <- parseSACData("data-raw/sacrementoData.txt", 1906:2017)
 
 devtools::use_data(evTables, sacYT, internal = TRUE, overwrite = TRUE)

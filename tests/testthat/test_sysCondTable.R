@@ -3,13 +3,15 @@ library(dplyr)
 
 context('Check system condition table creation')
 
-slotAggList <- RWDataPlyr::createSlotAggList(CRSSIO::sys_cond_matrix())
-scenFolder <- "DNF,CT,IG"
-scenName <- 'scen1'
+rwa <- sys_cond_rwa()
+scenFolder <- "ISM1988_2014,2007Dems,IG,Most"
+scenName <- "scen1"
 scenPath <- system.file('extdata','Scenario/',package = 'RWDataPlyr')
-sysData <- RWDataPlyr::getDataForAllScens(scenFolder, scenName, slotAggList,
-                                          scenPath, 'tmp.feather', TRUE)
-on.exit(file.remove("tmp.feather"))
+sysData <- RWDataPlyr::rdf_aggregate(
+  rwa,
+  rdf_dir = file.path(scenPath, scenFolder),
+  scenario = scenName
+)
 
 yrs <- 2018:2022
 sysCondTable <- crsso_get_sys_cond_table(sysData, yrs)
@@ -27,7 +29,7 @@ test_that('object dimensions and attributes are correct', {
   )
   # test that when using too few years, you only get back one year of data
   # warning text is checked below
-  expect_warning(s2 <- crsso_get_sys_cond_table(sysData, 2016:2018)) 
+  expect_warning(s2 <- crsso_get_sys_cond_table(sysData, 2016:2019)) 
   expect_equal(dim(s2$fullTable), c(length(CRSSIO:::slotNames()) + 4, 2))
 })
 
@@ -101,15 +103,15 @@ expVals <- matrix(c(
 # check UEB Total, Shortage 1, MER 7.48 and normal year
 r1 <- apply(
   {
-    rdfSlotToMatrix(
+    rdf_get_slot(
       RWDataPlyr::sysRdf, 
       "SummaryOutputData.UpperBalancingAbove823"
     ) +
-    rdfSlotToMatrix(
+    rdf_get_slot(
       RWDataPlyr::sysRdf, 
       "SummaryOutputData.UpperBalancingAt823"
     ) +
-    rdfSlotToMatrix(
+    rdf_get_slot(
       RWDataPlyr::sysRdf, 
       "SummaryOutputData.UpperBalancingBelow823"
     )
@@ -118,12 +120,12 @@ r1 <- apply(
   mean
 ) * 100
 r2 <- apply(
-  rdfSlotToMatrix(RWDataPlyr::sysRdf, "SummaryOutputData.LBShortageStep1"),
+  rdf_get_slot(RWDataPlyr::sysRdf, "SummaryOutputData.LBShortageStep1"),
   1,
   mean
 ) * 100
 r3 <- apply(
-  rdfSlotToMatrix(
+  rdf_get_slot(
     RWDataPlyr::sysRdf, 
     "SummaryOutputData.MidElevationReleaseAt748"
   ),
@@ -131,17 +133,17 @@ r3 <- apply(
   mean
 ) * 100
 r4 <- apply(
-  rdfSlotToMatrix(RWDataPlyr::sysRdf, "SummaryOutputData.LBNormalCondition"),
+  rdf_get_slot(RWDataPlyr::sysRdf, "SummaryOutputData.LBNormalCondition"),
   1,
   mean
 ) * 100
-#test_that("computations of chances are correct", {
-#  expect_equivalent(expVals, sysCondTable$fullTable)
-#  expect_equivalent(sysCondTable$fullTable[4,], r1)
-#  expect_equivalent(sysCondTable$fullTable[16,], r2)
-#  expect_equivalent(sysCondTable$fullTable[10,], r3)
-#  expect_equivalent(sysCondTable$fullTable[21,], r4)
-#})
+test_that("computations of chances are correct", {
+ expect_equivalent(expVals, sysCondTable$fullTable)
+ expect_equivalent(sysCondTable$fullTable[4,], r1)
+ expect_equivalent(sysCondTable$fullTable[16,], r2)
+ expect_equivalent(sysCondTable$fullTable[10,], r3)
+ expect_equivalent(sysCondTable$fullTable[21,], r4)
+})
 
 test_that("rows sum together correctly", {
   expect_equal(
