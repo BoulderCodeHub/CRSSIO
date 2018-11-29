@@ -1,4 +1,4 @@
-CRSSIO 0.6.2
+CRSSIO 0.6.3
 ===================
 
 *Released November 29, 2018*
@@ -15,6 +15,13 @@ Released to work with CoRiverNF v0.5.0. It will work with older versions, but to
 * modified how the CMIP3 tests work
 * updated the Sacramento year type data to go through 2017
     * ensure that specified years exist in the Sacramento year type data (#55)
+
+CRSSIO 0.6.2
+===================
+
+*Released March 23, 2018*
+
+`createISMMAtrix()` is again exported
 
 CRSSIO 0.6.1
 ==============
