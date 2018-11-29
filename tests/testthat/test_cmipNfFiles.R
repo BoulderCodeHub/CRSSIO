@@ -6,7 +6,7 @@ context('Check that CMIP natural flow files are created correctly')
 cmipDir <- "../cmip5/tmp"
 
 dir.create(cmipDir)
-on.exit(unlink(cmipDir, recursive = T))
+on.exit(unlink(cmipDir, recursive = TRUE))
 
 # unzip the example nc file
 ncPath <- "../cmip5"
@@ -170,6 +170,10 @@ test_that("Trimmed output matches full output", {
 # compare to original data -------------------------
 # check that full output matches original files that ncdf was created from 
 # get 4 more random nodes
+
+setup(unzip("../ccOrig.zip", exdir = ".."))
+teardown(unlink("../ccOrig", recursive = TRUE))
+
 rr <- sample(1:29, 4) # get 4 random nodes
 message(cat("\n4 random nodes are:" ,rr),"\n")
 rr <- file.path(
