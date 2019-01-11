@@ -2,11 +2,13 @@
 #' RStudio Addin to Create CRSS Input Files
 #' 
 #' `crss_input_addin()` is an RStudio Addin that sets key parameters of 
-#' [crssi_create_dnf_files()] and [crssi_create_hist_nf_xlsx()] before running it.
+#' [crssi_create_dnf_files()], [crssi_create_cmip_nf_files()], and 
+#' [crssi_create_hist_nf_xlsx()] before running it.
 #' 
 #' To use the Addin, RStudio v0.99.878 or later must be used. The key user input
-#' to `crssi_create_dnf_files()` can be set in the GUI. The `oFiles`
-#' arguement uses the default value of [nf_file_names()].
+#' to `crssi_create_dnf_files()` and `crssi_create_cmip_nf_files()` can be set 
+#' in the GUI. The `oFiles` arguement uses the default value of 
+#' [nf_file_names()].
 #' 
 #' Additionally, there is an option to also create the HistoricalNaturalFlows.xlsx
 #' file necessary for CRSS runs via `crssi_create_hist_nf_xlsx()`. 
@@ -221,7 +223,7 @@ crss_input_addin <- function() {
     # check the simulation options ------------------------
     
     output$simStartYearUI <- renderUI({
-      if (isDnfSelected() | isCmipSelected())
+      if (isDnfSelected() | isCmipSelected() | isHistNfSelected())
         selectInput(
           'traceStartYear',
           'Traces Start In:',
@@ -241,15 +243,15 @@ crss_input_addin <- function() {
     })
     
     output$simYearHeader <- renderText({
-      if (isDnfSelected() | isCmipSelected())
+      if (isDnfSelected() | isCmipSelected() | isHistNfSelected())
         "Select the simulation start and end years of the CRSS simulations."
       else
         ""
     })
     
     output$simYearTitle <- renderText({
-      if (isDnfSelected() | isCmipSelected())
-        "DNF and/or CMIP Options"
+      if (isDnfSelected() | isCmipSelected() | isHistNfSelected())
+        "Simulation Start and End Years"
       else
         ""
     })
@@ -379,7 +381,11 @@ crss_input_addin <- function() {
     
     output$cmipIFileUI <- renderUI({
       if (isCmipSelected())
-        textInput("cmipFile", "Select CMIP netcdf file to use:", value = "C:/test.nc")
+        textInput(
+          "cmipFile", 
+          "Select CMIP netcdf file to use:", 
+          value = "C:/test.nc"
+        )
     })
     
     output$cmipScenNumUI <- renderUI({

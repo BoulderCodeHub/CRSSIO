@@ -3,6 +3,10 @@ CRSSIO 0.6.3.9000
 
 *In progress*
 
+## Bug fixes
+
+* Updated the create files add-in so that the start year parameter stays visible for creation of historical and CMIP natural flows and the HistoricalNaturalFlows.xlsx file. (#47)
+
 CRSSIO 0.6.3
 ===================
 
