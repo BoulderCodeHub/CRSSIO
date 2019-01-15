@@ -6,6 +6,8 @@ CRSSIO 0.6.3.9000
 ## Bug fixes
 
 * Updated the create files add-in so that the start year parameter stays visible for creation of historical and CMIP natural flows and the HistoricalNaturalFlows.xlsx file. (#47)
+* Fixed the closing parenthesis in the level 2 and 3 shortage rows in `crsso_get_sys_cond_table()`. (#62)
+* Updated `crssi_change_nf_start_date()` so that it only edits the year of the start date. This was required so that the MWD ICS files are correctly modified as they use a 12/31 year/month, while the other files use a 1/31 year/month. As part of this, the `startDate` argument is deprecated and replaced by `start_year`. The function now updates the README.txt file if it exists, or creates one if it doesn't exist. (#52)
 
 CRSSIO 0.6.3
 ===================
