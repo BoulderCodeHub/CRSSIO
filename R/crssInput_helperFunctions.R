@@ -364,3 +364,14 @@ check_recordToUse <- function(recordToUse)
   
   c(paste(y1, m1, sep = "-"), paste(y2, m2, sep = "-"))
 }
+
+check_recordToUse_year2 <- function(year2, nf)
+{
+  nf_y2 <- as.integer(format(tail(zoo::index(nf), 1), "%Y"))
+  assert_that(
+    as.integer(format(year2, "%Y")) <= nf_y2,
+    msg = paste("The end year in `recordToUse` must be <=", nf_y2)
+  )
+  
+  invisible(year2)
+}
