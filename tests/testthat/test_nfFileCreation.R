@@ -124,6 +124,20 @@ test_that("Upfront errors post correctly", {
     ),
     "The second entry in recordToUse should be after the first entry."
   )
+  
+  expect_error(
+    crssi_create_dnf_files(
+      'CoRiverNF', 
+      oFolder = dir2, 
+      startYear = 2017, 
+      endYear = 2021, 
+      recordToUse = zoo::as.yearmon(c("1988-1", "2100-12"))
+    ),
+    paste(
+      "The end year in `recordToUse` must be <=", 
+      as.integer(format(tail(zoo::index(CoRiverNF::monthlyInt), 1), "%Y"))
+    )
+  )
 })
 
 # check the two different fucntions create data -------

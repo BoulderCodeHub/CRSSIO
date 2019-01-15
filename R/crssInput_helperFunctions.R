@@ -34,6 +34,15 @@ read_and_format_nf_excel <- function(iFile)
 {
   ymJan1906 <- zoo::as.yearmon("Jan 1906")
   
+  # before tibble 2.0.0 the empty variables were renamed with X__; now they use
+  # .. and column number
+  if (packageVersion("tibble") < '2.0.0' || 
+      packageVersion("readxl") < '1.2.0') {
+    drop_chars <- "X__"
+  } else {
+    drop_chars <- ".."
+  }
+  
   nf <- readxl::read_xlsx(
     iFile, 
     sheet = getOption("crssio.nf_sheet_name"), 
@@ -50,7 +59,8 @@ read_and_format_nf_excel <- function(iFile)
     # bottom
     dplyr::filter_at("date", dplyr::any_vars(!is.na(.))) %>%
     dplyr::filter_at("date", dplyr::any_vars(. >= ymJan1906)) %>%
-    dplyr::select(-dplyr::matches("X__1")) %>%
+    # should drop any columns that were renamed b/c they were empty
+    dplyr::select(-dplyr::contains(drop_chars)) %>%
     dplyr::mutate_if(is.character, as.numeric) %>%
     as.data.frame()
  
