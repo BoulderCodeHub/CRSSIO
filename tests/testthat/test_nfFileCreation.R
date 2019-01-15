@@ -294,8 +294,6 @@ test_that('ism files match each other as expected', {
 
 # internal format excel function -------------------
 
-message("xlsx file exists: ", file.exists("../NaturalFlows_Sample.xlsx"))
-
 test_that("Excel formatting works", {
   expect_warning(expect_s3_class(
     tmp <- CRSSIO:::read_and_format_nf_excel("../NaturalFlows_Sample.xlsx"),
