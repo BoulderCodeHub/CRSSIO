@@ -3,6 +3,10 @@ CRSSIO 0.6.3.9000
 
 *In progress*
 
+## New Functions
+
+* Added `stat_boxplot_custom()`. This allows the user to specify the extents of the whiskers using percentiles (`qs`) instead of the IQR. (#51)
+
 ## Bug fixes
 
 * Updated the create files add-in so that the start year parameter stays visible for creation of historical and CMIP natural flows and the HistoricalNaturalFlows.xlsx file. (#47)
