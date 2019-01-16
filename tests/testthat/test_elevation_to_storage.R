@@ -5,6 +5,14 @@ test_that("warnings and errors work", {
   expect_error(elevation_to_storage(3434, "shasta"), "Invalid reservoir")
   expect_true(is.na(elevation_to_storage(3490, "mead")))
   expect_true(is.na(elevation_to_storage(1000, "powell")))
+  expect_error(
+    elevation_to_storage(5000, c("mead", "powell")),
+    "`reservoir` should be a character vector with length = 1."
+  )
+  expect_error(
+    elevation_to_storage(5000, 50),
+    "`reservoir` should be a character vector with length = 1."
+  )
 })
 
 test_that("Values are the same when they should be the same", {
