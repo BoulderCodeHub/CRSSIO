@@ -36,8 +36,8 @@ read_and_format_nf_excel <- function(iFile)
   
   # before tibble 2.0.0 the empty variables were renamed with X__; now they use
   # .. and column number
-  if (packageVersion("tibble") < '2.0.0' || 
-      packageVersion("readxl") < '1.2.0') {
+  if (utils::packageVersion("tibble") < '2.0.0' || 
+      utils::packageVersion("readxl") < '1.2.0') {
     drop_chars <- "X__"
   } else {
     drop_chars <- ".."
@@ -377,7 +377,7 @@ check_recordToUse <- function(recordToUse)
 
 check_recordToUse_year2 <- function(year2, nf)
 {
-  nf_y2 <- as.integer(format(tail(zoo::index(nf), 1), "%Y"))
+  nf_y2 <- as.integer(format(utils::tail(zoo::index(nf), 1), "%Y"))
   assert_that(
     as.integer(format(year2, "%Y")) <= nf_y2,
     msg = paste("The end year in `recordToUse` must be <=", nf_y2)
