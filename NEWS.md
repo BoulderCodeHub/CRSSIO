@@ -6,6 +6,7 @@ CRSSIO 0.6.3.9000
 ## New Functions
 
 * Added `stat_boxplot_custom()`. This allows the user to specify the extents of the whiskers using percentiles (`qs`) instead of the IQR. (#51)
+* Added `storage_to_elevation()`. This is the inverse of `elevation_to_storage()`. (#40)
 
 ## Bug fixes
 
