@@ -32,6 +32,7 @@ Imports:
     tibble,
     tidyr,
     tools,
+    udunits2,
     utils,
     writexl,
     xts (>= 0.10.0),

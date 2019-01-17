@@ -7,6 +7,7 @@ CRSSIO 0.6.3.9000
 
 * Added `stat_boxplot_custom()`. This allows the user to specify the extents of the whiskers using percentiles (`qs`) instead of the IQR. (#51)
 * Added `storage_to_elevation()`. This is the inverse of `elevation_to_storage()`. (#40)
+* Added `add_secondary_y_conversion()`. This function takes a ggplot and adds in a secondary axis with different units. The units are converted from the current label positions of the primary axis. (#49)
 
 ## Bug fixes
 

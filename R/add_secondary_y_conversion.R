@@ -1,6 +1,6 @@
 #' Add a Secondary Y-Axis to a ggplot, Converting from the Primary Axis Units
 #' 
-#' `add_secondary_y_convert()` adds a secondary y-axis to a ggplot. While it is 
+#' `add_secondary_y_conversion()` adds a secondary y-axis to a ggplot. While it is 
 #' intended to be used to add a metric equivelent axis, it will work for any
 #' conversion that is handled by [udunits2::ud.convert()].
 #' 
@@ -27,10 +27,10 @@
 #' df <- data.frame(year = 2020:2029, elev = rnorm(10, 3580, 10))
 #' gg <- ggplot(df, aes(year, elev)) + 
 #'   geom_line()
-#' add_secondary_y_convert(gg, "feet", "meters")
+#' add_secondary_y_conversion(gg, "feet", "meters")
 #' 
 #' @export
-add_secondary_y_convert <- function(gg, from_unit, to_unit, sec_name = to_unit, 
+add_secondary_y_conversion <- function(gg, from_unit, to_unit, sec_name = to_unit, 
                                  digits = "get_decimals") 
 {
   assert_that(
@@ -38,7 +38,7 @@ add_secondary_y_convert <- function(gg, from_unit, to_unit, sec_name = to_unit,
     msg = "`gg` does not inherit from c('gg', 'ggplot')"
   )
   
-  current_y_labs <- ggplot_build(gg)$layout$panel_params[[1]]$y.labels
+  current_y_labs <- ggplot2::ggplot_build(gg)$layout$panel_params[[1]]$y.labels
   
   current_y_num <- as.numeric(current_y_labs)
   
@@ -69,8 +69,8 @@ add_secondary_y_convert <- function(gg, from_unit, to_unit, sec_name = to_unit,
   }
   
   gg +
-    scale_y_continuous(
-      sec.axis = sec_axis(
+    ggplot2::scale_y_continuous(
+      sec.axis = ggplot2::sec_axis(
         name = sec_name,
         trans = ~udunits2::ud.convert(., from_unit, to_unit), 
         breaks = udunits2::ud.convert(current_y_num, from_unit, to_unit), 
