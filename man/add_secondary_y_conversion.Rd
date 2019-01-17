@@ -26,10 +26,13 @@ conversion that is handled by \code{\link[udunits2:ud.convert]{udunits2::ud.conv
 }
 \details{
 \describe{
-\item{digits}{Either a number or the string \code{"get_decimals"}. If a number,
+\item{\code{digits}}{Either a number or the string \code{"get_decimals"}. If a number,
 then that is the number of digits to the right of the decimal place that will
 be shown. If \code{"get_decimals"}, then the secondary axis will show the same
 number of digits to the right of the decimal place as the primary axis does.}
+\item{units}{For \code{from_unit} and \code{to_unit}, the following are common units
+used in CRSS that will work with \code{\link[udunits2:ud.convert]{udunits2::ud.convert()}}: "acre_feet",
+"m^3", "acre_feet/month", "acre_feet/year", "m^3/s", "km^3/s", "1e6m^3/s".}
 }
 }
 \examples{

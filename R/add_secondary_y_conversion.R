@@ -5,10 +5,13 @@
 #' conversion that is handled by [udunits2::ud.convert()].
 #' 
 #' \describe{
-#' \item{digits}{Either a number or the string `"get_decimals"`. If a number, 
+#' \item{`digits`}{Either a number or the string `"get_decimals"`. If a number, 
 #' then that is the number of digits to the right of the decimal place that will
 #' be shown. If `"get_decimals"`, then the secondary axis will show the same 
 #' number of digits to the right of the decimal place as the primary axis does.}
+#' \item{units}{For `from_unit` and `to_unit`, the following are common units 
+#' used in CRSS that will work with [udunits2::ud.convert()]: "acre_feet", 
+#' "m^3", "acre_feet/month", "acre_feet/year", "m^3/s", "km^3/s", "1e6m^3/s".}
 #' }
 #' 
 #' @param gg A ggplot
