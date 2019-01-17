@@ -3,13 +3,10 @@
 %   R/storage_to_elevation.R
 \name{elevation_to_storage}
 \alias{elevation_to_storage}
-\alias{elevation2Volume}
 \alias{storage_to_elevation}
 \title{Convert Between Elevation and Volume for a Reservoir}
 \usage{
 elevation_to_storage(elevation, reservoir)
-
-elevation2Volume(elevation, reservoir)
 
 storage_to_elevation(storage, reservoir)
 }

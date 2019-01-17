@@ -54,17 +54,3 @@ test_that("return values are correct length and type", {
   expect_true(anyNA(elevation_to_storage(c(1000, 3490), "Mead")))
   expect_true(!anyNA(elevation_to_storage(c(1000, 1050, 1075), "Mead")))
 })
-
-test_that("deprecated function is the same as new functions", {
-  
-  expect_warning(elevation2Volume(3490, "mead")) %>%
-    expect_identical(elevation_to_storage(3490, "mead"))
-  expect_identical(
-    expect_warning(elevation2Volume(1050, "mead")),
-    elevation_to_storage(1050, "mead")
-  )
-  expect_identical(
-    expect_warning(elevation2Volume(c(1050, 1100, 10000), "mead")),
-    elevation_to_storage(c(1050, 1100, 10000), "mead")
-  )
-})

@@ -58,11 +58,3 @@ check_reservoir <- function(reservoir)
   
   reservoir
 }
-
-#' @export
-#' @rdname elevation_to_storage
-elevation2Volume <- function(elevation, reservoir)
-{
-  .Deprecated("elevation_to_storage")
-  elevation_to_storage(elevation, reservoir)
-}
