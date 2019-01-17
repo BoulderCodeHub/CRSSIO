@@ -44,8 +44,9 @@ vDescAll <- function()
 		'Lower Elevation Balancing - annual release > 8.23 maf',
 		'Lower Elevation Balancing - annual release < 8.23 maf',
 		'Lower Elevation Balancing - annual release = 8.23 maf',
-		'Surplus - Flood Control','Shortage - 1st Level (Mead <= 1,075 and >= 1,050',
-		'Shortage - 2nd Level (Mead < 1,050 and >= 1,025',
+		'Surplus - Flood Control',
+		'Shortage - 1st Level (Mead <= 1,075 and >= 1,050)',
+		'Shortage - 2nd Level (Mead < 1,050 and >= 1,025)',
 		'Shortage - 3rd Level (Mead < 1,025)',
 		'Equalization Tier','Upper Elevation Balancing Tier',
 		'Mid-Elevation Release Tier','Lower Elevation Balancing Tier'

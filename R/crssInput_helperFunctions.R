@@ -34,6 +34,15 @@ read_and_format_nf_excel <- function(iFile)
 {
   ymJan1906 <- zoo::as.yearmon("Jan 1906")
   
+  # before tibble 2.0.0 the empty variables were renamed with X__; now they use
+  # .. and column number
+  if (utils::packageVersion("tibble") < '2.0.0' || 
+      utils::packageVersion("readxl") < '1.2.0') {
+    drop_chars <- "X__"
+  } else {
+    drop_chars <- ".."
+  }
+  
   nf <- readxl::read_xlsx(
     iFile, 
     sheet = getOption("crssio.nf_sheet_name"), 
@@ -50,7 +59,8 @@ read_and_format_nf_excel <- function(iFile)
     # bottom
     dplyr::filter_at("date", dplyr::any_vars(!is.na(.))) %>%
     dplyr::filter_at("date", dplyr::any_vars(. >= ymJan1906)) %>%
-    dplyr::select(-dplyr::matches("X__1")) %>%
+    # should drop any columns that were renamed b/c they were empty
+    dplyr::select(-dplyr::contains(drop_chars)) %>%
     dplyr::mutate_if(is.character, as.numeric) %>%
     as.data.frame()
  
@@ -363,4 +373,15 @@ check_recordToUse <- function(recordToUse)
   # and return that
   
   c(paste(y1, m1, sep = "-"), paste(y2, m2, sep = "-"))
+}
+
+check_recordToUse_year2 <- function(year2, nf)
+{
+  nf_y2 <- as.integer(format(utils::tail(zoo::index(nf), 1), "%Y"))
+  assert_that(
+    as.integer(format(year2, "%Y")) <= nf_y2,
+    msg = paste("The end year in `recordToUse` must be <=", nf_y2)
+  )
+  
+  invisible(year2)
 }

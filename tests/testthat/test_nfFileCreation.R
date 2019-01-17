@@ -1,20 +1,25 @@
 library(CRSSIO)
 context('check that Natural Flow files are created correctly.')
 
+# setup temp folders ---------------------------
+dir1 <- file.path(tempdir(), "tmp")
+dir2 <- file.path(tempdir(), "tmp2")
+dir3 <- file.path(tempdir(), "tmp3")
+
 setup({
-  dir.create("tmp")
-  dir.create("tmp2")
-  dir.create("tmp3")
+  dir.create(dir1)
+  dir.create(dir2)
+  dir.create(dir3)
 })
 teardown({
-  unlink("tmp", recursive = TRUE)
-  unlink("tmp2", recursive = TRUE)
-  unlink("tmp3", recursive = TRUE)
+  unlink(dir1, recursive = TRUE)
+  unlink(dir2, recursive = TRUE)
+  unlink(dir3, recursive = TRUE)
 })
 
 p1 <- ".."
 rr <- sample(1:29, 4) # get 4 random nodes
-message(cat('\n4 random nodes are:',rr))
+message('\n4 random nodes are: ',paste(rr, collapse = " "))
 r2u <- zoo::as.yearmon(c('1950-01','1954-12'))
 
 # check errors -------------------
@@ -46,7 +51,7 @@ test_that("Upfront errors post correctly", {
   expect_error(
     crssi_create_dnf_files(
       'CoRiverNF', 
-      oFolder = 'tmp2', 
+      oFolder = dir2, 
       startYear = 2017, 
       endYear = 2021, 
       recordToUse = c("1906-01", "1997-12")
@@ -57,7 +62,7 @@ test_that("Upfront errors post correctly", {
   expect_error(
     crssi_create_dnf_files(
       'CoRiverNF', 
-      oFolder = 'tmp2', 
+      oFolder = dir2, 
       startYear = 2017, 
       endYear = 2021, 
       recordToUse = zoo::as.yearmon(c("1906-01", "1997-12", "1999-12"))
@@ -68,7 +73,7 @@ test_that("Upfront errors post correctly", {
   expect_error(
     crssi_create_dnf_files(
       'CoRiverNF', 
-      oFolder = 'tmp2', 
+      oFolder = dir2, 
       startYear = 2017, 
       endYear = 2021, 
       recordToUse = zoo::as.yearmon(c("1906-2", "1997-12"))
@@ -79,7 +84,7 @@ test_that("Upfront errors post correctly", {
   expect_error(
     crssi_create_dnf_files(
       'CoRiverNF', 
-      oFolder = 'tmp2', 
+      oFolder = dir2, 
       startYear = 2017, 
       endYear = 2021, 
       recordToUse = zoo::as.yearmon(c("1906-1", "1997-11"))
@@ -90,7 +95,7 @@ test_that("Upfront errors post correctly", {
   expect_error(
     crssi_create_dnf_files(
       'CoRiverNF', 
-      oFolder = 'tmp2', 
+      oFolder = dir2, 
       startYear = 2017, 
       endYear = 2021, 
       recordToUse = zoo::as.yearmon(c("1905-1", "1997-12"))
@@ -101,7 +106,7 @@ test_that("Upfront errors post correctly", {
   expect_error(
     crssi_create_dnf_files(
       'CoRiverNF', 
-      oFolder = 'tmp2', 
+      oFolder = dir2, 
       startYear = 2017, 
       endYear = 2021, 
       recordToUse = zoo::as.yearmon(c("1906-1", "1905-12"))
@@ -112,12 +117,26 @@ test_that("Upfront errors post correctly", {
   expect_error(
     crssi_create_dnf_files(
       'CoRiverNF', 
-      oFolder = 'tmp2', 
+      oFolder = dir2, 
       startYear = 2017, 
       endYear = 2021, 
       recordToUse = zoo::as.yearmon(c("1988-1", "1980-12"))
     ),
     "The second entry in recordToUse should be after the first entry."
+  )
+  
+  expect_error(
+    crssi_create_dnf_files(
+      'CoRiverNF', 
+      oFolder = dir2, 
+      startYear = 2017, 
+      endYear = 2021, 
+      recordToUse = zoo::as.yearmon(c("1988-1", "2100-12"))
+    ),
+    paste(
+      "The end year in `recordToUse` must be <=", 
+      as.integer(format(tail(zoo::index(CoRiverNF::monthlyInt), 1), "%Y"))
+    )
   )
 })
 
@@ -128,7 +147,7 @@ test_that('can create files',{
   expect_warning(expect_message(
     createCRSSDNFInputFiles(
       'CoRiverNF', 
-      oFolder = 'tmp', 
+      oFolder = dir1, 
       startDate = '2017-1-31', 
       simYrs = 5, 
       recordToUse = r2u
@@ -138,7 +157,7 @@ test_that('can create files',{
   expect_message(
     crssi_create_dnf_files(
       'CoRiverNF', 
-      oFolder = 'tmp2', 
+      oFolder = dir2, 
       startYear = 2017, 
       endYear = 2021, 
       recordToUse = r2u
@@ -148,7 +167,7 @@ test_that('can create files',{
   expect_warning(expect_message(
     crssi_create_dnf_files(
       "../NaturalFlows_Sample.xlsx",
-      oFolder = "tmp3",
+      oFolder = dir3,
       startYear = 2017,
       endYear = 2021,
       recordToUse = r2u
@@ -158,15 +177,15 @@ test_that('can create files',{
 
 # check that all files in the three directories are the same -------------
 
-dirs <- list.dirs('tmp', recursive = FALSE, full.names = FALSE)
+dirs <- list.dirs(dir1, recursive = FALSE, full.names = FALSE)
 test_that("all files are the same", {
   for(curDir in dirs){
-    allFiles <- list.files(file.path("tmp", curDir))
+    allFiles <- list.files(file.path(dir1, curDir))
     for(ff in allFiles){
       #message(curDir, "/", ff)
       expect_identical(
-        scan(file.path("tmp", curDir, ff), what = "character", quiet = TRUE),
-        scan(file.path("tmp2", curDir, ff), what = "character", quiet = TRUE),
+        scan(file.path(dir1, curDir, ff), what = "character", quiet = TRUE),
+        scan(file.path(dir2, curDir, ff), what = "character", quiet = TRUE),
         info = paste(curDir, ff)
       )
     }
@@ -174,15 +193,15 @@ test_that("all files are the same", {
 })
 
   
-dirs <- list.dirs("tmp2", recursive = FALSE, full.names = FALSE)
+dirs <- list.dirs(dir2, recursive = FALSE, full.names = FALSE)
 test_that("all files are the same", {
   for(curDir in dirs){
-    allFiles <- list.files(file.path("tmp2", curDir))
+    allFiles <- list.files(file.path(dir2, curDir))
     for(ff in allFiles){
       #message(curDir, "/", ff)
       expect_identical(
-        scan(file.path("tmp2", curDir, ff), what = "character", quiet = TRUE),
-        scan(file.path("tmp3", curDir, ff), what = "character", quiet = TRUE),
+        scan(file.path(dir2, curDir, ff), what = "character", quiet = TRUE),
+        scan(file.path(dir3, curDir, ff), what = "character", quiet = TRUE),
         info = paste(curDir, ff)
       )
     }
@@ -195,60 +214,60 @@ allFiles <- c(nf_file_names(), "MWD_ICS.SacWYType",
               "HydrologyParameters.SupplyScenario")
 
 test_that("all files exist", {
-  expect_true(all(allFiles %in% list.files("tmp/trace1")))
-  expect_true(all(allFiles %in% list.files("tmp/trace3")))
-  expect_true(all(list.files("tmp/trace1") %in% allFiles))
-  expect_true(all(list.files("tmp/trace3") %in% allFiles))
+  expect_true(all(allFiles %in% list.files(file.path(dir1, "trace1"))))
+  expect_true(all(allFiles %in% list.files(file.path(dir1, "trace3"))))
+  expect_true(all(list.files(file.path(dir1, "trace1")) %in% allFiles))
+  expect_true(all(list.files(file.path(dir1, "trace3")) %in% allFiles))
 })
 
 test_that('files created from "CoRiverNF" are the same as from Excel', {
   expect_equal(
     as.matrix(read.csv(
-      file.path('tmp/trace1/',nf_file_names()[rr[1]]),
+      file.path(dir1, 'trace1',nf_file_names()[rr[1]]),
       skip = 1
     )),
     as.matrix(read.csv(
-      file.path(p1,'trace1/', nf_file_names()[rr[1]]), 
+      file.path(p1,'trace1', nf_file_names()[rr[1]]), 
       skip = 1
     ))
   )
   expect_equal(
     as.matrix(read.csv(
-      file.path('tmp/trace5/',nf_file_names()[rr[1]]),
+      file.path(dir1, 'trace5',nf_file_names()[rr[1]]),
       skip = 1
     )),
     as.matrix(read.csv(
-      file.path(p1,'trace5/', nf_file_names()[rr[1]]),
+      file.path(p1,'trace5', nf_file_names()[rr[1]]),
       skip = 1
     ))
   )
   expect_equal(
     as.matrix(read.csv(
-      file.path('tmp/trace2/',nf_file_names()[rr[2]]),
+      file.path(dir1, 'trace2',nf_file_names()[rr[2]]),
       skip = 1
     )),
     as.matrix(read.csv(
-      file.path(p1,'trace2/', nf_file_names()[rr[2]]),
+      file.path(p1,'trace2', nf_file_names()[rr[2]]),
       skip = 1
     ))
   )
   expect_equal(
     as.matrix(read.csv(
-      file.path('tmp/trace3/',nf_file_names()[rr[3]]),
+      file.path(dir1, 'trace3',nf_file_names()[rr[3]]),
       skip = 1
     )),
     as.matrix(read.csv(
-      file.path(p1,'trace3/', nf_file_names()[rr[3]]),
+      file.path(p1,'trace3', nf_file_names()[rr[3]]),
       skip = 1
     ))
   )
   expect_equal(
     as.matrix(read.csv(
-      file.path('tmp/trace4/',nf_file_names()[rr[4]]),
+      file.path(dir1, 'trace4',nf_file_names()[rr[4]]),
       skip = 1
     )),
     as.matrix(read.csv(
-      file.path(p1,'trace4/', nf_file_names()[rr[4]]),
+      file.path(p1,'trace4', nf_file_names()[rr[4]]),
       skip = 1
     ))
   )
@@ -257,31 +276,31 @@ test_that('files created from "CoRiverNF" are the same as from Excel', {
 test_that('ism files match each other as expected', {
   expect_equal(
     as.matrix(read.csv(
-      file.path('tmp/trace1/',nf_file_names()[rr[1]]),
+      file.path(dir1, 'trace1',nf_file_names()[rr[1]]),
       skip = 1
     ))[13:24],
     as.matrix(read.csv(
-      file.path(p1,'trace2/', nf_file_names()[rr[1]]),
+      file.path(p1,'trace2', nf_file_names()[rr[1]]),
       skip = 1
     ))[1:12]
   )
   expect_equal(
     as.matrix(read.csv(
-      file.path('tmp/trace1/',nf_file_names()[rr[2]]),
+      file.path(dir1, 'trace1',nf_file_names()[rr[2]]),
       skip = 1
     ))[49:60],
     as.matrix(read.csv(
-      file.path(p1,'trace5/', nf_file_names()[rr[2]]),
+      file.path(p1,'trace5', nf_file_names()[rr[2]]),
       skip = 1
     ))[1:12]
   )
   expect_equal(
     as.matrix(read.csv(
-      file.path('tmp/trace1/',nf_file_names()[rr[2]]),
+      file.path(dir1, 'trace1',nf_file_names()[rr[2]]),
       skip = 1
     ))[1:12],
     as.matrix(read.csv(
-      file.path(p1,'trace4/', nf_file_names()[rr[2]]),
+      file.path(p1,'trace4', nf_file_names()[rr[2]]),
       skip = 1
     ))[25:36]
   )

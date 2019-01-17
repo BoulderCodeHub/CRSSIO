@@ -3,17 +3,17 @@
 
 # CRSSIO
 
-*Stable version (v0.6.3):* [![Travis-CI Build
+*Stable version (v0.7.0):* [![Travis-CI Build
 Status](https://travis-ci.org/BoulderCodeHub/CRSSIO.svg?branch=master)](https://travis-ci.org/BouldercodeHub/CRSSIO)
 [![AppVeyor Build
 status](https://ci.appveyor.com/api/projects/status/tkbmrk4hosv96rin?svg=true)](https://ci.appveyor.com/project/BoulderCodeHub/crssio)
 [![codecov](https://codecov.io/gh/BoulderCodeHub/CRSSIO/branch/master/graphs/badge.svg)](https://codecov.io/gh/BoulderCodeHub/CRSSIO)
 
-*Development version:* [![Travis-CI Build
-Status](https://travis-ci.org/rabutler/CRSSIO.svg?branch=master)](https://travis-ci.org/rabutler/CRSSIO)
+*Development version:* [![Build
+Status](https://travis-ci.org/rabutler-usbr/CRSSIO.svg?branch=master)](https://travis-ci.org/rabutler-usbr/CRSSIO)
 [![AppVeyor Build
-status](https://ci.appveyor.com/api/projects/status/88fep06n341s4kdb?svg=true)](https://ci.appveyor.com/project/BoulderCodeHub/crssio-kvvpl)
-[![codecov](https://codecov.io/gh/rabutler/CRSSIO/branch/master/graphs/badge.svg)](https://codecov.io/gh/rabutler/CRSSIO)
+status](https://ci.appveyor.com/api/projects/status/lad6jf69q7stn1e7?svg=true)](https://ci.appveyor.com/project/rabutler-usbr/crssio)
+[![codecov](https://codecov.io/gh/rabutler-usbr/CRSSIO/branch/master/graph/badge.svg)](https://codecov.io/gh/rabutler-usbr/CRSSIO)
 
 R Package to manage code for manipulating the input and output data for
 CRSS.
@@ -36,6 +36,11 @@ will return data.
 The final noun of the function describes what is created or retrieved.
 Ex: `crssi_create_dnf_files()` creates the DNF (direct natural flow)
 files.
+
+The package also includes other functions for conveniently manipulating
+other data related to CRSS, e.g., converting between elevation and
+storage for modeled reservoirs. Finally, the package provides several
+functions that extend/modify ggplots.
 
 ### `crssi_`
 
@@ -90,10 +95,20 @@ sysCondTable <- crsso_get_sys_cond_table(sysData, 2018:2022)
 
 ### Other CRSS Functions
 
-  - `elevation_to_storage()` converts elevations to storage values for
-    reservoirs modeled in CRSS.
+  - `elevation_to_storage()` and `storage_to_elevation()` convert
+    between elevation and storage for reservoirs modeled in CRSS.
   - `ism_get_site_matrix()` applies the index sequential method (ISM) to
     a single time series of data.
+
+## Plotting
+
+  - `stat_boxplot_custom()` works with ggplots to add box and whisker
+    plots. It differs from `ggplot2::stat_boxplot()` in that it extends
+    the whiskers to specified percentiles intead of some scaled value of
+    the IQR.
+  - `add_secondary_y_conversion()` adds a secondary y-axis to a plot. It
+    ensures that the secondary axis is a conversion of the primary axis
+    labels so the ticks match the grid lines from the primary axis.
 
 ## Installation
 
@@ -109,6 +124,7 @@ devtools::install_github('BoulderCodeHub/CRSSIO')
 
 For details, see the [News](NEWS.md)
 
+  - 2019-01-17: version 0.7.0 available
   - 2018-11-29: version 0.6.3 available
   - 2018-03-23: version 0.6.2 available
   - 2018-01-23: version 0.6.1 available

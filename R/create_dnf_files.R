@@ -128,36 +128,38 @@ crssi_create_dnf_files <- function(iFile,
   
   check_nf_oFolder(oFolder, overwriteFiles, "crssi_create_dnf_files")
   
-  if(!anyNA(recordToUse))
-    recordToUse <- check_recordToUse(recordToUse)
+  if (!anyNA(recordToUse))
+    recordToUse_str <- check_recordToUse(recordToUse)
   
-  if(iFile == 'CoRiverNF'){
+  if (iFile == 'CoRiverNF') {
     # use the data in CoRiverNF::monthlyInt
     nf <- CoRiverNF::monthlyInt
-    if(!anyNA(recordToUse)){
+    if (!anyNA(recordToUse)) {
       # if not NA, then trim data, otherwise use full data
-      nf <- nf[paste(recordToUse[1], recordToUse[2],sep = '/')]
-    } else{
+      check_recordToUse_year2(recordToUse[2], nf)
+      nf <- nf[paste(recordToUse_str[1], recordToUse_str[2],sep = '/')]
+    } else {
       nf <- nf['1906-01/'] # trim off OND 1905
     }
-  } else{
+  } else {
     # use the data in the Excel workbook, if it exists.
-    if(!file.exists(iFile)){
+    if (!file.exists(iFile)) {
       stop('iFile does not exist')
     }
   
     nf <- read_and_format_nf_excel(iFile)
 
-    if(!anyNA(recordToUse)){
+    if (!anyNA(recordToUse)) {
+      check_recordToUse_year2(recordToUse[2], nf)
       # trim data
-      nf <- nf[paste(recordToUse[1], recordToUse[2],sep = '/')]
+      nf <- nf[paste(recordToUse_str[1], recordToUse_str[2],sep = '/')]
     }
   }
   
   # get the years used before changing nf
   if (!anyNA(recordToUse)) {
-    y1 <- format(zoo::as.yearmon(recordToUse[1]), "%Y")
-    y2 <- format(zoo::as.yearmon(recordToUse[2]), "%Y")
+    y1 <- format(recordToUse[1], "%Y")
+    y2 <- format(recordToUse[2], "%Y")
     periodToUse <- paste0(y1, '-', y2)
     # this only deals with historical observed NF, so that is supply scenario 
     # 1.xxxxxxxx, where the .xxxxxxxx are the beginning and ending years used

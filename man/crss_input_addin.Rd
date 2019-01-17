@@ -8,12 +8,14 @@ crss_input_addin()
 }
 \description{
 \code{crss_input_addin()} is an RStudio Addin that sets key parameters of
-\code{\link[=crssi_create_dnf_files]{crssi_create_dnf_files()}} and \code{\link[=crssi_create_hist_nf_xlsx]{crssi_create_hist_nf_xlsx()}} before running it.
+\code{\link[=crssi_create_dnf_files]{crssi_create_dnf_files()}}, \code{\link[=crssi_create_cmip_nf_files]{crssi_create_cmip_nf_files()}}, and
+\code{\link[=crssi_create_hist_nf_xlsx]{crssi_create_hist_nf_xlsx()}} before running it.
 }
 \details{
 To use the Addin, RStudio v0.99.878 or later must be used. The key user input
-to \code{crssi_create_dnf_files()} can be set in the GUI. The \code{oFiles}
-arguement uses the default value of \code{\link[=nf_file_names]{nf_file_names()}}.
+to \code{crssi_create_dnf_files()} and \code{crssi_create_cmip_nf_files()} can be set
+in the GUI. The \code{oFiles} arguement uses the default value of
+\code{\link[=nf_file_names]{nf_file_names()}}.
 
 Additionally, there is an option to also create the HistoricalNaturalFlows.xlsx
 file necessary for CRSS runs via \code{crssi_create_hist_nf_xlsx()}.

@@ -1,3 +1,24 @@
+CRSSIO 0.7.0
+=================
+
+*Released January 17, 2019*
+
+## New functions
+
+* Added `stat_boxplot_custom()`. This allows the user to specify the extents of the whiskers using percentiles (`qs`) instead of the IQR. (#51)
+* Added `storage_to_elevation()`. This is the inverse of `elevation_to_storage()`. (#40)
+* Added `add_secondary_y_conversion()`. This function takes a ggplot and adds in a secondary axis with different units. The units are converted from the current label positions of the primary axis. (#49)
+
+## Removed functions
+
+* Removed `elevation2Volume()`. Since `storage_to_elevation()` was added in this release, this was removed for consistency of names between these two functions. The other functions deprecated in v0.6.0 will be removed in v0.8.0. 
+
+## Bug fixes
+
+* Updated the create files add-in so that the start year parameter stays visible for creation of historical and CMIP natural flows and the HistoricalNaturalFlows.xlsx file. (#47)
+* Fixed the closing parenthesis in the level 2 and 3 shortage rows in `crsso_get_sys_cond_table()`. (#62)
+* Updated `crssi_change_nf_start_date()` so that it only edits the year of the start date. This was required so that the MWD ICS files are correctly modified as they use a 12/31 year/month, while the other files use a 1/31 year/month. As part of this, the `startDate` argument is deprecated and replaced by `start_year`. The function now updates the README.txt file if it exists, or creates one if it doesn't exist. (#52)
+
 CRSSIO 0.6.3
 ===================
 
