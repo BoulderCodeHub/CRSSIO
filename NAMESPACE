@@ -3,6 +3,7 @@
 export(CRSSNFInputNames)
 export(CRSSNatSaltInputNames)
 export(StatBoxplotCustom)
+export(add_secondary_y_convert)
 export(changeStartDate)
 export(changeStartDateForEvapAndAddZeros)
 export(copyAndChangeNFFileNames)
