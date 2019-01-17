@@ -43,12 +43,12 @@ add_secondary_y_conversion <- function(gg, from_unit, to_unit, sec_name = to_uni
   
   current_y_labs <- ggplot2::ggplot_build(gg)$layout$panel_params[[1]]$y.labels
   
-  current_y_num <- as.numeric(current_y_labs)
+  current_y_num <- suppressWarnings(as.numeric(current_y_labs))
   
   if (anyNA(current_y_num)) {
     stop(
       "Current y labels do not appear to be plain numbers.\n",
-      "Try calling again, but ensure labels haven not been modified by something like `scales::comma`"
+      " Try calling again, but ensure labels haven not been modified by something like `scales::comma`"
     )
   }
   
@@ -88,10 +88,23 @@ add_secondary_y_conversion <- function(gg, from_unit, to_unit, sec_name = to_uni
 get_decimals <- function(x)
 {
   nums <- simplify2array(strsplit(x, ".", fixed = TRUE))
+
+  if (is.list(nums)) {
+    # there is at least one number with no decimals and at least one number 
+    # with decimals, so have to look into the list manually
+    nums <- lapply(seq_len(length(nums)), function(i) {
+      if (length(nums[[i]]) == 2) {
+        nums[[i]]
+      } else {
+        c(nums[[i]][1], NA_real_)
+      }
+    })
+    nums <- t(do.call(rbind, nums))
+  }
   
   if(!is.null(nrow(nums))) {
     # there are decimals
-    decimals <- max(nchar(nums[2,]))
+    decimals <- as.numeric(max(nchar(nums[2,]), na.rm = TRUE))
   } else {
     decimals <- 0
   }
