@@ -3,7 +3,7 @@
 
 # CRSSIO
 
-*Stable version (v0.7.0):* [![Travis-CI Build
+*Stable version (v0.7.1):* [![Travis-CI Build
 Status](https://travis-ci.org/BoulderCodeHub/CRSSIO.svg?branch=master)](https://travis-ci.org/BouldercodeHub/CRSSIO)
 [![AppVeyor Build
 status](https://ci.appveyor.com/api/projects/status/tkbmrk4hosv96rin?svg=true)](https://ci.appveyor.com/project/BoulderCodeHub/crssio)
@@ -124,6 +124,7 @@ devtools::install_github('BoulderCodeHub/CRSSIO')
 
 For details, see the [News](NEWS.md)
 
+  - 2019-01-18: version 0.7.1 available
   - 2019-01-17: version 0.7.0 available
   - 2018-11-29: version 0.6.3 available
   - 2018-03-23: version 0.6.2 available

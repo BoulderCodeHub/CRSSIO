@@ -46,7 +46,7 @@ Useful links:
 
 }
 \author{
-\strong{Maintainer}: Alan Butler \email{r.alan.butler+CRSSIO@gmail.com}
+\strong{Maintainer}: Alan Butler \email{rabutler@usbr.gov}
 
 }
 \keyword{internal}

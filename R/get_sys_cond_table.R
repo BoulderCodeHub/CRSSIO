@@ -32,14 +32,14 @@ vDescAll <- function()
 {
 	r <- c(
 	  'Normal Year or ICS Surplus Condition', 
-	  'Mid-Elevation Balancing - annual release = 8.23 maf',
+	  'Mid-Elevation Release - annual release = 8.23 maf',
 		'Shortage Condition - any amount (Mead <= 1,075 ft)',
 		'Upper Elevation Balancing - annual release < 8.23 maf',
 		'Surplus Condition - any amount (Mead>= 1,145 ft)',
 		'Equalization - annual release = 8.23 maf',
 		'Upper Elevation Balancing - annual release > 8.23 maf',
 		'Upper Elevation Balancing - annual release = 8.23 maf',
-		'Mid-Elevation Release Tier - annual release = 7.48 maf',
+		'Mid-Elevation Release - annual release = 7.48 maf',
 		'Equalization - annual release > 8.23 maf',
 		'Lower Elevation Balancing - annual release > 8.23 maf',
 		'Lower Elevation Balancing - annual release < 8.23 maf',
@@ -278,7 +278,7 @@ sys_cond_rwa <- function()
   RWDataPlyr::rwd_agg(data.frame(
     file = rep("SystemConditions.rdf", n),
     slot = slotNames(),
-    period = rep("asis", n),
+    period = rep("eocy", n),
     summary = rep(NA, n),
     eval = rep(NA, n),
     t_s = rep(NA, n),
