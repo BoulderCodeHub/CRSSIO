@@ -1,7 +1,7 @@
-CRSSIO 0.7.0.9000
+CRSSIO 0.7.1
 =================
 
-*In progress* 
+*Releases January 18, 2019*
 
 ## Bug fixes
 
