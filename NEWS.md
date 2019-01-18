@@ -6,6 +6,7 @@ CRSSIO 0.7.0.9000
 ## Bug fixes
 
 * Fixed the mid-elevation release tier labels in `crsso_get_sys_cond_table()`. (#67)
+* Changed the `period` function in `sys_cond_rwa()` to be `"eocy"`, instead of `"asis"`. This ensures that `crsso_get_sys_cond_table()` will work, even if the SystemConditions.rdf file has monthly data, instead of the expected annual data. (#67)
 
 CRSSIO 0.7.0
 =================

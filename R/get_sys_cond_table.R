@@ -278,7 +278,7 @@ sys_cond_rwa <- function()
   RWDataPlyr::rwd_agg(data.frame(
     file = rep("SystemConditions.rdf", n),
     slot = slotNames(),
-    period = rep("asis", n),
+    period = rep("eocy", n),
     summary = rep(NA, n),
     eval = rep(NA, n),
     t_s = rep(NA, n),
