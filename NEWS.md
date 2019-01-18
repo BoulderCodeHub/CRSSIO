@@ -3,6 +3,10 @@ CRSSIO 0.7.0.9000
 
 *In progress* 
 
+## Bug fixes
+
+* Fixed the mid-elevation release tier labels in `crsso_get_sys_cond_table()`. (#67)
+
 CRSSIO 0.7.0
 =================
 
