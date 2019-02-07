@@ -59,7 +59,7 @@ write_nc_single_trace <- function(nc,
                                   endYear, 
                                   oFiles, progressBar)
 {
-  if (nc$var$naturalFlow$dim[[1]]$name != "trace")
+  if (nc$var$natural_flow$dim[[1]]$name != "trace")
     stop("The netcdf file is not formated as expected.", "\n",
          "We expect the naturalFlow variable's first dimension to be 'trace'.")
   
@@ -77,7 +77,7 @@ write_nc_single_trace <- function(nc,
   mm <- mm + ncdf4::ncvar_get(nc, "time")/12
   
   # get the single trace data
-  traceData <- ncdf4::ncvar_get(nc, "naturalFlow")[tt,,]
+  traceData <- ncdf4::ncvar_get(nc, "natural_flow")[tt,,]
   # now each row is a gage, and the columns are the timesteps
   
   # and now create a zoo object of the trace data
@@ -91,7 +91,7 @@ write_nc_single_trace <- function(nc,
     units = nc$var$naturalFlow$units
   )
     
-  nfSites <- ncdf4::ncvar_get(nc, "gageNumber")
+  nfSites <- ncdf4::ncvar_get(nc, "gage_number")
   
   # write out each site's natural flow data to the correct file name
   lapply(
@@ -107,7 +107,7 @@ write_nc_single_trace <- function(nc,
   )
   
   # get the sacramento year type data and write it out -------------------
-  sac <- t(ncdf4::ncvar_get(nc, varid = "sacYT")) # t([trace, year])
+  sac <- t(ncdf4::ncvar_get(nc, varid = "sac_yt")) # t([trace, year])
   year <- ncdf4::ncvar_get(nc, varid = "year")
   # select the data to keep
   sac <- sac[year %in% seq.int(startYear, endYear), , drop = FALSE]

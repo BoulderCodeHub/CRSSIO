@@ -1,7 +1,21 @@
+CRSSIO 0.7.2.9000
+=================
+
+*In development*
+
+CRSSIO 0.7.2
+=================
+
+*Released February 7, 2019*
+
+## Bug fixes
+
+* Updated `crsso_create_cmip_nf_files()` to work with new format of ncdf files. The ncdf files now use snake_case for all variable names, instead of camelCase.
+
 CRSSIO 0.7.1
 =================
 
-*Releases January 18, 2019*
+*Released January 18, 2019*
 
 ## Bug fixes
 
