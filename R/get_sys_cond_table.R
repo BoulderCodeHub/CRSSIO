@@ -31,11 +31,11 @@ slotNames <- function()
 vDescAll <- function()
 {
 	r <- c(
-	  'Normal Year or ICS Surplus Condition', 
+	  'Normal Year or ICS Surplus Condition (Mead < 1,145 and > 1,075 ft)', 
 	  'Mid-Elevation Release - annual release = 8.23 maf',
 		'Shortage Condition - any amount (Mead <= 1,075 ft)',
 		'Upper Elevation Balancing - annual release < 8.23 maf',
-		'Surplus Condition - any amount (Mead>= 1,145 ft)',
+		'Surplus Condition - any amount (Mead >= 1,145 ft)',
 		'Equalization - annual release = 8.23 maf',
 		'Upper Elevation Balancing - annual release > 8.23 maf',
 		'Upper Elevation Balancing - annual release = 8.23 maf',
@@ -45,11 +45,13 @@ vDescAll <- function()
 		'Lower Elevation Balancing - annual release < 8.23 maf',
 		'Lower Elevation Balancing - annual release = 8.23 maf',
 		'Surplus - Flood Control',
-		'Shortage - 1st Level (Mead <= 1,075 and >= 1,050)',
-		'Shortage - 2nd Level (Mead < 1,050 and >= 1,025)',
-		'Shortage - 3rd Level (Mead < 1,025)',
-		'Equalization Tier','Upper Elevation Balancing Tier',
-		'Mid-Elevation Release Tier','Lower Elevation Balancing Tier'
+		'Shortage - 1st Level (Mead <= 1,075 and >= 1,050 ft)',
+		'Shortage - 2nd Level (Mead < 1,050 and >= 1,025 ft)',
+		'Shortage - 3rd Level (Mead < 1,025 ft)',
+		'Equalization Tier (Powell >= Equalization [EQ] Elevation)',
+		'Upper Elevation Balancing Tier (Powell < EQ Elevation and >= 3,575 ft)',
+		'Mid-Elevation Release Tier (Powell < 3,575 and >= 3,525 ft)',
+		'Lower Elevation Balancing Tier (Powell < 3,525 ft)'
 	)
 	r
 }
@@ -73,19 +75,22 @@ vShortAll <- function()
 
 shortOrderFull <- function()
 {
-	r <- c('eqAll','eq','eq823','uebAll','uebGt823','ueb823','uebLt823','merAll',
-	       'mer823','mer748', 'lebAll','lebGt823','leb823','lebLt823',
-	       'lbShortage','lbShortageStep1','lbShortageStep2', 'lbShortageStep3',
-	       'lbSurplus','lbFcSurplus','lbNormal')
+	r <- c(
+	  'eqAll','eq','eq823','uebAll','uebGt823','ueb823','uebLt823','merAll',
+	  'mer823','mer748', 'lebAll','lebGt823','leb823','lebLt823',
+	  'lbNormal','lbSurplus','lbFcSurplus', 'lbShortage','lbShortageStep1',
+	  'lbShortageStep2', 'lbShortageStep3'
+	)
 	r
 }
 
 shortOrderLimit <- function()
 {
-	r <- c('eqAll','eq','eq823','uebAll','uebGt823','ueb823','uebLt823','merAll',
-	       'mer823','mer748', 'lebAll','lbShortage','lbShortageStep1',
-	       'lbShortageStep2','lbShortageStep3','lbSurplus','lbFcSurplus',
-	       'lbNormal')
+	r <- c(
+	  'eqAll','eq','eq823','uebAll','uebGt823','ueb823','uebLt823','merAll',
+	  'mer823','mer748', 'lebAll','lbSurplus','lbFcSurplus', 'lbNormal',
+	  'lbShortage','lbShortageStep1', 'lbShortageStep2','lbShortageStep3'
+	)
 	r
 }
 

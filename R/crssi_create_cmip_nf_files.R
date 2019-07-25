@@ -88,7 +88,7 @@ write_nc_single_trace <- function(nc,
   # get the headerInfo for the trace file
   headerInfo <- get_trace_file_header(
     startYear, 
-    units = nc$var$naturalFlow$units
+    units = nc$var$natural_flow$units
   )
     
   nfSites <- ncdf4::ncvar_get(nc, "gage_number")
