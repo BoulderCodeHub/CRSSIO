@@ -1,5 +1,3 @@
-#source(paste(Sys.getenv('GEN_CODE'),'/getDataFromRdf.R',sep = ''))
-
 
 # variable names after getting data from rdf
 slotNames <- function()
@@ -78,7 +76,7 @@ shortOrderFull <- function()
 	r <- c(
 	  'eqAll','eq','eq823','uebAll','uebGt823','ueb823','uebLt823','merAll',
 	  'mer823','mer748', 'lebAll','lebGt823','leb823','lebLt823',
-	  'lbNormal','lbSurplus','lbFcSurplus', 'lbShortage','lbShortageStep1',
+	  'lbSurplus','lbFcSurplus', 'lbNormal', 'lbShortage', 'lbShortageStep1',
 	  'lbShortageStep2', 'lbShortageStep3'
 	)
 	r
