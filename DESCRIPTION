@@ -1,6 +1,6 @@
 Package: CRSSIO
 Title: Package to Manage the Input and Output of CRSS Data
-Version: 0.7.2
+Version: 0.7.3
 Authors@R: person(
     "Alan", "Butler", , "rabutler@usbr.gov", c("aut", "cre")
     )
@@ -22,10 +22,8 @@ Imports:
     magrittr,
     miniUI (>= 0.1.1),
     ncdf4,
-    quantreg,
     readxl,
     rlang,
-    rstudioapi (>= 0.5),
     RWDataPlyr (> 0.5.0),
     shiny (>= 0.13),
     stats,
@@ -41,6 +39,7 @@ Remotes:
     BoulderCodeHub/CoRiverNF
 Suggests:
     knitr,
+    scales,
     testthat
 VignetteBuilder: knitr
 Roxygen: list(markdown = TRUE)

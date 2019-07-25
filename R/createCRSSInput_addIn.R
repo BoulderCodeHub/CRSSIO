@@ -41,7 +41,7 @@ crss_input_addin <- function() {
         checkboxGroupInput(
           "createFiles",
           label = "Select files to create:",
-          choices = c("DNF Files" = "dnf", "CMIP5 Files" = "cmip5", 
+          choices = c("DNF Files" = "dnf", "CMIP Files" = "cmip5", 
                       "HistoricalNaturalFlows.xlsx" = "histNF"),
           selected = c("dnf", "histNF"), 
           inline = TRUE
@@ -507,11 +507,11 @@ crss_input_addin <- function() {
             recordToUse = rr,
             overwriteFiles = as.logical(input$overwriteDnf)
           )
-          message(paste("All DNF trace files have been saved to:", 
+          message(paste("\nAll DNF trace files have been saved to:", 
                         input$selectFolder))
         }
         
-        if (isCmipSelected()){
+        if (isCmipSelected()) {
           crssi_create_cmip_nf_files(
             input$cmipFile, 
             oFolder = input$cmipOFolder,
@@ -520,18 +520,17 @@ crss_input_addin <- function() {
             scenarioNumber = input$cmipScenNum ,
             overwriteFiles = as.logical(input$overwriteCmip)
           )
-          
-          message(paste("All CMIP trace files have been saved to:", 
-                        input$selectFolder))
+          message(paste("\nAll CMIP trace files have been saved to:", 
+                        input$cmipOFolder))
         }
         
-        if (isHistNfSelected()){
+        if (isHistNfSelected()) {
           crssi_create_hist_nf_xlsx(
             as.integer(input$traceStartYear), 
             nYearAvg = as.integer(input$xlAvg), 
             oFolder = input$xlPath
           )
-          message(paste("HistoricalNaturalFlow.xlsx saved to:", input$xlPath))
+          message(paste("\nHistoricalNaturalFlow.xlsx saved to:", input$xlPath))
         }
         
         stopApp()

@@ -150,9 +150,9 @@ writeTraceSupplyNumbers <- function(traceNum, supplyScenNum, folderPath)
 
 #' Write the hydrology increment file based on the trace number
 #'
-#' `writeHydroIncrement()` takes in the trace number as an argument and uses that
-#' to create the hydrology increment data. Then the hydrology increment data
-#' is saved in the specified folder. 
+#' `writeHydroIncrement()` takes in the trace number as an argument and uses 
+#' that to create the hydrology increment data. Then the hydrology increment 
+#' data is saved in the specified folder. 
 #' 
 #' @keywords internal
 #' @noRd
@@ -338,8 +338,10 @@ check_nf_oFolder <- function(oFolder, overwriteFiles, calledBy)
   # what; if they are not empty, then check the overwrite argument. if overwrite
   # is false the throw error, if overwrite is true, then proceed
   if (length(list.files(oFolder, recursive = TRUE)) != 0 & !overwriteFiles){
-    stop("Trace files exist in ", oFolder, "\n",
-         "  Choose a different folder, delete the files, or use overwriteFiles = TRUE")
+    stop(
+      "Trace files exist in ", oFolder, "\n",
+      "  Choose a different folder, delete the files, or use overwriteFiles = TRUE"
+    )
   }
 }
 

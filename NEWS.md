@@ -1,3 +1,15 @@
+CRSSIO 0.7.3
+=================
+
+*Released July 25, 2019*
+
+## Bug fixes
+
+* Updated the labels in `crsso_get_sys_cond_table()` to include elevations for all Powell tiers, and for normal conditions in the Lower Basin. 
+* Reorderd the table returned by `crsso_get_sys_cond_table()` to show Lower Basin from highest (surplus) to lowest (shortage) conditions.
+* Fixed concluding messesage in Shiny addin when creating CMIP files.
+* Fixed on more variable in `crsso_create_cmip_nf_files()` that didn't get inot the last bug fix. 
+
 CRSSIO 0.7.2
 =================
 
