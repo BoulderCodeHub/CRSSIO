@@ -36,10 +36,11 @@ Vector of characters with 29 entries (file names, gage names, gage
 abbreviations).
 }
 \description{
-These functions return the natural flow and salt file names (\code{nf_file_names()}
-and \code{natsalt_file_names()}), the natural flow gage names (\code{nf_gage_names()}), and
-the abbreviations (\code{nf_gage_abbrv()}) of the natural flow gage names in the
-standard node order used by Reclamation and expected by CRSS.
+These functions return the natural flow and salt file names
+(\code{nf_file_names()} and \code{natsalt_file_names()}), the natural flow gage names
+(\code{nf_gage_names()}), and the abbreviations (\code{nf_gage_abbrv()}) of the natural
+flow gage names in the standard node order used by Reclamation and expected
+by CRSS.
 }
 \details{
 \code{nf_file_names()} and \code{natsalt_file_names()} return file names that

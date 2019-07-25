@@ -139,9 +139,9 @@ shortOrderLimit <- function()
 #' @rdname sys_cond_table
 crsso_get_sys_cond_table <- function(zz, yrs)
 {
-  # if there there is a "Scenario" dimension and there are more than 1 scenarios, 
-  # then post a warning message that the scenarios will be averaged together 
-  # for creating the table
+  # if there there is a "Scenario" dimension and there are more than 1 
+  # scenarios, then post a warning message that the scenarios will be averaged 
+  # together for creating the table
   if(!is.null(zz$Scenario) & length(levels(as.factor(zz$Scenario))) > 1){
     warning(paste(
       'There are', 
@@ -162,8 +162,8 @@ crsso_get_sys_cond_table <- function(zz, yrs)
   
   if(!all(yrs %in% zz$Year)){
     yrs <- yrs[yrs %in% zz$Year]
-    # if none of the years exist then throw an error, otherwise warn the user and will
-    # use a subset
+    # if none of the years exist then throw an error, otherwise warn the user 
+    # and will use a subset
     if(length(yrs) == 0)
       stop("None of the yrs exist in the data")
     

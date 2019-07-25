@@ -33,8 +33,9 @@
 #' add_secondary_y_conversion(gg, "feet", "meters")
 #' 
 #' @export
-add_secondary_y_conversion <- function(gg, from_unit, to_unit, sec_name = to_unit, 
-                                 digits = "get_decimals") 
+add_secondary_y_conversion <- function(gg, from_unit, to_unit, 
+                                       sec_name = to_unit, 
+                                       digits = "get_decimals") 
 {
   assert_that(
     inherits(gg, c("gg", "ggplot")), 

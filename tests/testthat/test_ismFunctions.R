@@ -20,7 +20,10 @@ myIsm2 <- xts::xts(
 test_that('ism_get_site_matrix returns currect dimensions',{
   expect_equal(dim(ism_get_site_matrix(tstData,'2016-01',nYrs = NA)),c(48,4))
   expect_equal(dim(ism_get_site_matrix(tstData,'2016-01',nYrs = 3)),c(36,4))
-  expect_equal(dim(ism_get_site_matrix(tstData[1:36],'2016-01',nYrs = 2)),c(24,3))
+  expect_equal(
+    dim(ism_get_site_matrix(tstData[1:36],'2016-01',nYrs = 2)),
+    c(24,3)
+  )
   # test the annual data
   expect_equal(
     dim(ism_get_site_matrix(t2[1:5], "2016-12", nYrs = NA, monthly = FALSE)),
@@ -41,11 +44,18 @@ test_that('ism_get_site_matrix returns an expected matrix', {
   # so all.equal will not work as it will return differences in attributes
   
   expect_equivalent(ism_get_site_matrix(tstData, '2016-01', nYrs = NA), myIsm)
-  expect_equivalent(ism_get_site_matrix(tstData, '2016-01',nYrs = 3), myIsm[1:36,])
-  expect_equivalent(ism_get_site_matrix(t2, "2016-12", nYrs = NA, monthly = FALSE),
-                    myIsm2)
-  expect_equivalent(ism_get_site_matrix(t2, "2016-12", nYrs = 5, monthly = FALSE),
-                    myIsm2[1:5,])
+  expect_equivalent(
+    ism_get_site_matrix(tstData, '2016-01',nYrs = 3), 
+    myIsm[1:36,]
+  )
+  expect_equivalent(
+    ism_get_site_matrix(t2, "2016-12", nYrs = NA, monthly = FALSE),
+    myIsm2
+  )
+  expect_equivalent(
+    ism_get_site_matrix(t2, "2016-12", nYrs = 5, monthly = FALSE),
+    myIsm2[1:5,]
+  )
 })
 
 tmp <- ism_get_site_matrix(t2, "2016-12", monthly = FALSE)

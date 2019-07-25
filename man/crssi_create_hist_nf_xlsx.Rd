@@ -16,8 +16,8 @@ natural flow data.}
 }
 \value{
 The filename that is created is invisibly returned. The function
-creates the HistoricalNaturalFlows.xlsx file, which contains three worksheets:
-README, Intervening Natural Flow, Total Natural Flow.
+creates the HistoricalNaturalFlows.xlsx file, which contains three
+worksheets: README, Intervening Natural Flow, Total Natural Flow.
 }
 \description{
 \code{crssi_create_hist_nf_xlsx()} creates the HistoricalNaturalFlows.xlsx that
@@ -25,11 +25,11 @@ CRSS relies on. This file needed to be manually updated before each new
 model start date before; this function takes care of the manual update.
 }
 \details{
-HistoricalNaturalFlows.xlsx will contain monthly total natural flow above Lees
-Ferry for the entire historical natural flow record that exists. It will also
-contain monthly intevening natural flow for all gages at and below Hoover.
-For these gages, data are appended from the end of the natural flow record
-through the year before the CRSS model run starts (\code{modelStartYear}).
+HistoricalNaturalFlows.xlsx will contain monthly total natural flow above
+Lees Ferry for the entire historical natural flow record that exists. It will
+also contain monthly intevening natural flow for all gages at and below
+Hoover. For these gages, data are appended from the end of the natural flow
+record through the year before the CRSS model run starts (\code{modelStartYear}).
 The appended data use an
 n-year average (\code{nYearAvg}) of the available historical natural flow. For
 example, if the CRSS run begins in January 2019 and historical natural flow

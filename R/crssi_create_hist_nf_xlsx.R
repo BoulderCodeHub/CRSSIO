@@ -4,11 +4,11 @@
 #' CRSS relies on. This file needed to be manually updated before each new 
 #' model start date before; this function takes care of the manual update.
 #' 
-#' HistoricalNaturalFlows.xlsx will contain monthly total natural flow above Lees 
-#' Ferry for the entire historical natural flow record that exists. It will also 
-#' contain monthly intevening natural flow for all gages at and below Hoover.
-#' For these gages, data are appended from the end of the natural flow record
-#' through the year before the CRSS model run starts (`modelStartYear`). 
+#' HistoricalNaturalFlows.xlsx will contain monthly total natural flow above 
+#' Lees Ferry for the entire historical natural flow record that exists. It will 
+#' also contain monthly intevening natural flow for all gages at and below 
+#' Hoover. For these gages, data are appended from the end of the natural flow 
+#' record through the year before the CRSS model run starts (`modelStartYear`). 
 #' The appended data use an
 #' n-year average (`nYearAvg`) of the available historical natural flow. For
 #' example, if the CRSS run begins in January 2019 and historical natural flow 
@@ -27,8 +27,8 @@
 #' @param oFolder The location to save the xlsx file. 
 #' 
 #' @return The filename that is created is invisibly returned. The function 
-#'   creates the HistoricalNaturalFlows.xlsx file, which contains three worksheets:
-#'   README, Intervening Natural Flow, Total Natural Flow. 
+#'   creates the HistoricalNaturalFlows.xlsx file, which contains three 
+#'   worksheets: README, Intervening Natural Flow, Total Natural Flow. 
 #'
 #' @examples 
 #' # create the file for a CRSS model run that begins in January 2019 and uses
@@ -39,7 +39,8 @@
 #'    
 #' @export
 
-crssi_create_hist_nf_xlsx <- function(modelStartYear, nYearAvg = 5, oFolder = ".")
+crssi_create_hist_nf_xlsx <- function(modelStartYear, nYearAvg = 5, 
+                                      oFolder = ".")
 {
   # Lees Ferry total natural flow -----------------------
   lf <- nf_xts_to_df(CoRiverNF::monthlyTot, "LeesFerry") %>%
@@ -82,17 +83,17 @@ crssi_create_hist_nf_xlsx <- function(modelStartYear, nYearAvg = 5, oFolder = ".
 #' Convert natural flow xts data to data frame
 #' 
 #' `nf_xts_to_df` takes in the natural flow xts objects from CoRiverNF and 
-#' converts them to a data frame with `"year"` and `"month"` columns. The function
-#' also filters by the natural flow gage names (`nfGages`). The natural flow 
-#' gages are left as columns (variables).
+#' converts them to a data frame with `"year"` and `"month"` columns. The 
+#' function also filters by the natural flow gage names (`nfGages`). The natural 
+#' flow gages are left as columns (variables).
 #' 
 #' @param x The natural flow data as an xts matrix. Likely from the CoRiverNF 
 #'   package.
 #' @param nfGages A vector of strings that will limit the natural flow gages
 #'   returned by this function.
 #' 
-#' @return A data frame with `"year"` and `"month"` columns, as well as columns for
-#'   all of the natural flow gages specified by `nfGages`
+#' @return A data frame with `"year"` and `"month"` columns, as well as columns 
+#'   for all of the natural flow gages specified by `nfGages`
 #' 
 #' @keywords internal
 #' @noRd

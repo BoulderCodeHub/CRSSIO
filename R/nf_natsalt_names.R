@@ -1,9 +1,10 @@
 #' Get vector of natural flow and salt gage names, filenames, and abbreviations
 #' 
-#' These functions return the natural flow and salt file names (`nf_file_names()` 
-#' and `natsalt_file_names()`), the natural flow gage names (`nf_gage_names()`), and 
-#' the abbreviations (`nf_gage_abbrv()`) of the natural flow gage names in the 
-#' standard node order used by Reclamation and expected by CRSS. 
+#' These functions return the natural flow and salt file names 
+#' (`nf_file_names()` and `natsalt_file_names()`), the natural flow gage names 
+#' (`nf_gage_names()`), and the abbreviations (`nf_gage_abbrv()`) of the natural 
+#' flow gage names in the standard node order used by Reclamation and expected 
+#' by CRSS. 
 #' 
 #' @details 
 #' `nf_file_names()` and `natsalt_file_names()` return file names that

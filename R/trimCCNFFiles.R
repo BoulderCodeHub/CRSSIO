@@ -19,13 +19,15 @@
 #' These are the file names returned by `\link{nf_file_names}()` and 
 #' `\link{natsalt_file_names}()`.
 #' 
-#' @param startYear The desired start year. Should be after 1950 and before 2099.
+#' @param startYear The desired start year. Should be after 1950 and before 
+#'   2099.
 #' @param endYear The desired end year. Should be after 1950 and before 2099.
 #' @param iFolder The path to the trace files, e.g., '/dmi/VIC/'.
 #' @param nTraces The number of traces to process. The default is 112, which is 
 #'   the number of traces in the CMIP3 climate change hydrology.
-#' @param force Boolean. If `TRUE` the function will trim the files as specified,
-#'   but if it is `FALSE`, then the function stops without trimming any files.
+#' @param force Boolean. If `TRUE` the function will trim the files as 
+#'   specified, but if it is `FALSE`, then the function stops without trimming 
+#'   any files.
 #' 
 #' @return The number of files that were processed
 #' 
@@ -103,8 +105,8 @@ trimSingleFile <- function(ff, startYear, endYear)
     fixed = TRUE
   )[[1]][1])
   
-  # check to see if the year you want to start the data in is after the year that
-  # the data actual starts in
+  # check to see if the year you want to start the data in is after the year 
+  # that the data actual starts in
   if(dataStartYear > startYear)
     stop("startYear is before the actual start year listed in the files you are trying to trim in iFolder")
   
