@@ -45,7 +45,7 @@ parseSACData <- function(iFile, histYrs)
   
   zz <- zz %>% dplyr::mutate(YrTypeNum = yrType[`Yr-type`]) %>%
     select(WY, YrTypeNum) %>%
-    mutate(WY = as.yearmon(paste("Dec", WY)))
+    mutate(WY = zoo::as.yearmon(paste("Dec", WY)))
   
   zz <- xts::xts(zz$YrTypeNum, zz$WY)
   colnames(zz) <- "YrTypeNum"
