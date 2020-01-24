@@ -3,7 +3,7 @@
 
 # CRSSIO
 
-*Stable version (v0.7.3):* [![Travis-CI Build
+*Stable version (v0.7.4):* [![Travis-CI Build
 Status](https://travis-ci.org/BoulderCodeHub/CRSSIO.svg?branch=master)](https://travis-ci.org/BouldercodeHub/CRSSIO)
 [![AppVeyor Build
 status](https://ci.appveyor.com/api/projects/status/tkbmrk4hosv96rin?svg=true)](https://ci.appveyor.com/project/BoulderCodeHub/crssio)
