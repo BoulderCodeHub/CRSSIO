@@ -1,7 +1,9 @@
-CRSSIO 0.7.3.9000
+CRSSIO 0.7.4
 =================
 
-*In development*
+*Released January 24, 2020*
+
+* Updated Sacramento year type data through 2018
 
 CRSSIO 0.7.3
 =================
