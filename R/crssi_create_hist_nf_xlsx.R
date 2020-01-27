@@ -46,6 +46,7 @@ crssi_create_hist_nf_xlsx <- function(modelStartYear, nYearAvg = 5,
   lf <- nf_xts_to_df(CoRiverNF::monthlyTot, "LeesFerry") %>%
     tidyr::unite_("month", from = c("month", "year"), sep = "/1/") %>%
     dplyr::select_at(c("month", "LeesFerry")) %>%
+    dplyr::mutate_at("month", .funs = as.Date, format = "%m/%d/%Y") %>%
     dplyr::rename_at(
       "LeesFerry", 
       function(x) "HistoricalNaturalFlow.AboveLeesFerry"
@@ -61,11 +62,12 @@ crssi_create_hist_nf_xlsx <- function(modelStartYear, nYearAvg = 5,
     dplyr::arrange_at(c("year", "month")) %>%
     tidyr::unite_("month", from = c("month", "year"), sep = "/1/") %>%
     dplyr::select_at(c("month", lbSites)) %>%
+    dplyr::mutate_at("month", .funs = as.Date, format = "%m/%d/%Y") %>%
     dplyr::rename_at(
       lbSites, 
       .funs = dplyr::funs(paste("HistoricalNaturalFlow", ., sep = "."))
     )
-  
+
   # write out the file -----------------------------
   oList <- list(
     "README" = get_hist_nf_readme(modelStartYear, nYearAvg),
