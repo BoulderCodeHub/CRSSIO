@@ -43,4 +43,4 @@ Suggests:
     testthat
 VignetteBuilder: knitr
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 6.0.1
+RoxygenNote: 7.1.0

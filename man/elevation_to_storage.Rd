@@ -31,9 +31,6 @@ length as \code{storage}, or \code{NA} if the storage is invalid for the reservo
 \description{
 \code{elevation_to_storage()} computes the storage (volume) for a given elevation
 for a particular reservoir included in CRSS.
-
-\code{storage_to_elevation()} computes the elevation from a given storage (volume)
-for a particular reservoir included in CRSS.
 }
 \details{
 Elevation is assumed to be in feet, and volume is assumed to be in acre-feet

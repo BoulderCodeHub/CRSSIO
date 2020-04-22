@@ -4,8 +4,15 @@
 \alias{crssi_create_cmip_nf_files}
 \title{Create CRSS natural flow input files from CMIP data}
 \usage{
-crssi_create_cmip_nf_files(iFile, oFolder, startYear, endYear = 2060,
-  scenarioNumber, oFiles = nf_file_names(), overwriteFiles = FALSE)
+crssi_create_cmip_nf_files(
+  iFile,
+  oFolder,
+  startYear,
+  endYear = 2060,
+  scenarioNumber,
+  oFiles = nf_file_names(),
+  overwriteFiles = FALSE
+)
 }
 \arguments{
 \item{iFile}{Path to netcdf file containing the CMIP based natural inflow

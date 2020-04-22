@@ -5,11 +5,25 @@
 \alias{createCRSSDNFInputFiles}
 \title{Create CRSS Natural Flow Input Files}
 \usage{
-crssi_create_dnf_files(iFile, oFolder, startYear, endYear,
-  oFiles = nf_file_names(), recordToUse = NA, overwriteFiles = FALSE)
+crssi_create_dnf_files(
+  iFile,
+  oFolder,
+  startYear,
+  endYear,
+  oFiles = nf_file_names(),
+  recordToUse = NA,
+  overwriteFiles = FALSE
+)
 
-createCRSSDNFInputFiles(iFile, oFolder, startDate, simYrs,
-  oFiles = nf_file_names(), recordToUse = NA, overwriteFiles = FALSE)
+createCRSSDNFInputFiles(
+  iFile,
+  oFolder,
+  startDate,
+  simYrs,
+  oFiles = nf_file_names(),
+  recordToUse = NA,
+  overwriteFiles = FALSE
+)
 }
 \arguments{
 \item{iFile}{Either the string `"CoRiverNF"``, or the relative or absolute
