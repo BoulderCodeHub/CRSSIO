@@ -8,7 +8,7 @@ nfa(
   data = NA,
   dim = NA,
   flow_space = c("intervening", "total"),
-  start_year = NA
+  start_yearmon = NA
 )
 }
 \arguments{
@@ -24,10 +24,24 @@ if data is not NA or length of 1.}
 
 \item{flow_space}{Data are intervening or total flow.}
 
-\item{start_year}{Start year to use for monthly data if \code{data} is length of 1.}
+\item{start_yearmon}{Start year and month of data. If \code{NA}, then assumes the
+data begins in January of the current year. Should be a \link[zoo:yearmon]{zoo::yearmon}
+object or coercable to one.}
 }
 \description{
 \code{nfa()} creates a natural flow array from the specified \code{data}. Stores data
 for multiple months and traces (sequences) for all 29 natural flow sites
 (\code{\link[=nf_gage_names]{nf_gage_names()}}).
+}
+\details{
+\emph{Array:} Arrays should be an m x t x 29 array, where m is the number of
+months, and t is the number of
+traces. If there are rownames, then they must be in "yyyy-mm" format,
+otherwise an error will post. Rownames are not required, and if they are not
+provided will be set starting with the specified \code{start_yearmon} or assuming
+a starting date of January of the current year. The colnames are not required
+but will be used in their provided form if they are specified. If they are
+not specified, they will be named Trace1 - TraceN. The names of the 3rd
+dimension should match \code{\link[=nf_gage_abbrv]{nf_gage_abbrv()}} if provided. If they are not
+provided, then assume that the depths match the order in \code{\link[=nf_gage_abbrv]{nf_gage_abbrv()}}.
 }
