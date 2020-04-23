@@ -1,0 +1,42 @@
+dimensions 
+
+- time
+- site
+- trace
+- flow space
+- time step
+
+list(
+  "annual" = list(
+    "intervening" = list(
+      xts/zoo, xts/zoo, xts/zoo...
+    ),
+    "total" = list(
+      xts/zoo, xts/zoo, xts/zoo...
+    )
+  ),
+  "monthly" = list(
+    list(
+      "intervening" = list(
+        xts/zoo, xts/zoo, xts/zoo...
+      ),
+      "total" = list(
+        xts/zoo, xts/zoo, xts/zoo...
+      )
+    )
+  )
+)
+
+
+x["1906/1999", 1:9, "Cameo", "annual", "total"]
+- add drop = TRUE; if TRUE, will reduce to a matrix if possible
+
+as.array(x["1906/1999", , ,"monthly", "int"])
+as.matrix(x["1906/", ,"LeesFerry","annual","total"]) == as.matrix(nfd_site_annual(x, "1906/", "LeesFerry", "total"))
+
+x[] returns `nfd`, but suppose we want to quickly get a matrix/dataframe/xts of trace 1, site = all sites, that's easy
+But what if we want a matrix of all traces for site = Lees Ferry 
+
+as.data.frame(x, wide = TRUE) <- data.frame(
+  time, trace, flow, flow_space, time_step, cameo, glenwood, ....
+)

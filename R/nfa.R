@@ -209,18 +209,6 @@ ym_to_yyyymm <- function(x)
   format(x, "%Y-%m")
 }
 
-# takes a yearmon `x`, and creates a vector yearmons starting with x and a 
-# specified length
-ym_seq <- function(x, length)
-{
-  x + 0:(length - 1)/12
-}
-
-default_yearmon <- function()
-{
-  zoo::as.yearmon(paste0(format(Sys.Date(), "%Y"), "-01"))
-}
-
 # x should be coercible to yearmon; then determine if they are increasing
 are_increasing <- function(x) 
 {
