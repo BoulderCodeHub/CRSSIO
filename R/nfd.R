@@ -71,6 +71,8 @@ nfd <- function(data = NA, start_yearmon = NA, n_months = NA,
   } else {
     x <- as_nfd(data, flow_space, start_yearmon = start_yearmon)
   }
+  
+  x
 }
 
 new_nfd <- function(mon_int, mon_tot, ann_int, ann_tot)
@@ -194,13 +196,69 @@ print.nfd <- function(x, ...)
     "nfd: Natural Flow Data\n",
     "----------------------\n",
     "n traces:", n_trace(x), "\n",
-    "dates:", start(x), "-", end(x), "\n",
+    "dates:", as.character(start(x)), "-", as.character(end(x)), "\n",
     "flow space:\n - ", flow_space
   )
   
   invisible(x)
 }
 
-# TODO: 
-# start.nfd
-# end.nfd
+has_monthly <- function(x)
+{
+  !is.null(x$monthly$intervening) || !is.null(x$monthly$total)
+}
+
+has_annual <- function(x)
+{
+  !is.null(x$annual$intervening) || !is.null(x$annual$total)
+}
+
+has_intervening <- function(x, timestep = "annual")
+{
+  !is.null(x[[timestep]][["intervening"]])
+}
+
+has_total <- function(x, timestep = "annual")
+{
+  !is.null(x[[timestep]][["total"]])
+}
+
+#' @export
+start.nfd <- function(x, ...)
+{
+  if (has_monthly(x)) {
+    if (has_intervening(x, "monthly")) {
+      y <- zoo::index(x[["monthly"]][["intervening"]][[1]])[1]
+    } else {
+      y <- zoo::index(x[["monthly"]][["total"]][[1]])[1]
+    }
+  } else {
+    if (has_intervening(x, "annual")) {
+      y <- zoo::index(x[["annual"]][["intervening"]][[1]])[1]
+    } else {
+      y <- zoo::index(x[["annual"]][["total"]][[1]])[1]
+    }
+  }
+  
+  y
+}
+
+#' @export
+end.nfd <- function(x, ...)
+{
+  if (has_monthly(x)) {
+    if (has_intervening(x, "monthly")) {
+      y <- tail(zoo::index(x[["monthly"]][["intervening"]][[1]]), 1)
+    } else {
+      y <- tail(zoo::index(x[["monthly"]][["total"]][[1]])[1], 1)
+    }
+  } else {
+    if (has_intervening(x, "annual")) {
+      y <- tail(zoo::index(x[["annual"]][["intervening"]][[1]])[1], 1)
+    } else {
+      y <- tail(zoo::index(x[["annual"]][["total"]][[1]])[1], 1)
+    }
+  }
+  
+  y
+}

@@ -28,7 +28,7 @@ list(
 )
 
 
-x["1906/1999", 1:9, "Cameo", "annual", "total"]
+x["1906/1999", trace=1:9, "Cameo", "annual", "total"]
 - add drop = TRUE; if TRUE, will reduce to a matrix if possible
 
 as.array(x["1906/1999", , ,"monthly", "int"])
