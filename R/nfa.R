@@ -269,47 +269,47 @@ print.nfa <- function(x, ...)
   invisible(x)
 }
 
-#' @export
-head.nfa <- function(x, n = 6L, trace = 1, ...)
-{
-  assert_that(trace <= ncol(x))
-  assert_that(length(n) == 1 && is.numeric(n))
-  
-  if (n > 0) {
-    n <- min(n, nrow(x))
-    n <- 1:n
-  } else {
-    n <- min(nrow(x), abs(n))
-    if (n == nrow(x)) {
-      n <- 0
-    } else {
-      n <- 1:(nrow(x) - n)
-    }
-  }
-  
-  as.matrix(x[n, trace, ])
-}
-
-#' @export
-tail.nfa <- function(x, n = 6L, trace = 1, ...)
-{
-  assert_that(trace <= ncol(x))
-  assert_that(length(n) == 1 && is.numeric(n))
-
-  if (n > 0) {
-    n <- min(n, nrow(x))
-    n <- (nrow(x) - n + 1):nrow(x)
-  } else {
-    n <- min(nrow(x), abs(n))
-    if (n == nrow(x)) {
-      n <- 0
-    } else {
-      n <- (n + 1):nrow(x)
-    }
-  }
-  
-  as.matrix(x[n, trace, ])
-}
+#' #' @export
+#' head.nfa <- function(x, n = 6L, trace = 1, ...)
+#' {
+#'   assert_that(trace <= ncol(x))
+#'   assert_that(length(n) == 1 && is.numeric(n))
+#'   
+#'   if (n > 0) {
+#'     n <- min(n, nrow(x))
+#'     n <- 1:n
+#'   } else {
+#'     n <- min(nrow(x), abs(n))
+#'     if (n == nrow(x)) {
+#'       n <- 0
+#'     } else {
+#'       n <- 1:(nrow(x) - n)
+#'     }
+#'   }
+#'   
+#'   as.matrix(x[n, trace, ])
+#' }
+#' 
+#' #' @export
+#' tail.nfa <- function(x, n = 6L, trace = 1, ...)
+#' {
+#'   assert_that(trace <= ncol(x))
+#'   assert_that(length(n) == 1 && is.numeric(n))
+#' 
+#'   if (n > 0) {
+#'     n <- min(n, nrow(x))
+#'     n <- (nrow(x) - n + 1):nrow(x)
+#'   } else {
+#'     n <- min(nrow(x), abs(n))
+#'     if (n == nrow(x)) {
+#'       n <- 0
+#'     } else {
+#'       n <- (n + 1):nrow(x)
+#'     }
+#'   }
+#'   
+#'   as.matrix(x[n, trace, ])
+#' }
 
 #' @export
 as.array.nfa <- function(x, ...)
