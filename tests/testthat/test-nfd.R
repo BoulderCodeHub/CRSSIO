@@ -160,3 +160,54 @@ test_that("nfd works with arrays", {
   expect_equal(x$monthly$total[[2]], t2_tot_xts)
   expect_equal(x$monthly$total[[3]], t3_tot_xts)
 })
+
+# matrix ---------------------------------------------
+test_that("nfd works with matrices", {
+  expect_is(x <- nfd(t1_tot, time_step = "monthly"), "nfd")
+  expect_null(x$annual$intervening)
+  expect_null(x$annual$total)
+  expect_null(x$monthly$intervening)
+  expect_length(x$monthly$total, 1)
+  expect_equivalent(coredata(x$monthly$total[[1]]), t1_tot)
+  expect_identical(start(x), as.yearmon(paste0("Jan ", this_year)))
+  expect_identical(
+    end(x), 
+    as.yearmon(paste0("Dec ", as.numeric(this_year) + 1))
+  )
+  
+  expect_is(
+    x <- as_nfd(
+      matrix(1:58, ncol = 29), 
+      flow_space = "intervening", 
+      timestep = "annual", 
+      start_yearmon = "Jan 2021"
+    ), 
+    "nfd"
+  )
+  
+  expect_null(x$monthly$total)
+  expect_null(x$monthly$intervening)
+  expect_null(x$annual$total)
+  expect_length(x$annual$intervening, 1)
+  expect_identical(start(x), as.yearmon("Dec 2021"))
+  expect_identical(end(x), as.yearmon("Dec 2022"))
+})
+
+# xts --------------------------------------------------
+test_that("nfd works with xts", {
+  expect_is(x <- nfd(t1_tot_xts, time_step = "monthly"), "nfd")
+  expect_identical(
+    x, 
+    nfd(t1_tot, time_step = "monthly", start_yearmon = "Jan 2000")
+  )
+  
+  expect_identical(
+    nfd(t3_tot_xts, time_step = "monthly"), 
+    nfd(t3_tot, time_step = "monthly", start_yearmon = "Jan 2000")
+  )
+  
+  # use the monthly data, but says its annual. will result in new years
+  expect_is(x <- nfd(t1_tot_xts[1:3], time_step = "annual"), "nfd")
+  expect_identical(start(x), as.yearmon("Dec 2000"))
+  expect_identical(end(x), as.yearmon("Dec 2002"))
+})

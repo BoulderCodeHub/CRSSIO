@@ -44,7 +44,7 @@ as.data.frame(x, wide = TRUE) <- data.frame(
 How do we combine multiple nfd objects. For example, it would be good to be able
 to take two nfd objects with the same number of traces and timesteps and combine
 them by flow_type. Or to take two with the same flow types and combine by timestep 
-or number of traces. c() vs rbind() vs cbind()? Or defininig our own more 
+or number of traces. c() vs rbind() vs cbind() vs merge()? Or defininig our own more 
 intuitive/explicit names, e.g., nfd_c_traces(), nfd_c_flow_type
 
 - define head.nfd() to get a peep at the actual data. ... can be used to specify flow_space and time_step. 

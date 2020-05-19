@@ -69,7 +69,7 @@ nfd <- function(data = NA, start_yearmon = NA, n_months = NA,
   time_step <- match.arg(time_step, c("annual", "monthly", "both"))
   year <- match.arg(year, c("cy", "wy"))
   
-  if (is.na(start_yearmon)) {
+  if (is.na(start_yearmon) && !inherits(data, "xts")) {
     start_yearmon <- default_yearmon()
   } else {
     start_yearmon <- zoo::as.yearmon(start_yearmon)
@@ -162,9 +162,7 @@ as_nfd.default <- function(x, ...)
 
 # TODO
 # as_nfd.xts should just call as_nfd.matrix with some sort of specification 
-# on the dates
-# for as_nfd.array
-# lapply(seq(dim(MyArray)[3]), function(x) MyArray[ , , x])
+# on the dates; actually, otherway around is good. 
 
 #' @export
 as_nfd.array <- function(x, ...)
@@ -278,6 +276,99 @@ as_nfd.array <- function(x, ...)
   }
   
   new_nfd(mon_int, mon_tot, ann_int, ann_tot, year)
+}
+
+#' @export
+as_nfd.matrix <- function(x, ...)
+{
+  # setup the variables that should be specified -----
+  args <- list(...)
+  n_trace <- 1
+  ignore_arg("n_trace", args, 1)
+  
+  # flow_space
+  if (exists("flow_space", args)) {
+    flow_space <- match.arg(
+      args[["flow_space"]], 
+      c("total", "intervening", "both")
+    )
+    assert_that(
+      flow_space != "both", 
+      msg = "flow_space cannot be both for a matrix or xts object."
+    )
+  } else {
+    # preserves same behaviour if it is not specified in as_nfd() as if nfd()
+    # is called with no flow_space argument
+    flow_space <- "total"
+  }
+  
+  # time_step
+  if (exists("time_step", args)) {
+    time_step <- match.arg(args[["time_step"]], c("annual", "monthly", "both"))
+    assert_that(
+      time_step != "both", 
+      msg = "time_step cannot be both for a matrix or xts object."
+    )
+  } else {
+    time_step <- "annual"
+  }
+  
+  # n_months
+  n_months <- nrow(x)
+  if (time_step == "annual")
+    n_months <- n_months * 12
+  ignore_arg("n_months", args, n_months)
+  
+  # year
+  if (exists("year", args)) {
+    year <- match.arg(args[["year"]], c("cy", "wy"))
+  } else {
+    year <- "cy"
+  }
+  
+  # start_yearmon
+  if (exists("start_yearmon", args)) {
+    start_yearmon <- zoo::as.yearmon(args[["start_yearmon"]])
+  } else {
+    start_yearmon <- default_yearmon()
+  }
+  
+  is_monthly <- time_step %in% c("monthly", "both")
+  is_annual <- time_step %in% c("annual", "both")
+  is_int <- flow_space %in% c("intervening", "both")
+  is_tot <- flow_space %in% c("total", "both")
+  
+  # recreate xts data ----
+  # redundant, but ensures the indexes are correct, and the colnames get set
+  if (is_annual) {
+    d1 <- list(initialize_annual_xts(x, start_yearmon, n_months, year))
+  } else {
+    d1 <- list(initialize_monthly_xts(x, start_yearmon, n_months))
+  }
+  
+  # set all list entries ---
+  mon_int <- mon_tot <- ann_int <- ann_tot <- NULL
+  if (is_annual && is_tot)
+    ann_tot <- d1
+  else if (is_monthly && is_tot)
+    mon_tot <- d1
+  else if (is_annual && is_int)
+    ann_int <- d1
+  else if (is_monthly && is_int)
+    mon_int <- d1
+
+  new_nfd(mon_int, mon_tot, ann_int, ann_tot, year)
+}
+
+#' @export
+as_nfd.xts <- function(x, ...) {
+  # start_yearmon
+  # cast as yearmon in case the index is daily or smaller. 
+  start_yearmon <- zoo::as.yearmon(zoo::index(x)[1])
+  args <- list(...)
+  ignore_arg("start_yearmon", args, start_yearmon)
+  
+  as_nfd.matrix(zoo::coredata(x), start_yearmon = start_yearmon, ...)
 }
 
 # Ignore the specified arg if it esists in args. Will post message that `used`
