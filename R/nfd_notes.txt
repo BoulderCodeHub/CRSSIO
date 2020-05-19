@@ -40,3 +40,30 @@ But what if we want a matrix of all traces for site = Lees Ferry
 as.data.frame(x, wide = TRUE) <- data.frame(
   time, trace, flow, flow_space, time_step, cameo, glenwood, ....
 )
+
+How do we combine multiple nfd objects. For example, it would be good to be able
+to take two nfd objects with the same number of traces and timesteps and combine
+them by flow_type. Or to take two with the same flow types and combine by timestep 
+or number of traces. c() vs rbind() vs cbind()? Or defininig our own more 
+intuitive/explicit names, e.g., nfd_c_traces(), nfd_c_flow_type
+
+- define head.nfd() to get a peep at the actual data. ... can be used to specify flow_space and time_step. 
+  if they are not specified, then will show only 1. Will check in this order and show the first data
+  that exist: annual-total, annual-intervening, monthly-total, monthly-intervening. 
+  Also need to specify trace; maybe this is always 1, as it is head. 
+- should probably do tail too. 
+
+
+A function that will update the nfd object to contain annual data if only monthly data exist
+
+------------------------
+
+test key -
+
+TYYYYMMSS.f
+
+T = trace: 1 - 3
+SS = site number: 01 - 29
+MM = month: 01-12
+YY = year: yyyy
+f = flow space: 1 = total; 2 = intervening

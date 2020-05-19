@@ -2,24 +2,74 @@
 % Please edit documentation in R/nfd.R
 \name{nfd}
 \alias{nfd}
-\title{If data is a scalar, then n_time_steps and n_trace are used to determine the
-number of traces and time steps. Otherwise, those values are assumed from
-the dimensions of the data and the data class.}
+\title{Natural Flow Data (nfd)}
 \usage{
 nfd(
   data = NA,
   start_yearmon = NA,
   n_months = NA,
   n_trace = 1,
-  flow_space = c("intervening", "total", "both"),
+  flow_space = c("total", "intervening", "both"),
   time_step = c("annual", "monthly", "both"),
   year = c("cy", "wy")
 )
 }
+\arguments{
+\item{data}{If \code{NA} or of length 1, creates an object with dimensions based
+on \code{n_months}, \code{n_trace}, \code{flow_space}, and \code{time_step}. Otherwise, creates
+an object based on the provided data. Data should be a matrix, array, list,
+data.frame, or \verb{[xts]} object.}
+
+\item{start_yearmon}{Start year and month of data. If \code{NA}, then assumes the
+data begins in January of the current year. Should be a \link[zoo:yearmon]{zoo::yearmon}
+object or coercable to one. Scalar character.}
+
+\item{n_months}{The number of months. Scalar numeric.}
+
+\item{n_trace}{The number of traces. Scalar numeric.}
+
+\item{flow_space}{Data are intervening or total flow (or both). If both, then
+will store/create total and intervening flow data.}
+
+\item{time_step}{Data are annual or monthly (or both). If both, then will
+store/create annual and monthly data.}
+
+\item{year}{Data are calendar year (\code{"cy"}) or water year (\code{"wy"}). This has
+implications for the timestep the annual data are stored in (December for
+cy and September for wy) as well as how summation functions will be applied
+to monthly data.}
+}
 \description{
+\code{nfd()} creates an object to store natural flow data from the specified
+\code{data}. Data include multiple months and traces (sequences) for all 29 natural
+flow sites (\code{\link[=nf_gage_names]{nf_gage_names()}}), and can include monthly and/or annual data as
+well as intervening and/or total natural flow.
+}
+\details{
+If \code{data} is a scalar, then \code{n_months} and \code{n_trace} are used to determine
+the number of traces and time steps. Otherwise, those values are assumed from
+the dimensions of the data and the data class. See further description for
+the how different data types are handled below.
+
 For initializing blank annual data - the number of years is computed as the
 number of full years with a minimum of 1 year of data:
 \code{n_years = max(floor(n_months / 12), 1)}. The timestep will begin in
 December of the year as specified in \code{start_yearmon} if \code{year} is calendar
 year, or September if the the \code{year} is water year.
+
+The data are assumed to always exist for all sites first, and then the number
+of timesteps or traces are determined after that.
+
+\emph{Array:} Arrays should be an m x t x 29 array, where m is the number of
+months, and t is the number of
+traces. Can also be an m x t x 29 x 2 array, where x\link{,,,1} is total flow and
+x\link{,,,2} is intervening flow.
+If there are rownames, then they must be in "yyyy-mm" format,
+otherwise an error will post. Rownames are not required, and if they are not
+provided will be set starting with the specified \code{start_yearmon} or assuming
+a starting date of January of the current year. The colnames are not required
+but will be used in their provided form if they are specified. If they are
+not specified, they will be named Trace1 - TraceN. The names of the 3rd
+dimension should match \code{\link[=nf_gage_abbrv]{nf_gage_abbrv()}} if provided. If they are not
+provided, then assume that the depths match the order in \code{\link[=nf_gage_abbrv]{nf_gage_abbrv()}}.
 }

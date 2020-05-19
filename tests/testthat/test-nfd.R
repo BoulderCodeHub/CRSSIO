@@ -1,0 +1,162 @@
+# nfd <- function(data = NA, start_yearmon = NA, n_months = NA,
+#                 n_trace = 1, flow_space = c("intervening", "total", "both"), 
+#                 time_step = c("annual", "monthly", "both"), year = c("cy", "wy")
+# )
+library(zoo)
+library(xts)
+this_year <- format(Sys.Date(), "%Y")
+
+# tesk key --------------
+# test key -
+#   
+#   TYYYYMMSS.f
+# 
+# T = trace: 1 - 3
+# SS = site number: 01 - 29
+# MM = month: 01-12
+# YY = year: yyyy
+# f = flow space: 1 = total; 2 = intervening
+create_test_mat <- function(nmonths, start_month, start_year)
+{
+  mseq <- as.yearmon(paste0(start_year, "-", sprintf("%02d", start_month))) + 
+    seq(0, nmonths - 1) / 12
+  
+  mseq <- as.numeric(paste0(format(mseq, "%Y"), format(mseq, "%m"))) * 100
+  mseq <- do.call(cbind, lapply(1:29, function(x) mseq))
+  mask <- do.call(rbind, lapply(1:nmonths, function(x) 1:29))
+  mseq <- mseq + mask
+  mseq
+}
+
+int_flow <- create_test_mat(24, 1, 2000)
+tot_flow <- int_flow + 0.1
+int_flow <- int_flow + 0.2
+ym <- as.yearmon("Jan 2000") + seq(0, 23) / 12
+t1_int <- int_flow + 100000000
+t2_int <- int_flow + 200000000
+t3_int <- int_flow + 300000000
+t1_tot <- tot_flow + 100000000
+t2_tot <- tot_flow + 200000000
+t3_tot <- tot_flow + 300000000
+
+to_named_xts <- function(x, ym) {
+  tmp <- xts(x, order.by = ym)
+  colnames(tmp) <- nf_gage_abbrv()
+  tmp
+}
+
+t1_int_xts <- to_named_xts(t1_int, ym)
+t2_int_xts <- to_named_xts(t2_int, ym)
+t3_int_xts <- to_named_xts(t3_int, ym)
+t1_tot_xts <- to_named_xts(t1_tot, ym)
+t2_tot_xts <- to_named_xts(t2_tot, ym)
+t3_tot_xts <- to_named_xts(t3_tot, ym)
+
+
+# 1D -----------------
+test_that("nfd constructor for 1d data works", {
+  expect_is(x <- nfd(), "nfd")
+  expect_true(CRSSIO:::has_annual(x) && CRSSIO:::has_total(x))
+  expect_false(CRSSIO:::has_intervening(x))
+  expect_false(CRSSIO:::has_monthly(x))
+  expect_null(x$annual$intervening)
+  expect_null(x$monthly$intervening)
+  expect_null(x$monthly$total)
+  expect_length(x$annual$total, 1)
+  expect_equal(dim(x$annual$total[[1]]), c(1L, 29L))
+  
+  expect_is(
+    x <- nfd(
+      -999999, 
+      start_yearmon = "Jan 2020", 
+      n_months = 24, 
+      n_trace = 10, 
+      flow_space = "both", 
+      time_step = "both",
+      year = "cy"),
+    "nfd"
+  )
+  expect_true(CRSSIO:::has_annual(x) && CRSSIO:::has_intervening(x) && 
+                CRSSIO:::has_monthly(x) && CRSSIO:::has_total(x))
+  expect_length(x$annual$total, 10)
+  expect_length(x$annual$intervening, 10)
+  expect_length(x$monthly$total, 10)
+  expect_length(x$monthly$intervening, 10)
+  expect_equal(dim(x$annual$total[[1]]), c(2L, 29L))
+  expect_equal(dim(x$annual$intervening[[10]]), c(2L, 29L))
+  expect_equal(dim(x$monthly$total[[4]]), c(24L, 29L))
+  expect_equal(dim(x$monthly$intervening[[7]]), c(24L, 29L))
+  expect_true(all(x$annual$total[[1]] == -999999))
+  expect_true(all(x$annual$total[[9]] == -999999))
+  expect_true(all(x$annual$intervening[[2]] == -999999))
+  expect_true(all(x$annual$intervening[[10]] == -999999))
+  expect_true(all(x$monthly$intervening[[3]] == -999999))
+  expect_true(all(x$monthly$intervening[[4]] == -999999))
+  expect_true(all(x$monthly$total[[5]] == -999999))
+  expect_true(all(x$monthly$total[[8]] == -999999))
+  expect_identical(start(x), zoo::as.yearmon("Jan 2020"))
+  expect_identical(end(x), zoo::as.yearmon("Dec 2021"))
+  
+  expect_identical(
+    nfd(55, start_yearmon = "Jan 2020"), 
+    nfd(55, start_yearmon = "2020-01")
+  )
+  
+  expect_is(x <- nfd(year = "wy"), "nfd")
+  expect_identical(
+    start(x), 
+    zoo::as.yearmon(paste0("Sep", this_year))
+  )
+})
+
+# array ----------------------
+# create a 3 trace, 24 month array
+nf_array <- array(-999999, dim = c(24, 3, 29))
+a2 <- array(-999999, dim = c(4, 1, 29, 2))
+a3 <- array(dim = c(24, 3, 29))
+a3[,1,] <- t1_tot
+a3[,2,] <- t2_tot
+a3[,3,] <- t3_tot
+  
+test_that("nfd works with arrays", {
+  expect_warning(expect_is(x <- nfd(nf_array, time_step = "monthly"), "nfd"))
+  expect_identical(as_nfd(nf_array, time_step = "monthly"), x)
+  expect_null(x$annual$intervening)
+  expect_null(x$annual$total)
+  expect_null(x$monthly$intervening)
+  expect_length(x$monthly$total, 3)
+  expect_identical(dim(x$monthly$total[[1]]), dim(x$monthly$total[[3]]))
+  expect_identical(dim(x$monthly$total[[1]]), c(24L, 29L))
+  expect_identical(start(x), zoo::as.yearmon(paste("Jan", this_year)))
+  expect_identical(
+    end(x), 
+    zoo::as.yearmon(paste("Dec", as.numeric(this_year) + 1))
+  )
+  
+  # annual total and intervening for 1 trace, 4 years
+  expect_is(
+    x <- nfd(a2, time_step = "annual", year = "wy", flow_space = "both"), 
+    "nfd"
+  )
+  expect_identical(as_nfd(a2, time_step = "annual", year = "wy"), x)
+  expect_null(x$monthly$total)
+  expect_null(x$monthly$intervening)
+  expect_identical(x$annual$total, x$annual$intervening)
+  expect_length(x$annual$total, 1)
+  expect_identical(dim(x$annual$total[[1]]), c(4L, 29L))
+  expect_identical(start(x), as.yearmon(paste("Sep", this_year)))
+  expect_identical(end(x), as.yearmon(paste("Sep", as.numeric(this_year) + 3)))
+  
+  # values are preserved correctly
+  expect_is(
+    x <- nfd(a3, time_step = "monthly", flow_space = "total", 
+             start_yearmon = "Jan 2000", n_trace = 3), 
+    "nfd"
+  )
+  expect_null(x$monthly$intervening)
+  expect_null(x$annual$intervening)
+  expect_null(x$annual$total)
+  expect_equal(x$monthly$total[[1]], t1_tot_xts)
+  expect_equal(x$monthly$total[[2]], t2_tot_xts)
+  expect_equal(x$monthly$total[[3]], t3_tot_xts)
+})
