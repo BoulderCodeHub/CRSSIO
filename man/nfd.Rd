@@ -2,6 +2,8 @@
 % Please edit documentation in R/nfd.R
 \name{nfd}
 \alias{nfd}
+\alias{as_nfd}
+\alias{is_nfd}
 \title{Natural Flow Data (nfd)}
 \usage{
 nfd(
@@ -13,6 +15,10 @@ nfd(
   time_step = c("annual", "monthly", "both"),
   year = c("cy", "wy")
 )
+
+as_nfd(x, ...)
+
+is_nfd(x)
 }
 \arguments{
 \item{data}{If \code{NA} or of length 1, creates an object with dimensions based
@@ -38,6 +44,10 @@ store/create annual and monthly data.}
 implications for the timestep the annual data are stored in (December for
 cy and September for wy) as well as how summation functions will be applied
 to monthly data.}
+
+\item{x}{An \code{R} object.}
+
+\item{...}{Other parameters passed to \code{nfd()}.}
 }
 \description{
 \code{nfd()} creates an object to store natural flow data from the specified
@@ -62,11 +72,8 @@ of timesteps or traces are determined after that.
 
 \emph{Array:} Arrays should be an m x t x 29 array, where m is the number of
 months, and t is the number of
-traces. Can also be an m x t x 29 x 2 array, where x\link{,,,1} is total flow and
-x\link{,,,2} is intervening flow.
-If there are rownames, then they must be in "yyyy-mm" format,
-otherwise an error will post. Rownames are not required, and if they are not
-provided will be set starting with the specified \code{start_yearmon} or assuming
+traces. Can also be an m x t x 29 x 2 array, where \code{x[,,,1]} is total flow and
+\verb{x[,,,2]`` is intervening flow.  If there are rownames, then they must be in "yyyy-mm" format,  otherwise an error will post. Rownames are not required, and if they are not provided will be set starting with the specified }start_yearmon` or assuming
 a starting date of January of the current year. The colnames are not required
 but will be used in their provided form if they are specified. If they are
 not specified, they will be named Trace1 - TraceN. The names of the 3rd

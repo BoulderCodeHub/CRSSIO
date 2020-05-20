@@ -21,8 +21,8 @@
 #' 
 #' *Array:* Arrays should be an m x t x 29 array, where m is the number of
 #' months, and t is the number of 
-#' traces. Can also be an m x t x 29 x 2 array, where x[,,,1] is total flow and
-#' x[,,,2] is intervening flow. 
+#' traces. Can also be an m x t x 29 x 2 array, where `x[,,,1]` is total flow and
+#' `x[,,,2]`` is intervening flow. 
 #' If there are rownames, then they must be in "yyyy-mm" format, 
 #' otherwise an error will post. Rownames are not required, and if they are not
 #' provided will be set starting with the specified `start_yearmon` or assuming
@@ -148,7 +148,10 @@ new_nfd <- function(mon_int, mon_tot, ann_int, ann_tot, year)
   x
 }
 
+#' @param x An `R` object.
+#' @param ... Other parameters passed to `nfd()`.
 #' @export
+#' @rdname nfd
 as_nfd <- function(x, ...)
 {
   UseMethod("as_nfd")
@@ -159,10 +162,6 @@ as_nfd.default <- function(x, ...)
   stop("as_nfd() is not implemented for an object of class: ", class(x),
        "\nSee ?nfd for details.")
 }
-
-# TODO
-# as_nfd.xts should just call as_nfd.matrix with some sort of specification 
-# on the dates; actually, otherway around is good. 
 
 #' @export
 as_nfd.array <- function(x, ...)
@@ -449,6 +448,7 @@ n_trace <- function(x)
   max_n
 }
 
+#' @rdname nfd
 #' @export
 is_nfd <- function(x) inherits(x, "nfd")
 
@@ -527,15 +527,15 @@ end.nfd <- function(x, ...)
 {
   if (has_monthly(x)) {
     if (has_intervening(x, "monthly")) {
-      y <- tail(zoo::index(x[["monthly"]][["intervening"]][[1]]), 1)
+      y <- utils::tail(zoo::index(x[["monthly"]][["intervening"]][[1]]), 1)
     } else {
-      y <- tail(zoo::index(x[["monthly"]][["total"]][[1]]), 1)
+      y <- utils::tail(zoo::index(x[["monthly"]][["total"]][[1]]), 1)
     }
   } else {
     if (has_intervening(x, "annual")) {
-      y <- tail(zoo::index(x[["annual"]][["intervening"]][[1]]), 1)
+      y <- utils::tail(zoo::index(x[["annual"]][["intervening"]][[1]]), 1)
     } else {
-      y <- tail(zoo::index(x[["annual"]][["total"]][[1]]), 1)
+      y <- utils::tail(zoo::index(x[["annual"]][["total"]][[1]]), 1)
     }
   }
   
