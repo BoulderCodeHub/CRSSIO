@@ -72,8 +72,11 @@ of timesteps or traces are determined after that.
 
 \emph{Array:} Arrays should be an m x t x 29 array, where m is the number of
 months, and t is the number of
-traces. Can also be an m x t x 29 x 2 array, where \code{x[,,,1]} is total flow and
-\verb{x[,,,2]`` is intervening flow.  If there are rownames, then they must be in "yyyy-mm" format,  otherwise an error will post. Rownames are not required, and if they are not provided will be set starting with the specified }start_yearmon` or assuming
+traces. Can also be an m x t x 29 x 2 array, where \code{x[,,,1]} is total flow
+and \code{x[,,,2]} is intervening flow.
+If there are rownames, then they must be in "yyyy-mm" format,
+otherwise an error will post. Rownames are not required, and if they are not
+provided will be set starting with the specified \code{start_yearmon} or assuming
 a starting date of January of the current year. The colnames are not required
 but will be used in their provided form if they are specified. If they are
 not specified, they will be named Trace1 - TraceN. The names of the 3rd

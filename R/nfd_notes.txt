@@ -67,3 +67,7 @@ SS = site number: 01 - 29
 MM = month: 01-12
 YY = year: yyyy
 f = flow space: 1 = total; 2 = intervening
+
+--------------------
+Should nfd be more generic and allow any number of sites and then the crssi 
+object will enforce nfd with 29 sites in a specific order?

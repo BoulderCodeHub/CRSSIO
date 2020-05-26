@@ -225,24 +225,24 @@ trace_names <- function(n)
 }
 
 # TODO: add site argument? That then resolve to the correct k dimension?
-#' @export
-`[.nfa` <- function(x, i, j, ...) {
-  attrs <- attributes(x)
+# @export
+# `[.nfa` <- function(x, i, j, ...) {
+#   attrs <- attributes(x)
+# 
+#   out <- unclass(x)
+#   out <- out[i, j, ..., drop = FALSE]
+# 
+#   attr(out, "flow_space") <- attrs$flow_space
+#   class(out) <- "nfa"
+# 
+#   out
+# }
 
-  out <- unclass(x)
-  out <- out[i, j, ..., drop = FALSE]
-
-  attr(out, "flow_space") <- attrs$flow_space
-  class(out) <- "nfa"
-
-  out
-}
-
-#' @export
-`[<-.nfa` <- function(x, i, j, ...) {
-  .Class <- "array"
-  NextMethod(.Generic)
-}
+# @export
+# `[<-.nfa` <- function(x, i, j, ...) {
+#   .Class <- "array"
+#   NextMethod(.Generic)
+# }
 
 #' @export
 is_nfa <- function(x) inherits(x, "nfa")

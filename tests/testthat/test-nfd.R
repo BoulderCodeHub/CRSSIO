@@ -4,6 +4,7 @@
 # )
 library(zoo)
 library(xts)
+library(CoRiverNF)
 this_year <- format(Sys.Date(), "%Y")
 
 # tesk key --------------
@@ -52,6 +53,28 @@ t1_tot_xts <- to_named_xts(t1_tot, ym)
 t2_tot_xts <- to_named_xts(t2_tot, ym)
 t3_tot_xts <- to_named_xts(t3_tot, ym)
 
+mon_array <- array(dim = c(24, 3, 29, 2))
+mon_array[,1,,1] <- t1_tot
+mon_array[,2,,1] <- t2_tot
+mon_array[,3,,1] <- t3_tot
+mon_array[,1,,2] <- t1_int
+mon_array[,2,,2] <- t2_int
+mon_array[,3,,2] <- t3_int
+
+ann <- cyAnnTot
+ann2 <- cyAnnTot * matrix(rnorm(length(ann)) + 1, nrow = nrow(ann))
+ann3 <- cyAnnTot * matrix(rnorm(length(ann)) + 1, nrow = nrow(ann))
+ann4 <- cyAnnTot * matrix(rnorm(length(ann)) + 1, nrow = nrow(ann))
+
+ann_array <- array(dim = c(nrow(ann), 4, 29, 2))
+ann_array[,1,,1] <- ann
+ann_array[,1,,2] <- ann
+ann_array[,2,,1] <- ann2
+ann_array[,2,,2] <- ann2
+ann_array[,3,,1] <- ann3
+ann_array[,3,,2] <- ann3
+ann_array[,4,,1] <- ann4
+ann_array[,4,,2] <- ann4
 
 # 1D -----------------
 test_that("nfd constructor for 1d data works", {
@@ -159,6 +182,12 @@ test_that("nfd works with arrays", {
   expect_equal(x$monthly$total[[1]], t1_tot_xts)
   expect_equal(x$monthly$total[[2]], t2_tot_xts)
   expect_equal(x$monthly$total[[3]], t3_tot_xts)
+  
+  # works with tot and int flow
+  expect_is(
+    x <- as_nfd(mon_array, time_step = "monthly", start_yearmon = "Jan 2000"),
+    "nfd"
+  )
 })
 
 # matrix ---------------------------------------------

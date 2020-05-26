@@ -19,10 +19,10 @@
 #' The data are assumed to always exist for all sites first, and then the number
 #' of timesteps or traces are determined after that. 
 #' 
-#' *Array:* Arrays should be an m x t x 29 array, where m is the number of
-#' months, and t is the number of 
-#' traces. Can also be an m x t x 29 x 2 array, where `x[,,,1]` is total flow and
-#' `x[,,,2]`` is intervening flow. 
+#' *Array:* Arrays should be an m x t x s array, where m is the number of
+#' months, t is the number of traces, and s is the number of sites. 
+#' Array can also be an m x t x s x 2 array, where `x[,,,1]` is total flow 
+#' and `x[,,,2]` is intervening flow. 
 #' If there are rownames, then they must be in "yyyy-mm" format, 
 #' otherwise an error will post. Rownames are not required, and if they are not
 #' provided will be set starting with the specified `start_yearmon` or assuming
@@ -43,6 +43,8 @@
 #'   
 #' @param n_months The number of months. Scalar numeric.
 #' 
+#' @param n_sites The number of sites. Scalar numeric.
+#' 
 #' @param n_trace The number of traces. Scalar numeric.
 #'   
 #' @param flow_space Data are intervening or total flow (or both). If both, then
@@ -55,16 +57,21 @@
 #'   implications for the timestep the annual data are stored in (December for 
 #'   cy and September for wy) as well as how summation functions will be applied
 #'   to monthly data.
+#'   
+#' @param site_names The names of the sites. If specified, must be the same 
+#'   length as the number of sites (`n_sites`).
 #' 
 #' @export
-nfd <- function(data = NA, start_yearmon = NA, n_months = NA,
+nfd <- function(data = NA, start_yearmon = NA, n_months = NA, n_sites = 1,
                 n_trace = 1, flow_space = c("total", "intervening", "both"), 
-                time_step = c("annual", "monthly", "both"), year = c("cy", "wy")
+                time_step = c("annual", "monthly", "both"), year = c("cy", "wy"),
+                site_names = NA
                 )
 {
   assert_that(length(start_yearmon) == 1)
   assert_that(length(n_months) == 1)
   assert_that(length(n_trace) == 1 && is.numeric(n_trace))
+  assert_that(length(n_sites) == 1 && is.numeric(n_sites))
   flow_space <- match.arg(flow_space,  c("total", "intervening", "both"))
   time_step <- match.arg(time_step, c("annual", "monthly", "both"))
   year <- match.arg(year, c("cy", "wy"))
@@ -74,6 +81,11 @@ nfd <- function(data = NA, start_yearmon = NA, n_months = NA,
   } else {
     start_yearmon <- zoo::as.yearmon(start_yearmon)
   }
+  
+  if (!is.na(site_names))
+    assert_that(length(site_names) == n_sites)
+  
+  # TODO: update from here down to account for the variable number of sites.
   
   if (isTRUE(is.na(data)) || (length(data) == 1 && is.numeric(data))) {
     if (is.na(n_months))
@@ -446,6 +458,59 @@ n_trace <- function(x)
   ))
   
   max_n
+}
+
+n_sites <- function(x)
+{
+  assert_that(is_nfd(x))
+  
+  if (has_monthly(x)) {
+    if (has_intervening(x, "monthly"))
+      s <- dim(x[["monthly"]][["intervening"]][[1]])[2]
+    else 
+      s <- dim(x[["monthly"]][["total"]][[1]])[2]
+  } else if (has_annual(x)) {
+    if (has_intervening(x, "annual"))
+      s <- dim(x[["annual"]][["intervening"]][[1]])[2]
+    else
+      s <- dim(x[["annual"]][["total"]][[1]])[2]
+  } else {
+    stop("nfd does not appear to have annual or monthly data.\n", 
+        "Cannot determine number of sites.")
+  }
+  
+  s
+}
+
+n_ts <- function(x, ts_func, ts_type)
+{
+  assert_that(is_nfd(x))
+  
+  if (ts_func(x)) {
+    val = c(-Inf, -Inf)
+    if (has_intervening(x, ts_type))
+      val[1] <- nrow(x[[ts_type]]$intervening[[1]])
+    if (has_total(x, ts_type))
+      val[2] <- nrow(x[[ts_type]]$intervening[[1]])
+    
+    val <- val[val != -Inf]
+    assert_that(length(val) > 0 && all(val[1] %in% val))
+    val <- val[1]
+    
+  } else
+    val = -Inf
+  
+  val
+}
+
+n_years <- function(x)
+{
+  n_ts(x, has_annual, "annual")
+}
+
+n_months <- function(x)
+{
+  n_ts(x, has_monthly, "monthly")
 }
 
 #' @rdname nfd
