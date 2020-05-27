@@ -1,14 +1,17 @@
 #' Natural Flow Data (nfd)
 #' 
 #' `nfd()` creates an object to store natural flow data from the specified 
-#' `data`. Data include multiple months and traces (sequences) for all 29 natural 
-#' flow sites ([nf_gage_names()]), and can include monthly and/or annual data as
-#' well as intervening and/or total natural flow.
+#' `data`. Conceptually, the `nfd` object is a 5-dimensional array, where the 
+#' first three dimensions represent time (months or years), traces, and sites. 
+#' The next two dimensions are the "flow space" (intervening or total flow), and
+#' then the time time step. This allows for the storage of all natural flow data
+#' used in CRSS and Colorado River modeling in one object, or to limit it and
+#' only store the site or flow space of interest.
 #' 
 #' If `data` is a scalar, then `n_months` and `n_trace` are used to determine 
 #' the number of traces and time steps. Otherwise, those values are assumed from 
-#' the dimensions of the data and the data class. See further description for 
-#' the how different data types are handled below. 
+#' the dimensions of the data and the data class. See **Data Types** section for 
+#' a description of how different data types are handled. 
 #' 
 #' For initializing blank annual data - the number of years is computed as the 
 #' number of full years with a minimum of 1 year of data: 
@@ -19,23 +22,40 @@
 #' The data are assumed to always exist for all sites first, and then the number
 #' of timesteps or traces are determined after that. 
 #' 
+#' @section Data Types:
+#' 
+#' This section describes how different data types for the specified `data`/`x` 
+#' are treated when created the `nfd` object.
+#' 
 #' *Array:* Arrays should be an m x t x s array, where m is the number of
-#' months, t is the number of traces, and s is the number of sites. 
+#' months (or years), t is the number of traces, and s is the number of sites. 
 #' Array can also be an m x t x s x 2 array, where `x[,,,1]` is total flow 
 #' and `x[,,,2]` is intervening flow. 
 #' If there are rownames, then they must be in "yyyy-mm" format, 
 #' otherwise an error will post. Rownames are not required, and if they are not
 #' provided will be set starting with the specified `start_yearmon` or assuming
 #' a starting date of January of the current year. The colnames are not required
-#' but will be used in their provided form if they are specified. If they are 
-#' not specified, they will be named Trace1 - TraceN. The names of the 3rd 
-#' dimension should match [nf_gage_abbrv()] if provided. If they are not 
-#' provided, then assume that the depths match the order in [nf_gage_abbrv()].
+#' but will be used in their provided form if they are specified. 
+#' The names of the 3rd dimension represent the site names, and will be used if 
+#' provided, otherwise the site names remain `NULL`.
+#' 
+#' *Matrix:* Matrices are assumed to be structured as m x s, where m is the 
+#' number of months or years and s is the number of sites for a single trace. 
+#' The user needs to specify the `time_step` and `flow_space`, although they are
+#' assumed to be annual total if not specified. If `start_yearmon` is not 
+#' specified, it is assumed to be January of the current year. The colnames of 
+#' the matrix are used for the site names, if provided, otherwise they remain 
+#' `NULL`.
+#' 
+#' *xts:* xts objects work the same way as matrices, except that `start_yearmon`
+#' is determined form the xts object.
+#' 
+#' All other data types will result in an error. 
 #' 
 #' @param data If `NA` or of length 1, creates an object with dimensions based
 #'   on `n_months`, `n_trace`, `flow_space`, and `time_step`. Otherwise, creates 
-#'   an object based on the provided data. Data should be a matrix, array, list, 
-#'   data.frame, or `[xts]` object. 
+#'   an object based on the provided data. Data should be a matrix, array, or 
+#'   `[xts]` object. 
 #'   
 #' @param start_yearmon Start year and month of data. If `NA`, then assumes the
 #'   data begins in January of the current year. Should be a [zoo::yearmon] 
@@ -60,6 +80,8 @@
 #'   
 #' @param site_names The names of the sites. If specified, must be the same 
 #'   length as the number of sites (`n_sites`).
+#'   
+#' @return `nfd()` and `as_nfd()` return an object of class `nfd`. 
 #' 
 #' @export
 nfd <- function(data = NA, n_months = NA, n_trace = 1, 
@@ -595,6 +617,7 @@ n_months <- function(x)
 }
 
 #' @rdname nfd
+#' @return `is_nfd()` returns `TRUE` if class inherits from `nfd`.
 #' @export
 is_nfd <- function(x) inherits(x, "nfd")
 
