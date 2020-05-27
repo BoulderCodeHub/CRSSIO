@@ -8,12 +8,14 @@
 \usage{
 nfd(
   data = NA,
-  start_yearmon = NA,
   n_months = NA,
   n_trace = 1,
+  n_sites = 1,
   flow_space = c("total", "intervening", "both"),
   time_step = c("annual", "monthly", "both"),
-  year = c("cy", "wy")
+  start_yearmon = NA,
+  year = c("cy", "wy"),
+  site_names = NA
 )
 
 as_nfd(x, ...)
@@ -26,13 +28,11 @@ on \code{n_months}, \code{n_trace}, \code{flow_space}, and \code{time_step}. Oth
 an object based on the provided data. Data should be a matrix, array, list,
 data.frame, or \verb{[xts]} object.}
 
-\item{start_yearmon}{Start year and month of data. If \code{NA}, then assumes the
-data begins in January of the current year. Should be a \link[zoo:yearmon]{zoo::yearmon}
-object or coercable to one. Scalar character.}
-
 \item{n_months}{The number of months. Scalar numeric.}
 
 \item{n_trace}{The number of traces. Scalar numeric.}
+
+\item{n_sites}{The number of sites. Scalar numeric.}
 
 \item{flow_space}{Data are intervening or total flow (or both). If both, then
 will store/create total and intervening flow data.}
@@ -40,10 +40,17 @@ will store/create total and intervening flow data.}
 \item{time_step}{Data are annual or monthly (or both). If both, then will
 store/create annual and monthly data.}
 
+\item{start_yearmon}{Start year and month of data. If \code{NA}, then assumes the
+data begins in January of the current year. Should be a \link[zoo:yearmon]{zoo::yearmon}
+object or coercable to one. Scalar character.}
+
 \item{year}{Data are calendar year (\code{"cy"}) or water year (\code{"wy"}). This has
 implications for the timestep the annual data are stored in (December for
 cy and September for wy) as well as how summation functions will be applied
 to monthly data.}
+
+\item{site_names}{The names of the sites. If specified, must be the same
+length as the number of sites (\code{n_sites}).}
 
 \item{x}{An \code{R} object.}
 
@@ -70,9 +77,9 @@ year, or September if the the \code{year} is water year.
 The data are assumed to always exist for all sites first, and then the number
 of timesteps or traces are determined after that.
 
-\emph{Array:} Arrays should be an m x t x 29 array, where m is the number of
-months, and t is the number of
-traces. Can also be an m x t x 29 x 2 array, where \code{x[,,,1]} is total flow
+\emph{Array:} Arrays should be an m x t x s array, where m is the number of
+months, t is the number of traces, and s is the number of sites.
+Array can also be an m x t x s x 2 array, where \code{x[,,,1]} is total flow
 and \code{x[,,,2]} is intervening flow.
 If there are rownames, then they must be in "yyyy-mm" format,
 otherwise an error will post. Rownames are not required, and if they are not

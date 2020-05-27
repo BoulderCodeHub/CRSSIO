@@ -75,7 +75,8 @@ ann_array[,4,,2] <- ann4
 # nfd_extract -------------------------------------------------
 test_that("nfd_extract() works", {
   # only monthly nfd
-  x <- as_nfd(mon_array, time_step = "monthly", start_yearmon = "Jan 2000")
+  x <- as_nfd(mon_array, time_step = "monthly", start_yearmon = "Jan 2000", 
+              site_names = nf_gage_abbrv())
   
   # by time
   expect_is(x2 <- nfd_extract(x, "2001/"), "nfd")
@@ -101,6 +102,22 @@ test_that("nfd_extract() works", {
   expect_identical(x$monthly$total[[2]], x2$monthly$total[[1]])
   expect_identical(x$monthly$intervening[[3]], x2$monthly$intervening[[2]])
   
+  # by site
+  x2 <- nfd_extract(x, , , 1:2)
+  x3 <- nfd_extract(x, , , "LeesFerry")
+  x4 <- nfd_extract(x, , , c("Imperial", "LeesFerry"))
+  expect_error(nfd_extract(x, , "xasdf"))
+  expect_error(nfd_extract(x, , 20:35))
+  expect_equal(x2$monthly$total[[1]], x$monthly$total[[1]][, 1:2])
+  expect_equal(x2$monthly$intervening[[2]], x$monthly$intervening[[2]][, 1:2])
+  expect_equal(x3$monthly$total[[3]], x$monthly$total[[3]][, 20])
+  expect_equal(x3$monthly$intervening[[2]], x$monthly$intervening[[2]][, 20])
+  expect_equal(x4$monthly$total[[1]], x$monthly$total[[1]][, c(29, 20)])
+  expect_equal(
+    x4$monthly$intervening[[3]], 
+    x$monthly$intervening[[3]][, c(29, 20)]
+  )
+  
   # by flow_space
   x2 <- nfd_extract(x, , , , "intervening")
   x3 <- nfd_extract(x, , , , "total")
@@ -112,12 +129,13 @@ test_that("nfd_extract() works", {
   expect_false(CRSSIO:::has_intervening(x3, "monthly"))
   
   # by all 3
-  x2 <- nfd_extract(x, "/2000", 1:2, , "total")
-  expect_identical(x$monthly$total[[1]][1:12], x2$monthly$total[[1]])
-  expect_identical(x$monthly$total[[2]][1:12], x2$monthly$total[[2]])
+  x2 <- nfd_extract(x, "/2000", 1:2, "LeesFerry", "total")
+  expect_identical(x$monthly$total[[1]][1:12, "LeesFerry"], x2$monthly$total[[1]])
+  expect_identical(x$monthly$total[[2]][1:12, "LeesFerry"], x2$monthly$total[[2]])
   
   # only annual nfd
-  x <- as_nfd(ann_array, time_step = "annual", start_yearmon = "Dec 1906")
+  x <- as_nfd(ann_array, time_step = "annual", start_yearmon = "Dec 1906", 
+              site_names = nf_gage_abbrv())
   # by time
   expect_is(x2 <- nfd_extract(x, "2000/"), "nfd")
   expect_identical(coredata(x2$annual$total[[1]]), coredata(ann["2000/"]))
@@ -137,6 +155,14 @@ test_that("nfd_extract() works", {
   expect_identical(coredata(ann2), coredata(x2$annual$total[[1]]))
   expect_identical(coredata(ann4), coredata(x2$annual$intervening[[2]]))
   
+  # by site
+  x2 <- nfd_extract(x, , ,"LeesFerry")
+  x3 <- nfd_extract(x, , , c(4:6))
+  expect_equal(x2$annual$total[[1]], x$annual$total[[1]][,"LeesFerry"])
+  expect_equal(x2$annual$intervening[[2]], x$annual$intervening[[2]][,"LeesFerry"])
+  expect_equal(x3$annual$total[[3]], x$annual$total[[3]][,4:6])
+  expect_equal(x3$annual$total[[4]], x$annual$total[[4]][,4:6])
+  
   # by flow_space
   x2 <- nfd_extract(x, , , , "intervening")
   x3 <- nfd_extract(x, , , , "total")
@@ -148,9 +174,9 @@ test_that("nfd_extract() works", {
   expect_false(CRSSIO:::has_intervening(x3, "annual"))
   
   # by all 3
-  x2 <- nfd_extract(x, "/2000", 1:2, , "total")
-  expect_identical(coredata(ann["/2000"]), coredata(x2$annual$total[[1]]))
-  expect_identical(coredata(ann2["/2000"]), coredata(x2$annual$total[[2]]))
+  x2 <- nfd_extract(x, "/2000", 1:2, c("Cameo", "LeesFerry") , "total")
+  expect_identical(coredata(ann["/2000", c("Cameo", "LeesFerry")]), coredata(x2$annual$total[[1]]))
+  expect_identical(coredata(ann2["/2000", c("Cameo", "LeesFerry")]), coredata(x2$annual$total[[2]]))
   expect_false(CRSSIO:::has_intervening(x2))
   
   # monthly and annual nfd

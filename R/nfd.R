@@ -43,9 +43,9 @@
 #'   
 #' @param n_months The number of months. Scalar numeric.
 #' 
-#' @param n_sites The number of sites. Scalar numeric.
-#' 
 #' @param n_trace The number of traces. Scalar numeric.
+#' 
+#' @param n_sites The number of sites. Scalar numeric.
 #'   
 #' @param flow_space Data are intervening or total flow (or both). If both, then
 #'   will store/create total and intervening flow data.
@@ -62,9 +62,10 @@
 #'   length as the number of sites (`n_sites`).
 #' 
 #' @export
-nfd <- function(data = NA, start_yearmon = NA, n_months = NA, n_sites = 1,
-                n_trace = 1, flow_space = c("total", "intervening", "both"), 
-                time_step = c("annual", "monthly", "both"), year = c("cy", "wy"),
+nfd <- function(data = NA, n_months = NA, n_trace = 1, 
+                n_sites = 1, flow_space = c("total", "intervening", "both"), 
+                time_step = c("annual", "monthly", "both"), 
+                start_yearmon = NA, year = c("cy", "wy"),
                 site_names = NA
                 )
 {
@@ -82,14 +83,12 @@ nfd <- function(data = NA, start_yearmon = NA, n_months = NA, n_sites = 1,
     start_yearmon <- zoo::as.yearmon(start_yearmon)
   }
   
-  if (!is.na(site_names))
-    assert_that(length(site_names) == n_sites)
-  
-  # TODO: update from here down to account for the variable number of sites.
-  
   if (isTRUE(is.na(data)) || (length(data) == 1 && is.numeric(data))) {
     if (is.na(n_months))
       n_months <- 1
+    
+    if (!isTRUE(is.na(site_names)))
+      assert_that(length(site_names) == n_sites)
     
     is_monthly <- time_step %in% c("monthly", "both")
     is_annual <- time_step %in% c("annual", "both")
@@ -99,14 +98,18 @@ nfd <- function(data = NA, start_yearmon = NA, n_months = NA, n_sites = 1,
     # initialize an empty nfa/ or one with all the same values
     xts_mon <- xts_ann <- NULL
     if (is_monthly ) {
-      xts_mon <- initialize_monthly_xts(data, start_yearmon, n_months)
+      xts_mon <- initialize_monthly_xts(
+        data, start_yearmon, n_months, n_sites, site_names
+      )
       # create a list with n_trace entries of xts_mon
       
       xts_mon <- lapply(seq(n_trace), function(x) xts_mon)
     }
     
     if (is_annual) {
-      xts_ann <- initialize_annual_xts(data, start_yearmon, n_months, year)
+      xts_ann <- initialize_annual_xts(
+        data, start_yearmon, n_months, year, n_sites, site_names
+      )
       xts_ann <- lapply(seq(n_trace), function(x) xts_ann)
     }
     
@@ -132,9 +135,11 @@ nfd <- function(data = NA, start_yearmon = NA, n_months = NA, n_sites = 1,
       start_yearmon = start_yearmon,
       n_months = n_months,
       n_trace = n_trace,
+      n_sites = n_sites,
       flow_space = flow_space,
       time_step = time_step,
-      year = year
+      year = year,
+      site_names = site_names
     )
   }
   
@@ -180,12 +185,28 @@ as_nfd.array <- function(x, ...)
 {
   # x[month, trace, site, (ann/int)]
   assert_that(length(dim(x)) %in% c(3, 4))
-  assert_that(dim(x)[3] == 29)
+  assert_that(dim(x)[3] >= 1)
 
   # setup the variables that should be specified -----
   args <- list(...)
   n_trace <- dim(x)[2]
   ignore_arg("n_trace", args, n_trace)
+  
+  n_sites <- dim(x)[3]
+  ignore_arg("n_sites", args, n_sites)
+  
+  # site names
+  site_names <- dimnames(x)[[3]]
+  if (is.null(site_names)) {
+    site_names <- args[["site_names"]]
+    if (is.null(site_names))
+      site_names <- NA
+  } else {
+    ignore_arg("site_names", args, site_names)
+  }
+  
+  if (!isTRUE(is.na(site_names))) 
+    assert_that(length(site_names) == n_sites)
   
   # flow_space
   if (length(dim(x)) == 4) {
@@ -242,18 +263,26 @@ as_nfd.array <- function(x, ...)
     d1 <- lapply(seq(n_trace), function(n) {
       tmp <- x[ , n, , 1]
       if (is_annual) {
-        tmp <- initialize_annual_xts(tmp, start_yearmon, n_months, year)
+        tmp <- initialize_annual_xts(
+          tmp, start_yearmon, n_months, year, n_sites, site_names
+        )
       } else {
-        tmp <- initialize_monthly_xts(tmp, start_yearmon, n_months)
+        tmp <- initialize_monthly_xts(
+          tmp, start_yearmon, n_months, n_sites, site_names
+        )
       }
     })
     
     d2 <- lapply(seq(n_trace), function(n) {
       tmp <- x[ , n, , 2]
       if (is_annual) {
-        tmp <- initialize_annual_xts(tmp, start_yearmon, n_months, year)
+        tmp <- initialize_annual_xts(
+          tmp, start_yearmon, n_months, year, n_sites, site_names
+        )
       } else {
-        tmp <- initialize_monthly_xts(tmp, start_yearmon, n_months)
+        tmp <- initialize_monthly_xts(
+          tmp, start_yearmon, n_months, n_sites, site_names
+        )
       }
     })
     
@@ -269,9 +298,13 @@ as_nfd.array <- function(x, ...)
     d1 <- lapply(seq(n_trace), function(n) {
       tmp <- x[ , n, ]
       if (is_annual) {
-        tmp <- initialize_annual_xts(tmp, start_yearmon, n_months, year)
+        tmp <- initialize_annual_xts(
+          tmp, start_yearmon, n_months, year, n_sites, site_names
+        )
       } else {
-        tmp <- initialize_monthly_xts(tmp, start_yearmon, n_months)
+        tmp <- initialize_monthly_xts(
+          tmp, start_yearmon, n_months, n_sites, site_names
+        )
       }
     })
     
@@ -329,6 +362,22 @@ as_nfd.matrix <- function(x, ...)
   if (time_step == "annual")
     n_months <- n_months * 12
   ignore_arg("n_months", args, n_months)
+ 
+  n_sites <- ncol(x)
+  ignore_arg("n_sites", args, n_sites)
+  
+  # site names
+  site_names <- dimnames(x)[[2]]
+  if (is.null(site_names)) {
+    site_names <- args[["site_names"]]
+    if (is.null(site_names))
+      site_names <- NA
+  } else {
+    ignore_arg("site_names", args, site_names)
+  }
+  
+  if (!isTRUE(is.na(site_names))) 
+    assert_that(length(site_names) == n_sites)
   
   # year
   if (exists("year", args)) {
@@ -352,9 +401,13 @@ as_nfd.matrix <- function(x, ...)
   # recreate xts data ----
   # redundant, but ensures the indexes are correct, and the colnames get set
   if (is_annual) {
-    d1 <- list(initialize_annual_xts(x, start_yearmon, n_months, year))
+    d1 <- list(initialize_annual_xts(
+      x, start_yearmon, n_months, year, n_sites, site_names
+    ))
   } else {
-    d1 <- list(initialize_monthly_xts(x, start_yearmon, n_months))
+    d1 <- list(initialize_monthly_xts(
+      x, start_yearmon, n_months, n_sites, site_names
+    ))
   }
   
   # set all list entries ---
@@ -395,16 +448,20 @@ ignore_arg <- function(arg, args, used)
   }
 }
 
-initialize_monthly_xts <- function(val, start_month, n_time_steps)
+initialize_monthly_xts <- function(val, start_month, n_time_steps, n_sites, 
+                                   site_names)
 {
-  x <- matrix(val, nrow = n_time_steps, ncol = 29)
-  colnames(x) <- nf_gage_abbrv()
+  x <- matrix(val, nrow = n_time_steps, ncol = n_sites)
+  if (!isTRUE(is.na(site_names)))
+    colnames(x) <- site_names
+  
   ym <- start_month + (0:(n_time_steps - 1)) / 12
   
   xts::xts(x, order.by = ym)
 }
 
-initialize_annual_xts <- function(val, start_month, n_months, year_type)
+initialize_annual_xts <- function(val, start_month, n_months, year_type, 
+                                  n_sites, site_names)
 {
   n_years <- max(floor(n_months / 12), 1)
   
@@ -414,8 +471,10 @@ initialize_annual_xts <- function(val, start_month, n_months, year_type)
   ym <- zoo::as.yearmon(paste(year(start_month), mon, sep = "-")) + 
     seq(0, n_years - 1)
   
-  x <- matrix(val, nrow = n_years, ncol = 29)
-  colnames(x) <- nf_gage_abbrv()
+  x <- matrix(val, nrow = n_years, ncol = n_sites)
+  
+  if (!isTRUE(is.na(site_names)))
+    colnames(x) <- site_names
   
   xts::xts(x, order.by = ym)
 }
@@ -482,6 +541,28 @@ n_sites <- function(x)
   s
 }
 
+sites <- function(x)
+{
+  assert_that(is_nfd(x))
+  
+  if (has_monthly(x)) {
+    if (has_intervening(x, "monthly"))
+      s <- colnames(x[["monthly"]][["intervening"]][[1]])
+    else 
+      s <- colnames(x[["monthly"]][["total"]][[1]])
+  } else if (has_annual(x)) {
+    if (has_intervening(x, "annual"))
+      s <- colnames(x[["annual"]][["intervening"]][[1]])
+    else
+      s <- colnames(x[["annual"]][["total"]][[1]])
+  } else {
+    stop("nfd does not appear to have annual or monthly data.\n", 
+         "Cannot determine site names.")
+  }
+  
+  s
+}
+
 n_ts <- function(x, ts_func, ts_type)
 {
   assert_that(is_nfd(x))
@@ -491,7 +572,7 @@ n_ts <- function(x, ts_func, ts_type)
     if (has_intervening(x, ts_type))
       val[1] <- nrow(x[[ts_type]]$intervening[[1]])
     if (has_total(x, ts_type))
-      val[2] <- nrow(x[[ts_type]]$intervening[[1]])
+      val[2] <- nrow(x[[ts_type]]$total[[1]])
     
     val <- val[val != -Inf]
     assert_that(length(val) > 0 && all(val[1] %in% val))

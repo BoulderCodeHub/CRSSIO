@@ -73,8 +73,27 @@ nfd_extract <- function(x, i, j, k, l, m)
     assert_that(is.numeric(j) && max(j) <= n_trace(x))
   
   # site ------------
-  # TODO: update this once we relax the number of columns
-  k <- 1:29
+  # can extract by column index, or by name
+  if (missing(k)) {
+    k <- seq(n_sites(x))
+  } else if (is.character(k)) {
+    k_miss <- k[!(k %in% sites(x))]
+    
+    if (length(k_miss) > 0)
+      stop(
+        "Invalid site(s) to extract by.\n", 
+        "Site(s): ", paste(k_miss, collapse = ","), 
+        "\ndo not exist in nfd object."
+      )
+    
+  } else if (is.numeric(k)) {
+    assert_that(
+      all(k %in% seq(n_sites(x))), 
+      msg = "all k values should be valid site indeces."
+    )
+  } else {
+    stop("`k` should be either a numeric or character vector if specified.")
+  }
   
   # flow_space ------------
   if (missing(l)) {

@@ -86,7 +86,7 @@ test_that("nfd constructor for 1d data works", {
   expect_null(x$monthly$intervening)
   expect_null(x$monthly$total)
   expect_length(x$annual$total, 1)
-  expect_equal(dim(x$annual$total[[1]]), c(1L, 29L))
+  expect_equal(dim(x$annual$total[[1]]), c(1L, 1L))
   
   expect_is(
     x <- nfd(
@@ -94,6 +94,7 @@ test_that("nfd constructor for 1d data works", {
       start_yearmon = "Jan 2020", 
       n_months = 24, 
       n_trace = 10, 
+      n_sites = 29,
       flow_space = "both", 
       time_step = "both",
       year = "cy"),
@@ -140,6 +141,8 @@ a3 <- array(dim = c(24, 3, 29))
 a3[,1,] <- t1_tot
 a3[,2,] <- t2_tot
 a3[,3,] <- t3_tot
+
+a4 <- array(45524, dim = c(24, 3, 1))
   
 test_that("nfd works with arrays", {
   expect_warning(expect_is(x <- nfd(nf_array, time_step = "monthly"), "nfd"))
@@ -158,7 +161,8 @@ test_that("nfd works with arrays", {
   
   # annual total and intervening for 1 trace, 4 years
   expect_is(
-    x <- nfd(a2, time_step = "annual", year = "wy", flow_space = "both"), 
+    x <- nfd(a2, time_step = "annual", year = "wy", flow_space = "both", 
+             n_sites = 29), 
     "nfd"
   )
   expect_identical(as_nfd(a2, time_step = "annual", year = "wy"), x)
@@ -173,7 +177,8 @@ test_that("nfd works with arrays", {
   # values are preserved correctly
   expect_is(
     x <- nfd(a3, time_step = "monthly", flow_space = "total", 
-             start_yearmon = "Jan 2000", n_trace = 3), 
+             start_yearmon = "Jan 2000", n_trace = 3, n_sites = 29,
+             site_names = nf_gage_abbrv()), 
     "nfd"
   )
   expect_null(x$monthly$intervening)
@@ -188,11 +193,27 @@ test_that("nfd works with arrays", {
     x <- as_nfd(mon_array, time_step = "monthly", start_yearmon = "Jan 2000"),
     "nfd"
   )
+  
+  # monthly for 3 traces and 1 site
+  expect_warning(expect_is(
+    x <- nfd(
+      a4, time_step = "monthly", flow_space = "total", site_names = "LeesFerry",
+      start_yearmon = "Jan 2000"
+    ), 
+    "nfd"
+  ))
+  expect_null(x$annual$total)
+  expect_null(x$annual$intervening)
+  expect_null(x$monthly$intervening)
+  expect_length(x$monthly$total, 3)
+  expect_identical(dim(x$monthly$total[[1]]), c(24L, 1L))
+  expect_identical(start(x), as.yearmon("Jan 2000"))
+  expect_identical(end(x), as.yearmon("Dec 2001"))
 })
 
 # matrix ---------------------------------------------
 test_that("nfd works with matrices", {
-  expect_is(x <- nfd(t1_tot, time_step = "monthly"), "nfd")
+  expect_warning(expect_is(x <- nfd(t1_tot, time_step = "monthly"), "nfd"))
   expect_null(x$annual$intervening)
   expect_null(x$annual$total)
   expect_null(x$monthly$intervening)
@@ -220,23 +241,47 @@ test_that("nfd works with matrices", {
   expect_length(x$annual$intervening, 1)
   expect_identical(start(x), as.yearmon("Dec 2021"))
   expect_identical(end(x), as.yearmon("Dec 2022"))
+  
+  # one site
+  expect_is(x <- nfd(matrix(1:36, ncol = 1), start_yearmon = "Jan 2020"), "nfd")
+  expect_equal(CRSSIO:::n_trace(x), 1)
+  expect_equal(CRSSIO:::n_years(x), 36)
+  expect_null(colnames(x$annual$total[[1]]))
 })
 
 # xts --------------------------------------------------
 test_that("nfd works with xts", {
-  expect_is(x <- nfd(t1_tot_xts, time_step = "monthly"), "nfd")
+  expect_warning(expect_is(x <- nfd(t1_tot_xts, time_step = "monthly"), "nfd"))
   expect_identical(
     x, 
-    nfd(t1_tot, time_step = "monthly", start_yearmon = "Jan 2000")
+    nfd(
+      t1_tot, 
+      time_step = "monthly", 
+      start_yearmon = "Jan 2000", 
+      site_names = nf_gage_abbrv(), 
+      n_sites = 29
+    )
   )
   
   expect_identical(
-    nfd(t3_tot_xts, time_step = "monthly"), 
-    nfd(t3_tot, time_step = "monthly", start_yearmon = "Jan 2000")
+    nfd(t3_tot_xts, time_step = "monthly", n_sites = 29), 
+    nfd(
+      t3_tot, 
+      time_step = "monthly",
+      start_yearmon = "Jan 2000", 
+      site_names = nf_gage_abbrv(), 
+      n_sites = 29
+    )
   )
   
   # use the monthly data, but says its annual. will result in new years
-  expect_is(x <- nfd(t1_tot_xts[1:3], time_step = "annual"), "nfd")
+  expect_is(x <- nfd(t1_tot_xts[1:3], time_step = "annual", n_sites = 29), "nfd")
   expect_identical(start(x), as.yearmon("Dec 2000"))
   expect_identical(end(x), as.yearmon("Dec 2002"))
+  
+  # two sites
+  expect_is(x <- as_nfd(t1_tot_xts[,1:2], time_step = "monthly"), "nfd")
+  expect_equal(CRSSIO:::n_trace(x), 1)
+  expect_equal(CRSSIO:::n_sites(x), 2)
+  expect_setequal(colnames(x$monthly$total[[1]]), c("GlenwoodSprings", "Cameo"))
 })
