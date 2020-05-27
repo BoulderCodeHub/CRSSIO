@@ -2,9 +2,12 @@
 % Please edit documentation in R/nfd_get.R
 \name{nfd_get_site}
 \alias{nfd_get_site}
+\alias{nfd_get_trace}
 \title{Get data from \code{nfd} objects.}
 \usage{
 nfd_get_site(x, site, flow_space, time_step)
+
+nfd_get_trace(x, trace, flow_space, time_step)
 }
 \arguments{
 \item{x}{An \code{nfd} object.}
@@ -14,10 +17,15 @@ nfd_get_site(x, site, flow_space, time_step)
 \item{flow_space}{"total" or "intervening"}
 
 \item{time_step}{"annual" or "monthly"}
+
+\item{trace}{Trace number (numeric scalar)}
 }
 \value{
 \code{nfd_get_site()} returns an \code{xts} object with columns representing
 different traces.
+
+\code{nfd_get_trace()} returns an \code{xts} object with columns representing
+different sites.
 }
 \description{
 \verb{nfd_get_*()} functions get data from an \link{nfd} object in matrix form. If
@@ -26,6 +34,8 @@ To extract the data, but keep it as an \code{nfd} object, see \code{\link[=nfd_e
 }
 \details{
 \code{nfd_get_site()} returns the data for all traces for one specified \code{site}.
+
+\code{nfd_get_trace()} returns the data for all sites for one specified \code{trace}.
 }
 \seealso{
 \code{\link[=nfd_extract]{nfd_extract()}}, \link{nfd}

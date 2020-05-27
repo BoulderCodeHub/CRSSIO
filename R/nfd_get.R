@@ -52,6 +52,40 @@ nfd_get_site <- function(x, site, flow_space, time_step)
   rv
 }
 
+#' @details 
+#' `nfd_get_trace()` returns the data for all sites for one specified `trace`.
+#' 
+#' @param trace Trace number (numeric scalar)
+#' 
+#' @return `nfd_get_trace()` returns an `xts` object with columns representing 
+#' different sites.
+#' 
+#' @export
+#' @rdname nfd_get_
+nfd_get_trace <- function(x, trace, flow_space, time_step)
+{
+  assert_that(is_nfd(x))
+  assert_that(length(trace) == 1 && is.numeric(trace))
+  flow_space <- match.arg(flow_space, c("total", "intervening"))
+  time_step <- match.arg(time_step, c("annual", "monthly"))
+  
+  # check that trace exists
+  assert_that(
+    trace <= n_trace(x), 
+    msg = paste0(
+      "`trace` should be valid trace index.\n", 
+      "nfd object only has ", n_traces(x), " traces of data."
+    )
+  )
+  
+  check_flow_ts(x, flow_space, time_step)
+  
+  rv <- x[[time_step]][[flow_space]][[trace]]
+  rv <- set_atts(rv, flow_space, time_step, trace = trace)
+  
+  rv
+}
+
 check_flow_ts <- function(x, flow_space, time_step)
 {
   # check flow_space and time_step

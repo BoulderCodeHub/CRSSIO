@@ -98,5 +98,23 @@ test_that("nfd_get_site() works", {
   expect_error(nfd_get_site(nfd_mon, 12, "intervening", "annual"))
   expect_error(nfd_get_site(nfd_mon, 40, "intervening", "monthly"))
   expect_error(nfd_get_site(nfd_mon, "Bluffs", "intervening", "monthly"))
+})
+
+# nfd_get_trace() -----------------------------------------
+test_that("nfd_get_trace() works", {
+  expect_is(x <- nfd_get_trace(nfd_ann, 2, "intervening", "annual"), "xts")
+  expect_equal(coredata(x), coredata(ann2))
+  expect_identical(start(x), as.yearmon("Dec 2020"))
+  expect_identical(end(x), as.yearmon("Dec 2020") + nrow(ann) - 1)
+  expect_error(nfd_get_trace(nfd_ann, 2, "total", "monthly"))
+  expect_error(nfd_get_trace(nfd_ann, 40, "intervening", "annual"))
+  expect_error(nfd_get_trace(nfd_ann, "abc", "intervening", "annual"))
   
+  expect_is(x <- nfd_get_trace(nfd_mon, 3, "total", "monthly"), "xts")
+  expect_equal(coredata(x), coredata(t3_tot_xts))
+  expect_identical(start(x), as.yearmon("Jan 2020"))
+  expect_identical(end(x), as.yearmon("Dec 2021"))
+  expect_error(nfd_get_trace(nfd_mon, 2, "total", "annual"))
+  expect_error(nfd_get_trace(nfd_mon, 4, "intervening", "monthly"))
+  expect_error(nfd_get_trace(nfd_mon, "defs", "intervening", "monthly"))
 })
