@@ -34,8 +34,8 @@
 #' If there are rownames, then they must be in "yyyy-mm" format, 
 #' otherwise an error will post. Rownames are not required, and if they are not
 #' provided will be set starting with the specified `start_yearmon` or assuming
-#' a starting date of January of the current year. The colnames are not required
-#' but will be used in their provided form if they are specified. 
+#' a starting date of January of the current year. Colnames are not required or 
+#' used.
 #' The names of the 3rd dimension represent the site names, and will be used if 
 #' provided, otherwise the site names remain `NULL`.
 #' 
