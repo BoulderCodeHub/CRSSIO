@@ -1,8 +1,8 @@
 #' Get data from `nfd` objects.
 #' 
 #' `nfd_get_*()` functions get data from an [nfd] object in matrix form. If 
-#' there is a time component, then the returend data are kepts as an xts matrix. 
-#' To extract the data, but keep it as an `nfd` object, see [nfd_extract()].
+#' there is a time component, then the data are returned as an xts matrix. 
+#' To extract the data, but keep as an `nfd` object, see [nfd_extract()].
 #' 
 #' `nfd_get_site()` returns the data for all traces for one specified `site`.
 #' 
@@ -86,6 +86,61 @@ nfd_get_trace <- function(x, trace, flow_space, time_step)
   rv
 }
 
+#' @details 
+#' `nfd_get_time()` returns the data for all sites and all traces for the 
+#' specified `time`. To get annual data, must specify December or September of 
+#' the desired year for calendar year or water year data, respectively.
+#' 
+#' @param time Time to extract as `yearmon` or `character`.
+#' 
+#' @return `nfd_get_time()` returns a matrix with columns representing 
+#' different sites and rows representing different traces.
+#' 
+#' @export
+#' @rdname nfd_get_
+nfd_get_time <- function(x, time, flow_space, time_step)
+{
+  assert_that(is_nfd(x))
+  flow_space <- match.arg(flow_space, c("total", "intervening"))
+  time_step <- match.arg(time_step, c("annual", "monthly"))
+  
+  assert_that(
+    length(time) == 1 && (is.character(time) || inherits(time, "yearmon")),
+    msg = "`time` should be a scalar charater or yearmon."
+  )
+  
+  check_flow_ts(x, flow_space, time_step)
+  
+  # check that specified time exists in data
+  if (is.character(time))
+    time <- zoo::as.yearmon(time)
+  
+  tmp <- x[[time_step]][[flow_space]]
+  all_time <- zoo::index(tmp[[1]])
+  assert_that(
+    time %in% all_time, 
+    msg = "`time` was not found in the index of the nfd data."
+  )
+  
+  rv <- do.call(rbind, lapply(seq(n_trace(x)), function(i) {
+    tmp[[i]][time,]
+  }))
+  
+  # do not want an xts object with all same timesteps
+  rv <- coredata(rv)
+  
+  if (!is.null(sites(x)))
+    colnames(rv) <- sites(x)
+  else
+    colnames(rv) <- NULL
+  
+  rownames(rv) <- seq(n_trace(x))
+  
+  rv <- set_atts(rv, flow_space, time_step, time = time)
+  
+  rv
+}
+
 check_flow_ts <- function(x, flow_space, time_step)
 {
   # check flow_space and time_step
@@ -114,13 +169,15 @@ check_flow_ts <- function(x, flow_space, time_step)
   invisible(x)
 }
 
-set_atts <- function(x, flow_space, time_step, site = NULL, trace = NULL)
+set_atts <- function(x, flow_space, time_step, site = NULL, trace = NULL, 
+                     time = NULL)
 {
   new_atts <- list(
     flow_space = flow_space, 
     time_step = time_step, 
     site = site,
-    trace = trace
+    trace = trace,
+    time = time
   )
   
   # remove NULLs

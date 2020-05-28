@@ -3,11 +3,14 @@
 \name{nfd_get_site}
 \alias{nfd_get_site}
 \alias{nfd_get_trace}
+\alias{nfd_get_time}
 \title{Get data from \code{nfd} objects.}
 \usage{
 nfd_get_site(x, site, flow_space, time_step)
 
 nfd_get_trace(x, trace, flow_space, time_step)
+
+nfd_get_time(x, time, flow_space, time_step)
 }
 \arguments{
 \item{x}{An \code{nfd} object.}
@@ -19,6 +22,8 @@ nfd_get_trace(x, trace, flow_space, time_step)
 \item{time_step}{"annual" or "monthly"}
 
 \item{trace}{Trace number (numeric scalar)}
+
+\item{time}{Time to extract as \code{yearmon} or \code{character}.}
 }
 \value{
 \code{nfd_get_site()} returns an \code{xts} object with columns representing
@@ -26,16 +31,23 @@ different traces.
 
 \code{nfd_get_trace()} returns an \code{xts} object with columns representing
 different sites.
+
+\code{nfd_get_time()} returns a matrix with columns representing
+different sites and rows representing different traces.
 }
 \description{
 \verb{nfd_get_*()} functions get data from an \link{nfd} object in matrix form. If
-there is a time component, then the returend data are kepts as an xts matrix.
-To extract the data, but keep it as an \code{nfd} object, see \code{\link[=nfd_extract]{nfd_extract()}}.
+there is a time component, then the data are returned as an xts matrix.
+To extract the data, but keep as an \code{nfd} object, see \code{\link[=nfd_extract]{nfd_extract()}}.
 }
 \details{
 \code{nfd_get_site()} returns the data for all traces for one specified \code{site}.
 
 \code{nfd_get_trace()} returns the data for all sites for one specified \code{trace}.
+
+\code{nfd_get_time()} returns the data for all sites and all traces for the
+specified \code{time}. To get annual data, must specify December or September of
+the desired year for calendar year or water year data, respectively.
 }
 \seealso{
 \code{\link[=nfd_extract]{nfd_extract()}}, \link{nfd}

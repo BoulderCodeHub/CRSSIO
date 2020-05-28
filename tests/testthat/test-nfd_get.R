@@ -118,3 +118,33 @@ test_that("nfd_get_trace() works", {
   expect_error(nfd_get_trace(nfd_mon, 4, "intervening", "monthly"))
   expect_error(nfd_get_trace(nfd_mon, "defs", "intervening", "monthly"))
 })
+
+# nfd_get_time() ----------------------------------------------
+test_that("nfd_get_time() works", {
+  expect_is(x <- nfd_get_time(nfd_ann, "Dec 2021", "total", "annual"), "matrix")
+  expect_equivalent(x, ann_array[2,,,1])
+  expect_identical(
+    x, 
+    nfd_get_time(nfd_ann, as.yearmon("Dec 2021"), "total", "annual")
+  )
+  
+  expect_equivalent(
+    nfd_get_time(nfd_ann, "Dec 2132", "total", "annual"),
+    ann_array[113,,,2]
+  )
+  expect_error(nfd_get_time(nfd_ann, "Sep 2030", "total", "annual"))
+  expect_error(nfd_get_time(nfd_ann, "Dec 2021", "total", "monthly"))
+  
+  expect_is(x <- nfd_get_time(nfd_mon, "Feb 2020", "total", "monthly"), "matrix")
+  expect_equivalent(x, mon_array[2,,,1])
+  expect_identical(
+    x, 
+    nfd_get_time(nfd_mon, as.yearmon("Feb 2020"), "total", "monthly")
+  )
+  expect_equivalent(
+    nfd_get_time(nfd_mon, "Dec 2021", "intervening", "monthly"),
+    mon_array[24,,,2]
+  )
+  expect_error(nfd_get_time(nfd_mon, "Jan 2022", "total", "monthly"))
+  expect_error(nfd_get_time(nfd_mon, "Sep 2021", "intervening", "annual"))
+})
