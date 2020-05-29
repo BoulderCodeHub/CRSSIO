@@ -4,6 +4,9 @@ CRSSIO 0.7.4.9000
 *In development*
 
 * The Excel file created by `crssi_create_hist_nf_xlsx()` had a `month` column that contained strings. This column is now formated as a `Date`. (#81)
+* New classes: `nfd` and `crss_nf` (#86)
+  * Generics: `nfd_extract()`
+  * Get functions: `nfd_get_time()`, `nfd_get_site()`, `nfd_get_trace()` (#84)
 
 
 CRSSIO 0.7.4
