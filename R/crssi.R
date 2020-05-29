@@ -1,4 +1,68 @@
 #' CRSS Input Class (crssi)
+#' 
+#' `crssi()` constructs a `crssi` object that holds all of the necessary 
+#' trace-based input data for CRSS. Namely, this includes the intervening, 
+#' monthly natural flow for all 29 sites, the Sacremento Year Type index, 
+#' and a scenario number.
+#' 
+#' `crssi()` inherits from [crss_nf], maintaining the same required structure 
+#' for the intervening natural flows. The object also contains the Sacremento 
+#' Year Type index, and a scenario number. Given this, all functions that work
+#' on [crss_nf] and [nfd] objects work on `crssi` objects.
+#' 
+#' Overlapping years: `crssi()` checks to make sure that there at least some
+#' overlappying yeras of data between `flow` and `sac_year_type`. It then trims
+#' the data to be January, year1 - December, year2 for the overlapping period 
+#' between `flow` and `sac_year_type`. For example, if `flow` contains data 
+#' for March 2020 - December 2024 while `sac_year_type` contains data for 
+#' December 2020 - December 2025, the returned object will contain monthly 
+#' intervening flow for January 2021 - December 2024, and Sacremento year type
+#' index values for December 2021 - December 2024.
+#' 
+#' @section Scenario Numbering Convention:
+#' 
+#' The numbering convention uses the following for the ones place of the 
+#' scenario number.
+#' 
+#' - 1 = Observed Resampled, i.e., ISM applied to the historical record.
+#' - 2 = Direct Paleo Resampled
+#' - 3 = Paleo-conditioned
+#' - 4 = CMIP3 Downscaled GCM Projected- 
+#' - 5 = CMIP5 Downscaled GCM Projected, BCSD downscaling, quantile mapping 
+#' secondary bias correction
+#' 
+#' Then, for scenarios that use the observed resampled data, the decimal portion
+#' should be set to reflect the years that ISM is applied to. For example, if 
+#' you are using the 1988-2012 record, the decimal portion should be set to
+#' 19882012, where the first 4 numbers represent the start year and the second 
+#' four numbers represent the end year. Thus `scen_number` should be 1.19882012 
+#' in this example. This tells the user of CRSS that the supply scenario is 
+#' the observed historical natural flows with the ISM method applied to the 
+#' 1988-2012 data. 
+#' 
+#' @param flow A `crss_nf` object.
+#' 
+#' @param sac_year_type An annual xts object with all timesteps having a 
+#'   December-some year timestep. The number of columns in this object must 
+#'   match the number of traces in `flow`. Additionally, there must be some
+#'   overlapping years of data. See details.
+#'   
+#' @param scen_number The scenario number. See **Scenario Numbering Convention**
+#'   section.
+#'   
+#' @param scen_name Optional. This is only used when printing in R to help the 
+#' user quickly know what is stored in the `crssi` object.
+#' 
+#' @param drop_flow Boolean. If `TRUE`, and if `flow` contains flows other than
+#'   monthly, intervening, these flows will be dropped. This is suggested as 
+#'   the memory needed to store the object and the time needed to apply ISM to 
+#'   the object will be drastically reduced. If `FALSE`, the other flows are 
+#'   kept in the object.
+#'   
+#' @return `crssi()` returns an object of class `crssi`.
+#' 
+#' @seealso [crss_nf], [nfd]
+#' 
 #' @export
 crssi <- function(flow, sac_year_type, scen_number, scen_name = NULL, 
                   drop_flow = TRUE)
@@ -34,8 +98,7 @@ crssi <- function(flow, sac_year_type, scen_number, scen_name = NULL,
   
   # if drop_flow == TRUE, delete the monthly total, and annual flow data from
   # flow
-  if (drop_flow)
-  {
+  if (drop_flow) {
     flow = new_nfd(
       flow$monthly$intervening, NULL, NULL, NULL, attr(flow, "year")
     )
@@ -47,6 +110,49 @@ crssi <- function(flow, sac_year_type, scen_number, scen_name = NULL,
   sac_year_type <- sac_year_type[paste0(overlap[1],"/",overlap[2])]
   
   flow <- nfd_extract(flow, paste0(overlap[1], "-01/", overlap[2], "-12"))
+  crss_nf_validate(flow)
+  
+  # add on to flow list structure
+  flow[["sac_year_type"]] <- sac_year_type
+  flow[["n_trace"]] <- n_trace
+  flow[["scen_number"]] <- scen_number
+  
+  if (!is.null(scen_name))
+    flow[["scen_name"]] <- scen_name
+  
+  class(flow) <- c("crssi", class(flow))
+  
+  flow
+}
+
+#' @export
+#' @return `is_crssi()` returns `TRUE` if class inherits from `crssi`.
+#' @rdname crssi
+is_crssi <- function(x)
+{
+  inherits(x, "crssi")
+}
+
+#' @export
+print.crssi <- function(x, ...)
+{
+  cat(
+    "crssi: CRSS Input Data\n",
+    "----------------------\n"
+  )
+  
+  if (!is.null(x$scen_name)) {
+    cat(
+      x$scen_name, "scenario\n"
+    )
+  }
+    
+  cat(
+    "n traces:", x$n_trace, "\n",
+    "dates:", as.character(start(x)), "-", as.character(end(x)), "\n"
+  )
+  
+  invisible(x)
 }
 
 # find the January y1 - December y2 that exist given the dates

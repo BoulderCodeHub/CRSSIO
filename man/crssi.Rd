@@ -2,10 +2,83 @@
 % Please edit documentation in R/crssi.R
 \name{crssi}
 \alias{crssi}
+\alias{is_crssi}
 \title{CRSS Input Class (crssi)}
 \usage{
 crssi(flow, sac_year_type, scen_number, scen_name = NULL, drop_flow = TRUE)
+
+is_crssi(x)
+}
+\arguments{
+\item{flow}{A \code{crss_nf} object.}
+
+\item{sac_year_type}{An annual xts object with all timesteps having a
+December-some year timestep. The number of columns in this object must
+match the number of traces in \code{flow}. Additionally, there must be some
+overlapping years of data. See details.}
+
+\item{scen_number}{The scenario number. See \strong{Scenario Numbering Convention}
+section.}
+
+\item{scen_name}{Optional. This is only used when printing in R to help the
+user quickly know what is stored in the \code{crssi} object.}
+
+\item{drop_flow}{Boolean. If \code{TRUE}, and if \code{flow} contains flows other than
+monthly, intervening, these flows will be dropped. This is suggested as
+the memory needed to store the object and the time needed to apply ISM to
+the object will be drastically reduced. If \code{FALSE}, the other flows are
+kept in the object.}
+}
+\value{
+\code{crssi()} returns an object of class \code{crssi}.
+
+\code{is_crssi()} returns \code{TRUE} if class inherits from \code{crssi}.
 }
 \description{
-CRSS Input Class (crssi)
+\code{crssi()} constructs a \code{crssi} object that holds all of the necessary
+trace-based input data for CRSS. Namely, this includes the intervening,
+monthly natural flow for all 29 sites, the Sacremento Year Type index,
+and a scenario number.
+}
+\details{
+\code{crssi()} inherits from \link{crss_nf}, maintaining the same required structure
+for the intervening natural flows. The object also contains the Sacremento
+Year Type index, and a scenario number. Given this, all functions that work
+on \link{crss_nf} and \link{nfd} objects work on \code{crssi} objects.
+
+Overlapping years: \code{crssi()} checks to make sure that there at least some
+overlappying yeras of data between \code{flow} and \code{sac_year_type}. It then trims
+the data to be January, year1 - December, year2 for the overlapping period
+between \code{flow} and \code{sac_year_type}. For example, if \code{flow} contains data
+for March 2020 - December 2024 while \code{sac_year_type} contains data for
+December 2020 - December 2025, the returned object will contain monthly
+intervening flow for January 2021 - December 2024, and Sacremento year type
+index values for December 2021 - December 2024.
+}
+\section{Scenario Numbering Convention}{
+
+
+The numbering convention uses the following for the ones place of the
+scenario number.
+\itemize{
+\item 1 = Observed Resampled, i.e., ISM applied to the historical record.
+\item 2 = Direct Paleo Resampled
+\item 3 = Paleo-conditioned
+\item 4 = CMIP3 Downscaled GCM Projected-
+\item 5 = CMIP5 Downscaled GCM Projected, BCSD downscaling, quantile mapping
+secondary bias correction
+}
+
+Then, for scenarios that use the observed resampled data, the decimal portion
+should be set to reflect the years that ISM is applied to. For example, if
+you are using the 1988-2012 record, the decimal portion should be set to
+19882012, where the first 4 numbers represent the start year and the second
+four numbers represent the end year. Thus \code{scen_number} should be 1.19882012
+in this example. This tells the user of CRSS that the supply scenario is
+the observed historical natural flows with the ISM method applied to the
+1988-2012 data.
+}
+
+\seealso{
+\link{crss_nf}, \link{nfd}
 }
