@@ -510,6 +510,15 @@ year <- function(x, numeric = FALSE)
   x
 }
 
+month <- function(x, numeric = FALSE)
+{
+  x <- format(x, "%m")
+  if (numeric)
+    x <- as.numeric(x)
+  
+  x
+}
+
 # takes a yearmon `x`, and creates a vector yearmons starting with x and a 
 # specified length
 ym_seq <- function(x, length)
