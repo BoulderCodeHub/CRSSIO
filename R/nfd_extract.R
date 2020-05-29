@@ -1,7 +1,7 @@
-#' Extract subsets of nfd objects
+#' Extract subsets from nfd objects
 #' 
-#' Extract subsets of `nfd` objects by time, trace, site, flow space, and/or 
-#' timestep dimensions.
+#' Extract subsets from `nfd` (and `crss_nf`) objects by time, trace, site, 
+#' flow space, and/or timestep dimensions.
 #' 
 #' When calling `nfd_extract()` not all dimensions have to be specified. When 
 #' dimensions are not specified, all data for that dimension are returned. 
@@ -25,10 +25,20 @@
 #' @param m The time step to get. "annual", "monthly", or 
 #'   `c("annual", "monthly")`.
 #' 
-#' @return `nfd_extract()` always returns an `nfd` object.
+#' @return `nfd_extract()` returns an `nfd` object if `x` is an `nfd` object. 
+#' If `x` is a `crss_nf` object, a `crss_nf` object is returned, unless the 
+#' extraction results in an invalid `crss_nf` object, i.e., there are less than
+#' the required 29 sites and/or the time_step or flow_space no longer includes
+#' monthly intervening data.
 #' 
 #' @export
 nfd_extract <- function(x, i, j, k, l, m) 
+{
+  UseMethod("nfd_extract")
+}
+
+#' @export
+nfd_extract.nfd <- function(x, i, j, k, l, m) 
 {
   assert_that(is_nfd(x))
   year_att <- attr(x, "year")
@@ -182,6 +192,26 @@ nfd_extract <- function(x, i, j, k, l, m)
                  remove_traces(ann_int), remove_traces(ann_tot), year_att)
   
   out
+}
+
+#' @export
+nfd_extract.crss_nf <- function(x, i, j, k, l, m)
+{
+  x <- nfd_extract.nfd(x, i, j, k, l, m)
+  
+  x <- tryCatch(
+    {
+      tmp <- crss_nf_validate(x)
+      class(tmp) <- c("crss_nf", "nfd")
+      tmp
+    }, 
+    error = function(cond) {
+      x
+    },
+    finally = NULL
+  )
+  
+  x
 }
 
 #' @param x list of trace data. Presumably the list of annual intervening, 

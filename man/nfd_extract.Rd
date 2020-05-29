@@ -2,7 +2,7 @@
 % Please edit documentation in R/nfd_extract.R
 \name{nfd_extract}
 \alias{nfd_extract}
-\title{Extract subsets of nfd objects}
+\title{Extract subsets from nfd objects}
 \usage{
 nfd_extract(x, i, j, k, l, m)
 }
@@ -23,11 +23,15 @@ range.}
 \code{c("annual", "monthly")}.}
 }
 \value{
-\code{nfd_extract()} always returns an \code{nfd} object.
+\code{nfd_extract()} returns an \code{nfd} object if \code{x} is an \code{nfd} object.
+If \code{x} is a \code{crss_nf} object, a \code{crss_nf} object is returned, unless the
+extraction results in an invalid \code{crss_nf} object, i.e., there are less than
+the required 29 sites and/or the time_step or flow_space no longer includes
+monthly intervening data.
 }
 \description{
-Extract subsets of \code{nfd} objects by time, trace, site, flow space, and/or
-timestep dimensions.
+Extract subsets from \code{nfd} (and \code{crss_nf}) objects by time, trace, site,
+flow space, and/or timestep dimensions.
 }
 \details{
 When calling \code{nfd_extract()} not all dimensions have to be specified. When
