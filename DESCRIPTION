@@ -53,6 +53,7 @@ Collate:
     'crssInput_helperFunctions.R'
     'nfd.R'
     'crss_nf.R'
+    'crssi.R'
     'crssi_change_nf_start_date.R'
     'crssi_create_cmip_nf_files.R'
     'crssi_create_dnf_files.R'
