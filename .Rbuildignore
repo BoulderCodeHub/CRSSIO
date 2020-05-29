@@ -7,3 +7,5 @@
 ^README-.*\.png$
 ^tmp\.feather$
 ^appveyor\.yml$
+^__app\.R$
+^forVignette\.R$

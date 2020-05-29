@@ -47,7 +47,6 @@ RoxygenNote: 7.1.0
 Encoding: UTF-8
 Collate: 
     'CRSSIO.R'
-    '__app.R'
     'add_secondary_y_conversion.R'
     'change_nf_file_names.R'
     'createCRSSInput_addIn.R'
