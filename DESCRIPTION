@@ -62,7 +62,6 @@ Collate:
     'globalVariables.R'
     'ism_get_matrix.R'
     'nf_natsalt_names.R'
-    'nfa.R'
     'nfd_extract.R'
     'nfd_get.R'
     'stat_boxplot_custom.R'
