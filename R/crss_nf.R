@@ -77,6 +77,27 @@ as_crss_nf.nfd <- function(x, ...)
 }
 
 #' @export
+as_crss_nf.crssi <- function(x, ...)
+{
+  # drop sac_year_type, n_trace, scen_name, scen_number
+  drop_vals <- c("sac_year_type", "n_trace", "scen_number", "scen_name")
+  
+  if (!exists("scen_name", where = x))
+    drop_vals <- drop_vals[1:3]
+  
+  for (dv in drop_vals) {
+    x[[dv]] <- NULL
+  }
+  
+  message("Dropping ", paste(drop_vals, collapse = ", "), 
+          "\nfrom crssi object to create crss_nf object.")
+  
+  crss_nf_validate(x)
+  class(x) <- c("crss_nf", "nfd")
+  x
+}
+
+#' @export
 as_crss_nf.array <- function(x, ...)
 {
   assert_that(dim(x)[3] == 29, msg = "Must have 29 sites.")

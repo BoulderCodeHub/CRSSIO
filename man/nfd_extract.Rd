@@ -10,11 +10,12 @@ nfd_extract(x, i, j, k, l, m)
 \item{x}{An object inheriting from \link{nfd}.}
 
 \item{i}{The times to extract. Can be numeric or ISO-8601 style character
-range.}
+range. See details.}
 
 \item{j}{Traces to extract. Numeric.}
 
-\item{k}{Sites to extract. Numeric or names of sites.}
+\item{k}{Sites to extract. Numeric or names of sites. Must be missing, or all
+sites if extracting from \code{crssi} objects.}
 
 \item{l}{The flow space. "intervening", "total", or
 \code{c("total", "intervening")}.}
@@ -30,8 +31,8 @@ the required 29 sites and/or the time_step or flow_space no longer includes
 monthly intervening data.
 }
 \description{
-Extract subsets from \code{nfd} (and \code{crss_nf}) objects by time, trace, site,
-flow space, and/or timestep dimensions.
+Extract subsets from \code{nfd} (and \code{crss_nf}, and \code{crssi}) objects by time,
+trace, site, flow space, and/or timestep dimensions.
 }
 \details{
 When calling \code{nfd_extract()} not all dimensions have to be specified. When
@@ -40,4 +41,9 @@ dimensions are not specified, all data for that dimension are returned.
 Times (\code{i}) can be specified by row index or ISO-8601 style character ranges.
 For example: \code{"2000/2002"} would return all data for 2000-2002. See
 \code{\link[xts]{[.xts}} for more details.
+
+When extracting from a \link{crssi} object, all sites must remain. Additionally,
+there must be intervening monthly flow remaining after the extraction is
+complete, or an error will post. For \link{crss_nf} objects, the extraction is
+less strict, and will return a \link{nfd} object instead of erroring.
 }

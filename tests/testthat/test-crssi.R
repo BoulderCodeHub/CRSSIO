@@ -2,7 +2,11 @@ library(zoo)
 library(xts)
 library(CoRiverNF)
 # crssi -------------------------------
-mon_array <- array(50, c(36, 5, 29, 2), dimnames = list(NULL, NULL, nf_gage_abbrv(), NULL))
+mon_array <- array(
+  50, 
+  c(36, 5, 29, 2),
+  dimnames = list(NULL, NULL, nf_gage_abbrv(), NULL)
+)
 ann_array <- array(40, c(3, 5, 29, 2), dimnames = list(NULL, NULL, nf_gage_abbrv(), NULL))
 sac_mat <- matrix(sample.int(5, 3 * 5, replace = TRUE), ncol = 5)
 yrs <- zoo::as.yearmon("Dec 2000") + 0:2

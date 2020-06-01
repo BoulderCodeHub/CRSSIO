@@ -58,6 +58,10 @@ index values for December 2021 - December 2024.
 \section{Scenario Numbering Convention}{
 
 
+Scenario numbering can change faster than this package. For the latest
+numbering convention, check the package
+\href{https://github.com/BoulderCodeHub/CRSSIO/wiki/Scenario-Numbering-Convention}{wiki}.
+
 The numbering convention uses the following for the ones place of the
 scenario number.
 \itemize{

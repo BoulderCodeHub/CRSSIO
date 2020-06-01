@@ -21,6 +21,10 @@
 #' 
 #' @section Scenario Numbering Convention:
 #' 
+#' Scenario numbering can change faster than this package. For the latest 
+#' numbering convention, check the package 
+#' [wiki](https://github.com/BoulderCodeHub/CRSSIO/wiki/Scenario-Numbering-Convention).
+#' 
 #' The numbering convention uses the following for the ones place of the 
 #' scenario number.
 #' 
@@ -114,7 +118,7 @@ crssi <- function(flow, sac_year_type, scen_number, scen_name = NULL,
   
   # add on to flow list structure
   flow[["sac_year_type"]] <- sac_year_type
-  flow[["n_trace"]] <- n_trace
+  flow[["n_trace"]] <- nt
   flow[["scen_number"]] <- scen_number
   
   if (!is.null(scen_name))
@@ -136,21 +140,23 @@ is_crssi <- function(x)
 #' @export
 print.crssi <- function(x, ...)
 {
-  cat(
+  p <- paste0(
     "crssi: CRSS Input Data\n",
     "----------------------\n"
   )
   
   if (!is.null(x$scen_name)) {
-    cat(
-      x$scen_name, "scenario\n"
+    p <- paste0(p, 
+      "scenario: ", x$scen_name, "\n" 
     )
   }
     
-  cat(
-    "n traces:", x$n_trace, "\n",
-    "dates:", as.character(start(x)), "-", as.character(end(x)), "\n"
+  p <- paste0(p, 
+    "n traces: ", x$n_trace, "\n",
+    "dates: ", as.character(start(x)), "-", as.character(end(x)), "\n"
   )
+  
+  cat(p)
   
   invisible(x)
 }
@@ -206,4 +212,22 @@ find_overlap_years <- function(flow_time, sac_time)
   )
   
   c(start_year, end_year)
+}
+
+crssi_validate <- function(x)
+{
+  crss_nf_validate(x)
+  assert_that(!is.null(x[["n_trace"]]))
+  assert_that(!is.null(x[["scen_number"]]))
+  assert_that(xts::is.xts(x[["sac_year_type"]]))
+  assert_that(end(x[["sac_year_type"]]) == end(x))
+  assert_that(
+    start(x) ==
+      zoo::as.yearmon(paste0("Jan", year(start(x[["sac_year_type"]]))))
+  )
+  assert_that(
+    x[["n_trace"]] == n_trace(x) && x[["n_trace"]] == ncol(x[["sac_year_type"]])
+  )
+  
+  invisible(x)
 }

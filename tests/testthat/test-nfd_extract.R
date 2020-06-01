@@ -75,6 +75,11 @@ ann_array[,4,,2] <- ann4
 x_nfd <- as_nfd(mon_array, time_step = "monthly", start_yearmon = "Jan 2000", 
                 site_names = nf_gage_abbrv())
 x_crss_nf <- crss_nf(x_nfd)
+sac_yt <- xts(
+  matrix(sample.int(5, 6, replace = TRUE), ncol = 3), 
+  order.by = as.yearmon("Dec 2000") + 0:1
+)
+x_crssi <- crssi(x_crss_nf, sac_yt, 1.20002001, "my scenario", drop_flow = FALSE)
 
 
 # time - monthly -------------------------------------------------
@@ -95,8 +100,16 @@ test_that("nfd_extract works by month", {
   )
   
   # crss_nf
-  expect_is(x2 <- nfd_extract(x_crss_nf, "2001/"), "crss_nf")
-  expect_identical(x2, crss_nf(x2))
+  expect_is(x3 <- nfd_extract(x_crss_nf, "2001/"), "crss_nf")
+  expect_identical(x3, crss_nf(x2))
+  
+  # crssi
+  expect_is(x4 <- nfd_extract(x_crssi, "2001/"), "crssi")
+  expect_identical(expect_message(as_crss_nf(x4)), x3)
+  expect_identical(start(x4), as.yearmon("Jan 2001"))
+  expect_identical(end(x4), as.yearmon("Dec 2001"))
+  expect_identical(start(x4[["sac_year_type"]]), as.yearmon("Dec 2001"))
+  expect_identical(end(x4[["sac_year_type"]]), as.yearmon("Dec 2001"))
 })
 
 # trace - monthly ----------------------------
@@ -107,8 +120,9 @@ test_that("nfd_extract works by trace", {
   expect_identical(x_nfd$monthly$total[[1]], x2$monthly$total[[1]])
   expect_identical(x_nfd$monthly$intervening[[1]], x2$monthly$intervening[[1]])
   
-  expect_is(x3 <- nfd_extract(x_crss_nf, , 1), "crss_nf")
-  expect_identical(x3, crss_nf(x2))
+  # crss_nf
+  expect_is(x5 <- nfd_extract(x_crss_nf, , 1), "crss_nf")
+  expect_identical(x5, crss_nf(x2))
   
   x2 <- nfd_extract(x_nfd, , 2:3)
   expect_identical(CRSSIO:::n_trace(x2), 2L)
@@ -117,6 +131,11 @@ test_that("nfd_extract works by trace", {
   
   expect_is(x3 <- nfd_extract(x_crss_nf, , 2:3), "crss_nf")
   expect_identical(x3, crss_nf(x2))
+  
+  # crssi
+  expect_is(x4 <- nfd_extract(x_crssi, , 2:3), "crssi")
+  expect_identical(x3, as_crss_nf(x4))
+  expect_identical(x5, as_crss_nf(nfd_extract(x_crssi, , 1)))
 })
 
 # site - monthly -------------------------------
@@ -144,6 +163,10 @@ test_that("nfd_extract works by site", {
   expect_identical(x3, x6)
   expect_is(x7 <- nfd_extract(x_nfd, , , c("Imperial", "LeesFerry")), "nfd")
   expect_identical(x4, x7)
+  
+  # crssi
+  expect_error(nfd_extract(x_crssi, , , 1:2))
+  expect_error(nfd_extract(x_Crssi, , , "LeesFerry"))
 })
 
 # flow_space - monthly ---------------------------
@@ -163,6 +186,11 @@ test_that("nfd_extract works by flow_space", {
   expect_identical(crss_nf(x2), x4)
   expect_is(x5 <- nfd_extract(x_crss_nf, , , , "total"), "nfd")
   expect_identical(x3, x5)
+  
+  # crssi
+  expect_is(x6 <- nfd_extract(x_crssi, , , , "intervening"), "crssi")
+  expect_identical(x4, as_crss_nf(x6))
+  expect_error(nfd_extract(x_crssi, , , , "total"))
 })
 
 # combined - monthly ---------------------  
@@ -189,6 +217,13 @@ test_that("nfd_extract works for combined dimensions", {
   expect_identical(x3, x6)
   expect_is(x7 <- nfd_extract(x_crss_nf, "/2000", 1:2, ,"intervening"), "crss_nf")
   expect_identical(crss_nf(x4), x7)
+  
+  # crssi
+  expect_error(nfd_extract(x_crssi, "/2000", 1:2, "LeesFerry", "total"))
+  expect_identical(
+    as_crss_nf(nfd_extract(x_crssi, "/2000", 1:2, ,"intervening")), 
+    x7
+  )
 })
 
 # nfd - annual --------------------------
@@ -257,6 +292,10 @@ test_that("can extract monthly and annual data from nfd", {
     site_names = nf_gage_abbrv()
   )
   x_crss_nf <- crss_nf(x_nfd)
+  sac_yt <- xts(
+    matrix(1, ncol = 20, nrow = 2), order.by = as.yearmon("Dec 2000") + 0:1
+  )
+  x_crssi <- crssi(x_crss_nf, sac_yt, -99, drop_flow = FALSE)
   
   # nfd
   expect_is(
@@ -295,5 +334,14 @@ test_that("can extract monthly and annual data from nfd", {
     "crss_nf"
   )
   expect_identical(crss_nf(x2), x3)
+  
+  # crssi
+  expect_error(nfd_extract(x_crssi, "2001/", 1:5, , "intervening", "annual"))
+  expect_identical(
+    as_crss_nf(
+      nfd_extract(x_crssi, "2000/", , , c("intervening", "total"), "monthly" )
+    ),
+    x3
+  )
 })
 

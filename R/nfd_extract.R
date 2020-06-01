@@ -1,7 +1,7 @@
 #' Extract subsets from nfd objects
 #' 
-#' Extract subsets from `nfd` (and `crss_nf`) objects by time, trace, site, 
-#' flow space, and/or timestep dimensions.
+#' Extract subsets from `nfd` (and `crss_nf`, and `crssi`) objects by time, 
+#' trace, site, flow space, and/or timestep dimensions.
 #' 
 #' When calling `nfd_extract()` not all dimensions have to be specified. When 
 #' dimensions are not specified, all data for that dimension are returned. 
@@ -10,14 +10,20 @@
 #' For example: `"2000/2002"` would return all data for 2000-2002. See 
 #' \code{\link[xts]{[.xts}} for more details.
 #' 
+#' When extracting from a [crssi] object, all sites must remain. Additionally, 
+#' there must be intervening monthly flow remaining after the extraction is 
+#' complete, or an error will post. For [crss_nf] objects, the extraction is
+#' less strict, and will return a [nfd] object instead of erroring. 
+#' 
 #' @param x An object inheriting from [nfd].
 #' 
 #' @param i The times to extract. Can be numeric or ISO-8601 style character
-#'   range.
+#'   range. See details.
 #' 
-#' @param j Traces to extract. Numeric.
+#' @param j Traces to extract. Numeric. 
 #' 
-#' @param k Sites to extract. Numeric or names of sites.
+#' @param k Sites to extract. Numeric or names of sites. Must be missing, or all
+#'   sites if extracting from `crssi` objects.
 #' 
 #' @param l The flow space. "intervening", "total", or 
 #'   `c("total", "intervening")`.
@@ -43,6 +49,7 @@ nfd_extract.nfd <- function(x, i, j, k, l, m)
   assert_that(is_nfd(x))
   year_att <- attr(x, "year")
   
+  # time -------------------------------
   if (missing(i)) {
     # TODO have to handle i_mon and i_ann
     # and specifying by row numbers: 1:40
@@ -212,6 +219,76 @@ nfd_extract.crss_nf <- function(x, i, j, k, l, m)
   )
   
   x
+}
+
+#' @export
+nfd_extract.crssi <- function(x, i, j, k, l, m)
+{
+  if (!missing(k)) {
+    assert_that(
+      identical(k, 1:29) || identical(k, nf_gage_abbrv()),
+      msg = paste0(
+        "Cannot extract sites from crssi object.\n",
+        "Convert to a crss_nf object first."
+      )
+    )
+  }
+  
+  if (!missing(l))
+    assert_that(
+      "intervening" %in% l, 
+      msg = "Must keep the intervening flow space when extracting from a crssi object."
+    )
+  
+  if (!missing(m))
+    assert_that(
+      "monthly" %in% m,
+      msg = "Must keep monthly time step when extracting from a crssi object."
+    )
+  
+  
+  # save other data
+  sac_yt <- x[["sac_year_type"]]
+  scen_name <- x[["scen_name"]]
+  scen_number <- x[["scen_number"]]
+  orig_trace <- x[["n_trace"]]
+  
+  # extract the flow data using nfd_extract.crss_nf
+  x <- nfd_extract.crss_nf(x, i, j, k, l, m)
+  
+  # then extract sac_yt data ----------------
+  # time 
+  if (missing(i)) {
+    i <- ""
+  } else {
+    if (is.numeric(i)) {
+      stop(
+        "Extracting time from crssi objects by row index is ambiguous.\n",
+        "Try extracting by date element instead. See help('[.xts', package = 'xts')"
+      )
+    } else {
+      assert_that(is.character(i) && length(i) == 1)
+    }
+  }
+  
+  # trace
+  if (missing(j)) {
+    j <- seq(orig_trace)
+  } else {
+    assert_that(is.numeric(j) && max(j) <= orig_trace)
+  }
+  
+  sac_yt <- sac_yt[i, j]
+  
+  # then recreate crssi
+  x[["sac_year_type"]] <- sac_yt
+  x[["scen_name"]] <- scen_name
+  x[["scen_number"]] <- scen_number
+  x[["n_trace"]] <- n_trace(x)
+  
+  class(x) <- c("crssi", class(x))
+  
+  crssi_validate(x)
 }
 
 #' @param x list of trace data. Presumably the list of annual intervening, 

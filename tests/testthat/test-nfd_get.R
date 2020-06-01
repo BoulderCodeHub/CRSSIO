@@ -80,6 +80,11 @@ nfd_mon <- nfd(mon_array, flow_space = "both", time_step = "monthly",
                start_yearmon = "Jan 2020", site_names = nf_gage_abbrv())
 
 x_crss_nf <- crss_nf(nfd_mon)
+sac_yt <- xts(
+  matrix(sample.int(5, 6, replace = TRUE), ncol = 3), 
+  order.by = as.yearmon("Dec 2020") + 0:1
+)
+x_crssi <- crssi(x_crss_nf, sac_yt, 1.20002001, "my scenario", drop_flow = FALSE)
 
 # nfd_get_site() --------------------------------------
 test_that("nfd_get_site() works", {
@@ -102,6 +107,10 @@ test_that("nfd_get_site() works", {
   expect_error(nfd_get_site(nfd_mon, "Bluffs", "intervening", "monthly"))
   expect_is(x2 <- nfd_get_site(x_crss_nf, "Maybell", "intervening", "monthly"), "xts")
   expect_identical(x, x2)
+  
+  # crssi
+  expect_is(x3 <- nfd_get_site(x_crssi, "Maybell", "intervening", "monthly"), "xts")
+  expect_identical(x3, x)
 })
 
 # nfd_get_trace() -----------------------------------------
@@ -124,6 +133,10 @@ test_that("nfd_get_trace() works", {
   
   expect_is(x2 <- nfd_get_trace(x_crss_nf, 3, "total", "monthly"), "xts")
   expect_identical(x, x2)
+  
+  # crssi
+  expect_is(x3 <- nfd_get_trace(x_crssi, 3, "total", "monthly"), "xts")
+  expect_identical(x, x3)
 })
 
 # nfd_get_time() ----------------------------------------------
@@ -157,4 +170,8 @@ test_that("nfd_get_time() works", {
   
   expect_is(x2 <- nfd_get_time(x_crss_nf, "Feb 2020", "total", "monthly"), "matrix")
   expect_identical(x, x2)
+  
+  # crssi
+  expect_is(x3 <- nfd_get_time(x_crssi, "Feb 2020", "total", "monthly"), "matrix")
+  expect_identical(x, x3)
 })
