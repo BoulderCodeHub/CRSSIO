@@ -61,6 +61,7 @@ Collate:
     'elevation_to_storage.R'
     'get_sys_cond_table.R'
     'globalVariables.R'
+    'has_overlapping_ts.R'
     'ism_get_matrix.R'
     'nf_natsalt_names.R'
     'nfd_extract.R'

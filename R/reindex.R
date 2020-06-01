@@ -1,4 +1,8 @@
-#' Change Timestamps of Natural Flow Data
+#' Helper Functions for Natural Flow Data Time Steps
+#' 
+#' The objects that store natural flow data ([nfd], [crss_nf], or [crssi]) all 
+#' include multiple xts objects. These functions help modify or query the 
+#' timestep component of these objects.
 #' 
 #' `reindex()` changes the timesteps, i.e., indeces, of natural flow data as 
 #' stored in [nfd], [crss_nf], or [crssi] objects.
@@ -8,6 +12,7 @@
 #' @param start_year The new starting year as a string or numeric.
 #' 
 #' @export
+#' @rdname nfd_time_helpers
 reindex <- function(x, start_year)
 {
   UseMethod("reindex")
