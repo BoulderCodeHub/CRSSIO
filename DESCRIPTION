@@ -65,6 +65,7 @@ Collate:
     'nf_natsalt_names.R'
     'nfd_extract.R'
     'nfd_get.R'
+    'reindex.R'
     'stat_boxplot_custom.R'
     'storage_to_elevation.R'
     'trimCCNFFiles.R'
