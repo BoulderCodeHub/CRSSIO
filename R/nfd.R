@@ -490,8 +490,17 @@ initialize_annual_xts <- function(val, start_month, n_months, year_type,
   mon <- c("cy" = "12", "wy" = "09")
   mon <- mon[[year_type]]
   
+  # if the start_month is OND and year_type wy, then the year should be
+  # shifted forward by 1 year. 
+  if (year_type == "wy" && month(start_month) %in% c("10", "11", "12"))
+    year_seq <- seq(1, n_years)
+  else
+    year_seq <- seq(0, n_years - 1)
+  
+  # creates a "yyyy-mm" string, casts to yearmon, and then creates all
+  # remaining years.
   ym <- zoo::as.yearmon(paste(year(start_month), mon, sep = "-")) + 
-    seq(0, n_years - 1)
+    year_seq
   
   x <- matrix(val, nrow = n_years, ncol = n_sites)
   
