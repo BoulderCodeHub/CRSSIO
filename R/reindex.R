@@ -67,7 +67,7 @@ reindex.xts <- function(x, start_year)
   
   new_index <- zoo::as.yearmon(paste0(start_year, "-", mm)) + 0:n / denom
   
-  x <- xts(x, order.by = new_index)
+  x <- xts::xts(x, order.by = new_index)
   colnames(x) <- cc
   
   x

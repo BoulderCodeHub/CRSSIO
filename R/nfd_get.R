@@ -74,7 +74,7 @@ nfd_get_trace <- function(x, trace, flow_space, time_step)
     trace <= n_trace(x), 
     msg = paste0(
       "`trace` should be valid trace index.\n", 
-      "nfd object only has ", n_traces(x), " traces of data."
+      "nfd object only has ", n_trace(x), " traces of data."
     )
   )
   
@@ -183,8 +183,8 @@ set_atts <- function(x, flow_space, time_step, site = NULL, trace = NULL,
   # remove NULLs
   new_atts <- new_atts[lengths(new_atts) > 0]
   
-  if (is.xts(x)) {
-    xtsAttributes(x) <- new_atts
+  if (xts::is.xts(x)) {
+    xts::xtsAttributes(x) <- new_atts
   } else {
     for (att in names(new_atts)) {
       attr(x, att) <- new_atts[[att]]

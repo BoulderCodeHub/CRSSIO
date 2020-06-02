@@ -72,7 +72,7 @@ crssi <- function(flow, sac_year_type, scen_number, scen_name = NULL,
                   drop_flow = TRUE)
 {
   assert_that(is_crss_nf(flow))
-  assert_that(is.xts(sac_year_type))
+  assert_that(xts::is.xts(sac_year_type))
   assert_that(is.numeric(scen_number) && length(scen_number) == 1)
   
   nt <- n_trace(flow)
@@ -110,7 +110,7 @@ crssi <- function(flow, sac_year_type, scen_number, scen_name = NULL,
   }
   
   # compute the overlapping years of data, and trim to those overlapping years
-  overlap <- find_overlap_years(flow_time, sac_time)
+  overlap <- find_overlap_years(flow_time, sac_time, "cy")
   sac_year_type <- sac_year_type[paste0(overlap[1],"/",overlap[2])]
   
   flow <- nfd_extract(flow, paste0(overlap[1], "-01/", overlap[2], "-12"))
@@ -125,6 +125,7 @@ crssi <- function(flow, sac_year_type, scen_number, scen_name = NULL,
     flow[["scen_name"]] <- scen_name
   
   class(flow) <- c("crssi", class(flow))
+  attr(flow, "year") <- "cy"
   
   flow
 }
@@ -161,59 +162,6 @@ print.crssi <- function(x, ...)
   invisible(x)
 }
 
-# find the January y1 - December y2 that exist given the dates
-# from both flow and sac_year_type
-find_overlap_years <- function(flow_time, sac_time)
-{
-  # start:
-  start_flow <- min(flow_time)
-  # if the start month isn't january, then increment to january of the next year
-  if (month(start_flow, TRUE) != 1)
-    start_flow <- zoo::as.yearmon(paste("Jan", year(start_flow, TRUE) + 1))
-  
-  start_sac <- min(sac_time)
-  if (year(start_sac, TRUE) <= year(start_flow, TRUE))
-    start_year <- year(start_flow)
-  else
-    start_year <- year(start_sac)
-  
-  # end
-  end_flow <- max(flow_time)
-  # if the end month is not December, then decrment to december of the previous
-  # year
-  if (month(end_flow, TRUE) != 12)
-    end_flow <- zoo::as.yearmon(paste("Dec", year(end_flow, TRUE) - 1))
-  
-  end_sac <- max(sac_time)
-  if (year(end_sac, TRUE) >= year(end_flow, TRUE))
-    end_year <- year(end_flow)
-  else
-    end_year <- year(end_sac)
-
-  assert_that(
-    all(
-      c(
-        zoo::as.yearmon(paste("Jan", start_year)), 
-        zoo::as.yearmon(paste("Dec", end_year))
-      ) %in% flow_time
-    ) && 
-    all(
-      c(
-        zoo::as.yearmon(paste("Dec", start_year)), 
-        zoo::as.yearmon(paste("Dec", end_year))
-      ) %in% sac_time
-    ),
-    msg = "A full year of overlapping times does not exist in `flow` and `sac_year_type`"
-  )
-
-  assert_that(
-    as.numeric(end_year) >= as.numeric(start_year),
-    msg = "A full year of overlapping times does not exist in `flow` and `sac_year_type`"
-  )
-  
-  c(start_year, end_year)
-}
-
 crssi_validate <- function(x)
 {
   crss_nf_validate(x)
@@ -228,6 +176,7 @@ crssi_validate <- function(x)
   assert_that(
     x[["n_trace"]] == n_trace(x) && x[["n_trace"]] == ncol(x[["sac_year_type"]])
   )
+  assert_that(attr(x, "year") == "cy")
   
   invisible(x)
 }
