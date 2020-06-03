@@ -1,4 +1,9 @@
 # See reindex.R for documentation
+#' @details `nfd_trim_ts()` trims the object so that it only contains an "exact"
+#' overlapping set of monthly and annual data, that is it starts and ends in 
+#' January and December for calendar year data or October and September for 
+#' water year data. Additionally, the annual and monthly data are trimmed to 
+#' only include data for the same years. 
 #' @rdname nfd_time_helpers
 #' @export
 nfd_trim_ts <- function(x)
