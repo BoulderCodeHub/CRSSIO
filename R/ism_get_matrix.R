@@ -1,19 +1,3 @@
-
-# returns subset of a data
-# assumes monthly data
-getSubsetOfData <- function(startYear, zz, nYrs, monthly)
-{
-  if(monthly){
-    startI <- startYear * 12 - 11
-    zz <- zz[startI:(nYrs * 12 + startI - 1)]
-  } else{
-    # annual data
-    zz <- zz[startYear:(nYrs + startYear - 1)]
-  }
-  
-  zz
-}
-
 #' Create a matrix of data based on ISM
 #' 
 #' `ism_get_site_matrix()` takes in a matrix of historical data for a single 
@@ -49,7 +33,6 @@ getSubsetOfData <- function(startYear, zz, nYrs, monthly)
 #'   should set to `FALSE` if annual data.
 #' 
 #' @export
-#' 
 ism_get_site_matrix <- function(xtsData, startMonth, nYrs = NA, monthly = TRUE)
 {
   if(!xts::is.xts(xtsData)){

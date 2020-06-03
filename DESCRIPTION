@@ -62,6 +62,7 @@ Collate:
     'get_sys_cond_table.R'
     'globalVariables.R'
     'has_overlapping_ts.R'
+    'ism.R'
     'ism_get_matrix.R'
     'nf_natsalt_names.R'
     'nfd_extract.R'

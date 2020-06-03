@@ -1,12 +1,11 @@
-library(CRSSIO)
 library(xts)
-context('check that the ISM related functions work.')
 
+# tests ism_get_site_matrix(), and compares its results to ism()
+
+# setup ----------------------------------------------
 myYM <- zoo::as.yearmon('1905-01') + seq(0,47)/12
 tstData <- xts::xts(1:48, myYM)
-xts::indexTZ(tstData) <- 'UTC'
 t2 <- xts::xts(1:6, zoo::as.yearmon("Dec 2000") + 0:5)
-xts::indexTZ(t2) <- "UTC"
 
 myIsm <- xts::xts(
   cbind(1:48,c(13:48,1:12),c(25:48,1:24),c(37:48,1:36)),
@@ -17,6 +16,8 @@ myIsm2 <- xts::xts(
   zoo::as.yearmon("Dec 2000") + 0:5
 )
 
+
+# check dimension --------------------------
 test_that('ism_get_site_matrix returns currect dimensions',{
   expect_equal(dim(ism_get_site_matrix(tstData,'2016-01',nYrs = NA)),c(48,4))
   expect_equal(dim(ism_get_site_matrix(tstData,'2016-01',nYrs = 3)),c(36,4))
@@ -39,6 +40,7 @@ test_that('ism_get_site_matrix returns currect dimensions',{
   )
 })
 
+# check values -----------------------------
 test_that('ism_get_site_matrix returns an expected matrix', {
   # comparing to a range of differences because myISM is not an xts object,
   # so all.equal will not work as it will return differences in attributes
@@ -77,16 +79,47 @@ test_that('ism_get_site_matrix messages',{
                'xtsData is not of type xts')
 })
 
+# ism_get_site_matrix() vs ism() ------------------------
+test_that("ism_get_site_matrix() == ism()", {
+  expect_equivalent(
+    coredata(ism_get_site_matrix(tstData,'2016-01',nYrs = NA)),
+    coredata(ism(tstData))
+  )
+  expect_equivalent(
+    coredata(ism_get_site_matrix(tstData,'2016-01',nYrs = 3)),
+    coredata(ism(tstData, n_years_keep = 3))
+  )
+  expect_equivalent(
+    coredata(ism_get_site_matrix(tstData[1:36],'2016-01',nYrs = 2)),
+    coredata(ism(tstData[1:36], n_years_keep = 2))
+  )
+  
+  # test the annual data
+  expect_equivalent(
+    coredata(ism_get_site_matrix(t2[1:5], "2016-12", nYrs = NA, monthly = FALSE)),
+    coredata(ism(t2[1:5]))
+  )
+  expect_equivalent(ism(t2[1:5]), ism(t2[1:5], is_monthly = FALSE))
+  expect_equivalent(
+    coredata(ism_get_site_matrix(t2, "2016-12", nYrs = 5, monthly = FALSE)),
+    coredata(ism(t2, n_years_keep = 5, is_monthly = FALSE))
+  )
+  expect_equivalent(
+    coredata(ism_get_site_matrix(t2[1:4], "2016-12", nYrs = 3, monthly = FALSE)),
+    coredata(ism(t2[1:4], n_years_keep = 3))
+  )
+})
+
 # compare both versions of function -------------------
 test_that("ism_get_site_matrix matches createISMMatrix", {
   expect_warning(tmp <- createISMMatrix(tstData,'2016-01',nYrs = NA))
   expect_identical(tmp, ism_get_site_matrix(tstData,'2016-01',nYrs = NA))
 })
 
-# check internal getALLISMMatrices function -----------
+# getALLISMMatrices function -----------
 tstMat <- xts::as.xts(zoo::read.zoo(
   data.frame(myYM,matrix(rep(tstData,29), ncol = 29, byrow = F))))
-xts::indexTZ(tstMat) <- 'UTC'
+#xts::indexTZ(tstMat) <- 'UTC'
 
 test_that('ism_get_site_matrix works', {
   expect_error(CRSSIO:::getAllISMMatrices(cbind(tstData,tstData), '2016-01', 3),
