@@ -17,9 +17,13 @@
 #' \describe{
 #' \item{`crssio.histNfFile`}{The file name that will be created by
 #' `crssi_create_hist_nf_xlsx()`. Default: `"HistoricalNaturalFlow.xlsx"`}
+#' 
 #' \item{`crssio.nf_sheet_name`}{The sheet name to read from the natural flow 
 #' Excel file if using Excel instead of the CoRiverNF package in 
 #' [crssi_create_dnf_files()]. Default: `"InterveningNaturalFlow"`}
+#' 
+#' \item{`crssio.sac_yt_url`}{The website to download the Sacramento Year Type
+#' index data from. Default: http://cdec.water.ca.gov/cgi-progs/iodir/WSIHIST}
 #' }
 
 #' @keywords internal

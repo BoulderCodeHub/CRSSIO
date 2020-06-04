@@ -19,11 +19,13 @@ Imports:
     CoRiverNF,
     dplyr,
     ggplot2,
+    httr,
     magrittr,
     miniUI (>= 0.1.1),
     ncdf4,
     readxl,
     rlang,
+    rvest,
     RWDataPlyr (> 0.5.0),
     shiny (>= 0.13),
     stats,
@@ -33,6 +35,7 @@ Imports:
     udunits2,
     utils,
     writexl,
+    xml2,
     xts (>= 0.10.0),
     zoo
 Remotes:
@@ -69,6 +72,7 @@ Collate:
     'nfd_get.R'
     'nfd_trim_ts.R'
     'reindex.R'
+    'sac_year_type_get.R'
     'stat_boxplot_custom.R'
     'storage_to_elevation.R'
     'trimCCNFFiles.R'
