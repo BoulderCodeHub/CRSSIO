@@ -3,7 +3,8 @@
 #' `write_crssi()` creates the required CRSS input files from a [crssi] object.
 #' In addition to the files for the 29 natural flow inputs (specified by 
 #' `file_names`), four additional files are written for each trace. See 
-#' *Details* for a description of these slots.
+#' *Details* for a description of these slots. The files are formatted and saved 
+#' in a format expected by CRSS.
 #' 
 #' The four additional slots are:
 #' 

@@ -29,7 +29,8 @@ site. See \code{\link[=nf_file_names]{nf_file_names()}}.}
 \code{write_crssi()} creates the required CRSS input files from a \link{crssi} object.
 In addition to the files for the 29 natural flow inputs (specified by
 \code{file_names}), four additional files are written for each trace. See
-\emph{Details} for a description of these slots.
+\emph{Details} for a description of these slots. The files are formatted and saved
+in a format expected by CRSS.
 }
 \details{
 The four additional slots are:
