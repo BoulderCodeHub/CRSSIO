@@ -99,7 +99,7 @@ reindex.xts <- function(x, start_year, ...)
   start_year <- as.numeric(start_year)
   delta <- start_year - y
   
-  index(x) <- index(x) + delta
+  zoo::index(x) <- zoo::index(x) + delta
     
   x
 }
