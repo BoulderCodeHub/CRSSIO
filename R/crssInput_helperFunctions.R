@@ -1,26 +1,3 @@
-
-#' returns all ISM matrices for all nodes
-#' 
-#' Given a matrix of natural flow data, applies the ISM method to all nodes
-#' 
-#' @param nfMat Matrix of natural flow data
-#' @param startMonth The startMonth of the return matrix. Should be able to be
-#' cast to a zoo::yearmon
-#' @param nYrs The number of years to create the data for. 
-#' 
-#' @return list of matrices. Each node is one matrix entry into the list
-#' @keywords internal
-#' @noRd
-
-getAllISMMatrices <- function(nfMat, startMonth, nYrs)
-{
-  # make sure matrix is correct dimension
-  if(ncol(nfMat) != 29)
-    stop('nfMat does not contain 29 columns (natural flow nodes).')
-  # then call ism_get_site_matrix for every node
-  lapply(1:29, function(x) ism_get_site_matrix(nfMat[,x], startMonth, nYrs))
-}
-
 #' Read in NF Excel file and format it
 #' 
 #' Read in NF Excel file, remove whitespace and unnecessary rows and columns.
