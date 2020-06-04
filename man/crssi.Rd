@@ -12,8 +12,8 @@ is_crssi(x)
 \arguments{
 \item{flow}{A \code{crss_nf} object.}
 
-\item{sac_year_type}{An annual xts object with all timesteps having a
-December-some year timestep. The number of columns in this object must
+\item{sac_year_type}{An annual xts object with all time steps having a
+December-some year time step. The number of columns in this object must
 match the number of traces in \code{flow}. Additionally, there must be some
 overlapping years of data. See details.}
 
@@ -42,9 +42,13 @@ and a scenario number.
 }
 \details{
 \code{crssi()} inherits from \link{crss_nf}, maintaining the same required structure
-for the intervening natural flows. The object also contains the Sacremento
+for the intervening natural flows. The object also contains the Sacramento
 Year Type index, and a scenario number. Given this, all functions that work
 on \link{crss_nf} and \link{nfd} objects work on \code{crssi} objects.
+
+\strong{Sacramento Year Type index:} Beginning in CRSS v2.6, input data for the
+Sacramento year type index are necessary. For historical values see
+\code{\link[=sac_year_type_get]{sac_year_type_get()}}.
 
 Overlapping years: \code{crssi()} checks to make sure that there at least some
 overlappying yeras of data between \code{flow} and \code{sac_year_type}. It then trims
@@ -84,5 +88,5 @@ the observed historical natural flows with the ISM method applied to the
 }
 
 \seealso{
-\link{crss_nf}, \link{nfd}
+\link{crss_nf}, \link{nfd}, \code{\link[=write_crssi]{write_crssi()}}, \code{\link[=sac_year_type_get]{sac_year_type_get()}}
 }

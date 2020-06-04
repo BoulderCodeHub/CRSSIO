@@ -77,4 +77,5 @@ Collate:
     'storage_to_elevation.R'
     'trimCCNFFiles.R'
     'trim_helpers.R'
+    'write_crssi.R'
     'zzz.R'

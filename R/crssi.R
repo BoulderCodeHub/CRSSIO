@@ -6,9 +6,13 @@
 #' and a scenario number.
 #' 
 #' `crssi()` inherits from [crss_nf], maintaining the same required structure 
-#' for the intervening natural flows. The object also contains the Sacremento 
+#' for the intervening natural flows. The object also contains the Sacramento 
 #' Year Type index, and a scenario number. Given this, all functions that work
 #' on [crss_nf] and [nfd] objects work on `crssi` objects.
+#' 
+#' **Sacramento Year Type index:** Beginning in CRSS v2.6, input data for the 
+#' Sacramento year type index are necessary. For historical values see
+#' [sac_year_type_get()].
 #' 
 #' Overlapping years: `crssi()` checks to make sure that there at least some
 #' overlappying yeras of data between `flow` and `sac_year_type`. It then trims
@@ -46,8 +50,8 @@
 #' 
 #' @param flow A `crss_nf` object.
 #' 
-#' @param sac_year_type An annual xts object with all timesteps having a 
-#'   December-some year timestep. The number of columns in this object must 
+#' @param sac_year_type An annual xts object with all time steps having a 
+#'   December-some year time step. The number of columns in this object must 
 #'   match the number of traces in `flow`. Additionally, there must be some
 #'   overlapping years of data. See details.
 #'   
@@ -65,7 +69,7 @@
 #'   
 #' @return `crssi()` returns an object of class `crssi`.
 #' 
-#' @seealso [crss_nf], [nfd]
+#' @seealso [crss_nf], [nfd], [write_crssi()], [sac_year_type_get()]
 #' 
 #' @export
 crssi <- function(flow, sac_year_type, scen_number, scen_name = NULL, 
