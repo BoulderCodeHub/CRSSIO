@@ -144,16 +144,6 @@ test_that("Upfront errors post correctly", {
 # because we are using pre- 1971 data, we do not need to regenerate the data
 # in the provided trace folders each time the natural flow are updated
 test_that('can create files',{
-  expect_warning(expect_message(
-    createCRSSDNFInputFiles(
-      'CoRiverNF', 
-      oFolder = dir1, 
-      startDate = '2017-1-31', 
-      simYrs = 5, 
-      recordToUse = r2u
-    )
-  ))
-  
   expect_message(
     crssi_create_dnf_files(
       'CoRiverNF', 

@@ -2,7 +2,6 @@
 % Please edit documentation in R/crssi_create_dnf_files.R
 \name{crssi_create_dnf_files}
 \alias{crssi_create_dnf_files}
-\alias{createCRSSDNFInputFiles}
 \title{Create CRSS Natural Flow Input Files}
 \usage{
 crssi_create_dnf_files(
@@ -10,16 +9,6 @@ crssi_create_dnf_files(
   oFolder,
   startYear,
   endYear,
-  oFiles = nf_file_names(),
-  recordToUse = NA,
-  overwriteFiles = FALSE
-)
-
-createCRSSDNFInputFiles(
-  iFile,
-  oFolder,
-  startDate,
-  simYrs,
   oFiles = nf_file_names(),
   recordToUse = NA,
   overwriteFiles = FALSE

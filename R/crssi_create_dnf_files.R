@@ -227,22 +227,3 @@ crssi_create_dnf_files <- function(iFile,
 	  oFolder = oFolder
 	)
 }
-
-#' @export
-#' @rdname crssi_create_dnf_files
-createCRSSDNFInputFiles <- function(iFile, 
-                                    oFolder, 
-                                    startDate, 
-                                    simYrs, 
-                                    oFiles = nf_file_names(),
-                                    recordToUse = NA,
-                                    overwriteFiles = FALSE)
-{
-  .Deprecated("crssi_create_dnf_files")
-  
-  startYear <- as.numeric(strsplit(startDate, "-")[[1]][1])
-  endYear <- startYear + simYrs - 1
-  
-  crssi_create_dnf_files(iFile, oFolder, startYear, endYear, oFiles, 
-                         recordToUse, overwriteFiles)
-}
