@@ -24,12 +24,17 @@ ism.crssi <- function(x, ...)
   scen_number <- x[["scen_number"]]
   scen_name <- x[["scen_name"]]
   
+  args <- list(...)
+  if (exists("is_monthly", where = args))
+    stop("is_monthly should not be passed to crssi as it contains monthly and annual data.")
+  
   x <- suppressMessages(as_crss_nf(x))
-  x <- ism.crss_nf(x)
-  sac_year_type <- ism(sac_year_type)
+  x <- ism.crss_nf(x, ...)
+  sac_year_type <- ism(sac_year_type, ...)
   
   # rbuild crssi
   x[["sac_year_type"]] <- sac_year_type
+  x[["n_trace"]] <- n_trace(x)
   x[["scen_number"]] <- scen_number
   
   if (!is.null(scen_name))
@@ -62,7 +67,7 @@ ism.nfd <- function(x, ...)
   
   # check that years and months overlap, strictly, if monthly and annual data
   # exist
-  if (has_annual(x) && has_monthly(x))
+  if (has_annual(x) && has_monthly(x)) {
     assert_that(
       has_overlapping_ts(x), 
       msg = paste0(
@@ -70,7 +75,11 @@ ism.nfd <- function(x, ...)
         "Try using `nfd_trim()` first."
       )
     )
-  
+    
+    args <- list(...)
+    if (exists("is_monthly", args))
+      stop("is_monthly should not be passed to ism when the object contains annual and monthly data.")
+  }
   
   # for each flow_space/time_step, get the ism matrix
   mon_int <- nfd_ism(x, "intervening", "monthly", ...)
