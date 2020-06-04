@@ -73,7 +73,7 @@ read_and_format_nf_excel <- function(iFile)
   
   Sys.setenv(TZ = 'UTC') # set the system timezone to UTC
   nf <- xts::as.xts(zoo::read.zoo(nf))
-  colnames(nf) <- paste0("X", seq(1, ncol(nf)))
+  colnames(nf) <- nf_gage_abbrv()
   nf
 }
 
