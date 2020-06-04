@@ -63,29 +63,6 @@ writeSingleFile <- function(xData, fPath, headerInfo)
   utils::write.table(xData, file = fPath, quote = FALSE, row.names = FALSE)
 }
 
-#' Write out all of the trace files for a given node
-#' 
-#' @param nfXts Natural flow data as a matrix for a single node. The number of 
-#' columns is the number of traces that will be written out to 
-#' oFolder/trace[n]/oFile
-#' @param oFile File name that each file will be saved as
-#' @param oFolder Folder location to write files to
-#' @keywords internal
-#' @noRd
-writeNFFilesByNode <- function(nfXts, oFile, oFolder, headerInfo)
-{
-  message('Beginning to write node: ',oFile)
-
-  lapply(
-    seq_len(ncol(nfXts)), 
-    function(x) writeSingleFile(
-      nfXts[,x], 
-      file.path(oFolder,paste0('trace',x),oFile),
-      headerInfo
-    )
-  )
-}
-
 #' write out the trace number and supply scenario number, to a given trace 
 #' folder folderPath should be the top level folder, e.g., dmi/NFSinput
 #' @keywords internal

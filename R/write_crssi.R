@@ -55,23 +55,24 @@ write_crssi <- function(x, path, file_names = nf_file_names(),
   headerInfo <- get_trace_file_header(startYear)
   
   # create all traceN folders
-  lapply(
+  tmp <- lapply(
     1:nT,
-    function(x){
-      fold <- paste(path, '/trace', x, sep = '')
+    function(i){
+      fold <- paste(path, '/trace', i, sep = '')
       if(!dir.exists(fold))
         dir.create(fold)
     }
   )
   
-  # for each node, write out all of the trace files
-  lapply(
-    1:29, 
-    function(s) writeNFFilesByNode(
-      nfd_get_site(x, s, "intervening", "monthly"), 
-      file_names[s], path, headerInfo
+  # for each trace, write out all 29 flow files
+  message("Writing natural flow files ...\n")
+  pb <- txtProgressBar(min = 0, max = nT, style = 3)
+  tmp <- lapply(seq(nT), function(i) {
+    write_files_by_trace(
+      nfd_get_trace(x, i, "intervening", "monthly"),
+      i, file_names, path, headerInfo, pb
     )
-  )
+  })
   
   # get sacramento year type ism data ----------
   eoyDate <- paste0(startYear, "-12-31")
@@ -80,8 +81,8 @@ write_crssi <- function(x, path, file_names = nf_file_names(),
   scen_num <- x[["scen_number"]]
   
   # write out additional trace files ----------
-  message("Beginning to write additional trace files")
-  lapply(1:nT, function(i) {
+  message("\nBeginning to write additional trace files")
+  tmp <- lapply(1:nT, function(i) {
     # write out all of the trace and supply scenario number files
     writeTraceSupplyNumbers(i, scen_num, path)
     
@@ -123,4 +124,23 @@ get_crssi_readme_vals <- function(x, startYear, endYear)
     startDate = startDate,
     createFrom = "crssi object using write_crssi()"
   )
+}
+
+write_files_by_trace <- function(x, trace_n, file_names, path, header_info, pb)
+{
+  #message('Beginning to write node: ',oFile)
+  
+  f_path <- file.path(path, paste0("trace", trace_n))
+  
+  y <- lapply(
+    seq_len(ncol(x)), 
+    function(i) writeSingleFile(
+      x[,i], 
+      file.path(f_path, file_names[i]),
+      header_info
+    )
+  )
+  
+  setTxtProgressBar(pb, trace_n)
+  invisible(x)
 }
