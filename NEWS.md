@@ -5,7 +5,8 @@ CRSSIO 0.7.4.9000
 
 * The Excel file created by `crssi_create_hist_nf_xlsx()` had a `month` column that contained strings. This column is now formated as a `Date`. (#81)
 * New classes: `nfd`, `crss_nf` (#86), `crssi` (#85)
-  * Generics: `nfd_extract()`, `nfd_trim()`, `has_overlapping_ts()` (#92), `reindex()` (#91)
+  * Generics: `nfd_extract()`, `nfd_trim()`, `has_overlapping_ts()` (#92), `reindex()` (#91), `ism()` (#88)
+    * Deprecated `ism_get_site_matrix()`
   * Get functions: `nfd_get_time()`, `nfd_get_site()`, `nfd_get_trace()` (#84)
 
 

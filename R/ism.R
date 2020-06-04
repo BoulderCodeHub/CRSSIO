@@ -1,6 +1,15 @@
 #' Apply the Index Sequential Method
 #' 
-#' `ism()` applies the index sequential method to one site (column) of data. 
+#' `ism()` applies the Index Sequential Method to a single trace of data to 
+#' create multiple traces. `ism()` will work on matrices, [xts], [nfd], 
+#' [crss_nf], and [crssi] objects. `ism_get_site_matrix()` is a deprecated 
+#' precursor to this function that only works on `xts` objects.
+#' 
+#' `ism()` will determine if the data are annual or monthly (or contain both for
+#' objects inheriting from `nfd`), and will act accordingly. The time step can
+#' be forced by using `is_monthly`, but that is only necessary for matrices. 
+#' If `is_monthly` is used with an `nfd` type object that contains annual and
+#' monthly data, an error will occur.
 #' 
 #' @param x An R object. `ism()` is implemented for matrices, [xts], [nfd], 
 #'   [crss_nf], and [crssi] objects.
@@ -9,6 +18,19 @@
 #'   number of years of data that exists in `x`. 
 #'   
 #' @param ... Further arguments passed to subsequent methods.
+#' 
+#' @return `ism()` returns an object of the same class as `x`, but with more
+#'   traces, and potentially trimmed to the number of years specified by 
+#'   `n_years_keep`.
+#'   
+#' @examples 
+#' # monthly data, that will create a 48x4 xts matrix
+#' t1 <- xts::xts(1:48, zoo::as.yearmon("Jan 2000") + seq(0,47)/12)
+#' ism(t1)
+#' 
+#' # annual data that will create a 5 x 6 matrix
+#' t2 <- xts::xts(1:6, zoo::as.yearmon("Dec 2000") + 0:5)
+#' ism(t2, n_years_keep = 5)
 #' 
 #' @export
 ism <- function(x, n_years_keep = NA, ...)
@@ -141,7 +163,7 @@ ism.xts <- function(x, ...)
 }
 
 #' @param is_monthly Boolean. `TRUE` if data are monthly. `FALSE` if data are 
-#'   annual.
+#'   annual. See *Details*.
 #'   
 #' @export
 #' @rdname ism

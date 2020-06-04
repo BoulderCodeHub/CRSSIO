@@ -19,23 +19,23 @@ myIsm2 <- xts::xts(
 
 # check dimension --------------------------
 test_that('ism_get_site_matrix returns currect dimensions',{
-  expect_equal(dim(ism_get_site_matrix(tstData,'2016-01',nYrs = NA)),c(48,4))
-  expect_equal(dim(ism_get_site_matrix(tstData,'2016-01',nYrs = 3)),c(36,4))
+  expect_equal(dim(expect_warning(ism_get_site_matrix(tstData,'2016-01',nYrs = NA))),c(48,4))
+  expect_equal(dim(expect_warning(ism_get_site_matrix(tstData,'2016-01',nYrs = 3))),c(36,4))
   expect_equal(
-    dim(ism_get_site_matrix(tstData[1:36],'2016-01',nYrs = 2)),
+    dim(expect_warning(ism_get_site_matrix(tstData[1:36],'2016-01',nYrs = 2))),
     c(24,3)
   )
   # test the annual data
   expect_equal(
-    dim(ism_get_site_matrix(t2[1:5], "2016-12", nYrs = NA, monthly = FALSE)),
+    dim(expect_warning(ism_get_site_matrix(t2[1:5], "2016-12", nYrs = NA, monthly = FALSE))),
     c(5,5)
   )
   expect_equal(
-    dim(ism_get_site_matrix(t2, "2016-12", nYrs = 5, monthly = FALSE)),
+    dim(expect_warning(ism_get_site_matrix(t2, "2016-12", nYrs = 5, monthly = FALSE))),
     c(5,6)
   )
   expect_equal(
-    dim(ism_get_site_matrix(t2[1:4], "2016-12", nYrs = 3, monthly = FALSE)),
+    dim(expect_warning(ism_get_site_matrix(t2[1:4], "2016-12", nYrs = 3, monthly = FALSE))),
     c(3,4)
   )
 })
@@ -45,67 +45,67 @@ test_that('ism_get_site_matrix returns an expected matrix', {
   # comparing to a range of differences because myISM is not an xts object,
   # so all.equal will not work as it will return differences in attributes
   
-  expect_equivalent(ism_get_site_matrix(tstData, '2016-01', nYrs = NA), myIsm)
+  expect_equivalent(expect_warning(ism_get_site_matrix(tstData, '2016-01', nYrs = NA)), myIsm)
   expect_equivalent(
-    ism_get_site_matrix(tstData, '2016-01',nYrs = 3), 
+    expect_warning(ism_get_site_matrix(tstData, '2016-01',nYrs = 3)), 
     myIsm[1:36,]
   )
   expect_equivalent(
-    ism_get_site_matrix(t2, "2016-12", nYrs = NA, monthly = FALSE),
+    expect_warning(ism_get_site_matrix(t2, "2016-12", nYrs = NA, monthly = FALSE)),
     myIsm2
   )
   expect_equivalent(
-    ism_get_site_matrix(t2, "2016-12", nYrs = 5, monthly = FALSE),
+    expect_warning(ism_get_site_matrix(t2, "2016-12", nYrs = 5, monthly = FALSE)),
     myIsm2[1:5,]
   )
 })
 
-tmp <- ism_get_site_matrix(t2, "2016-12", monthly = FALSE)
+tmp <- expect_warning(ism_get_site_matrix(t2, "2016-12", monthly = FALSE))
 test_that('ism_get_site_matrix timestamps are correct', {
-  expect_equal(index(ism_get_site_matrix(tstData, '2016-01', nYrs = NA))[1], 
+  expect_equal(index(expect_warning(ism_get_site_matrix(tstData, '2016-01', nYrs = NA)))[1], 
                zoo::as.yearmon('2016-01'))
-  expect_equal(index(ism_get_site_matrix(tstData, '2016-01', nYrs = NA))[48], 
+  expect_equal(index(expect_warning(ism_get_site_matrix(tstData, '2016-01', nYrs = NA)))[48], 
                zoo::as.yearmon('2019-12'))
-  expect_equal(index(ism_get_site_matrix(tstData, '2016-01', nYrs = 3))[36], 
+  expect_equal(index(expect_warning(ism_get_site_matrix(tstData, '2016-01', nYrs = 3)))[36], 
                zoo::as.yearmon('2018-12'))
   expect_equal(index(tmp)[1], zoo::as.yearmon("2016-12"))
   expect_equal(index(tmp)[6], zoo::as.yearmon("2021-12"))
 })
 
 test_that('ism_get_site_matrix messages',{
-  expect_error(ism_get_site_matrix(tstData, '2016-01',nYrs = 5),
+  expect_error(expect_warning(ism_get_site_matrix(tstData, '2016-01',nYrs = 5)),
                'nYrs is longer than xtsData.')
-  expect_error(ism_get_site_matrix(as.matrix(myIsm), '2016-01'),
+  expect_error(expect_warning(ism_get_site_matrix(as.matrix(myIsm), '2016-01')),
                'xtsData is not of type xts')
 })
 
 # ism_get_site_matrix() vs ism() ------------------------
 test_that("ism_get_site_matrix() == ism()", {
   expect_equivalent(
-    coredata(ism_get_site_matrix(tstData,'2016-01',nYrs = NA)),
+    coredata(expect_warning(ism_get_site_matrix(tstData,'2016-01',nYrs = NA))),
     coredata(ism(tstData))
   )
   expect_equivalent(
-    coredata(ism_get_site_matrix(tstData,'2016-01',nYrs = 3)),
+    coredata(expect_warning(ism_get_site_matrix(tstData,'2016-01',nYrs = 3))),
     coredata(ism(tstData, n_years_keep = 3))
   )
   expect_equivalent(
-    coredata(ism_get_site_matrix(tstData[1:36],'2016-01',nYrs = 2)),
+    coredata(expect_warning(ism_get_site_matrix(tstData[1:36],'2016-01',nYrs = 2))),
     coredata(ism(tstData[1:36], n_years_keep = 2))
   )
   
   # test the annual data
   expect_equivalent(
-    coredata(ism_get_site_matrix(t2[1:5], "2016-12", nYrs = NA, monthly = FALSE)),
+    coredata(expect_warning(ism_get_site_matrix(t2[1:5], "2016-12", nYrs = NA, monthly = FALSE))),
     coredata(ism(t2[1:5]))
   )
   expect_equivalent(ism(t2[1:5]), ism(t2[1:5], is_monthly = FALSE))
   expect_equivalent(
-    coredata(ism_get_site_matrix(t2, "2016-12", nYrs = 5, monthly = FALSE)),
+    coredata(expect_warning(ism_get_site_matrix(t2, "2016-12", nYrs = 5, monthly = FALSE))),
     coredata(ism(t2, n_years_keep = 5, is_monthly = FALSE))
   )
   expect_equivalent(
-    coredata(ism_get_site_matrix(t2[1:4], "2016-12", nYrs = 3, monthly = FALSE)),
+    coredata(expect_warning(ism_get_site_matrix(t2[1:4], "2016-12", nYrs = 3, monthly = FALSE))),
     coredata(ism(t2[1:4], n_years_keep = 3))
   )
 })
@@ -116,17 +116,17 @@ tstMat <- xts::as.xts(zoo::read.zoo(
 #xts::indexTZ(tstMat) <- 'UTC'
 
 test_that('ism_get_site_matrix works', {
-  expect_error(CRSSIO:::getAllISMMatrices(cbind(tstData,tstData), '2016-01', 3),
+  expect_error(expect_warning(CRSSIO:::getAllISMMatrices(cbind(tstData,tstData)), '2016-01', 3),
                'nfMat does not contain 29 columns')
-  expect_equal(CRSSIO:::getAllISMMatrices(tstMat,'2016-01', 3)[[1]], 
-               ism_get_site_matrix(tstData, '2016-01', nYrs = 3))
-  expect_equal(CRSSIO:::getAllISMMatrices(tstMat,'2016-01', NA)[[1]],
-               CRSSIO:::getAllISMMatrices(tstMat,'2016-01', NA)[[29]])
-  expect_equal(length(CRSSIO:::getAllISMMatrices(tstMat,'2016-01', NA)),29)
+  expect_equal(expect_warning(CRSSIO:::getAllISMMatrices(tstMat,'2016-01', 3))[[1]], 
+               expect_warning(ism_get_site_matrix(tstData, '2016-01', nYrs = 3)))
+  expect_equal(expect_warning(CRSSIO:::getAllISMMatrices(tstMat,'2016-01', NA))[[1]],
+               expect_warning(CRSSIO:::getAllISMMatrices(tstMat,'2016-01', NA))[[29]])
+  expect_equal(length(expect_warning(CRSSIO:::getAllISMMatrices(tstMat,'2016-01', NA))),29)
 })
 
-yt1 <- CRSSIO:::getYTISMData("2018-12-31", 110, 1906, 2015)
-yt2 <- CRSSIO:::getYTISMData("2000-12-31", 10, 1988, 2012)
+yt1 <- expect_warning(CRSSIO:::getYTISMData("2018-12-31", 110, 1906, 2015))
+yt2 <- expect_warning(CRSSIO:::getYTISMData("2000-12-31", 10, 1988, 2012))
 yt11 <- unclass(yt1[,110])
 attributes(yt11) <- NULL
 yt21 <- unclass(yt2[,23])
