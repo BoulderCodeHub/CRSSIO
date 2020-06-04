@@ -2,12 +2,9 @@
 % Please edit documentation in R/change_nf_file_names.R
 \name{crssi_change_nf_file_names}
 \alias{crssi_change_nf_file_names}
-\alias{copyAndChangeNFFileNames}
 \title{Rename CRSS Input Files}
 \usage{
 crssi_change_nf_file_names(iFolder, oFolder, nTrace, fromNames, toNames)
-
-copyAndChangeNFFileNames(iFolder, oFolder, nTrace, fromNames, toNames)
 }
 \arguments{
 \item{iFolder}{Path to the input folder cotaining trace folders.}

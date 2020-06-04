@@ -176,14 +176,6 @@ update_readme <- function(folder, start_year)
   invisible(txt)
 }
 
-#' @export
-#' @rdname crssi_change_nf_start_date
-changeStartDate <- function(nTrace, folder, startDate)
-{
-  .Deprecated("crssi_change_nf_start_date")
-  crssi_change_nf_start_date(nTrace, folder, startDate)
-}
-
 #' Change Start Date of Evap Files
 #' 
 #' Changes the start date in all files in each CRSS_DIR/dmi/evap/trace folder.
@@ -244,12 +236,3 @@ crssi_change_evap_files <- function(nTrace, folder, startDate, NZeros)
 		}
 	}
 }
-
-#' @export
-#' @rdname crssi_change_evap_files
-changeStartDateForEvapAndAddZeros <- function(nTrace, folder, startDate, NZeros)
-{
-  .Deprecated("crssi_change_evap_files")
-  crssi_change_evap_files(nTrace, folder, startDate, NZeros)
-}
-

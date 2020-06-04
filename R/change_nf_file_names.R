@@ -48,15 +48,3 @@ crssi_change_nf_file_names <- function(iFolder,
     }
   }
 } 
-
-#' @export
-#' @rdname crssi_change_nf_file_names
-copyAndChangeNFFileNames <- function(iFolder, 
-                                     oFolder, 
-                                     nTrace, 
-                                     fromNames, 
-                                     toNames)
-{
-  .Deprecated("crssi_change_nf_file_names")
-  crssi_change_nf_file_names(iFolder, oFolder, nTrace, fromNames, toNames)
-}

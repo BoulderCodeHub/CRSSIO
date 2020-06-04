@@ -2,12 +2,9 @@
 % Please edit documentation in R/crssi_change_nf_start_date.R
 \name{crssi_change_nf_start_date}
 \alias{crssi_change_nf_start_date}
-\alias{changeStartDate}
 \title{Change the start dates of CRSS input trace files}
 \usage{
 crssi_change_nf_start_date(nTrace, folder, start_year, startDate)
-
-changeStartDate(nTrace, folder, startDate)
 }
 \arguments{
 \item{nTrace}{The number of traces to process.}

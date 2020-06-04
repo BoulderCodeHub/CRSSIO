@@ -9,6 +9,8 @@ CRSSIO 0.7.4.9000
     * Deprecated `ism_get_site_matrix()`
   * Get functions: `nfd_get_time()`, `nfd_get_site()`, `nfd_get_trace()` (#84)
 * `sac_year_type_get()` to download and parse Sacramento year type indexes (#78)
+* Updated internals of `crssi_create_dnf_files()` (#90)
+* Removed deprecated functions (#89)
 
 
 CRSSIO 0.7.4

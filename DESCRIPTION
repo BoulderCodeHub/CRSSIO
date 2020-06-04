@@ -75,7 +75,6 @@ Collate:
     'sac_year_type_get.R'
     'stat_boxplot_custom.R'
     'storage_to_elevation.R'
-    'trimCCNFFiles.R'
     'trim_helpers.R'
     'write_crssi.R'
     'zzz.R'

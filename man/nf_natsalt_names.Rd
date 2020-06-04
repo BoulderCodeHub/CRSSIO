@@ -5,10 +5,6 @@
 \alias{natsalt_file_names}
 \alias{nf_gage_names}
 \alias{nf_gage_abbrv}
-\alias{CRSSNFInputNames}
-\alias{CRSSNatSaltInputNames}
-\alias{nfGageNames}
-\alias{nfShortNames}
 \title{Get vector of natural flow and salt gage names, filenames, and abbreviations}
 \usage{
 nf_file_names(version = 2)
@@ -18,14 +14,6 @@ natsalt_file_names(version = 2)
 nf_gage_names()
 
 nf_gage_abbrv()
-
-CRSSNFInputNames(version = 2)
-
-CRSSNatSaltInputNames(version = 2)
-
-nfGageNames()
-
-nfShortNames()
 }
 \arguments{
 \item{version}{The CRSS version number. Current version of CRSS is 2. Valid

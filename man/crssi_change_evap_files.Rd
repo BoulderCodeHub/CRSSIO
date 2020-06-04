@@ -2,12 +2,9 @@
 % Please edit documentation in R/crssi_change_nf_start_date.R
 \name{crssi_change_evap_files}
 \alias{crssi_change_evap_files}
-\alias{changeStartDateForEvapAndAddZeros}
 \title{Change Start Date of Evap Files}
 \usage{
 crssi_change_evap_files(nTrace, folder, startDate, NZeros)
-
-changeStartDateForEvapAndAddZeros(nTrace, folder, startDate, NZeros)
 }
 \arguments{
 \item{nTrace}{The number of traces to process.}
