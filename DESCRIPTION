@@ -18,7 +18,7 @@ Imports:
     assertthat,
     CoRiverNF,
     dplyr,
-    ggplot2,
+    ggplot2 (>= 3.3.0),
     httr,
     magrittr,
     miniUI (>= 0.1.1),

@@ -1,7 +1,6 @@
 library(ggplot2)
 
-context("get_decimals")
-
+# get_decimals -----------------------------------
 test_that("get_decimals returns expected values", {
   expect_identical(CRSSIO:::get_decimals("1"), 0)
   expect_identical(CRSSIO:::get_decimals(c("1", "4", "3434")), 0)
@@ -11,8 +10,7 @@ test_that("get_decimals returns expected values", {
   expect_identical(CRSSIO:::get_decimals(c("1.3456", "1","1.1")), 4)
 })
 
-context("to_metric_labels")
-
+# to_metric_labels ------------------------------------
 test_that("to_metric_labels returns as expected", {
   expect_identical(CRSSIO:::to_metric_labels(123, 0), "123")
   expect_identical(CRSSIO:::to_metric_labels(1234, 0), "1,234")
@@ -29,8 +27,7 @@ test_that("to_metric_labels returns as expected", {
   )
 })
 
-context("add_secondary_y_conversion")
-
+# add_secondary_y_conversion() errors ----------------------------
 df <- data.frame(year = 2020:2029, pe = rnorm(10, 3580, 15))
 gg <- ggplot(df, aes(year, pe)) + geom_line()
 
@@ -38,16 +35,6 @@ test_that("add_secondary_y_conversion errors expectedly", {
   expect_error(
     add_secondary_y_conversion(df, "meters", "feet"),
     "`gg` does not inherit from c('gg', 'ggplot')",
-    fixed = TRUE
-  )
-  expect_error(
-    add_secondary_y_conversion(
-      gg + scale_y_continuous(labels = scales::comma) , "meters", "feet"
-    ),
-    paste0(
-      "Current y labels do not appear to be plain numbers.\n",
-      " Try calling again, but ensure labels haven not been modified by something like `scales::comma`"
-    ),
     fixed = TRUE
   )
   expect_error(
@@ -70,6 +57,7 @@ test_that("add_secondary_y_conversion errors expectedly", {
   )
 })
 
+# add_secondary_y_conversion builds --------------------------------
 test_that("add_secondary_y_conversion builds", {
   expect_s3_class(
     ggplot_build(add_secondary_y_conversion(gg, "feet", "meters")), 

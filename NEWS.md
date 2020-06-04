@@ -11,6 +11,7 @@ CRSSIO 0.7.4.9000
 * `sac_year_type_get()` to download and parse Sacramento year type indexes (#78)
 * Updated internals of `crssi_create_dnf_files()` (#90)
 * Removed deprecated functions (#89)
+* Fixed `add_secondary_y_conversoin()` to work with ggplot2 v3.3.0
 
 
 CRSSIO 0.7.4
