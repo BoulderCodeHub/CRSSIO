@@ -110,12 +110,6 @@ test_that("ism_get_site_matrix() == ism()", {
   )
 })
 
-# compare both versions of function -------------------
-test_that("ism_get_site_matrix matches createISMMatrix", {
-  expect_warning(tmp <- createISMMatrix(tstData,'2016-01',nYrs = NA))
-  expect_identical(tmp, ism_get_site_matrix(tstData,'2016-01',nYrs = NA))
-})
-
 # getALLISMMatrices function -----------
 tstMat <- xts::as.xts(zoo::read.zoo(
   data.frame(myYM,matrix(rep(tstData,29), ncol = 29, byrow = F))))

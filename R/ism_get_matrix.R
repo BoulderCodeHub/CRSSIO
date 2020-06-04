@@ -65,11 +65,3 @@ ism_get_site_matrix <- function(xtsData, startMonth, nYrs = NA, monthly = TRUE)
   ismMatrix <- xts::as.xts(zoo::read.zoo(data.frame(ismYearMon, ismMatrix)))
   ismMatrix
 }
-
-#' @export
-#' @rdname ism_get_site_matrix
-createISMMatrix <- function(xtsData, startMonth, nYrs = NA, monthly = TRUE)
-{
-  .Deprecated("ism_get_site_matrix")
-  ism_get_site_matrix(xtsData, startMonth, nYrs, monthly)
-}

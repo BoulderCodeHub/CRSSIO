@@ -2,12 +2,9 @@
 % Please edit documentation in R/ism_get_matrix.R
 \name{ism_get_site_matrix}
 \alias{ism_get_site_matrix}
-\alias{createISMMatrix}
 \title{Create a matrix of data based on ISM}
 \usage{
 ism_get_site_matrix(xtsData, startMonth, nYrs = NA, monthly = TRUE)
-
-createISMMatrix(xtsData, startMonth, nYrs = NA, monthly = TRUE)
 }
 \arguments{
 \item{xtsData}{An xts vector.}
