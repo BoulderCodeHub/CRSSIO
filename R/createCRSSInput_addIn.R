@@ -7,7 +7,7 @@
 #' 
 #' To use the Addin, RStudio v0.99.878 or later must be used. The key user input
 #' to `crssi_create_dnf_files()` and `crssi_create_cmip_nf_files()` can be set 
-#' in the GUI. The `oFiles` arguement uses the default value of 
+#' in the GUI. The `oFiles` argument uses the default value of 
 #' [nf_file_names()].
 #' 
 #' Additionally, there is an option to also create the HistoricalNaturalFlows.xlsx
@@ -21,6 +21,11 @@
 crss_input_addin <- function() {
   divHeight <- "50px"
   padLeft <- "padding-left: 10px;"
+  
+  max_year <- function() {
+    year(Sys.Date(), TRUE) + (year(end(CoRiverNF::cyAnnTot), TRUE) - 
+      year(start(CoRiverNF::cyAnnTot), TRUE) + 1)
+  }
   
   ui <- miniPage(
     tags$head(
@@ -227,8 +232,8 @@ crss_input_addin <- function() {
         selectInput(
           'traceStartYear',
           'Traces Start In:',
-          choices = seq(2000, 2099),
-          selected = 2018
+          choices = seq(2000, max_year()),
+          selected = year(Sys.Date(), numeric = TRUE) + 1
         )
     })
     
@@ -237,7 +242,7 @@ crss_input_addin <- function() {
         selectInput(
           "simEndYear", 
           "Traces End In:", 
-          choices = seq(2000, 2099), 
+          choices = seq(2000, max_year()), 
           selected = 2060
         )
     })
@@ -280,7 +285,7 @@ crss_input_addin <- function() {
           "nfInputEndYear",
           'End Year',
           choices = 1906:2020,
-          selected = 2015
+          selected = year(end(CoRiverNF::cyAnnTot), TRUE)
         )
       } else
         return()
