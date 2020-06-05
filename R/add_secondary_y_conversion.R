@@ -42,7 +42,7 @@ add_secondary_y_conversion <- function(gg, from_unit, to_unit,
     msg = "`gg` does not inherit from c('gg', 'ggplot')"
   )
  
-  current_y_num <- ggplot_build(gg)$layout$panel_params[[1]]$y$breaks
+  current_y_num <- ggplot2::ggplot_build(gg)$layout$panel_params[[1]]$y$breaks
   current_y_num <- current_y_num[!is.na(current_y_num)]
   
   current_y_labs <- suppressWarnings(as.character(current_y_num))

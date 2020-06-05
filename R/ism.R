@@ -40,7 +40,7 @@ ism <- function(x, n_years_keep = NA, ...)
 
 #' @export
 #' @rdname ism
-ism.crssi <- function(x, ...)
+ism.crssi <- function(x, n_years_keep = NA, ...)
 {
   sac_year_type <- x[["sac_year_type"]]
   scen_number <- x[["scen_number"]]
@@ -51,8 +51,8 @@ ism.crssi <- function(x, ...)
     stop("is_monthly should not be passed to crssi as it contains monthly and annual data.")
   
   x <- suppressMessages(as_crss_nf(x))
-  x <- ism.crss_nf(x, ...)
-  sac_year_type <- ism(sac_year_type, ...)
+  x <- ism.crss_nf(x, n_years_keep, ...)
+  sac_year_type <- ism(sac_year_type, n_years_keep, ...)
   
   # rbuild crssi
   x[["sac_year_type"]] <- sac_year_type
@@ -68,9 +68,9 @@ ism.crssi <- function(x, ...)
 
 #' @export
 #' @rdname ism
-ism.crss_nf <- function(x, ...)
+ism.crss_nf <- function(x, n_years_keep = NA, ...)
 {
-  x <- ism.nfd(x, ...)
+  x <- ism.nfd(x, n_years_keep, ...)
   class(x) <- c("crss_nf", "nfd")
   crss_nf_validate(x)
   x
@@ -78,7 +78,7 @@ ism.crss_nf <- function(x, ...)
 
 #' @export
 #' @rdname ism
-ism.nfd <- function(x, ...)
+ism.nfd <- function(x, n_years_keep = NA, ...)
 {
   # check that n_trace == 1; ISM does not really make sense otherwise
   assert_that(
@@ -104,10 +104,10 @@ ism.nfd <- function(x, ...)
   }
   
   # for each flow_space/time_step, get the ism matrix
-  mon_int <- nfd_ism(x, "intervening", "monthly", ...)
-  mon_tot <- nfd_ism(x, "total", "monthly", ...)
-  ann_int <- nfd_ism(x, "intervening", "annual", ...)
-  ann_tot <- nfd_ism(x, "total", "annual", ...)
+  mon_int <- nfd_ism(x, "intervening", "monthly", n_years_keep, ...)
+  mon_tot <- nfd_ism(x, "total", "monthly", n_years_keep, ...)
+  ann_int <- nfd_ism(x, "intervening", "annual", n_years_keep, ...)
+  ann_tot <- nfd_ism(x, "total", "annual", n_years_keep, ...)
   
   # take all flow_space/time_step matrices and create a new nfd_object
   new_nfd(mon_int, mon_tot, ann_int, ann_tot, attr(x, "year"))
@@ -115,7 +115,7 @@ ism.nfd <- function(x, ...)
 
 #' @export
 #' @rdname ism
-ism.xts <- function(x, ...)
+ism.xts <- function(x, n_years_keep = NA, ...)
 {
   assert_that(
     ncol(x) == 1, 
@@ -123,7 +123,6 @@ ism.xts <- function(x, ...)
   )
   
   args <- list(...)
-  n_years_keep <- args[["n_years_keep"]]
   is_monthly <- args[["is_monthly"]]
   
   if (is.null(is_monthly) || isTRUE(is.na(is_monthly))) {
@@ -154,7 +153,7 @@ ism.xts <- function(x, ...)
   # make the data not an xts object so we can call ism.matrix
   x_mat <- zoo::coredata(x)
   
-  x_mat <- ism(x_mat, is_monthly, n_years_keep)
+  x_mat <- ism(x_mat, n_years_keep, is_monthly)
   
   # now convert back to xts object with monthly time step
   ism_xts <- xts::xts(x_mat, order.by = zoo::index(x)[1:nrow(x_mat)])
@@ -167,7 +166,7 @@ ism.xts <- function(x, ...)
 #'   
 #' @export
 #' @rdname ism
-ism.matrix <- function(x, is_monthly, n_years_keep = NA)
+ism.matrix <- function(x, n_years_keep = NA, is_monthly, ...)
 {
   assert_that(
     ncol(x) == 1, 
@@ -228,7 +227,7 @@ getSubsetOfData <- function(startYear, zz, nYrs, monthly)
   zz
 }
 
-nfd_ism <- function(x, flow_space, time_step, ...)
+nfd_ism <- function(x, flow_space, time_step, n_years_keep = NA, ...)
 {
   # grab trace 1 data
   # loop/apply by column, ism.xts
@@ -242,7 +241,7 @@ nfd_ism <- function(x, flow_space, time_step, ...)
     
   # list. Each entry is 1 site. Each matrix is time x trace
   y <- lapply(seq(n_sites(x)), function(i) {
-    ism(tmp[,i], ...)
+    ism(tmp[,i], n_years_keep, ...)
   })
   
   # need to convert to list where each entry is a trace and each matrix

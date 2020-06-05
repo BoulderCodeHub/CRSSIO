@@ -79,10 +79,10 @@ exact_overlap <- function(i_mon, i_year, year_type)
   
   all(
     month(i_mon[1]) == sm,
-    month(tail(i_mon, 1)) == em,
+    month(utils::tail(i_mon, 1)) == em,
     year(i_mon[1], numeric = TRUE) + i == year(i_year[1], numeric = TRUE),
-    year(tail(i_mon,1)) == year(tail(i_year, 1)),
+    year(utils::tail(i_mon,1)) == year(utils::tail(i_year, 1)),
     month(i_year[1]) == em,
-    month(tail(i_year, 1)) == em
+    month(utils::tail(i_year, 1)) == em
   )
 }

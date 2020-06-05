@@ -42,12 +42,6 @@ date. The vector should be of type \link[zoo:yearmon]{zoo::yearmon}, and begin i
 some year, and end in December of some year.}
 
 \item{overwriteFiles}{Boolean. Should existing files be overwritten.}
-
-\item{startDate}{The start date to be listed in each trace file; should be in
-2014-1-31 format.}
-
-\item{simYrs}{The number of years of data each file should contain. Should be
-no longer than the number of years in the input data.}
 }
 \value{
 Invisibly returns \code{crssi} object.

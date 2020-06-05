@@ -9,7 +9,7 @@
 Provides functions to generate input files commmonly used by the
     Colorado River Simulation System (CRSS) from publicly available data, as
     well as functions to modify these files. Figures that are commonly used to
-    QA/QC and undersand CRSS results are also automated with this package.
+    QA/QC and understand CRSS results are also automated with this package.
 }
 \section{Package Options}{
 

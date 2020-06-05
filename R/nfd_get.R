@@ -127,7 +127,7 @@ nfd_get_time <- function(x, time, flow_space, time_step)
   }))
   
   # do not want an xts object with all same timesteps
-  rv <- coredata(rv)
+  rv <- zoo::coredata(rv)
   
   if (!is.null(sites(x)))
     colnames(rv) <- sites(x)

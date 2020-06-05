@@ -134,6 +134,7 @@ crssi <- function(flow, sac_year_type, scen_number, scen_name = NULL,
   flow
 }
 
+#' @param x An object.
 #' @export
 #' @return `is_crssi()` returns `TRUE` if class inherits from `crssi`.
 #' @rdname crssi

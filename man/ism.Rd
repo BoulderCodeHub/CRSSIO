@@ -12,15 +12,15 @@
 \usage{
 ism(x, n_years_keep = NA, ...)
 
-\method{ism}{crssi}(x, ...)
+\method{ism}{crssi}(x, n_years_keep = NA, ...)
 
-\method{ism}{crss_nf}(x, ...)
+\method{ism}{crss_nf}(x, n_years_keep = NA, ...)
 
-\method{ism}{nfd}(x, ...)
+\method{ism}{nfd}(x, n_years_keep = NA, ...)
 
-\method{ism}{xts}(x, ...)
+\method{ism}{xts}(x, n_years_keep = NA, ...)
 
-\method{ism}{matrix}(x, is_monthly, n_years_keep = NA)
+\method{ism}{matrix}(x, n_years_keep = NA, is_monthly, ...)
 
 ism_get_site_matrix(xtsData, startMonth, nYrs = NA, monthly = TRUE)
 }

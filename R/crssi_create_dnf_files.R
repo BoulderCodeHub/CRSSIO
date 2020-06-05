@@ -46,13 +46,7 @@
 #' @param startYear The year to start the trace files in. Data will be trimmed 
 #'   to start in this year.
 #'   
-#' @param startDate The start date to be listed in each trace file; should be in 
-#'   2014-1-31 format.
-#'   
 #' @param endYear The final year of data the trace files will contain.
-#' 
-#' @param simYrs The number of years of data each file should contain. Should be
-#' no longer than the number of years in the input data.
 #' 
 #' @param oFiles A matrix of the file names (input into CRSS). The default uses
 #'   [nf_file_names()]. This must be specified in the correct 

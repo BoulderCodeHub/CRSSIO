@@ -28,6 +28,8 @@ monthly, intervening, these flows will be dropped. This is suggested as
 the memory needed to store the object and the time needed to apply ISM to
 the object will be drastically reduced. If \code{FALSE}, the other flows are
 kept in the object.}
+
+\item{x}{An object.}
 }
 \value{
 \code{crssi()} returns an object of class \code{crssi}.

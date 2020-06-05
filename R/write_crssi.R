@@ -66,7 +66,7 @@ write_crssi <- function(x, path, file_names = nf_file_names(),
   
   # for each trace, write out all 29 flow files
   message("Writing natural flow files ...\n")
-  pb <- txtProgressBar(min = 0, max = nT, style = 3)
+  pb <- utils::txtProgressBar(min = 0, max = nT, style = 3)
   tmp <- lapply(seq(nT), function(i) {
     write_files_by_trace(
       nfd_get_trace(x, i, "intervening", "monthly"),
@@ -141,6 +141,6 @@ write_files_by_trace <- function(x, trace_n, file_names, path, header_info, pb)
     )
   )
   
-  setTxtProgressBar(pb, trace_n)
+  utils::setTxtProgressBar(pb, trace_n)
   invisible(x)
 }
