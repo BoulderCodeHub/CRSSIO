@@ -41,6 +41,7 @@ Imports:
 Remotes:
     BoulderCodeHub/CoRiverNF
 Suggests:
+    covr,
     knitr,
     scales,
     testthat
