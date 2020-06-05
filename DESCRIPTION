@@ -52,12 +52,12 @@ Encoding: UTF-8
 Collate: 
     'CRSSIO.R'
     'add_secondary_y_conversion.R'
-    'change_nf_file_names.R'
     'createCRSSInput_addIn.R'
     'crssInput_helperFunctions.R'
     'nfd.R'
     'crss_nf.R'
     'crssi.R'
+    'crssi_change_nf_file_names.R'
     'crssi_change_nf_start_date.R'
     'crssi_create_cmip_nf_files.R'
     'crssi_create_dnf_files.R'
