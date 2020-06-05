@@ -128,8 +128,6 @@ get_crssi_readme_vals <- function(x, startYear, endYear)
 
 write_files_by_trace <- function(x, trace_n, file_names, path, header_info, pb)
 {
-  #message('Beginning to write node: ',oFile)
-  
   f_path <- file.path(path, paste0("trace", trace_n))
   
   y <- lapply(

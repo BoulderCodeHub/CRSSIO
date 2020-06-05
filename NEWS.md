@@ -12,6 +12,7 @@ CRSSIO 0.7.4.9000
 * Updated internals of `crssi_create_dnf_files()` (#90)
 * Removed deprecated functions (#89)
 * Fixed `add_secondary_y_conversoin()` and `stat_boxplot_custom()` to work with ggplot2 v3.3.0
+* Switched `crssi_change_nf_file_names()`, `crssi_change_nf_start_date()` and `crssi_change_evap_files()` to use progress bar instead of printing new line for each trace.
 
 
 CRSSIO 0.7.4
