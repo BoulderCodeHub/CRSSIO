@@ -106,10 +106,10 @@ nf_xts_to_df <- function(x, nfGages = nf_gage_abbrv())
     as.data.frame() %>%
     tibble::rownames_to_column(var = "ym") %>%
     dplyr::select_at(.vars = c("ym", nfGages)) %>%
-    dplyr::mutate_at(.vars = "ym", .funs = zoo::as.yearmon) %>%
-    dplyr::mutate_at(.vars = "ym", .funs = dplyr::funs(
-      "year" = as.numeric(format(., "%Y")),
-      "month" = as.numeric(format(., "%m"))
+    dplyr::mutate_at(.vars = "ym", zoo::as.yearmon) %>%
+    dplyr::mutate_at(.vars = "ym", .funs = list(
+      "year" = ~ year(., TRUE),
+      "month" = ~ month(., TRUE)
     )) %>%
     dplyr::select(-dplyr::matches("ym"))
 }
