@@ -3,22 +3,12 @@
 
 # CRSSIO
 
-*Stable version (v0.7.4):* [![Travis-CI Build
-Status](https://travis-ci.org/BoulderCodeHub/CRSSIO.svg?branch=master)](https://travis-ci.org/BouldercodeHub/CRSSIO)
-[![AppVeyor Build
-status](https://ci.appveyor.com/api/projects/status/tkbmrk4hosv96rin?svg=true)](https://ci.appveyor.com/project/BoulderCodeHub/crssio)
-[![codecov](https://codecov.io/gh/BoulderCodeHub/CRSSIO/branch/master/graphs/badge.svg)](https://codecov.io/gh/BoulderCodeHub/CRSSIO)
-
-*Development version:* [![Build
-Status](https://travis-ci.org/rabutler-usbr/CRSSIO.svg?branch=master)](https://travis-ci.org/rabutler-usbr/CRSSIO)
-[![AppVeyor Build
-status](https://ci.appveyor.com/api/projects/status/lad6jf69q7stn1e7?svg=true)](https://ci.appveyor.com/project/rabutler-usbr/crssio)
-[![codecov](https://codecov.io/gh/rabutler-usbr/CRSSIO/branch/master/graph/badge.svg)](https://codecov.io/gh/rabutler-usbr/CRSSIO)
-
 <!-- badges: start -->
 
 [![R build
 status](https://github.com/BoulderCodeHub/CRSSIO/workflows/R-CMD-check/badge.svg)](https://github.com/BoulderCodeHub/CRSSIO/actions)
+[![Codecov test
+coverage](https://codecov.io/gh/rabutler-usbr/CRSSIO/branch/master/graph/badge.svg)](https://codecov.io/gh/rabutler-usbr/CRSSIO?branch=master)
 <!-- badges: end -->
 
 R Package to manage code for manipulating the input and output data for

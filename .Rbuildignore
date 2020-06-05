@@ -10,3 +10,4 @@
 ^__app\.R$
 ^forVignette\.R$
 ^\.github$
+^codecov\.yml$
