@@ -39,6 +39,7 @@ stat_boxplot_custom <- function(mapping = NULL, data = NULL,
                                 ...,
                                 qs = c(.05, .25, 0.5, 0.75, 0.95),
                                 na.rm = FALSE,
+                                orientation = NA,
                                 show.legend = NA,
                                 inherit.aes = TRUE) {
   assert_that(
@@ -66,6 +67,7 @@ stat_boxplot_custom <- function(mapping = NULL, data = NULL,
     inherit.aes = inherit.aes,
     params = list(
       na.rm = na.rm,
+      orientation = orientation,
       qs = qs,
       ...
     )
@@ -77,28 +79,54 @@ stat_boxplot_custom <- function(mapping = NULL, data = NULL,
 #' @format NULL
 #' @export
 StatBoxplotCustom <- ggplot2::ggproto("StatBoxplotCustom", ggplot2::Stat,
-  required_aes = c("x", "y"),
+  required_aes = c("y|x"),
   non_missing_aes = "weight",
   
+  setup_data = function(data, params) {
+    data <- ggplot2::flip_data(data, params$flipped_aes)
+    data$x <- ggplot2:::"%||%"(data$x, 0)
+    data <- ggplot2::remove_missing(
+      data,
+      na.rm = params$na.rm,
+      vars = "x",
+      name = "stat_boxplot_custom"
+    )
+    ggplot2::flip_data(data, params$flipped_aes)
+  },
+  
   setup_params = function(data, params) {
+    params$flipped_aes <- ggplot2::has_flipped_aes(data, params, 
+                                          main_is_orthogonal = TRUE,
+                                          group_has_equal = TRUE,
+                                          main_is_optional = TRUE)
+    data <- ggplot2::flip_data(data, params$flipped_aes)
+    
+    has_x <- !(is.null(data$x) && is.null(params$x))
+    has_y <- !(is.null(data$y) && is.null(params$y))
+    if (!has_x && !has_y) {
+      abort("stat_boxplot() requires an x or y aesthetic.")
+    }
+    
     params$width <- ggplot2:::"%||%"(
       params$width, 
-        (ggplot2::resolution(data$x) * 0.75)
-      )
-     
-    if (is.double(data$x) && 
-        !ggplot2:::has_groups(data) && 
-        any(data$x != data$x[1L])) {
-      warning(
-        "Continuous x aesthetic -- did you forget aes(group=...)?",
-        call. = FALSE)
+      (ggplot2::resolution(ggplot2:::"%||%"(data$x, 0) * 0.75))
+    ) 
+    
+    if (is.double(data$x) && !ggplot2:::has_groups(data) && any(data$x != data$x[1L])) {
+      rlang::warn(glue::glue(
+        "Continuous {flipped_names(params$flipped_aes)$x} aesthetic -- did you forget aes(group=...)?"
+      ))
     }
-     
+    
     params
   },
+  
+  extra_params = c("na.rm", "orientation"),
    
   compute_group = function(data, scales, width = NULL, na.rm = FALSE, 
-                        qs = c(.05, .25, 0.5, 0.75, 0.95)) {
+                        qs = c(.05, .25, 0.5, 0.75, 0.95), flipped_aes = FALSE) {
+    
+    data <- ggplot2::flip_data(data, flipped_aes)
       
     if (!is.null(data$weight)) {
       mod <- quantreg::rq(y ~ 1, weights = weight, data = data, tau = qs)
@@ -130,6 +158,7 @@ StatBoxplotCustom <- ggplot2::ggproto("StatBoxplotCustom", ggplot2::Stat,
     df$x <- if (is.factor(data$x)) data$x[1] else mean(range(data$x))
     df$width <- width
     df$relvarwidth <- sqrt(n)
-    df
+    df$flipped_aes <- flipped_aes
+    ggplot2::flip_data(df, flipped_aes)
   }
 )
