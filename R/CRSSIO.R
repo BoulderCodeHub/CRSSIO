@@ -34,4 +34,5 @@
 #' @importFrom assertthat assert_that
 #' @importFrom stats end
 #' @importFrom stats start
+#' @import ggplot2
 NULL
