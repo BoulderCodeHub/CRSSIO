@@ -18,6 +18,7 @@ Imports:
     assertthat,
     CoRiverNF,
     dplyr,
+    grDevices,
     ggplot2 (>= 3.3.0),
     httr,
     magrittr,
@@ -73,6 +74,7 @@ Collate:
     'nfd_get.R'
     'nfd_stats.R'
     'nfd_trim_ts.R'
+    'nfdplot.R'
     'plot.nfd.R'
     'reindex.R'
     'sac_year_type_get.R'

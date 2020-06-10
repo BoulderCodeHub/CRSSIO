@@ -1,3 +1,50 @@
+#' Plot nfd objects
+#' 
+#' Plot [nfd] objects (including [crss_nf] and [crssi] objects) for a single 
+#' site. Plotting these
+#' objects are meant to give a cursory look at the underlying data. For more 
+#' complex statistics see [nfd_stats()]. 
+#' 
+#' @section Annual plots:
+#' Annual plots include boxplots, cloud plots, and spaghetti plots; each plot
+#' shows the annual values across multiple traces through time. Box and cloud
+#' plots use the 5th, 25th, 75th, and 95th percentiles as box and whiskers (in 
+#' the box plot) and as the different shaded regions (in the cloud plot). 
+#' The spaghetti plots show every single trace as a line plot. 
+#' 
+#' @section Monthly plots:
+#' Monthly plots only include boxplots by month. These boxplots aggregate data
+#' for all months and all traces. The months are ordered from January - December
+#' if the underlying object has a calendar year (cy) year attribute, and 
+#' October - September if it has a water year (wy) year attribute.
+#' 
+#' @param x An object inheriting from [nfd].
+#' 
+#' @param trace The trace(s) to use as a numeric vector. If `-1`, then all 
+#'   traces are used, otherwise the traces specified in the vector are used.
+#'   
+#' @param site The site to plot as a scalar numeric or character. Should be a 
+#' site number, or a site name.
+#' 
+#' @param flow_space The flow space to plot. "both", "intervening", or "total".
+#' 
+#' @param time_step The time step of data to plot. "both", "annual", or 
+#'   "monthly".
+#'   
+#' @param base_units The units of the data. Used for the y-axis label.
+#' 
+#' @param which The type of plot to create. Can be multiple plot types, but 
+#'   must be "box", "cloud", "spaghetti", or some combination of these three 
+#'   types. Can also specify numerically as 1, 2, and 3, respectively. See the
+#'   *Annual plots* and *Monthly plots* sections for details.
+#'   
+#' @param show Boolean. Should the plots be shown if in interactive mode. If 
+#'   `TRUE`, the user can enter through all returned plots.
+#'   
+#' @param ... Other parameters not used by this method.
+#' 
+#' @return `nfdplot` object. See [print.nfdplot()], [save_nfdplot()].
+#'     
 #' @export
 plot.nfd <- function(x, trace = -1, site = 1, flow_space = "both", 
                      time_step = "both", base_units = NULL, which = "box", 
@@ -68,6 +115,10 @@ plot.nfd <- function(x, trace = -1, site = 1, flow_space = "both",
     )
 
   gg <- c(gg_int_mon, gg_int_ann, gg_tot_mon, gg_tot_ann)
+  # remove the null lists
+  gg <- drop_null(gg)
+  
+  class(gg) <- "nfdplot"
   
   if (show && interactive())
     print(gg)
@@ -87,7 +138,7 @@ check_plot_site <- function(x, site)
   )
   
   if (is.character(site))
-    site <- which(site, sites(x))
+    site <- which(site == sites(x))
   
   site
 }
@@ -129,7 +180,36 @@ get_site_name <- function(x, site)
 plot_monthly <- function(x, trace, which, flow_space, site_name, year_type,
                          base_units)
 {
+  colnames(x) <- 1:ncol(x)
+  x <- xts_to_long_df(x, add_month = TRUE)
   
+  if (!all(unique(x$trace) %in% trace))
+    x <- dplyr::filter_at(x, "trace", function(i) i %in% trace)
+  
+  gg_box <- NULL
+  if ("box" %in% which) {
+    # set order of months depending on cy vs wy
+    if (year_type == "Year") 
+      mm <- 1:12
+    else
+      mm <- c(10:12, 1:9)
+    
+    x$month <- factor(x$month, levels = mm)
+    
+    gg_box <- ggplot(x, aes_string("month", "value")) +
+      stat_boxplot_custom(aes_string(group = "month")) +
+      scale_x_discrete(labels = month.abb[mm])
+    
+    gg_box <- nfd_plot_style(gg_box, "Monthly", flow_space, site_name, trace,
+                             NULL, base_units)
+    gg_box <- list(gg_box)
+  }
+  
+  # remove the null lists
+  gg_box <- drop_null(gg_box)
+  
+  class(gg_box) <- "nfdplot"
+  gg_box
 }
 
 plot_annual <- function(x, trace, which, flow_space, site_name, year_type,
@@ -137,7 +217,7 @@ plot_annual <- function(x, trace, which, flow_space, site_name, year_type,
 {
   # convert to df
   colnames(x) <- 1:ncol(x)
-  x <- xts_to_long_df(x)
+  x <- xts_to_long_df(x, add_year = TRUE)
   
   if (!all(unique(x$trace) %in% trace))
     x <- dplyr::filter_at(x, "trace", function(i) i %in% trace)
@@ -164,7 +244,33 @@ plot_annual <- function(x, trace, which, flow_space, site_name, year_type,
   }
   
   if ("cloud" %in% which) {
-    # TODO
+    # compute stats 5, 25, 50, 75, 95 percentiles
+    x_stats <- x %>% 
+      dplyr::group_by_at("year") %>%
+      dplyr::summarise_at("value", list(
+        "q05" = ~quantile(., 0.05),
+        "q25" = ~quantile(., 0.25),
+        "q50" = ~median(.),
+        "q75" = ~quantile(., 0.75),
+        "q95" = ~quantile(., 0.95)
+      ))
+    
+    fill_map <- c("median" = "grey20","25th-75th" = "grey60","5th-95th" = "grey80")
+    
+    gg_cloud <- ggplot(x_stats, aes_string("year")) + 
+      geom_ribbon(
+        aes(ymin = q50, ymax = q50, fill = "median", color = "grey20"), 
+        size = 1
+      ) + 
+      geom_ribbon(aes(ymin = q05, ymax = q95, fill = "5th-95th"), alpha = 0.6) + 
+      geom_ribbon(aes(ymin = q25, ymax = q75, fill = "25th-75th"), alpha = 0.5) + 
+      geom_line(aes(y = q50), color = "grey20", size = 1) +
+      scale_fill_manual("Percentile:", values = fill_map) + 
+      scale_color_manual("", values = "grey20", guide = "none")
+    
+    gg_cloud <- nfd_plot_style(gg_cloud, "Annual", flow_space, site_name, trace, 
+                               year_type, base_units)
+    gg_cloud <- list(gg_cloud)
   }
   
   gg <- c(gg_box, gg_cloud, gg_spag)
@@ -201,7 +307,7 @@ drop_null <- function(x)
   x[lengths(x) != 0]
 }
 
-xts_to_long_df <- function(x, add_year = TRUE) 
+xts_to_long_df <- function(x, add_year = FALSE, add_month = FALSE) 
 {
   df <- as.data.frame(x)
   df$ym <- zoo::index(x)
@@ -211,25 +317,8 @@ xts_to_long_df <- function(x, add_year = TRUE)
   if (add_year)
     df$year <- year(df$ym, TRUE)
   
+  if (add_month)
+    df$month <- month(df$ym, TRUE)
+  
   df
-}
-
-#' @export
-print.nfdplot <- function(x, ...)
-{
-  
-}
-
-#' @export
-save_nfdplot <- function()
-{
-  
-}
-
-#' @export
-c.nfdplot <- function(...)
-{
-  x <- NextMethod()
-  class(x) <- "nfdplot"
-  x
 }
