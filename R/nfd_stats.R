@@ -1,7 +1,10 @@
-#' Compute Basic Statistics on NFD Objects
+#' Compute Statistics on NFD Objects
 #' 
 #' `nfd_stats()` computes six basic statistics for each trace in any [nfd] type 
-#' objects. The basic statistics are mean, variance, minimum, maximum, lag-1 
+#' objects. `nfd_cdf()` computes an empirical cdf for each trace and returns the
+#' probabilities and magnitudes associated with the cdf.
+#' 
+#' The basic statistics are mean, variance, minimum, maximum, lag-1 
 #' correlation, and skew. The resulting statistics are stored in a special 
 #' data.frame - a `nfd_stats` object that inherits from `tbl_df` and 
 #' `data.frame`. The resulting statistics can be plotted by calling `plot()` on
