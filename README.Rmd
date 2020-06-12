@@ -4,6 +4,15 @@ output: github_document
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "man/figures/README-",
+  out.width = "100%"
+)
+```
+
 # CRSSIO
 <!-- badges: start -->
 *Stable version (v0.7.4):* [![R build status](https://github.com/BoulderCodeHub/CRSSIO/workflows/R-CMD-check/badge.svg)](https://github.com/BoulderCodeHub/CRSSIO/actions)
@@ -23,14 +32,38 @@ Functions that use the `create` verb will create files on the user's computer. F
 
 The final noun of the function describes what is created or retrieved. Ex: `crssi_create_dnf_files()` creates the DNF (direct natural flow) files. 
 
-The package also includes other functions for conveniently manipulating other data related to CRSS, e.g., converting between elevation and storage for modeled reservoirs. Finally, the package provides several functions that extend/modify ggplots. 
+The package also includes other functions for conveniently manipulating other data related to CRSS, e.g., converting between elevation and storage for modeled reservoirs. Finally, the package provides several functions that extend/modify ggplots.
+
+### Classes
+
+CRSSIO defines three classes for storing multi-trace natural flow data: `nfd`, `crss_nf`, and `crssi`. `crss_nf` inherits from `nfd` and `crssi` inherits from both `nfd` and `crss_nf`. These classes intend to make working with CRSS input natural flow data easier and more uniform.
+
+`nfd` stores multi-trace, multi-site data for annual and/or monthly time steps and for intervening and/or total natural flow (flow space). `nfd()` creates the object from arrays, matrices, or xts objects. The object can contain any/all of the four combinations of time step and flow space.
+
+`crss_nf` objects require that there are exactly 29 sites: the 29 sites required for input into CRSS, and that there are monthly intervening natural flows, which are also required input to CRSS. Other time step and flow space combinations are allowed, but there must be monthly intervening data. 
+
+`crssi` objects add additional required input into CRSS: the Sacramento year type index and a scenario number. 
+
+Several methods exist to work with these objects. `reindex()` changes the underlying time component so that historical data can be used for future projections in CRSS; `ism()` applies the Index Sequential Method to a single trace; `plot()` will quickly show the data; `write_crssi()` will create the input files necessary for CRSS; `nfd_stats()` and `nfd_pdf()` compute statistics across the different traces and can then be plotted with `plot()`.
+
+#### Example
+
+Apply ISM to the 1988-present period, and then plot the resulting statistics. 
+
+```{r statPlot, fig.height=5}
+library(CRSSIO)
+flows <- crss_nf(CoRiverNF::monthlyInt["1988/"])
+ism_flows <- ism(flows, n_years_keep = 15)
+hist_stats <- nfd_stats(flows, "Cameo", "intervening", "monthly")
+ism_stats <- nfd_stats(ism_flows, "Cameo", "intervening", "monthly")
+plot(ism_stats, ref = hist_stats, base_units = "acre-feet")
+```
 
 ### `crssi_`
 
 * Create CRSS input files with `crssi_create_dnf_files()`, `crssi_create_cmip_nf_files()`, and `crssi_create_hist_nf_xlsx()` 
   * These files can also be created with a GUI through an R Studio Addin (see `?crss_input_addin`)
 * Modify existing CRSS natural flow input files with `crssi_change_nf_start_date()`, `crssi_change_nf_file_names()`, and `crssi_change_evap_files()`
-* `trimCCNFFiles` trims the climate change hydrology input files to a specified time period 
 
 ### `crsso_`
 
@@ -38,7 +71,7 @@ The package also includes other functions for conveniently manipulating other da
 
 ```{r echo=TRUE, warning=FALSE, message=FALSE}
 library(CRSSIO)
-library(RWDataPlyr) # install_github("BoulderCodeHub/RWDataPlyr")
+library(RWDataPlyr) # install.packages("RWDataPlyr")
 # create the RiverWare data aggregator
 rwa <- sys_cond_rwa()
 
@@ -85,6 +118,7 @@ devtools::install_github('BoulderCodeHub/CRSSIO')
 
 For details, see the [News](NEWS.md)
 
+* 2020-06-12: version 0.8.0 available
 * 2020-01-24: version 0.7.4 available
 * 2019-07-25: version 0.7.3 available
 * 2019-02-07: version 0.7.2 available
