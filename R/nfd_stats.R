@@ -265,7 +265,7 @@ nfd_stats_plot_monthly <- function(x, ref, base_units, ...)
   gg
 }
 
-nfd_stats_plot_annual <- function(x, points, base_units, ...)
+nfd_stats_plot_annual <- function(x, ref, base_units, ...)
 {
   shape <- plot_ops("shape", "point", ...)
   color <- plot_ops("color", "point", ...)
