@@ -1,26 +1,28 @@
-#' Create CRSS Natural Flow Input Files 
+#' Create CRSS Natural Flow Input Files From Historical Record
 #' 
-#' Creates the CRSS natural flow input files used by the Colorado River 
-#' Simulation System (CRSS)
+#' `crssi_create_dnf_files()` creates the natural flow input files used by the 
+#' Colorado River Simulation System (CRSS) by applying the 
+#' [Index Sequential Method](http://onlinelibrary.wiley.com/doi/10.1111/j.1752-1688.1997.tb03557.x/abstract)
+#' (ISM) to the historical natural flow record (or a subset of the historical 
+#' record). `crssi_create_dnf_files()` is a convenience function that wraps 
+#' the process of getting/formatting data ([crss_nf()] + [sac_year_type_get()] + 
+#' [crssi()]), applying ISM ([ism()]), changing the dates to CRSS' future start
+#' year ([reindex()]), and then writing out the files ([write_crssi()]). 
 #' 
-#' `crssi_create_dnf_files()` and `createCRSSDNFInputFiles()` create individual 
-#' trace files for the observed natural flow on the Colorado River Basin using the 
-#' \href{http://onlinelibrary.wiley.com/doi/10.1111/j.1752-1688.1997.tb03557.x/abstract}{Index Sequential Method}. 
-#' Trace files are formated and saved in a format expected
-#' by the Colorado River Simulation System (CRSS). Data is read from the natural
-#' flow workbook available at \url{http://www.usbr.gov/lc/region/g4000/NaturalFlow/current.html} 
+#' **Input Data:** The input data can be read from the natural flow workbook 
+#' available at 
+#' \url{http://www.usbr.gov/lc/region/g4000/NaturalFlow/current.html} 
 #' or from the [CoRiverNF](https://github.com/BoulderCodeHub/CoRiverNF) data 
 #' package. It is much faster to use the data package rather than the Excel 
-#' workbook. The data package is created from the Excel file, so the files 
-#' created are identical for each of the two data sets.
+#' workbook, and the files created from the two sources will match identically 
+#' if they are from the same natural flow release.
 #' 
-#' In addition to creating the natural flow input files, data for two 
-#' informative slots are created. These slots include the trace number and the 
-#' supply scenario number. The trace numbers are intuitive, i.e., they are 
-#' integers from 1 to N where N is the trace number. This information is saved 
-#' in the slot name that is set by the "crssio.traceNumberSlot" option. The 
-#' scenario number provides the user with a numeric representation of which 
-#' supply scenario is used. The observed historical natural flows (used by this 
+#' **Other Files:** In addition to creating the natural flow input files, data 
+#' for two four other slots are also created. See [write_crssi()].  
+#' 
+#' **Scenario Number:** The scenario number in `crssi` objects provides the user 
+#' with a numeric representation of which supply scenario is used. 
+#' The observed historical natural flows (used by this 
 #' function) are supply scenario 1. For this supply scenario, the decimals of 
 #' the supply scenario number represent the start and end year that the ISM 
 #' method are applied to. For example, if you set `recordToUse` to 
@@ -29,70 +31,46 @@
 #' represent the end year. The supply scenario slot will be set to 1.19882012 in 
 #' this example. This tells the user of CRSS that the  supply scenario is the 
 #' observed historical natural flows with the ISM method applied to the 
-#' 1988-2012 data. The supply scenario slot name is set by the 
-#' "crssio.supplyScenarioSlot" option.
-#' 
-#' The hydrologyIncrement data that sets the random number generator for
-#' each year and trace is created for each trace folder. The slot name that is 
-#' created for the hydrologyIncrement is set by the "crssio.hydroIncrement" 
-#' option.
-#' 
-#' Beginning in CRSS v2.6, input data for the Sacramento year type 
-#' index are necessary. The historical Sacramento year type data (available at
-#' \url{http://cdec.water.ca.gov/cgi-progs/iodir/WSIHIST}) are resampled using
-#' ISM with the same years as the historical natural flows. This function also
-#' creates an input file for each trace that includes the Sacramento year type
-#' index. This file name is controlled by the \code{crssio.sacYTSlot} option and
-#' defaults to "MWD ICS.SacWYType"
-#' 
-#' `overwriteFiles` allows the user to control whether existing files within the
-#' trace folders should be overwritten (default is they are not). 
+#' 1988-2012 data. 
 #' 
 #' @param iFile Either the string `"CoRiverNF"``, or the relative or absolute 
 #'   path to the excel workbook. When "CoRiverNF" is used, the data from the 
 #'   [CoRiverNF](https://github.com/BoulderCodeHub/CoRiverNF) data package is 
 #'   used. Otherwise, it should be a valid path to the natural flow Excel 
 #'   workbook. 
+#'   
 #' @param oFolder Path to the top level directory where the trace folders and
 #'   input files will be created. This folder should exist before using this
 #'   function.
+#'   
 #' @param startYear The year to start the trace files in. Data will be trimmed 
 #'   to start in this year.
-#' @param startDate The start date to be listed in each trace file; should be in 
-#'   2014-1-31 format
+#'   
 #' @param endYear The final year of data the trace files will contain.
-#' @param simYrs The number of years of data each file should contain. Should be
-#' no longer than the number of years in the input data.
+#' 
 #' @param oFiles A matrix of the file names (input into CRSS). The default uses
-#'   \code{\link{nf_file_names}()}. This must be specified in the correct 
+#'   [nf_file_names()]. This must be specified in the correct 
 #'   order, i.e., the same order as the nodes in the input Excel file.
+#'   
 #' @param recordToUse The start and end dates of the natural flow record to 
 #'   perform ISM, if using something besides the full record. If it is `NA`, the 
 #'   full record will be used. Otherwise, it should be a vector of length 2, 
 #'   where the first entry is the start date and the second entry is the end 
 #'   date. The vector should be of type [zoo::yearmon], and begin in January of
 #'   some year, and end in December of some year.
-#' @param overwriteFiles A boolean that determines whether or not the function
-#'   should overwrite existing files. See 'Details'.
+#'   
+#' @param overwriteFiles Boolean. Should existing files be overwritten.
 #' 
-#' @return Nothing is returned by the function, but it writes out many files.
+#' @return Invisibly returns `crssi` object.
+#' 
 #' @examples
 #' 
 #' \dontrun{
-#' # create 107 traces of 107 years using the CoRiverNF R data package
-#' createCRSSDNFInputFiles("CoRiverNF", 'tmp','2017-1-31',107)
 #' # will create 20 years for 25 traces based on the 1988-2012 record:
 #' crssi_create_dnf_files("CoRiverNF", 
 #'   "tmp", 
 #'   startYear = 2017, 
 #'   endYear = 2036, 
-#'   recordToUse = zoo::as.yearmon(c('1988-1','2012-12'))
-#' )
-#' # or identical using other function:
-#' createCRSSDNFInputFiles("CoRiverNF", 
-#'   "tmp",
-#'   startDate = "2017-1-31",
-#'   nYrs = 20, 
 #'   recordToUse = zoo::as.yearmon(c('1988-1','2012-12'))
 #' )
 #' 
@@ -104,18 +82,39 @@
 #'   startYear = 2015, 
 #'   endYear = 2064
 #' )
-#' # or same from other function:
-#' createCRSSDNFInputFiles(iFile,'NFSinput/','2015-1-31',50)
-#' # will create 20 years for 25 traces based on the 1988-2012 record:
-#' createCRSSDNFInputFiles(iFile,
-#'   'scratch/',
-#'   '2016-1-31', 
-#'   20, 
-#'   recordToUse = zoo::as.yearmon(('1988-1','2012-12'))
+#' 
+#' # crssi_create_dnf_files() is a convenient wrapper around other functions
+#' # in CRSSIO. The following should produce the same output. This would create
+#' # the "stress test hydrology", which applies ISM to the 1988-present 
+#' # hydrology
+#' # wrapper: 
+#' crssi_create_dnf_files(
+#'   "CoRiverNF", 
+#'   "folder1/", 
+#'   startYear = 2020, 
+#'   endYear = 2024, 
+#'   recordToUse = zoo::as.yearmon(c('1988-1','2018-12'))
 #' )
+#' 
+#' # individual steps:
+#' # get data
+#' flow <- CoRiverNF::monthlyInt["1988/2018"]
+#' sac_yt <- sac_year_type_get()["1988/2018"]
+#'
+#' # create crssi object
+#' nf <- crssi(crss_nf(flow), sac_yt, scen_number = 1.19882018)
+#' 
+#' # apply ism
+#' nf <- ism(nf, n_years_keep = 5)
+#' 
+#' # change times to start in 2020
+#' nf <- reindex(nf, 2020)
+#' 
+#' # write the files
+#' write_crssi(nf, "folder2/")
+#' 
 #' }
-#' @seealso
-#' \code{\link{nf_file_names}()}
+#' @seealso [nf_file_names()], [crssi()], [write_crssi()] 
 #' 
 #' @export
 crssi_create_dnf_files <- function(iFile, 
@@ -135,6 +134,7 @@ crssi_create_dnf_files <- function(iFile,
   if (!anyNA(recordToUse))
     recordToUse_str <- check_recordToUse(recordToUse)
   
+  # get nf data ------------------------------------------
   if (iFile == 'CoRiverNF') {
     # use the data in CoRiverNF::monthlyInt
     nf <- CoRiverNF::monthlyInt
@@ -160,10 +160,14 @@ crssi_create_dnf_files <- function(iFile,
     }
   }
   
+  # convert nf to crss_nf
+  nf <- crss_nf(nf)
+  
+  # set scenario number --------------------
   # get the years used before changing nf
   if (!anyNA(recordToUse)) {
-    y1 <- format(recordToUse[1], "%Y")
-    y2 <- format(recordToUse[2], "%Y")
+    y1 <- year(recordToUse[1], numeric = TRUE)
+    y2 <- year(recordToUse[2], numeric = TRUE)
     periodToUse <- paste0(y1, '-', y2)
     # this only deals with historical observed NF, so that is supply scenario 
     # 1.xxxxxxxx, where the .xxxxxxxx are the beginning and ending years used
@@ -172,77 +176,44 @@ crssi_create_dnf_files <- function(iFile,
   } else {
     # uses the full record, so it's 1906 - some year. figure out some year
     y1 <- 1906
-    y2 <- format(zoo::index(nf)[nrow(nf)], "%Y")
+    y2 <- year(end(nf), numeric = TRUE)
     periodToUse <- paste0(y1, '-', y2)
     supplyScenario <- as.numeric(paste0('1.1906',y2))
   }
   
-  startDate <- paste0(startYear, "-01-31")
   simYrs <- endYear - startYear + 1
- 
-  nf <- getAllISMMatrices(nf, startDate, simYrs)
+  assert_that(
+    simYrs <= (y2 - y1 + 1), 
+    msg = "endYear-startYear+1 should be <= the length speciifed in recordToUse."
+  )
   
-  nT <- ncol(nf[[1]]) # number of traces
+  # get sac_yt_data -------------------------------------
+  sac_yt <- sac_year_type_get()
+  # trim to correct years
+  if (!anyNA(recordToUse)) {
+    check_recordToUse_year2(recordToUse[2], sac_yt)
+    # trim data
+    sac_yt <- sac_yt[paste(recordToUse_str[1], recordToUse_str[2], sep = '/')]
+  }
   
-	# number of months in each trace
-	nM <- simYrs * 12
-	headerInfo <- get_trace_file_header(startYear)
-	
-	# create all directories
-	lapply(
-	  1:nT,
-	  function(x){
-	    fold <- paste(oFolder, '/trace', x, sep = '')
-	    if(!dir.exists(fold))
-	      dir.create(fold)
-	  }
-	)
-
-	# for each node, write out all of the trace files
-	lapply(
-	  1:29, 
-	  function(x) writeNFFilesByNode(nf[[x]], oFiles[x], oFolder, headerInfo)
-	)
-	
-	# get sacramento year type ism data ----------
-	eoyDate <- paste0(startYear, "-12-31")
-	ytData <- getYTISMData(eoyDate, simYrs, y1, y2)
-
-	# write out additional trace files ----------
-	message("Beginning to write additional trace files")
-	lapply(1:nT, function(x) {
-	  # write out all of the trace and supply scenario number files
-	  writeTraceSupplyNumbers(x, supplyScenario, oFolder)
-	  
-	  # write out the hydrology increment slot
-	  writeHydroIncrement(x, simYrs, startDate, oFolder)
-	  
-	  # write out the sacramento year type file
-	  writeSacYT(x, ytData, eoyDate, oFolder)
-	})
+  # create crssi ----------------------------------------
+  scen_name <- paste0("ISM applied to ", y1, "-", y2, " historical hydrology.")
+  nf <- crssi(nf, sac_yt, supplyScenario, scen_name)
+  
+  # reindex to start in specified year ------------------
+  nf <- reindex(nf, startYear)
+  
+  # ism and trim ----------------------------------------
+  nf <- ism(nf, n_years_keep = simYrs)
+  
+  # save files ------------------------------------------
+  write_crssi(nf, path = oFolder, overwrite = overwriteFiles, readme = FALSE)
 	
 	# create the README
 	write_nf_readme(
 	  get_dnf_readme_vals(iFile, startYear, endYear, periodToUse), 
 	  oFolder = oFolder
 	)
-}
-
-#' @export
-#' @rdname crssi_create_dnf_files
-createCRSSDNFInputFiles <- function(iFile, 
-                                    oFolder, 
-                                    startDate, 
-                                    simYrs, 
-                                    oFiles = nf_file_names(),
-                                    recordToUse = NA,
-                                    overwriteFiles = FALSE)
-{
-  .Deprecated("crssi_create_dnf_files")
-  
-  startYear <- as.numeric(strsplit(startDate, "-")[[1]][1])
-  endYear <- startYear + simYrs - 1
-  
-  crssi_create_dnf_files(iFile, oFolder, startYear, endYear, oFiles, 
-                         recordToUse, overwriteFiles)
+	
+	invisible(nf)
 }

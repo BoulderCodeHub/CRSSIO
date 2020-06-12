@@ -213,16 +213,6 @@ crsso_get_sys_cond_table <- function(zz, yrs)
   rr
 }
 
-#' @export
-#' @rdname sys_cond_table
-
-createSysCondTable <- function(zz, yrs)
-{
-  .Deprecated("crsso_get_sys_cond_table")
-  
-  crsso_get_sys_cond_table(zz, yrs)
-}
-
 #' @details
 #' `sys_cond_matrix()` is included for use with RWDataPlyr <= v0.5.0. It
 #' is a convenience function to save the user from having to 
@@ -248,14 +238,6 @@ sys_cond_matrix <- function()
   r <- cbind(rep('SystemConditions.rdf',n), slotNames(), rep('AnnualRaw',n), 
              rep(NA, n), vShort())
   r
-}
-
-#' @export
-#' @rdname sys_cond_table
-sysCondSALMatrix <- function()
-{
-  .Deprecated("sys_cond_matrix")
-  sys_cond_matrix()
 }
 
 #' @details

@@ -69,9 +69,10 @@ crssi_change_nf_start_date <- function(nTrace, folder, start_year, startDate)
 	# it for every single file and trace would be extremely annoying
 	issueWarning <- FALSE
 	
-	for (i in seq_len(nTrace)){
-		message(paste('Starting trace:',i,'of',nTrace))
+	message(paste('Processing', nTrace, "traces:"))
+	pb <- utils::txtProgressBar(min = 0, max = nTrace, style = 3)
 	
+	for (i in seq_len(nTrace)){
 		currFold <- file.path(folder,paste0('trace',i))
 		# get list of all files contained in the trace folder
 		currFiles <- list.files(currFold)
@@ -117,6 +118,8 @@ crssi_change_nf_start_date <- function(nTrace, folder, start_year, startDate)
 			  )
 			}
 		}
+		
+		utils::setTxtProgressBar(pb, i)
 	}
 	
 	if(issueWarning) 
@@ -176,14 +179,6 @@ update_readme <- function(folder, start_year)
   invisible(txt)
 }
 
-#' @export
-#' @rdname crssi_change_nf_start_date
-changeStartDate <- function(nTrace, folder, startDate)
-{
-  .Deprecated("crssi_change_nf_start_date")
-  crssi_change_nf_start_date(nTrace, folder, startDate)
-}
-
 #' Change Start Date of Evap Files
 #' 
 #' Changes the start date in all files in each CRSS_DIR/dmi/evap/trace folder.
@@ -209,8 +204,11 @@ crssi_change_evap_files <- function(nTrace, folder, startDate, NZeros)
 	  'Powell.River_Evaporation_Coefficient'
 	)
 	
+  message(paste('Processing', nTrace, "traces:"))
+  pb <- utils::txtProgressBar(min = 0, max = nTrace, style = 3)
+  
 	for (i in seq_len(nTrace)){
-		message(paste('Starting trace:',i,'of',nTrace))
+		
 		currFold <- paste(folder,'/trace',i,'/',sep = '')
 		# get list of all files contained in the trace folder
 		currFiles <- list.files(currFold)
@@ -242,14 +240,7 @@ crssi_change_evap_files <- function(nTrace, folder, startDate, NZeros)
 				)
 			}
 		}
+		
+		utils::setTxtProgressBar(pb, i)
 	}
 }
-
-#' @export
-#' @rdname crssi_change_evap_files
-changeStartDateForEvapAndAddZeros <- function(nTrace, folder, startDate, NZeros)
-{
-  .Deprecated("crssi_change_evap_files")
-  crssi_change_evap_files(nTrace, folder, startDate, NZeros)
-}
-

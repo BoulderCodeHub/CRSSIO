@@ -4,8 +4,13 @@
 \alias{add_secondary_y_conversion}
 \title{Add a Secondary Y-Axis to a ggplot, Converting from the Primary Axis Units}
 \usage{
-add_secondary_y_conversion(gg, from_unit, to_unit, sec_name = to_unit,
-  digits = "get_decimals")
+add_secondary_y_conversion(
+  gg,
+  from_unit,
+  to_unit,
+  sec_name = to_unit,
+  digits = "get_decimals"
+)
 }
 \arguments{
 \item{gg}{A ggplot}

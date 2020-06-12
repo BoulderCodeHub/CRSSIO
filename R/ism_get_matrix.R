@@ -1,45 +1,20 @@
-
-# returns subset of a data
-# assumes monthly data
-getSubsetOfData <- function(startYear, zz, nYrs, monthly)
-{
-  if(monthly){
-    startI <- startYear * 12 - 11
-    zz <- zz[startI:(nYrs * 12 + startI - 1)]
-  } else{
-    # annual data
-    zz <- zz[startYear:(nYrs + startYear - 1)]
-  }
-  
-  zz
-}
-
-#' Create a matrix of data based on ISM
-#' 
-#' `ism_get_site_matrix()` takes in a matrix of historical data for a single 
-#' site and applies the Index Sequential Method (ISM) to it. Because this is 
-#' typically used to create future hydrology data, the entire matrix will have 
-#' a new start month (`starMonth`). 
-#' 
-#' The method can be used on monthly or annual data. If you are applying it to 
-#' monthly data, then \code{xtsData} needs to be monthly data, and \code{monthly}
-#' should be set to \code{TRUE}. If using annual data, then \code{xtsData} should 
-#' be annual, i.e., all with a December timestamp, and \code{monthly} should be
-#' set to \code{FALSE}. If \code{monthly} is \code{FALSE} and \code{xtsData} is 
+#' @details 
+#' `ism_get_site_matrix()` is a deprecated version of `ism()` that only works 
+#' on `xts` objects. It takes in 1 column of historical data for a single 
+#' site and applies (ISM) to it. This function allows you to change the start
+#' date of the returned data in it, while `ism()` does not. When using `ism(), 
+#' [reindex()] should be used after it to change the start date.
+#' `ism_get_site_matrix()` can be used on monthly or annual data. If applying it
+#' to monthly data, then `xtsData` needs to be monthly data, and `monthly`
+#' should be set to `TRUE`. If using annual data, then `xtsData` should 
+#' be annual, i.e., all with a December time stamp, and `monthly` should be
+#' set to `FALSE`. If `monthly` is `FALSE` and `xtsData` is 
 #' monthly data, an error will occur.
 #' 
-#' @return xts matrix with the number of years/months specified by `nYrs` 
-#'   and the number of columns equal to the number of years of data in `xtsData`
-#' 
-#' @examples 
-#' # monthly data, that will create a 48x4 xts matrix
-#' t1 <- xts::xts(1:48, zoo::as.yearmon("Jan 2000") + seq(0,47)/12)
-#' ism_get_site_matrix(t1, "Jan 2020")
-#' 
-#' # annual data that will create a 5 x 6 matrix
-#' t2 <- xts::xts(1:6, zoo::as.yearmon("Dec 2000") + 0:5)
-#' ism_get_site_matrix(t2, "Dec 2020", nYrs = 5, monthly = FALSE)
-#' 
+#' @return `ism_get_site_matrix()` returns an `xts` matrix with the number of 
+#'   years/months specified by `nYrs` and the number of columns equal to the 
+#'   number of years in `xtsData`
+#'   
 #' @param xtsData An xts vector.
 #' @param startMonth The start month and year of the return matrix. Should be 
 #'   able to be cast to a [zoo::yearmon].
@@ -47,11 +22,13 @@ getSubsetOfData <- function(startYear, zz, nYrs, monthly)
 #'   number of years in xtsData, but can be less. 
 #' @param monthly Boolean that should be set to `TRUE` if the data are monthly; 
 #'   should set to `FALSE` if annual data.
-#' 
+#'   
 #' @export
-#' 
+#' @rdname ism
 ism_get_site_matrix <- function(xtsData, startMonth, nYrs = NA, monthly = TRUE)
 {
+  .Deprecated("ism")
+  
   if(!xts::is.xts(xtsData)){
     stop('xtsData is not of type xts')
   }
@@ -81,12 +58,4 @@ ism_get_site_matrix <- function(xtsData, startMonth, nYrs = NA, monthly = TRUE)
   }
   ismMatrix <- xts::as.xts(zoo::read.zoo(data.frame(ismYearMon, ismMatrix)))
   ismMatrix
-}
-
-#' @export
-#' @rdname ism_get_site_matrix
-createISMMatrix <- function(xtsData, startMonth, nYrs = NA, monthly = TRUE)
-{
-  .Deprecated("ism_get_site_matrix")
-  ism_get_site_matrix(xtsData, startMonth, nYrs, monthly)
 }

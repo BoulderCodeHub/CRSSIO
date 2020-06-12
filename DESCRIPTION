@@ -1,13 +1,13 @@
 Package: CRSSIO
 Title: Package to Manage the Input and Output of CRSS Data
-Version: 0.7.4
+Version: 0.8.0
 Authors@R: person(
     "Alan", "Butler", , "rabutler@usbr.gov", c("aut", "cre")
     )
 Description: Provides functions to generate input files commmonly used by the
     Colorado River Simulation System (CRSS) from publicly available data, as
     well as functions to modify these files. Figures that are commonly used to
-    QA/QC and undersand CRSS results are also automated with this package.
+    QA/QC and understand CRSS results are also automated with this package.
 URL: https://github.com/BoulderCodeHub/CRSSIO
 BugReports: https://github.com/BoulderCodeHub/CRSSIO/issues
 License: CC0
@@ -18,29 +18,70 @@ Imports:
     assertthat,
     CoRiverNF,
     dplyr,
-    ggplot2,
+    grDevices,
+    ggplot2 (>= 3.3.0),
+    httr,
     magrittr,
     miniUI (>= 0.1.1),
     ncdf4,
     readxl,
     rlang,
+    rvest,
     RWDataPlyr (> 0.5.0),
     shiny (>= 0.13),
     stats,
     tibble,
     tidyr,
+    tidyselect,
     tools,
     udunits2,
     utils,
     writexl,
+    xml2,
     xts (>= 0.10.0),
     zoo
 Remotes:
     BoulderCodeHub/CoRiverNF
 Suggests:
+    covr,
     knitr,
     scales,
     testthat
 VignetteBuilder: knitr
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 6.0.1
+RoxygenNote: 7.1.0
+Encoding: UTF-8
+Collate: 
+    'CRSSIO.R'
+    'add_secondary_y_conversion.R'
+    'createCRSSInput_addIn.R'
+    'crssInput_helperFunctions.R'
+    'nfd.R'
+    'crss_nf.R'
+    'crssi.R'
+    'crssi_change_nf_file_names.R'
+    'crssi_change_nf_start_date.R'
+    'crssi_create_cmip_nf_files.R'
+    'crssi_create_dnf_files.R'
+    'crssi_create_hist_nf_xlsx.R'
+    'elevation_to_storage.R'
+    'get_sys_cond_table.R'
+    'globalVariables.R'
+    'has_overlapping_ts.R'
+    'ism.R'
+    'ism_get_matrix.R'
+    'nf_natsalt_names.R'
+    'nfd_extract.R'
+    'nfd_get.R'
+    'nfd_stats.R'
+    'nfd_pdf.R'
+    'nfd_trim_ts.R'
+    'nfdplot.R'
+    'plot.nfd.R'
+    'reindex.R'
+    'sac_year_type_get.R'
+    'stat_boxplot_custom.R'
+    'storage_to_elevation.R'
+    'trim_helpers.R'
+    'write_crssi.R'
+    'zzz.R'

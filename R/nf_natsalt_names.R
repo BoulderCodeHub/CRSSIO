@@ -158,7 +158,7 @@ natsalt_file_names <- function(version=2)
 		'CoRivMohaveToHavasu_GainsAboveParker.Local_Inflow_Salt_Concentration',
 		'AboveImperialDamColoradoR_GainsOnColoRAboveImperialDam.Local_Inflow_Salt_Concentration'))
 	} else{
-	  stop('Invalid version passed to CRSSNatSaltInputNames.')
+	  stop('Invalid version passed to natsalt_file_names().')
 	}
 
 }
@@ -228,36 +228,4 @@ nf_gage_abbrv <- function()
     "GreenRiverUTGreen", "GreenRiverUTSanRafael", "Archuleta", "Bluff", 
     "LeesFerry", "LeesFerryParia", "Cameron", "GrandCanyon", "Littlefield",
     "Hoover", "Davis", "Alamo", "Parker", "Imperial")
-}
-
-#' @export
-#' @rdname nf_natsalt_names
-CRSSNFInputNames <- function(version = 2)
-{
-  .Deprecated("nf_file_names")
-  nf_file_names(version)
-}
-
-#' @export
-#' @rdname nf_natsalt_names
-CRSSNatSaltInputNames <- function(version = 2)
-{
-  .Deprecated("natsalt_file_names")
-  natsalt_file_names(version)
-}
-
-#' @export
-#' @rdname nf_natsalt_names
-nfGageNames <- function()
-{
-  .Deprecated("nf_gage_names")
-  nf_gage_names()
-}
-
-#' @export
-#' @rdname nf_natsalt_names
-nfShortNames <- function()
-{
-  .Deprecated("nf_gage_abbrv")
-  nf_gage_abbrv()
 }

@@ -36,6 +36,9 @@ crssi_change_nf_file_names <- function(iFolder,
                                        toNames)
 {
   
+  message(paste('Processing', nTrace, "traces:"))
+  pb <- utils::txtProgressBar(min = 0, max = nTrace, style = 3)
+  
   for (i in seq_len(nTrace)){
     fromPath <- paste(iFolder,'trace',i,'/',sep = '')
     toPath <- paste(oFolder,'trace',i,'/',sep = '')
@@ -46,17 +49,7 @@ crssi_change_nf_file_names <- function(iFolder,
         paste(toPath, toNames[j],sep = '')
       )
     }
+    
+    utils::setTxtProgressBar(pb, i)
   }
 } 
-
-#' @export
-#' @rdname crssi_change_nf_file_names
-copyAndChangeNFFileNames <- function(iFolder, 
-                                     oFolder, 
-                                     nTrace, 
-                                     fromNames, 
-                                     toNames)
-{
-  .Deprecated("crssi_change_nf_file_names")
-  crssi_change_nf_file_names(iFolder, oFolder, nTrace, fromNames, toNames)
-}

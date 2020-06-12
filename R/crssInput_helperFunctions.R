@@ -1,26 +1,3 @@
-
-#' returns all ISM matrices for all nodes
-#' 
-#' Given a matrix of natural flow data, applies the ISM method to all nodes
-#' 
-#' @param nfMat Matrix of natural flow data
-#' @param startMonth The startMonth of the return matrix. Should be able to be
-#' cast to a zoo::yearmon
-#' @param nYrs The number of years to create the data for. 
-#' 
-#' @return list of matrices. Each node is one matrix entry into the list
-#' @keywords internal
-#' @noRd
-
-getAllISMMatrices <- function(nfMat, startMonth, nYrs)
-{
-  # make sure matrix is correct dimension
-  if(ncol(nfMat) != 29)
-    stop('nfMat does not contain 29 columns (natural flow nodes).')
-  # then call ism_get_site_matrix for every node
-  lapply(1:29, function(x) ism_get_site_matrix(nfMat[,x], startMonth, nYrs))
-}
-
 #' Read in NF Excel file and format it
 #' 
 #' Read in NF Excel file, remove whitespace and unnecessary rows and columns.
@@ -73,7 +50,7 @@ read_and_format_nf_excel <- function(iFile)
   
   Sys.setenv(TZ = 'UTC') # set the system timezone to UTC
   nf <- xts::as.xts(zoo::read.zoo(nf))
-  colnames(nf) <- paste0("X", seq(1, ncol(nf)))
+  colnames(nf) <- nf_gage_abbrv()
   nf
 }
 
@@ -84,29 +61,6 @@ writeSingleFile <- function(xData, fPath, headerInfo)
 {
   colnames(xData) <- headerInfo
   utils::write.table(xData, file = fPath, quote = FALSE, row.names = FALSE)
-}
-
-#' Write out all of the trace files for a given node
-#' 
-#' @param nfXts Natural flow data as a matrix for a single node. The number of 
-#' columns is the number of traces that will be written out to 
-#' oFolder/trace[n]/oFile
-#' @param oFile File name that each file will be saved as
-#' @param oFolder Folder location to write files to
-#' @keywords internal
-#' @noRd
-writeNFFilesByNode <- function(nfXts, oFile, oFolder, headerInfo)
-{
-  message('Beginning to write node: ',oFile)
-
-  lapply(
-    seq_len(ncol(nfXts)), 
-    function(x) writeSingleFile(
-      nfXts[,x], 
-      file.path(oFolder,paste0('trace',x),oFile),
-      headerInfo
-    )
-  )
 }
 
 #' write out the trace number and supply scenario number, to a given trace 

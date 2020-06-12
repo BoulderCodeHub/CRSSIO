@@ -194,9 +194,3 @@ test_that("rows sum together correctly", {
   # FC surplus should always be <= the total surplus
   expect_true(all(sysCondTable$fullTable[16,] <= sysCondTable$fullTable[15,]))
 })
-
-# compare both versions of the function ---------------------
-test_that("both functions are equal", {
-  expect_warning(tmp <- createSysCondTable(sysData, yrs))
-  expect_identical(crsso_get_sys_cond_table(sysData, yrs), tmp)
-})

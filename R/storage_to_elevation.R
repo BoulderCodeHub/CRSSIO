@@ -4,8 +4,6 @@
 #' 
 #' @param storage The volume (in acre-feet) that will be converted to an
 #'   elevation (in feet).
-#'   
-#' @inheritParams elevation_to_storage
 #' 
 #' @return `storage_to_elevation`() returns an elevation in feet with the same
 #'   length as `storage`, or `NA` if the storage is invalid for the reservoir.

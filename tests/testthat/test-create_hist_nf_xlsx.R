@@ -2,8 +2,6 @@ library(CoRiverNF)
 library(dplyr)
 library(tidyr)
 
-context("test the internal fuctions for crssi_create_hist_nf_xlsx()")
-
 # by only using pre 1971 data, the test results should not change with updated
 # version of CoRiverNF
 
@@ -37,7 +35,7 @@ zz1Comp <- zz1 %>%
   tail(24) %>%
   select_at(c(nf1[1], "year", "month")) %>%
   spread_("month", nf1[1]) %>%
-  summarise_at(.vars = as.character(1:12), .funs = funs(round(mean(.), 0))) %>%
+  summarise_at(.vars = as.character(1:12), .funs = list(~round(mean(.), 0))) %>%
   gather_("month", nf1[1], gather_cols = as.character(1:12)) %>%
   mutate(month = as.numeric(month))
 
@@ -45,7 +43,7 @@ zz2Comp <- zz1 %>%
   tail(120) %>%
   select_at(c(nf1[2], "year", "month")) %>%
   spread_("month", nf1[2]) %>%
-  summarise_at(.vars = as.character(1:12), .funs = funs(round(mean(.), 0))) %>%
+  summarise_at(.vars = as.character(1:12), .funs = list(~round(mean(.), 0))) %>%
   gather_("month", nf1[2], gather_cols = as.character(1:12)) %>%
   mutate(month = as.numeric(month))
   

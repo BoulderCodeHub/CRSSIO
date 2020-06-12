@@ -46,6 +46,7 @@ crssi_create_hist_nf_xlsx <- function(modelStartYear, nYearAvg = 5,
   lf <- nf_xts_to_df(CoRiverNF::monthlyTot, "LeesFerry") %>%
     tidyr::unite_("month", from = c("month", "year"), sep = "/1/") %>%
     dplyr::select_at(c("month", "LeesFerry")) %>%
+    dplyr::mutate_at("month", .funs = as.Date, format = "%m/%d/%Y") %>%
     dplyr::rename_at(
       "LeesFerry", 
       function(x) "HistoricalNaturalFlow.AboveLeesFerry"
@@ -61,11 +62,12 @@ crssi_create_hist_nf_xlsx <- function(modelStartYear, nYearAvg = 5,
     dplyr::arrange_at(c("year", "month")) %>%
     tidyr::unite_("month", from = c("month", "year"), sep = "/1/") %>%
     dplyr::select_at(c("month", lbSites)) %>%
+    dplyr::mutate_at("month", .funs = as.Date, format = "%m/%d/%Y") %>%
     dplyr::rename_at(
       lbSites, 
-      .funs = dplyr::funs(paste("HistoricalNaturalFlow", ., sep = "."))
+      .funs = list(~paste("HistoricalNaturalFlow", ., sep = "."))
     )
-  
+
   # write out the file -----------------------------
   oList <- list(
     "README" = get_hist_nf_readme(modelStartYear, nYearAvg),
@@ -104,10 +106,10 @@ nf_xts_to_df <- function(x, nfGages = nf_gage_abbrv())
     as.data.frame() %>%
     tibble::rownames_to_column(var = "ym") %>%
     dplyr::select_at(.vars = c("ym", nfGages)) %>%
-    dplyr::mutate_at(.vars = "ym", .funs = zoo::as.yearmon) %>%
-    dplyr::mutate_at(.vars = "ym", .funs = dplyr::funs(
-      "year" = as.numeric(format(., "%Y")),
-      "month" = as.numeric(format(., "%m"))
+    dplyr::mutate_at(.vars = "ym", zoo::as.yearmon) %>%
+    dplyr::mutate_at(.vars = "ym", .funs = list(
+      "year" = ~ year(., TRUE),
+      "month" = ~ month(., TRUE)
     )) %>%
     dplyr::select(-dplyr::matches("ym"))
 }
@@ -154,7 +156,7 @@ get_monthly_average_by_site <- function(x, site, nYearAvg)
     tidyr::spread_("month", site) %>%
     dplyr::arrange_at("year") %>%
     dplyr::select(-dplyr::matches("year")) %>%
-    dplyr::summarise_all(.funs = dplyr::funs(round(mean(.), 0))) %>%
+    dplyr::summarise_all(.funs = list(~round(mean(.), 0))) %>%
     tidyr::gather_("month", site, as.character(1:12)) %>%
     dplyr::mutate_at("month", as.numeric)
 }

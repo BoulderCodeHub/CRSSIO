@@ -2,19 +2,13 @@
 % Please edit documentation in R/get_sys_cond_table.R
 \name{crsso_get_sys_cond_table}
 \alias{crsso_get_sys_cond_table}
-\alias{createSysCondTable}
 \alias{sys_cond_matrix}
-\alias{sysCondSALMatrix}
 \alias{sys_cond_rwa}
 \title{Create standard CRSS system conditions table}
 \usage{
 crsso_get_sys_cond_table(zz, yrs)
 
-createSysCondTable(zz, yrs)
-
 sys_cond_matrix()
-
-sysCondSALMatrix()
 
 sys_cond_rwa()
 }

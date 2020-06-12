@@ -1,18 +1,14 @@
-library(CRSSIO)
-context('check that Natural Flow files are created correctly.')
 
 # setup temp folders ---------------------------
-dir1 <- file.path(tempdir(), "tmp")
-dir2 <- file.path(tempdir(), "tmp2")
-dir3 <- file.path(tempdir(), "tmp3")
+temp_folder <- tempdir()
+dir2 <- file.path(temp_folder, "tmp2")
+dir3 <- file.path(temp_folder, "tmp3")
 
 setup({
-  dir.create(dir1)
   dir.create(dir2)
   dir.create(dir3)
 })
 teardown({
-  unlink(dir1, recursive = TRUE)
   unlink(dir2, recursive = TRUE)
   unlink(dir3, recursive = TRUE)
 })
@@ -144,16 +140,6 @@ test_that("Upfront errors post correctly", {
 # because we are using pre- 1971 data, we do not need to regenerate the data
 # in the provided trace folders each time the natural flow are updated
 test_that('can create files',{
-  expect_warning(expect_message(
-    createCRSSDNFInputFiles(
-      'CoRiverNF', 
-      oFolder = dir1, 
-      startDate = '2017-1-31', 
-      simYrs = 5, 
-      recordToUse = r2u
-    )
-  ))
-  
   expect_message(
     crssi_create_dnf_files(
       'CoRiverNF', 
@@ -177,22 +163,6 @@ test_that('can create files',{
 
 # check that all files in the three directories are the same -------------
 
-dirs <- list.dirs(dir1, recursive = FALSE, full.names = FALSE)
-test_that("all files are the same", {
-  for(curDir in dirs){
-    allFiles <- list.files(file.path(dir1, curDir))
-    for(ff in allFiles){
-      #message(curDir, "/", ff)
-      expect_identical(
-        scan(file.path(dir1, curDir, ff), what = "character", quiet = TRUE),
-        scan(file.path(dir2, curDir, ff), what = "character", quiet = TRUE),
-        info = paste(curDir, ff)
-      )
-    }
-  }
-})
-
-  
 dirs <- list.dirs(dir2, recursive = FALSE, full.names = FALSE)
 test_that("all files are the same", {
   for(curDir in dirs){
@@ -214,16 +184,14 @@ allFiles <- c(nf_file_names(), "MWD_ICS.SacWYType",
               "HydrologyParameters.SupplyScenario")
 
 test_that("all files exist", {
-  expect_true(all(allFiles %in% list.files(file.path(dir1, "trace1"))))
-  expect_true(all(allFiles %in% list.files(file.path(dir1, "trace3"))))
-  expect_true(all(list.files(file.path(dir1, "trace1")) %in% allFiles))
-  expect_true(all(list.files(file.path(dir1, "trace3")) %in% allFiles))
+  expect_setequal(allFiles, list.files(file.path(dir2, "trace1")))
+  expect_setequal(allFiles, list.files(file.path(dir2, "trace3")))
 })
 
 test_that('files created from "CoRiverNF" are the same as from Excel', {
   expect_equal(
     as.matrix(read.csv(
-      file.path(dir1, 'trace1',nf_file_names()[rr[1]]),
+      file.path(dir2, 'trace1',nf_file_names()[rr[1]]),
       skip = 1
     )),
     as.matrix(read.csv(
@@ -233,7 +201,7 @@ test_that('files created from "CoRiverNF" are the same as from Excel', {
   )
   expect_equal(
     as.matrix(read.csv(
-      file.path(dir1, 'trace5',nf_file_names()[rr[1]]),
+      file.path(dir2, 'trace5',nf_file_names()[rr[1]]),
       skip = 1
     )),
     as.matrix(read.csv(
@@ -243,7 +211,7 @@ test_that('files created from "CoRiverNF" are the same as from Excel', {
   )
   expect_equal(
     as.matrix(read.csv(
-      file.path(dir1, 'trace2',nf_file_names()[rr[2]]),
+      file.path(dir2, 'trace2',nf_file_names()[rr[2]]),
       skip = 1
     )),
     as.matrix(read.csv(
@@ -253,7 +221,7 @@ test_that('files created from "CoRiverNF" are the same as from Excel', {
   )
   expect_equal(
     as.matrix(read.csv(
-      file.path(dir1, 'trace3',nf_file_names()[rr[3]]),
+      file.path(dir2, 'trace3',nf_file_names()[rr[3]]),
       skip = 1
     )),
     as.matrix(read.csv(
@@ -263,7 +231,7 @@ test_that('files created from "CoRiverNF" are the same as from Excel', {
   )
   expect_equal(
     as.matrix(read.csv(
-      file.path(dir1, 'trace4',nf_file_names()[rr[4]]),
+      file.path(dir2, 'trace4',nf_file_names()[rr[4]]),
       skip = 1
     )),
     as.matrix(read.csv(
@@ -276,7 +244,7 @@ test_that('files created from "CoRiverNF" are the same as from Excel', {
 test_that('ism files match each other as expected', {
   expect_equal(
     as.matrix(read.csv(
-      file.path(dir1, 'trace1',nf_file_names()[rr[1]]),
+      file.path(dir2, 'trace1',nf_file_names()[rr[1]]),
       skip = 1
     ))[13:24],
     as.matrix(read.csv(
@@ -286,7 +254,7 @@ test_that('ism files match each other as expected', {
   )
   expect_equal(
     as.matrix(read.csv(
-      file.path(dir1, 'trace1',nf_file_names()[rr[2]]),
+      file.path(dir2, 'trace1',nf_file_names()[rr[2]]),
       skip = 1
     ))[49:60],
     as.matrix(read.csv(
@@ -296,7 +264,7 @@ test_that('ism files match each other as expected', {
   )
   expect_equal(
     as.matrix(read.csv(
-      file.path(dir1, 'trace1',nf_file_names()[rr[2]]),
+      file.path(dir2, 'trace1',nf_file_names()[rr[2]]),
       skip = 1
     ))[1:12],
     as.matrix(read.csv(

@@ -7,9 +7,9 @@
 \title{CRSSIO: Package to Manage the Input and Output of CRSS Data}
 \description{
 Provides functions to generate input files commmonly used by the
-Colorado River Simulation System (CRSS) from publicly available data, as
-well as functions to modify these files. Figures that are commonly used to
-QA/QC and undersand CRSS results are also automated with this package.
+    Colorado River Simulation System (CRSS) from publicly available data, as
+    well as functions to modify these files. Figures that are commonly used to
+    QA/QC and understand CRSS results are also automated with this package.
 }
 \section{Package Options}{
 
@@ -31,9 +31,13 @@ Additional options for file I/O:
 \describe{
 \item{\code{crssio.histNfFile}}{The file name that will be created by
 \code{crssi_create_hist_nf_xlsx()}. Default: \code{"HistoricalNaturalFlow.xlsx"}}
+
 \item{\code{crssio.nf_sheet_name}}{The sheet name to read from the natural flow
 Excel file if using Excel instead of the CoRiverNF package in
 \code{\link[=crssi_create_dnf_files]{crssi_create_dnf_files()}}. Default: \code{"InterveningNaturalFlow"}}
+
+\item{\code{crssio.sac_yt_url}}{The website to download the Sacramento Year Type
+index data from. Default: http://cdec.water.ca.gov/cgi-progs/iodir/WSIHIST}
 }
 }
 
