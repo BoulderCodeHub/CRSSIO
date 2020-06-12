@@ -213,7 +213,7 @@ plot.nfd_stats <- function(x, ref = NULL, base_units = NULL, show = TRUE,
   else 
     gg <- nfd_stats_plot_monthly(x, ref, base_units, ...)
   
-  if (show && interactive())
+  if (show)
     print(gg)
   
   invisible(gg)

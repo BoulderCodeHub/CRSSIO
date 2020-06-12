@@ -120,7 +120,7 @@ plot.nfd <- function(x, trace = -1, site = 1, flow_space = "both",
   
   class(gg) <- "nfdplot"
   
-  if (show && interactive())
+  if (show)
     print(gg)
   
   invisible(gg)

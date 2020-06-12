@@ -215,7 +215,7 @@ plot.nfd_pdf <- function(x, ref = NULL, base_units = NULL, show = TRUE, ...)
   else 
     gg <- nfd_pdf_plot_monthly(x, ref, base_units, ...)
   
-  if (show && interactive())
+  if (show)
     print(gg)
   
   invisible(gg)
