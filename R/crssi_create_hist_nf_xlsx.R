@@ -65,7 +65,7 @@ crssi_create_hist_nf_xlsx <- function(modelStartYear, nYearAvg = 5,
     dplyr::mutate_at("month", .funs = as.Date, format = "%m/%d/%Y") %>%
     dplyr::rename_at(
       lbSites, 
-      .funs = dplyr::funs(paste("HistoricalNaturalFlow", ., sep = "."))
+      .funs = list(~paste("HistoricalNaturalFlow", ., sep = "."))
     )
 
   # write out the file -----------------------------
@@ -156,7 +156,7 @@ get_monthly_average_by_site <- function(x, site, nYearAvg)
     tidyr::spread_("month", site) %>%
     dplyr::arrange_at("year") %>%
     dplyr::select(-dplyr::matches("year")) %>%
-    dplyr::summarise_all(.funs = dplyr::funs(round(mean(.), 0))) %>%
+    dplyr::summarise_all(.funs = list(~round(mean(.), 0))) %>%
     tidyr::gather_("month", site, as.character(1:12)) %>%
     dplyr::mutate_at("month", as.numeric)
 }

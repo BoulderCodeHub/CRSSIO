@@ -2,8 +2,6 @@ library(CoRiverNF)
 library(dplyr)
 library(tidyr)
 
-context("test the internal fuctions for crssi_create_hist_nf_xlsx()")
-
 # by only using pre 1971 data, the test results should not change with updated
 # version of CoRiverNF
 
