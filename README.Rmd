@@ -15,7 +15,7 @@ knitr::opts_chunk$set(
 
 # CRSSIO
 <!-- badges: start -->
-*Stable version (v0.7.4):* [![R build status](https://github.com/BoulderCodeHub/CRSSIO/workflows/R-CMD-check/badge.svg)](https://github.com/BoulderCodeHub/CRSSIO/actions)
+*Stable version (v0.8.0):* [![R build status](https://github.com/BoulderCodeHub/CRSSIO/workflows/R-CMD-check/badge.svg)](https://github.com/BoulderCodeHub/CRSSIO/actions)
 [![Codecov test coverage](https://codecov.io/gh/BoulderCodeHub/CRSSIO/branch/master/graphs/badge.svg)](https://codecov.io/gh/BoulderCodeHub/CRSSIO)
 
 *Development version:*  [![R build status](https://github.com/rabutler-usbr/CRSSIO/workflows/R-CMD-check/badge.svg)](https://github.com/BoulderCodeHub/rabutler-usbr/actions)
