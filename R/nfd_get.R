@@ -29,6 +29,7 @@ nfd_get_site <- function(x, site, flow_space, time_step)
   time_step <- match.arg(time_step, c("annual", "monthly"))
   
   # check that site exists
+  site_name <- NULL
   if (is.character(site)) {
     assert_that(site %in% sites(x))
     site_name <- site

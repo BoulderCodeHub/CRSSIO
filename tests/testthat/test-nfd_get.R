@@ -79,6 +79,9 @@ nfd_mon <- nfd(mon_array, flow_space = "both", time_step = "monthly",
                n_sites = 29, n_trace = 3,
                start_yearmon = "Jan 2020", site_names = nf_gage_abbrv())
 
+nfd_simple <- nfd(5, n_months = 24, n_sites = 3, flow_space = "total", 
+                  time_step = "annual")
+
 x_crss_nf <- crss_nf(nfd_mon)
 sac_yt <- xts(
   matrix(sample.int(5, 6, replace = TRUE), ncol = 3), 
@@ -108,7 +111,10 @@ test_that("nfd_get_site() works", {
   expect_is(x2 <- nfd_get_site(x_crss_nf, "Maybell", "intervening", "monthly"), "xts")
   expect_identical(x, x2)
   
-  # crssi
+  # unnamed ------------------
+  expect_is(nfd_get_site(nfd_simple, 2, "total", "annual"), "xts")
+  
+  # crssi --------------------
   expect_is(x3 <- nfd_get_site(x_crssi, "Maybell", "intervening", "monthly"), "xts")
   expect_identical(x3, x)
 })
