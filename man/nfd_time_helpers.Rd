@@ -59,10 +59,11 @@ If the object contains only monthly, or only annual data,
 \code{has_overlapping_ts()} will always return TRUE.
 
 \code{nfd_trim_ts()} trims the object so that it only contains an "exact"
-overlapping set of monthly and annual data, that is it starts and ends in
+overlapping set of monthly data, that is it starts and ends in
 January and December for calendar year data or October and September for
-water year data. Additionally, the annual and monthly data are trimmed to
-only include data for the same years.
+water year data. Additionally, if object contains annual and monthly data,
+those data are trimmed to only include data for the same years. If the object
+only includes annual data, no trimming is performed.
 
 \code{reindex()} changes the time steps, i.e., indeces, of natural flow data as
 stored in \link{nfd}, \link{crss_nf}, or \link{crssi} objects. The time steps are changed
