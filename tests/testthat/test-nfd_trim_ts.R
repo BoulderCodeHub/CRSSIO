@@ -149,3 +149,22 @@ test_that("find_overlap_years works with water year", {
     foy(as.yearmon("Mar 2020") + 0:35 / 12, as.yearmon("Dec 2020"), "wy")
   )
 })
+
+# only one timestep of data ---------------------------------------
+xx_mon <- crss_nf(CoRiverNF::monthlyInt["/2000"])
+xx_mon2 <- crss_nf(CoRiverNF::monthlyInt["/2000"], year = "wy")
+xx_ann <- nfd(50, n_months = 10*12, start_yearmon = "Jan 2000")
+xx_ann2 <- nfd(20, n_months = 144, flow_space = "both", year = "wy")
+
+test_that("nfd_trim_ts() works on data with only one timestep", {
+  expect_is(x <- nfd_trim_ts(xx_mon), "crss_nf")
+  expect_identical(start(x), zoo::as.yearmon("Jan 1906"))
+  expect_identical(end(x), zoo::as.yearmon("Dec 2000"))
+  
+  expect_is(x <- nfd_trim_ts(xx_mon2), "crss_nf")
+  expect_identical(start(x), zoo::as.yearmon("Oct 1905"))
+  expect_identical(end(x), zoo::as.yearmon("Sep 2000"))
+  
+  expect_identical(xx_ann, nfd_trim_ts(xx_ann))
+  expect_identical(xx_ann2, nfd_trim_ts(xx_ann2))
+})

@@ -1,9 +1,11 @@
 # See reindex.R for documentation
 #' @details `nfd_trim_ts()` trims the object so that it only contains an "exact"
-#' overlapping set of monthly and annual data, that is it starts and ends in 
+#' overlapping set of monthly data, that is it starts and ends in 
 #' January and December for calendar year data or October and September for 
-#' water year data. Additionally, the annual and monthly data are trimmed to 
-#' only include data for the same years. 
+#' water year data. Additionally, if object contains annual and monthly data, 
+#' those data are trimmed to only include data for the same years. If the object
+#' only includes annual data, no trimming is performed.
+#' 
 #' @rdname nfd_time_helpers
 #' @export
 nfd_trim_ts <- function(x)
@@ -14,22 +16,37 @@ nfd_trim_ts <- function(x)
 #' @export
 nfd_trim_ts.nfd <- function(x)
 {
-  if (has_overlapping_ts(x))
-    return(x)
-  
-  assert_that(
-    has_overlapping_ts(x, exact = FALSE), 
-    msg = "There are no overlapping years, so it is not possible to trim the object."
-  )
-  
-  assert_that(
-    has_annual(x) && has_monthly(x), 
-    msg = "nfd does not have annual and monthly data, so nothing to trim."
-  )
-  
   year_type <- attr(x, "year")
   
-  overlap <- find_overlap_years(nfd_mon_index(x), nfd_ann_index(x), year_type)
+  if (has_annual(x) && has_monthly(x)) {
+    # if x has both monthly and annual data, and it is already exactly 
+    # overlapping this function does not have to do anything
+    if (has_overlapping_ts(x))
+      return(x)
+    
+    assert_that(
+      has_overlapping_ts(x, exact = FALSE), 
+      msg = "There are no overlapping years, so it is not possible to trim the object."
+    )
+
+    ann_years <- nfd_ann_index(x)
+    
+  } else if (has_monthly(x)) {
+    # need to trim to exact wy/cy
+    year_type <- attr(x, "year")
+    # make up annual data that is longer than monthly data and rely on the 
+    # find_overlap_years function. Probably not the most efficient, but it 
+    # makes it easier
+    mm <- ifelse(year_type == "cy", "Dec", "Sep")
+    ann_years <- seq(year(start(x), TRUE) - 2, year(end(x), TRUE) + 2)
+    ann_years <- zoo::as.yearmon(paste(mm, ann_years))
+
+  } else {
+    # only has annual, so it is always "exact".
+    return(x)
+  }
+  
+  overlap <- find_overlap_years(nfd_mon_index(x), ann_years, year_type)
   start_end <- start_end_by_yt(year_type)
   
   x <- nfd_extract(
