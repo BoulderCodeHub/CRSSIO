@@ -1,20 +1,42 @@
-CRSSIO 0.7.4.9000
+CRSSIO 0.8.0
 =================
 
-*In development*
+*Released June 12, 2020*
 
-* The Excel file created by `crssi_create_hist_nf_xlsx()` had a `month` column that contained strings. This column is now formated as a `Date`. (#81)
+v0.8.0 marks a major enhancement to CRSSIO. CRSSIO now defines three classes for storing multi-trace natural flow data: `nfd`, `crss_nf`, and `crssi`. `crss_nf` inherits from `nfd` and `crssi` inherits from both `nfd` and `crss_nf`. These classes intend to make working with CRSS input natural flow data easier and more uniform.
+
+## Major Enhancements
+
 * New classes: `nfd`, `crss_nf` (#86), `crssi` (#85)
-  * Generics: `nfd_extract()`, `nfd_trim()`, `has_overlapping_ts()` (#92), `reindex()` (#91), `ism()` (#88), `plot.nfd()` (#95)
-    * Deprecated `ism_get_site_matrix()`
-  * Get functions: `nfd_get_time()`, `nfd_get_site()`, `nfd_get_trace()` (#84)
-  * `nfd_stats()`, `nfd_pdf()`, `plot.nfd_stats()`, and `plot.nfd_pdf()` (#95)
-* `sac_year_type_get()` to download and parse Sacramento year type indexes (#78)
-* Updated internals of `crssi_create_dnf_files()` (#90)
-* Removed deprecated functions (#89)
-* Fixed `add_secondary_y_conversoin()` and `stat_boxplot_custom()` to work with ggplot2 v3.3.0
+  * `nfd` stores multi-trace, multi-site data for annual and/or monthly time steps and for intervening and/or total natural flow (flow space). `nfd()` creates the object from arrays, matrices, or xts objects. The object can contain any/all of the four combinations of time step and flow space.
+  * `crss_nf` objects require that there are exactly 29 sites: the 29 sites required for input into CRSS, and that there are monthly intervening natural flows, which are also required input to CRSS. Other time step and flow space combinations are allowed, but there must be monthly intervening data. 
+  * `crssi` objects add additional required input into CRSS: the Sacramento year type index and a scenario number. 
+* New methods for `nfd` type objects:
+  * `nfd_extract()` - extract data from `nfd` objects by time, trace, site, time step, and/or flow_space. This is a stand in for `[]`. 
+  * `nfd_trim_ts()` (#92) - trim `nfd` objects to "exact" calendar/water years, i.e., start and end in January and December or October and September, respectively. 
+  * `has_overlapping_ts()` (#92) - determine if `nfd` object has monthly and annual data that overlap exactly (default) or at all (`exact = FALSE`)
+  * `reindex()` (#91) - change the time component of the `nfd` object.
+  * `ism()` (#88) - apply Index Sequential Method to a single trace in the `nfd` object.
+    * With this generic, `ism_get_site_matrix()` is deprecated and will be removed in a future release.
+  * `plot()` (#95) - `plot.nfd()` will plot the data in the `nfd` object. Because there can be many traces of data, the data are typically summarized using boxplots; however, annual data can be shown as individual lines using `which = "spaghetti"`. `which = cloud` shows the same info as boxplots but as filled ribbons. 
+* `nfd_get_time()`, `nfd_get_site()`, and `nfd_get_trace()`  are used to get a single time step, site, or trace of data from `nfd` objects. (#84)
+* `nfd_stats()` and `nfd_pdf()` are used to compute basic statistics (mean, max, min, variance, lag-1 correlation, and skew) for each trace in an `nfd` object and to compute PDFs for each trace. 
+  * `plot.nfd_stats()` and `plot.nfd_pdf()` plot these statistics.
+  
+## Other Enhancements 
+
+* The Sacramento year type data can now be downloaded and parsed directly from the website using `sac_year_type_get()`. Previously, these data were stored internal to the package, thus requiring this package to be updated every time a new year of data is added to the record. This internal data can now be used by using `internal = TRUE`, but the internal data will not be routinely updated. (#78)
+* Removed deprecated functions. (#89)
 * Switched `crssi_change_nf_file_names()`, `crssi_change_nf_start_date()` and `crssi_change_evap_files()` to use progress bar instead of printing new line for each trace.
 
+## Bug Fixes
+
+* The Excel file created by `crssi_create_hist_nf_xlsx()` had a `month` column that contained strings. This column is now formated as a `Date`. (#81)
+* Fixed `add_secondary_y_conversoin()` and `stat_boxplot_custom()` to work with ggplot2 v3.3.0.
+
+## Internals
+
+* Updated `crssi_create_dnf_files()` to use the new classes and methods for storing natural flow data and applying ISM. (#90)
 
 CRSSIO 0.7.4
 =================
