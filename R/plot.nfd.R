@@ -133,7 +133,7 @@ check_plot_site <- function(x, site)
     msg = "`site` should have a length = 1."
   )
   assert_that(
-    site %in% sites(x) || site %in% seq(sites(x)), 
+    site %in% sites(x) || site %in% seq(n_sites(x)), 
     msg = "`site` does not exist in nfd."
   )
   
@@ -223,7 +223,8 @@ plot_annual <- function(x, trace, which, flow_space, site_name, year_type,
     x <- dplyr::filter_at(x, "trace", function(i) i %in% trace)
   
   gg_box <- gg_cloud <- gg_spag <- NULL
-
+  
+  # boxblot ------------------------------------
   if ("box" %in% which) {
     gg_box <- ggplot(x, aes_string("year", "value")) +
       stat_boxplot_custom(aes_string(group = "year"))
@@ -235,6 +236,7 @@ plot_annual <- function(x, trace, which, flow_space, site_name, year_type,
     
   }
   
+  # spaghetti -----------------------------------
   if ("spaghetti" %in% which) {
     gg_spag <- ggplot(x, aes_string("year", "value")) +
       geom_line(aes_string(group = "trace"))
@@ -243,30 +245,12 @@ plot_annual <- function(x, trace, which, flow_space, site_name, year_type,
     gg_spag <- list(gg_spag)
   }
   
+  # cloud ---------------------------------------
   if ("cloud" %in% which) {
     # compute stats 5, 25, 50, 75, 95 percentiles
-    x_stats <- x %>% 
-      dplyr::group_by_at("year") %>%
-      dplyr::summarise_at("value", list(
-        "q05" = ~quantile(., 0.05),
-        "q25" = ~quantile(., 0.25),
-        "q50" = ~median(.),
-        "q75" = ~quantile(., 0.75),
-        "q95" = ~quantile(., 0.95)
-      ))
-    
-    fill_map <- c("median" = "grey20","25th-75th" = "grey60","5th-95th" = "grey80")
-    
-    gg_cloud <- ggplot(x_stats, aes_string("year")) + 
-      geom_ribbon(
-        aes(ymin = q50, ymax = q50, fill = "median", color = "grey20"), 
-        size = 1
-      ) + 
-      geom_ribbon(aes(ymin = q05, ymax = q95, fill = "5th-95th"), alpha = 0.6) + 
-      geom_ribbon(aes(ymin = q25, ymax = q75, fill = "25th-75th"), alpha = 0.5) + 
-      geom_line(aes(y = q50), color = "grey20", size = 1) +
-      scale_fill_manual("Percentile:", values = fill_map) + 
-      scale_color_manual("", values = "grey20", guide = "none")
+    x_stats <- ribbon_stats(x, "year", "value")
+
+    gg_cloud <- gg_ribbon_cloud(ggplot(x_stats, aes_string("year"))) 
     
     gg_cloud <- nfd_plot_style(gg_cloud, "Annual", flow_space, site_name, trace, 
                                year_type, base_units)
