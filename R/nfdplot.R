@@ -2,14 +2,14 @@
 #'
 #' `save_nfdplot()` is a convenient function for saving `nfdplots`. While 
 #' `print.nfdplot()` prints covers showing the plots when R is in interactive
-#' mode. `nfdplot` objects are returned by [plot.nfd()], [plot.nfdstats()], 
-#' and [plot.nfdcdf()].
+#' mode. `nfdplot` objects are returned by [plot.nfd()], [plot.nfd_stats()], 
+#' and [plot.nfd_pdf()].
 #' 
-#' @param x,nfdplot An object inheriting from `nfdplot`.
+#' @param x An object inheriting from `nfdplot`.
 #' 
 #' @param ... Other parameters not used by this method.
 #' 
-#' @return `x` and `nfdplot` are ivisbily returned.
+#' @return `x` is are invisibly returned.
 #' 
 #' @export
 #' @rdname nfdplot
@@ -50,9 +50,9 @@ print.nfdplot <- function(x, ...)
 #'
 #' @export
 #' @rdname nfdplot
-save_nfdplot <- function(nfdplot, filename, width = NA, height = NA)
+save_nfdplot <- function(x, filename, width = NA, height = NA)
 {
-  assert_that(inherits(nfdplot, "nfdplot"))
+  assert_that(inherits(x, "nfdplot"))
   
   # check that base directory exists
   assert_that(dir.exists(dirname(filename)))
@@ -74,10 +74,10 @@ save_nfdplot <- function(nfdplot, filename, width = NA, height = NA)
     # add in the number after the provided file name
     filename <- gsub(paste0(".", ftype), "", filename)
     
-    for (i in seq(nfdplot)) {
+    for (i in seq(x)) {
       
       tmp_f <- paste0(filename, sprintf("%02d", i), ".png")
-      ggsave(tmp_f, plot = nfdplot[[i]], width = width, height = height,
+      ggsave(tmp_f, plot = x[[i]], width = width, height = height,
              units = "in")
     }
     
@@ -85,13 +85,13 @@ save_nfdplot <- function(nfdplot, filename, width = NA, height = NA)
     # its a pdf - one file
     grDevices::pdf(filename, width = width, height = height)
     on.exit(grDevices::dev.off())
-    for (gg in nfdplot) {
-      if (exists(p, where = knnstplot) && !is.null(knnstplot[[p]]))
+    for (gg in x) {
+      if (exists(p, where = x) && !is.null(x[[p]]))
         print(gg)
     }
   }
   
-  invisible(nfdplot)
+  invisible(x)
 }
 
 #' @export

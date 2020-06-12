@@ -75,7 +75,7 @@ nfd_pdf <- function(x, site, flow_space, time_step, which, breaks = NULL,
 #' @rdname nfd_stats
 nfd_pdf_get_breaks <- function(nfdpdf)
 {
-  assert_that(is(nfdpdf, "nfd_pdf"))
+  assert_that(inherits(nfdpdf, "nfd_pdf"))
   
   if (nfdpdf$time_step[1] == "monthly") {
   

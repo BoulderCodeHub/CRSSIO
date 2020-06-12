@@ -296,7 +296,7 @@ xts_to_long_df <- function(x, add_year = FALSE, add_month = FALSE)
   df <- as.data.frame(x)
   df$ym <- zoo::index(x)
   
-  df <- tidyr::pivot_longer(df, -ym, names_to = "trace")
+  df <- tidyr::pivot_longer(df, -"ym", names_to = "trace")
   
   if (add_year)
     df$year <- year(df$ym, TRUE)

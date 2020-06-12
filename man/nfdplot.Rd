@@ -7,10 +7,10 @@
 \usage{
 \method{print}{nfdplot}(x, ...)
 
-save_nfdplot(nfdplot, filename, width = NA, height = NA)
+save_nfdplot(x, filename, width = NA, height = NA)
 }
 \arguments{
-\item{x, nfdplot}{An object inheriting from \code{nfdplot}.}
+\item{x}{An object inheriting from \code{nfdplot}.}
 
 \item{...}{Other parameters not used by this method.}
 
@@ -22,13 +22,13 @@ should already exist.}
 \item{width, height}{Plot size in inches. If not specified, defaults to 7.}
 }
 \value{
-\code{x} and \code{nfdplot} are ivisbily returned.
+\code{x} is are invisibly returned.
 
 Invisibly returns \code{nfdplot}
 }
 \description{
 \code{save_nfdplot()} is a convenient function for saving \code{nfdplots}. While
 \code{print.nfdplot()} prints covers showing the plots when R is in interactive
-mode. \code{nfdplot} objects are returned by \code{\link[=plot.nfd]{plot.nfd()}}, \code{\link[=plot.nfdstats]{plot.nfdstats()}},
-and \code{\link[=plot.nfdcdf]{plot.nfdcdf()}}.
+mode. \code{nfdplot} objects are returned by \code{\link[=plot.nfd]{plot.nfd()}}, \code{\link[=plot.nfd_stats]{plot.nfd_stats()}},
+and \code{\link[=plot.nfd_pdf]{plot.nfd_pdf()}}.
 }
