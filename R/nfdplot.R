@@ -99,6 +99,5 @@ c.nfdplot <- function(...)
 {
   x <- NextMethod()
   class(x) <- "nfdplot"
-  print("here")
   x
 }

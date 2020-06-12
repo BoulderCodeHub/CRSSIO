@@ -8,6 +8,7 @@ CRSSIO 0.7.4.9000
   * Generics: `nfd_extract()`, `nfd_trim()`, `has_overlapping_ts()` (#92), `reindex()` (#91), `ism()` (#88), `plot.nfd()` (#95)
     * Deprecated `ism_get_site_matrix()`
   * Get functions: `nfd_get_time()`, `nfd_get_site()`, `nfd_get_trace()` (#84)
+  * `nfd_stats()`, `nfd_pdf()`, `plot.nfd_stats()`, and `plot.nfd_pdf()` (#95)
 * `sac_year_type_get()` to download and parse Sacramento year type indexes (#78)
 * Updated internals of `crssi_create_dnf_files()` (#90)
 * Removed deprecated functions (#89)

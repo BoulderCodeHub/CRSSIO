@@ -3,14 +3,14 @@
 \name{nfd_stats}
 \alias{nfd_stats}
 \alias{nfd_pdf}
-\alias{nfd_pdf_get_monthly_breaks}
+\alias{nfd_pdf_get_breaks}
 \title{Compute Statistics on NFD Objects}
 \usage{
 nfd_stats(x, site, flow_space, time_step, plot = FALSE)
 
 nfd_pdf(x, site, flow_space, time_step, which, breaks = NULL, plot = FALSE)
 
-nfd_pdf_get_monthly_breaks(nfdpdf)
+nfd_pdf_get_breaks(nfdpdf)
 }
 \arguments{
 \item{x}{An object inheriting from \link{nfd}.}
@@ -28,7 +28,8 @@ subsequently call \code{plot()} on the returned data.}
 values in \code{1:12}. Ignored if \code{time_step} is annual. Will be sorted if
 passed in out of order.}
 
-\item{breaks}{Specifies how the breaks are computed in \code{\link[stats:density]{stats::density()}}.
+\item{breaks}{Specifies how the breaks are computed in \code{\link[stats:density]{stats::density()}},
+which is used by \code{nfd_pdf()}.
 If \code{breaks} is \code{NULL}, then the number of breaks defaults to 25. If
 \code{breaks} is a single number, that is the number of breaks that will be
 used. Otherwise, \code{breaks} specifies the breaks, i.e., the number of breaks,
@@ -43,19 +44,28 @@ for (\code{which}).}
 \code{nfd_stats} data.frame.
 
 \code{nfd_pdf} data.frame.
+
+\code{nfd_pdf_get_breaks()} returns a numeric vector (for annual data) or
+matrix (for monthly data).
 }
 \description{
 \code{nfd_stats()} computes six basic statistics for each trace in any \link{nfd} type
-objects. \code{nfd_cdf()} computes an empirical cdf for each trace and returns the
-probabilities and magnitudes associated with the cdf.
+objects. \code{nfd_pdf()} computes an empirical PDF for each trace and returns the
+probabilities and magnitudes associated with the PDF.
 }
 \details{
 The basic statistics are mean, variance, minimum, maximum, lag-1
 correlation, and skew. The resulting statistics are stored in a special
-data.frame - a \code{nfd_stats} object that inherits from \code{tbl_df} and
+data.frame - a \code{nfd_stats} object that inherits from
 \code{data.frame}. The resulting statistics can be plotted by calling \code{plot()} on
 the resulting object.
+
+If using the output from \code{nfd_pdf()} to then specify the breaks for another
+call to \code{nfd_pdf()}, it is highly recommended to use
+\code{nfd_pdf_get_breaks()}. \code{nfd_pdf_get_breaks()} will return a matrix of all
+the breaks if \code{nfdpdf} contains monthly data, which is the format expected
+in \code{nfd_pdf()}. For annual data, it still works but is less necesary.
 }
 \seealso{
-\link{nfd}, \code{\link[=plot.nfd_stats]{plot.nfd_stats()}}
+\link{nfd}, \code{\link[=plot.nfd_stats]{plot.nfd_stats()}}, \code{\link[=plot.nfd_pdf]{plot.nfd_pdf()}}
 }

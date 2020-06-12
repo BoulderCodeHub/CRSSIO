@@ -1,12 +1,12 @@
 #' Compute Statistics on NFD Objects
 #' 
 #' `nfd_stats()` computes six basic statistics for each trace in any [nfd] type 
-#' objects. `nfd_cdf()` computes an empirical cdf for each trace and returns the
-#' probabilities and magnitudes associated with the cdf.
+#' objects. `nfd_pdf()` computes an empirical PDF for each trace and returns the
+#' probabilities and magnitudes associated with the PDF.
 #' 
 #' The basic statistics are mean, variance, minimum, maximum, lag-1 
 #' correlation, and skew. The resulting statistics are stored in a special 
-#' data.frame - a `nfd_stats` object that inherits from `tbl_df` and 
+#' data.frame - a `nfd_stats` object that inherits from 
 #' `data.frame`. The resulting statistics can be plotted by calling `plot()` on
 #' the resulting object.
 #' 
@@ -23,7 +23,7 @@
 #' 
 #' @return `nfd_stats` data.frame. 
 #' 
-#' @seealso [nfd], [plot.nfd_stats()]
+#' @seealso [nfd], [plot.nfd_stats()], [plot.nfd_pdf()]
 #'
 #' @export
 nfd_stats <- function(x, site, flow_space, time_step, plot = FALSE) 
@@ -164,49 +164,54 @@ nfd_stats_verify <- function(x)
   invisible(x)
 }
 
-#' Plot nfd_stats Objects
+#' Plot nfd_stats and nfd_pdf Objects
 #' 
 #' `plot.nfd_stats()` plots the resulting "base" statistics after calling 
-#' [nfd_stats()]. Statistics are plotted as boxplots across traces. Historical
-#' or some other reference statistics can be shown using `points`.
+#' [nfd_stats()]. Statistics are plotted as boxplots across traces. 
+#' `plot.nfd_pdf()` plots the resulting PDF after calling [nfd_pdf()]. The range
+#' of PDFs for every trace are shown as the statistics around the probability
+#' of any given flow occurring. For monthly data, one PDF is created for each
+#' month. Historical or some other reference trace can be shown on both plots 
+#' using `ref`.
 #' 
-#' @param x An object inheriting from `nfd_stats`.
+#' @param x An object inheriting from `nfd_stats` or `nfd_pdf`.
 #' 
-#' @param points An object inheriting from `nfd_stats`. Optional. Stats in this
-#'   object are shown as points instead of boxplots. 
+#' @param ref An object inheriting from `nfd_stats`. Optional. Stats in this
+#'   object are shown as points/lines instead of boxplots. 
 #'   
 #' @param base_units Optional. Used as y-axis label. 
 #' 
 #' @param show Boolean. If `TRUE` and in interactive mode, will show the plot
 #'   in the plot window.
 #'   
-#' @param ... Additional options passed to [geom_point()]. `size`, `shape`, and 
-#'   `color` can be overridden. 
+#' @param ... Additional options passed to [ggplot2::geom_point()] and 
+#'   [ggplot2::geom_line()]. `size`, `shape`, and `color` can be overridden for
+#'   points, and `size`, `linetype`, and `color` can be overriddent for lines. 
 #'   
 #' @return `nfdplot` object.
 #' 
 #' @seealso [nfd_stats()], [save_nfdplot()]
 #' 
 #' @export
-plot.nfd_stats <- function(x, points = NULL, base_units = NULL, show = TRUE, 
+plot.nfd_stats <- function(x, ref = NULL, base_units = NULL, show = TRUE, 
                            ...)
 {
   # input ok -------------------------------------------
   nfd_stats_verify(x)
-  if (!is.null(points)) {
-    nfd_stats_verify(points)
+  if (!is.null(ref)) {
+    nfd_stats_verify(ref)
     assert_that(
-      x$time_step[1] == points$time_step[1],
-      msg = "`x` and `points` must have same time_step."
+      x$time_step[1] == ref$time_step[1],
+      msg = "`x` and `ref` must have same time_step."
     )
   }
   
   assert_that(length(show) == 1 && is.logical(show))
   
   if (x$time_step[1] == "annual")
-    gg <- nfd_stats_plot_annual(x, points, base_units, ...)
+    gg <- nfd_stats_plot_annual(x, ref, base_units, ...)
   else 
-    gg <- nfd_stats_plot_monthly(x, points, base_units, ...)
+    gg <- nfd_stats_plot_monthly(x, ref, base_units, ...)
   
   if (show && interactive())
     print(gg)
@@ -215,11 +220,11 @@ plot.nfd_stats <- function(x, points = NULL, base_units = NULL, show = TRUE,
 }
 
 # return a nfdplot: list(gg)
-nfd_stats_plot_monthly <- function(x, points, base_units, ...)
+nfd_stats_plot_monthly <- function(x, ref, base_units, ...)
 {
-  shape <- plot_ops("shape", ...)
-  color <- plot_ops("color", ...)
-  size <- plot_ops("size", ...)
+  shape <- plot_ops("shape", "point", ...)
+  color <- plot_ops("color", "point", ...)
+  size <- plot_ops("size", "point", ...)
   site <- x$site[1]
   n_trace <- length(unique(x$trace))
   if (x$year_type[1] == "cy")
@@ -233,11 +238,11 @@ nfd_stats_plot_monthly <- function(x, points, base_units, ...)
     stat_boxplot_custom() +
     facet_wrap("variable", ncol = 2, scales = "free_y")
   
-  if (!is.null(points)) {
-    points$month <- factor(points$month, levels = mm)
+  if (!is.null(ref)) {
+    ref$month <- factor(ref$month, levels = mm)
     gg <- gg +
       geom_point(
-        data = points,
+        data = ref,
         aes_string(x = "month", y = "value"),
         shape = shape,
         color = color,
@@ -262,9 +267,9 @@ nfd_stats_plot_monthly <- function(x, points, base_units, ...)
 
 nfd_stats_plot_annual <- function(x, points, base_units, ...)
 {
-  shape <- plot_ops("shape", ...)
-  color <- plot_ops("color", ...)
-  size <- plot_ops("size", ...)
+  shape <- plot_ops("shape", "point", ...)
+  color <- plot_ops("color", "point", ...)
+  size <- plot_ops("size", "point", ...)
   site <- x$site[1]
   n_trace <- length(unique(x$trace))
   year_type <- ifelse(x$year_type[1] == "cy", "Calendar Year", "Water Year")
@@ -273,10 +278,10 @@ nfd_stats_plot_annual <- function(x, points, base_units, ...)
     stat_boxplot_custom() +
     facet_wrap("variable", ncol = 2, scales = "free_y")
   
-  if (!is.null(points))
+  if (!is.null(ref))
     gg <- gg +
       geom_point(
-        data = points,
+        data = ref,
         aes_string(x = 0, y = "value"),
         shape = shape,
         color = color,
@@ -301,16 +306,19 @@ nfd_stats_plot_annual <- function(x, points, base_units, ...)
 }
 
 # checks ... to see if something was specified, otherwise sets it to default
-plot_ops <- function(op, ...)
+plot_ops <- function(op, type, ...)
 {
   args <- list(...)
   if (exists(op, where = args)) {
     x <- args[[op]]
   } else {
+    size <- ifelse(type == "point", 2, 1.2)
+    
     defaults <- list(
       color = "#51B2FF",
-      size = 2,
-      shape = 17
+      size = size,
+      shape = 17,
+      linetype = 2
     )
     
     x <- defaults[[op]]
@@ -326,7 +334,6 @@ rbind.nfd_stats <- function(..., deparse.level = 1)
     "Combining multiple nfd_stats objects may have unforseen consequences\n",
     "  when plotting the data. Use with caution."
   ))
-  
   
   rbind.data.frame(..., deparse.level = deparse.level, stringsAsFactors = FALSE)
 }
