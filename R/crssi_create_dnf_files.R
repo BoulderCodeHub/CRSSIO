@@ -207,7 +207,8 @@ crssi_create_dnf_files <- function(iFile,
   nf <- ism(nf, n_years_keep = simYrs)
   
   # save files ------------------------------------------
-  write_crssi(nf, path = oFolder, overwrite = overwriteFiles, readme = FALSE)
+  write_crssi(nf, path = oFolder, file_names = oFiles, 
+              overwrite = overwriteFiles, readme = FALSE)
 	
 	# create the README
 	write_nf_readme(

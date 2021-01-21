@@ -4,6 +4,7 @@ CRSSIO 0.8.0.9000
 *In development*
 
 - added version 5 names to `natsalt_file_names()` and `nf_file_names()`
+- fixed bug in `crssi_create_dnf_files()` that was preventing file names from correctly being passed when specified
 
 
 CRSSIO 0.8.0
