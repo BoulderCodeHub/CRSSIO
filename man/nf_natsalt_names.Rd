@@ -7,17 +7,17 @@
 \alias{nf_gage_abbrv}
 \title{Get vector of natural flow and salt gage names, filenames, and abbreviations}
 \usage{
-nf_file_names(version = 2)
+nf_file_names(version = 5)
 
-natsalt_file_names(version = 2)
+natsalt_file_names(version = 5)
 
 nf_gage_names()
 
 nf_gage_abbrv()
 }
 \arguments{
-\item{version}{The CRSS version number. Current version of CRSS is 2. Valid
-versions are 1 or 2.}
+\item{version}{The CRSS version number. Current version of CRSS is 5. Valid
+versions are 1-5.}
 }
 \value{
 Vector of characters with 29 entries (file names, gage names, gage
