@@ -3,7 +3,7 @@ CRSSIO 0.8.0.9000
 
 *In development*
 
-
+- added version 5 names to `natsalt_file_names()` and `nf_file_names()`
 
 
 CRSSIO 0.8.0
