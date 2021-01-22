@@ -35,18 +35,19 @@ crssi_change_nf_file_names <- function(iFolder,
                                        fromNames, 
                                        toNames)
 {
+  assert_that(dir.exists(iFolder) && dir.exists(oFolder))
   
   message(paste('Processing', nTrace, "traces:"))
   pb <- utils::txtProgressBar(min = 0, max = nTrace, style = 3)
   
   for (i in seq_len(nTrace)){
-    fromPath <- paste(iFolder,'trace',i,'/',sep = '')
-    toPath <- paste(oFolder,'trace',i,'/',sep = '')
+    fromPath <- file.path(iFolder, paste0('trace', i))
+    toPath <- file.path(oFolder, paste0('trace', i))
     dir.create(toPath)
     for (j in seq_len(length(fromNames))){
       file.copy(
-        paste(fromPath,fromNames[j],sep = ''),
-        paste(toPath, toNames[j],sep = '')
+        file.path(fromPath, fromNames[j]),
+        file.path(toPath, toNames[j])
       )
     }
     
