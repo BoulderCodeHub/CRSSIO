@@ -49,7 +49,7 @@ Suggests:
     testthat
 VignetteBuilder: knitr
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.1.0
+RoxygenNote: 7.1.1
 Encoding: UTF-8
 Collate: 
     'CRSSIO.R'
@@ -71,6 +71,7 @@ Collate:
     'ism.R'
     'ism_get_matrix.R'
     'nf_natsalt_names.R'
+    'nf_to_total.R'
     'nfd_extract.R'
     'nfd_get.R'
     'nfd_stats.R'

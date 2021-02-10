@@ -457,6 +457,12 @@ as_nfd.xts <- function(x, ...) {
   as_nfd.matrix(zoo::coredata(x), start_yearmon = start_yearmon, ...)
 }
 
+#' @export
+as_nfd.crss_nf <- function(x, ...) {
+  class(x) <- "nfd"
+  x
+}
+
 # Ignore the specified arg if it esists in args. Will post message that `used`
 # is being used instead.
 ignore_arg <- function(arg, args, used)
