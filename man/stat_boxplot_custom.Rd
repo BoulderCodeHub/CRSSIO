@@ -79,7 +79,7 @@ that define both data and aesthetics and shouldn't inherit behaviour from
 the default plot specification, e.g. \code{\link[ggplot2:borders]{borders()}}.}
 }
 \description{
-\code{stat_boxplot_custom()} modifies \code{\link[ggplot2:stat_boxplot]{ggplot2::stat_boxplot()}} so that it
+\code{stat_boxplot_custom()} modifies \code{\link[ggplot2:geom_boxplot]{ggplot2::stat_boxplot()}} so that it
 computes the extents of the whiskers based on specified percentiles, rather
 than a multiple of the IQR.
 }

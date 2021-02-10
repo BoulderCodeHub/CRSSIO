@@ -21,7 +21,7 @@ object are shown as points/lines instead of boxplots.}
 in the plot window.}
 
 \item{...}{Additional options passed to \code{\link[ggplot2:geom_point]{ggplot2::geom_point()}} and
-\code{\link[ggplot2:geom_line]{ggplot2::geom_line()}}. \code{size}, \code{shape}, and \code{color} can be overridden for
+\code{\link[ggplot2:geom_path]{ggplot2::geom_line()}}. \code{size}, \code{shape}, and \code{color} can be overridden for
 points, and \code{size}, \code{linetype}, and \code{color} can be overriddent for lines.}
 }
 \value{
