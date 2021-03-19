@@ -30,6 +30,11 @@ nf_to_total(x, ...)
 \arguments{
 \item{x}{An object inheriting from \link[xts:xts]{xts::xts}, \link{nfd}, \link{crss_nf}, or \link{crssi}.}
 
+\item{...}{Other parameters passed to subsequent methods.}
+
+\item{keep_total}{When \code{FALSE}, the total flow are removed from
+the object. Otherwise those data remain in the returned object.}
+
 \item{recompute}{If \code{x} already has total flow, the function will fail with
 an error when \code{FALSE}. If \code{TRUE}, then the total flow will be recomputed
 and the existing data will be overwritten.}

@@ -16,6 +16,8 @@
 #' 
 #' @param x An object inheriting from [xts::xts], [nfd], [crss_nf], or [crssi].
 #' 
+#' @param ... Other parameters passed to subsequent methods.
+#' 
 #' @return An object of the same class as `x`, except when `x` is either a 
 #'   `crss_nf` obect or `crssi` object and `keep_intervening` is `FALSE`. See 
 #'   **Details**.

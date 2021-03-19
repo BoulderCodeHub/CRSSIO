@@ -5,6 +5,8 @@ nf_to_intervening <- function(x, ...)
   UseMethod("nf_to_intervening")
 }
 
+#' @param keep_total When `FALSE`, the total flow are removed from
+#'   the object. Otherwise those data remain in the returned object.
 #' @export
 #' @rdname nf_to_total
 nf_to_intervening.crss_nf <- function(x, keep_total = TRUE, recompute = FALSE, 
