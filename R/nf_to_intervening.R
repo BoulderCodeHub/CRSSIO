@@ -70,7 +70,7 @@ nf_to_intervening.nfd <- function(x, keep_total = TRUE, recompute = FALSE,
       compute_intervening_nf(x$monthly$total[[i]])
     })
     
-    if (!keep_intervening) {
+    if (!keep_total) {
       x$monthly <- list("intervening" = mon_int, "total" = NULL)
     } else {
       x$monthly$intervening <- mon_int
@@ -121,8 +121,8 @@ compute_intervening_nf <- function(x) {
     x$GrandJunction
   x$GrandJunction <- x$GrandJunction - x$Crystal
   x$Crystal <- x$Crystal - x$BlueMesa
-  x$BlueMesa <- x$TaylorPark - x$BlueMesa
-  x$Cameo <- x$GlenwoodSprings - x$Cameo
+  x$BlueMesa <- x$BlueMesa - x$TaylorPark
+  x$Cameo <- x$Cameo - x$GlenwoodSprings
   
   x
 }
