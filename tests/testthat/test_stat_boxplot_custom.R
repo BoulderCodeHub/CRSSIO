@@ -66,23 +66,19 @@ test_that("custom plot works with all examples from ggplot site", {
     "ggplot_built"
   )
   expect_s3_class(
-    expect_warning(
-      ggplot_build(
-        ggplot(diamonds, aes(carat, price)) + 
-          stat_boxplot_custom(aes(group = cut_width(carat, 0.25)))
-      )
+    ggplot_build(
+      ggplot(diamonds, aes(carat, price)) + 
+        stat_boxplot_custom(aes(group = cut_width(carat, 0.25)))
     ), 
     "ggplot_built"
   )
   expect_s3_class(
-    expect_warning(
-      ggplot_build(
-        ggplot(diamonds, aes(carat, price)) +
-          stat_boxplot_custom(
-            aes(group = cut_width(carat, 0.25)), 
-            outlier.alpha = 0.1
-          )
-      )
+    ggplot_build(
+      ggplot(diamonds, aes(carat, price)) +
+        stat_boxplot_custom(
+          aes(group = cut_width(carat, 0.25)), 
+          outlier.alpha = 0.1
+        )
     ), 
     "ggplot_built"
   )
