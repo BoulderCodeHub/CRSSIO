@@ -1,14 +1,17 @@
-CRSSIO 0.8.0.9000
+CRSSIO 0.8.1
 =================
 
-*In development*
+*Released March 19, 2021*
 
-- added version 5 names to `natsalt_file_names()` and `nf_file_names()`
-- fixed bug in `crssi_create_dnf_files()` that was preventing file names from correctly being passed when specified
-- fixed bug in `crssi_change_nf_file_names()` that was preventing folder names from being constructed correctly if input parameters did not have trailing slash. 
-- added `as_nfd.crss_nf()` to convert `crss_nf` objects to `nfd` objects, which are less restrictive.
-- added `nf_to_total()` (#101)
-- added `nf_to_intervening()` (#105)
+## Bug Fixes
+
+- Fixed bug in `crssi_create_dnf_files()` that was preventing file names from correctly being passed when specified
+- Fixed bug in `crssi_change_nf_file_names()` that was preventing folder names from being constructed correctly if input parameters did not have trailing slash. 
+
+## New Features
+- Added version 5 names to `natsalt_file_names()` and `nf_file_names()` for files that will work with CRSS v5.x.x. 
+- Added `as_nfd.crss_nf()` to convert `crss_nf` objects to `nfd` objects, which are less restrictive.
+- Added `nf_to_total()` (#101) and `nf_to_intervening()` (#105) to convert between intervening and total natural flows. 
 
 
 CRSSIO 0.8.0

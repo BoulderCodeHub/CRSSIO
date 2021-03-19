@@ -6,8 +6,8 @@
 \alias{CRSSIO-package}
 \title{CRSSIO: Package to Manage the Input and Output of CRSS Data}
 \description{
-Provides functions to generate input files commmonly used by the
-    Colorado River Simulation System (CRSS) from publicly available data, as
+CRSSIO Provides functions to generate input files commmonly used by 
+    the Colorado River Simulation System (CRSS) from publicly available data, as
     well as functions to modify these files. Figures that are commonly used to
     QA/QC and understand CRSS results are also automated with this package.
 }

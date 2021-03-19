@@ -5,13 +5,13 @@
 
 <!-- badges: start -->
 
-*Stable version (v0.8.0):* [![R build
+*Stable version (v0.8.1):* [![R build
 status](https://github.com/BoulderCodeHub/CRSSIO/workflows/R-CMD-check/badge.svg)](https://github.com/BoulderCodeHub/CRSSIO/actions)
 [![Codecov test
 coverage](https://codecov.io/gh/BoulderCodeHub/CRSSIO/branch/master/graphs/badge.svg)](https://codecov.io/gh/BoulderCodeHub/CRSSIO)
 
 *Development version:* [![R build
-status](https://github.com/rabutler-usbr/CRSSIO/workflows/R-CMD-check/badge.svg)](https://github.com/BoulderCodeHub/rabutler-usbr/actions)
+status](https://github.com/rabutler-usbr/CRSSIO/workflows/R-CMD-check/badge.svg)](https://github.com/rabutler-usbr/CRSSIO/actions)
 [![Codecov test
 coverage](https://codecov.io/gh/rabutler-usbr/CRSSIO/branch/master/graph/badge.svg)](https://codecov.io/gh/rabutler-usbr/CRSSIO?branch=master)
 <!-- badges: end -->
@@ -70,7 +70,8 @@ future projections in CRSS; `ism()` applies the Index Sequential Method
 to a single trace; `plot()` will quickly show the data; `write_crssi()`
 will create the input files necessary for CRSS; `nfd_stats()` and
 `nfd_pdf()` compute statistics across the different traces and can then
-be plotted with `plot()`.
+be plotted with `plot()`. `nf_to_total()` and `nf_to_intervening()` will
+convert between total and intervening flow.
 
 #### Example
 
@@ -148,8 +149,8 @@ sysCondTable <- crsso_get_sys_cond_table(sysData, 2018:2022)
 
   - `stat_boxplot_custom()` works with ggplots to add box and whisker
     plots. It differs from `ggplot2::stat_boxplot()` in that it extends
-    the whiskers to specified percentiles intead of some scaled value of
-    the IQR.
+    the whiskers to specified percentiles instead of some scaled value
+    of the IQR.
   - `add_secondary_y_conversion()` adds a secondary y-axis to a plot. It
     ensures that the secondary axis is a conversion of the primary axis
     labels so the ticks match the grid lines from the primary axis.
@@ -168,6 +169,7 @@ devtools::install_github('BoulderCodeHub/CRSSIO')
 
 For details, see the [News](NEWS.md)
 
+  - 2021-03-19: version 0.8.1 available
   - 2020-06-12: version 0.8.0 available
   - 2020-01-24: version 0.7.4 available
   - 2019-07-25: version 0.7.3 available
