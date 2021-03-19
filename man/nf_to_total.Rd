@@ -9,7 +9,7 @@
 \alias{nf_to_total.crss_nf}
 \alias{nf_to_total.nfd}
 \alias{nf_to_total.xts}
-\title{Convert intervening flow to total flow}
+\title{Convert between intervening and total flow}
 \usage{
 nf_to_intervening(x, ...)
 
@@ -44,14 +44,18 @@ An object of the same class as \code{x}, except when \code{x} is either a
 }
 \description{
 \code{nf_to_total()} converts intervening flow to total flow for the Colorado
-River natural flow network. The functions only work if the objects have the
+River natural flow network, while \code{nf_to_intervening()} converts total flow
+to intervening flow. The functions only work if the objects have the
 29 Colorado River natural flow sites, and that dimension's names match
 \code{\link[=nf_gage_abbrv]{nf_gage_abbrv()}}. \code{xts}, \code{nfd}, \code{crss_nf}, and \code{crssi} objects
-can all have their intervening natural flow converted to total flow. For
+can all be converted between total and intervening flow. For
 \code{xts} objects, the flow is converted without any additional checks, i.e.,
-it is assumed the user passed in intervening flow. For the other three types
-of objects, they must have intervening data already. If the objects have
-both annual and monthly data, both will be converted to total flow.
+it is assumed the user passed in intervening flow if \code{nf_to_total()} is
+called. For the other three types
+of objects, they must have the required existing data already, i.e.,
+intervening data must exist when calling \code{nf_to_total()}, and total data
+must exist when calling \code{nf_to_intervening()}. If the objects have
+both annual and monthly data, both will be converted.
 }
 \details{
 When \code{keep_intervening} is \code{FALSE} and \code{x} is either a \code{crss_nf} object or
@@ -69,7 +73,7 @@ nf_int <- nfd(
 )
 
 # convert to total
-nf <- nf_to_total(nf_int)
+nf <- nf_to_total(nf_int, keep_intervening = FALSE)
 
 # It matches the total natural flow that exists in the CoRiverNF package 
 # (except it doesn't have the sheet name attribute)
@@ -79,5 +83,9 @@ all.equal(
     nfd_get_trace(nf, 1, flow_space = "total", time_step = "annual")
   )
 )
+
+# converting back will result in original data
+nf2 <- nf_to_intervening(nf, keep_total = FALSE)
+all.equal(nf2, nf_int)
 
 }
