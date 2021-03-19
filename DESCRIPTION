@@ -76,6 +76,7 @@ Collate:
     'nfd_get.R'
     'nfd_stats.R'
     'nfd_pdf.R'
+    'nfd_to_intervening.R'
     'nfd_trim_ts.R'
     'nfdplot.R'
     'plot.nfd.R'
