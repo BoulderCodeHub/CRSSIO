@@ -8,6 +8,7 @@ CRSSIO 0.8.0.9000
 - fixed bug in `crssi_change_nf_file_names()` that was preventing folder names from being constructed correctly if input parameters did not have trailing slash. 
 - added `as_nfd.crss_nf()` to convert `crss_nf` objects to `nfd` objects, which are less restrictive.
 - added `nf_to_total()` (#101)
+- added `nf_to_intervening()` (#105)
 
 
 CRSSIO 0.8.0
