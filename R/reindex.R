@@ -51,7 +51,7 @@ reindex.nfd <- function(x, start_year, master_ts = "monthly")
   # only monthly or only annual is easy
   sy_mon <- start_year
   sy_ann <- start_year
-  
+ 
   # if both - master_ts determines which ts controls
   if (has_monthly(x) && has_annual(x)) {
     sy <- get_start_years(x, start_year, master_ts)
@@ -94,9 +94,13 @@ reindex.xts <- function(x, start_year, ...)
 {
   assert_that(length(start_year) == 1 && 
                 (is.numeric(start_year) || is.character(start_year)))
-  
+
   y <- year(zoo::index(x)[1], TRUE)
-  start_year <- as.numeric(start_year)
+  start_year <- tryCatch(as.numeric(start_year), warning = function(e){NA})
+  assert_that(
+    !is.na(start_year), 
+    msg = "Could not successfully convert start_year to a valid numeric."
+  )
   delta <- start_year - y
   
   zoo::index(x) <- zoo::index(x) + delta
@@ -123,7 +127,11 @@ get_start_years <- function(x, start_year, master_ts)
   
   sym <- year(sym, TRUE)
   sya <- year(sya, TRUE)
-  start_year <- as.numeric(start_year)
+  start_year <- tryCatch(as.numeric(start_year), warning = function(e){NA})
+  assert_that(
+    !is.na(start_year), 
+    msg = "Could not successfully convert start_year to a valid numeric."
+  )
   
   if (master_ts == "monthly") {
     # compute delta from monthly, and then apply that to annual sm, to get 
