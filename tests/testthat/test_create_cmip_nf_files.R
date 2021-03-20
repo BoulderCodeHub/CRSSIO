@@ -14,7 +14,7 @@ unzip(file.path(ncPath, "test_cmip5_bcsd.zip"), exdir = ncPath)
 nc <- file.path(ncPath, "test_cmip5_bcsd.nc")
 on.exit(file.remove(nc), add = TRUE)
 
-fBad <- "../trace1/DoloresRiver.Inflow"
+fBad <- "../trace1/CiscoDoloresNF.Inflow"
 
 myScen <- 5
 # test the errors ------------------------------

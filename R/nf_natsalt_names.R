@@ -10,8 +10,8 @@
 #' `nf_file_names()` and `natsalt_file_names()` return file names that
 #' CRSS is expecting to read in for natural flow and salt input data.
 #' 
-#' @param version The CRSS version number. Current version of CRSS is 2. Valid 
-#'   versions are 1 or 2.
+#' @param version The CRSS version number. Current version of CRSS is 5. Valid 
+#'   versions are 1-5.
 #'   
 #' @return Vector of characters with 29 entries (file names, gage names, gage 
 #'   abbreviations).
@@ -27,9 +27,12 @@
 #' 
 #' @export
 #' @rdname nf_natsalt_names
-nf_file_names <- function(version = 2)
+nf_file_names <- function(version = 5)
 {
-	if (version == 2 ) {
+	if (version == 5) {
+	  ff <- paste0(nf_gage_abbrv(), "NF.Inflow")
+	  return (ff)
+	} else if (version %in% 2:4 ) {
 	  return(c('UpperColoradoReach.Inflow',
 		'UpperColoradoAboveCameo_GainsAboveCameo.Local_Inflow',
 		'TaylorPark.Inflow',
@@ -96,9 +99,13 @@ nf_file_names <- function(version = 2)
 
 #' @export
 #' @rdname nf_natsalt_names
-natsalt_file_names <- function(version=2)
+natsalt_file_names <- function(version = 5)
 {
-	if (version == 2) {
+	if (version == 5) {
+	  ff <- paste0(nf_gage_abbrv(), "NF.Inflow_Salt_Concentration")
+	  return(ff)
+	  
+	} else if (version %in% 2:4) {
 	  return(c('UpperColoradoReach.Inflow_Salt_Concentration',
       'UpperColoradoAboveCameo_GainsAboveCameo.Local_Inflow_Salt_Concentration',
       'TaylorPark.Inflow_Salt_Concentration',

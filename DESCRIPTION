@@ -1,11 +1,11 @@
 Package: CRSSIO
 Title: Package to Manage the Input and Output of CRSS Data
-Version: 0.8.0
+Version: 0.8.1
 Authors@R: person(
     "Alan", "Butler", , "rabutler@usbr.gov", c("aut", "cre")
     )
-Description: Provides functions to generate input files commmonly used by the
-    Colorado River Simulation System (CRSS) from publicly available data, as
+Description: CRSSIO Provides functions to generate input files commmonly used by 
+    the Colorado River Simulation System (CRSS) from publicly available data, as
     well as functions to modify these files. Figures that are commonly used to
     QA/QC and understand CRSS results are also automated with this package.
 URL: https://github.com/BoulderCodeHub/CRSSIO
@@ -49,7 +49,7 @@ Suggests:
     testthat
 VignetteBuilder: knitr
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.1.0
+RoxygenNote: 7.1.1
 Encoding: UTF-8
 Collate: 
     'CRSSIO.R'
@@ -71,6 +71,8 @@ Collate:
     'ism.R'
     'ism_get_matrix.R'
     'nf_natsalt_names.R'
+    'nf_to_intervening.R'
+    'nf_to_total.R'
     'nfd_extract.R'
     'nfd_get.R'
     'nfd_stats.R'
