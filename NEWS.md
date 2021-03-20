@@ -3,6 +3,9 @@ CRSSIO 0.8.1.9000
 
 *In development*
 
+- reindex now fails if start year cannot be successfully converted to numeric. (#103)
+- now importing xts to ensure `reindex()`, `print.nfd()`, etc. work properly. (#107)
+
 CRSSIO 0.8.1
 =================
 
