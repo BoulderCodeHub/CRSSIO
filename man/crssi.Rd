@@ -89,6 +89,18 @@ the observed historical natural flows with the ISM method applied to the
 1988-2012 data.
 }
 
+\examples{
+
+# get natural flow and Sacremento Year Type data for 2000-2002
+nf <- crss_nf(
+  CoRiverNF::monthlyInt["2000/2002"],
+  flow_space = "intervening",
+  time_step = "monthly"
+)
+sac <- sac_year_type_get(internal = TRUE)["2000/2002"]
+in_data <- crssi(nf, sac, scen_number = 1.20002002)
+
+}
 \seealso{
 \link{crss_nf}, \link{nfd}, \code{\link[=write_crssi]{write_crssi()}}, \code{\link[=sac_year_type_get]{sac_year_type_get()}}
 }

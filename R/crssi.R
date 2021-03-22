@@ -69,6 +69,17 @@
 #'   
 #' @return `crssi()` returns an object of class `crssi`.
 #' 
+#' @examples 
+#' 
+#' # get natural flow and Sacremento Year Type data for 2000-2002
+#' nf <- crss_nf(
+#'   CoRiverNF::monthlyInt["2000/2002"],
+#'   flow_space = "intervening",
+#'   time_step = "monthly"
+#' )
+#' sac <- sac_year_type_get(internal = TRUE)["2000/2002"]
+#' in_data <- crssi(nf, sac, scen_number = 1.20002002)
+#' 
 #' @seealso [crss_nf], [nfd], [write_crssi()], [sac_year_type_get()]
 #' 
 #' @export
