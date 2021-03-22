@@ -57,6 +57,7 @@ Encoding: UTF-8
 Collate: 
     'CRSSIO.R'
     'add_secondary_y_conversion.R'
+    'as_xx_nfd.R'
     'createCRSSInput_addIn.R'
     'crssInput_helperFunctions.R'
     'nfd.R'
