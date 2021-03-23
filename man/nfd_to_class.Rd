@@ -5,17 +5,28 @@
 \alias{as.data.frame.crssi}
 \title{Convert \code{nfd} objects to other classes}
 \usage{
-\method{as.data.frame}{nfd}(x, wide = TRUE, ...)
+\method{as.data.frame}{nfd}(x, row.names = NULL, optional = FALSE, ..., wide = TRUE)
 
-\method{as.data.frame}{crssi}(x, wide = TRUE, ...)
+\method{as.data.frame}{crssi}(x, row.names = NULL, optional = FALSE, ..., wide = TRUE)
 }
 \arguments{
 \item{x}{Object inheriting from \code{nfd}.}
 
-\item{wide}{When \code{TRUE}, the sites are included as columns. When \code{FALSE} the
-sites are converted to a \code{site} column, making the data.frame longer.}
+\item{row.names}{\code{NULL} or a character vector giving the row
+    names for the data frame.  Missing values are not allowed.}
+
+\item{optional}{logical. If \code{TRUE}, setting row names and
+    converting column names (to syntactic names: see
+    \code{\link[base]{make.names}}) is optional.  Note that all of \R's
+    \pkg{base} package \code{as.data.frame()} methods use
+    \code{optional} only for column names treatment, basically with the
+    meaning of \code{\link[base]{data.frame}(*, check.names = !optional)}.
+    See also the \code{make.names} argument of the \code{matrix} method.}
 
 \item{...}{Other parameters passed to \code{\link[base:as.data.frame]{base::as.data.frame()}}}
+
+\item{wide}{When \code{TRUE}, the sites are included as columns. When \code{FALSE} the
+sites are converted to a \code{site} column, making the data.frame longer.}
 }
 \value{
 \code{data.frame} with columns for \code{date}, \code{trace}, \code{time_step}, and
@@ -28,4 +39,26 @@ Index data as another column (\code{wide == TRUE}) or as another entry into
 \description{
 \code{as.data.frame} converts \code{nfd}, \code{crss_nf}, and \code{crssi} objects to
 \code{data.frame}s.
+}
+\examples{
+nf <- crss_nf(
+  CoRiverNF::monthlyInt["2000/2002"],
+  flow_space = "intervening",
+  time_step = "monthly"
+ )
+ 
+ # keep sites as columns
+ as.data.frame(nf)
+ 
+ # moves sites to "site" variable
+ as.data.frame(nf, wide = FALSE)
+
+# crssi objects have sacramento year type data in them, which is also 
+# included in the data frame
+
+sac <- sac_year_type_get(internal = TRUE)["2000/2002"]
+in_data <- crssi(nf, sac, scen_number = 1.20002002)
+
+as.data.frame(in_data)
+
 }

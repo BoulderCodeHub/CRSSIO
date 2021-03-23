@@ -5,6 +5,8 @@
 #' 
 #' @param x Object inheriting from `nfd`. 
 #' 
+#' @inheritParams base::as.data.frame
+#' 
 #' @param wide When `TRUE`, the sites are included as columns. When `FALSE` the
 #'   sites are converted to a `site` column, making the data.frame longer. 
 #'   
@@ -17,9 +19,23 @@
 #'   Index data as another column (`wide == TRUE`) or as another entry into 
 #'   `site` (`wide == FALSE`).
 #' 
+#' @examples 
+#' nf <- crss_nf(
+#'   CoRiverNF::monthlyInt["2000/2002"],
+#'   flow_space = "intervening",
+#'   time_step = "monthly"
+#'  )
+#'  
+#'  # keep sites as columns
+#'  as.data.frame(nf)
+#'  
+#'  # moves sites to "site" variable
+#'  as.data.frame(nf, wide = FALSE)
+#' 
 #' @export
 #' @rdname nfd_to_class
-as.data.frame.nfd <- function(x, wide = TRUE, ...)
+as.data.frame.nfd <- function(x, row.names = NULL, optional = FALSE, ..., 
+                              wide = TRUE)
 {
   df <- data.frame()
   nt <- n_trace(x)
@@ -28,7 +44,9 @@ as.data.frame.nfd <- function(x, wide = TRUE, ...)
     if (has_intervening(x, "monthly")) {
       tmp_df <- lapply(
         seq_len(nt), 
-        function(i) trace_to_df(x, i, "intervening", "monthly", ...)
+        function(i) {
+          trace_to_df(x, i, "intervening", "monthly", optional, ...)
+        }
       )
       
       df <- dplyr::bind_rows(df, dplyr::bind_rows(tmp_df))
@@ -37,7 +55,9 @@ as.data.frame.nfd <- function(x, wide = TRUE, ...)
     if (has_total(x, "monthly")) {
       tmp_df <- lapply(
         seq_len(nt), 
-        function(i) trace_to_df(x, i, "total", "monthly", ...)
+        function(i) {
+          trace_to_df(x, i, "total", "monthly", optional, ...)
+        }
       )
       
       df <- dplyr::bind_rows(df, dplyr::bind_rows(tmp_df))
@@ -48,7 +68,9 @@ as.data.frame.nfd <- function(x, wide = TRUE, ...)
     if (has_intervening(x, "annual")) {
       tmp_df <- lapply(
         seq_len(nt), 
-        function(i) trace_to_df(x, i, "intervening", "annual", ...)
+        function(i) {
+          trace_to_df(x, i, "intervening", "annual", optional, ...)
+        }
       )
       
       df <- dplyr::bind_rows(df, dplyr::bind_rows(tmp_df))
@@ -57,7 +79,9 @@ as.data.frame.nfd <- function(x, wide = TRUE, ...)
     if (has_total(x, "annual")) {
       tmp_df <- lapply(
         seq_len(nt), 
-        function(i) trace_to_df(x, i, "total", "annual", ...)
+        function(i) {
+          trace_to_df(x, i, "total", "annual", optional, ...)
+        }
       )
       
       df <- dplyr::bind_rows(df, dplyr::bind_rows(tmp_df))
@@ -78,17 +102,34 @@ as.data.frame.nfd <- function(x, wide = TRUE, ...)
   }
   
   df$date <- zoo::as.yearmon(df$date)
+
+  if (!missing(row.names) && !is.null(row.names)) {
+    rownames(df) <- row.names
+  }
   
   df
 }
 
+#' @examples 
+#' # crssi objects have sacramento year type data in them, which is also 
+#' # included in the data frame
+#' 
+#' sac <- sac_year_type_get(internal = TRUE)["2000/2002"]
+#' in_data <- crssi(nf, sac, scen_number = 1.20002002)
+#' 
+#' as.data.frame(in_data)
+#' 
 #' @export
 #' @rdname nfd_to_class
-as.data.frame.crssi <- function(x, wide = TRUE, ...) {
-
-  sac <- sac_xts_to_df(x$sac_year_type, wide = wide, ...)
+as.data.frame.crssi <- function(x, row.names = NULL, optional = FALSE, ..., 
+                                wide = TRUE) {
+  sac <- sac_xts_to_df(
+    x$sac_year_type, optional = optional, wide = wide, 
+    ...
+  )
   x <- suppressMessages(as_crss_nf(x))
-  x <- as.data.frame(x, wide = wide, ...)
+  x <- as.data.frame(x, row.names = row.names, optional = optional, 
+                     wide = wide, ...)
   x$date <- as.character(x$date)
 
   if (wide) {
@@ -102,8 +143,8 @@ as.data.frame.crssi <- function(x, wide = TRUE, ...) {
   x
 }
 
-sac_xts_to_df <- function(x, wide, ...) {
-  x <- as.data.frame(x, ...)
+sac_xts_to_df <- function(x, optional, wide, ...) {
+  x <- as.data.frame(x, optional = optional, ...)
   ym <- rownames(x)
   rownames(x) <- NULL
   
@@ -126,8 +167,10 @@ sac_xts_to_df <- function(x, wide, ...) {
   x
 }
 
-trace_to_df <- function(x, trace, flow_space, time_step, ...) {
-  r <- as.data.frame(x[[time_step]][[flow_space]][[trace]], ...)
+trace_to_df <- function(x, trace, flow_space, time_step, optional, ...) {
+  r <- as.data.frame(
+    x[[time_step]][[flow_space]][[trace]], optional = optional, ...
+  )
   ym <- rownames(r)
   rownames(r) <- NULL
   

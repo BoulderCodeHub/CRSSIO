@@ -20,11 +20,13 @@ test_that("as.data.frame.nfd works", {
   expect_equal(ncol(df), 29 + 4)
   expect_equal(nrow(df), 3 * 12)
   expect_equal(unique(df$trace), 1)
+  expect_true(!anyNA(df$date))
   
   expect_s3_class(df <- as.data.frame(nf, wide = FALSE), "data.frame")
   expect_equal(ncol(df), 6)
   expect_equal(nrow(df), 3 * 12 * 29)
   expect_equal(unique(df$trace), 1)
+  expect_true(!anyNA(df$date))
   
   expect_s3_class(df <- as.data.frame(nf2), "data.frame")
   expect_equal(ncol(df), 29 + 4)
@@ -60,10 +62,12 @@ test_that("as.data.frame.crssi() works", {
   expect_equal(ncol(df), 29 + 5)
   expect_equal(nrow(df), 12 * 3)
   expect_equal(unique(df$trace), 1)
+  expect_true(!anyNA(df$date))
   
   expect_s3_class(df <- as.data.frame(nf, wide = FALSE), "data.frame")
   expect_equal(ncol(df), 6)
   expect_equal(nrow(df), 12 * 3 * 29 + 3)
   expect_equal(unique(df$trace), 1)
   expect_length(unique(df$site), 30)
+  expect_true(!anyNA(df$date))
 })
