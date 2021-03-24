@@ -8,7 +8,7 @@
 #' 
 #' @rdname nfd_time_helpers
 #' @export
-nfd_trim_ts <- function(x)
+nfd_trim_ts <- function(x, ...)
 {
   UseMethod("nfd_trim_ts")
 }
@@ -86,6 +86,52 @@ nfd_trim_ts.crssi <- function(x)
   x$monthly <- x_crss_nf$monthly
   
   x
+}
+
+#' @param year "cy" or "wy" to specify calendar or water year, respectively.
+#' @export
+#' @rdname nfd_time_helpers
+nfd_trim_ts.xts <- function(x, year = "cy") {
+  year = match.arg(year, c("cy", "wy"))
+  
+  if (xts::periodicity(x)$scale == "yearly") {
+    message("`x` appears to be yearly xts object. Will not be trimmed.")
+    return(x)
+  }
+  
+  se <- start_end_by_yt(year, TRUE)
+  
+  sm <- start(x)
+  em <- end(x)
+  
+  if (month(sm, TRUE) != se[1]) {
+    # have to move to next year
+    if (year == "cy") {
+      sm <- zoo::as.yearmon(paste("Jan", year(sm, TRUE) + 1))
+    } else {
+      offset <- ifelse(month(sm, TRUE) <= 9, 0, 1)
+      sm <- zoo::as.yearmon(paste("Oct", year(sm, TRUE) + offset))
+    }
+  }
+  
+  if (month(em, TRUE) != se[2]) {
+    # move to previous year
+    if (year == "cy") {
+      em <- zoo::as.yearmon(paste("Dec", year(em, TRUE) - 1))
+    } else {
+      offset <- ifelse(month(em, TRUE) <= 9, 1, 0)
+      em <- zoo::as.yearmon(paste("Sep", year(em, TRUE) - offset))
+    }
+  }
+  
+  assert_that(
+    em > sm, 
+    msg = "`xts` object does not contain a full year of data, so it cannot be trimmed."
+  )
+  
+  overlap <- paste0(year(sm), "-", month(sm), "/", year(em), "-", month(em))
+  
+  x[overlap]
 }
 
 start_end_by_yt <- function(year_type, numeric = FALSE)

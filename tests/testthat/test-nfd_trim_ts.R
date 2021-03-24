@@ -168,3 +168,29 @@ test_that("nfd_trim_ts() works on data with only one timestep", {
   expect_identical(xx_ann, nfd_trim_ts(xx_ann))
   expect_identical(xx_ann2, nfd_trim_ts(xx_ann2))
 })
+
+# nfd_trim_ts -----------------------------------------------------
+x1 <- CoRiverNF::monthlyInt["2010-01/2013-12"]$LeesFerry
+x2 <- CoRiverNF::monthlyTot["2010-01/2013-12"]
+test_that("nfd_trim_ts.xts() works", {
+  expect_equal(nfd_trim_ts(x1), x1)
+  expect_equal(nfd_trim_ts(x1["2010-03/"]), x1["2011/"])
+  expect_equal(nfd_trim_ts(x1["/2013-11"]), x1["/2012"])
+  expect_equal(nfd_trim_ts(x1, "wy"), x1["2010-10/2013-09"])
+  expect_error(nfd_trim_ts(x1["2013"], "wy"))
+  expect_error(nfd_trim_ts(x1["2013-2/"]))
+  
+  expect_equal(nfd_trim_ts(x2), x2)
+  expect_equal(nfd_trim_ts(x2["2010-03/"]), x2["2011/"])
+  expect_equal(nfd_trim_ts(x2["/2013-11"]), x2["/2012"])
+  expect_equal(nfd_trim_ts(x2, "wy"), x2["2010-10/2013-09"])
+  expect_error(nfd_trim_ts(x2["2013"], "wy"))
+  expect_error(nfd_trim_ts(x2["2013-2/"]))
+  
+  expect_message(
+    expect_equal(nfd_trim_ts(CoRiverNF::cyAnnTot), CoRiverNF::cyAnnTot)
+  )
+  expect_message(
+    expect_equal(nfd_trim_ts(CoRiverNF::wyAnnInt), CoRiverNF::wyAnnInt)
+  )
+})
