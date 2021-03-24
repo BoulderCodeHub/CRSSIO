@@ -169,6 +169,7 @@ devtools::install_github('BoulderCodeHub/CRSSIO')
 
 For details, see the [News](NEWS.md)
 
+  - 2021-03-24: version 0.8.2 available
   - 2021-03-19: version 0.8.1 available
   - 2020-06-12: version 0.8.0 available
   - 2020-01-24: version 0.7.4 available

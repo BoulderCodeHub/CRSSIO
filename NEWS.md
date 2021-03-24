@@ -1,14 +1,19 @@
-CRSSIO 0.8.1.9000
+CRSSIO 0.8.2
 =================
 
-*In development*
+*Released March 24, 2021*
 
-- reindex now fails if start year cannot be successfully converted to numeric. (#103)
-- now importing xts to ensure `reindex()`, `print.nfd()`, etc. work properly. (#107)
-- added `as.data.frame.nfd()` to create data.frames from `nfd`, `crss_nf`, and `crssi` objects.
+## Bug Fixes
+
+- `reindex()` now fails if start year cannot be successfully converted to numeric. (#103)
+- Now importing xts to ensure `reindex()`, `print.nfd()`, etc. work properly. (#107)
 - Changed default for `n_sites` argument in `nfd()`. It now defaults to `NA` and is computed based on the shape of the data.
+
+## New Features
+
+- Added `as.data.frame.nfd()` to create data.frames from `nfd`, `crss_nf`, and `crssi` objects. (#83)
 - Added xts method for `nfd_trim_ts()`.
-- Added `nf_to_annual()`. 
+- Added `nf_to_annual()` to sum monthly data to annual data. (#83)
 
 CRSSIO 0.8.1
 =================
