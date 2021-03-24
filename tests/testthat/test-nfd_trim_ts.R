@@ -176,15 +176,15 @@ test_that("nfd_trim_ts.xts() works", {
   expect_equal(nfd_trim_ts(x1), x1)
   expect_equal(nfd_trim_ts(x1["2010-03/"]), x1["2011/"])
   expect_equal(nfd_trim_ts(x1["/2013-11"]), x1["/2012"])
-  expect_equal(nfd_trim_ts(x1, "wy"), x1["2010-10/2013-09"])
-  expect_error(nfd_trim_ts(x1["2013"], "wy"))
+  expect_equal(nfd_trim_ts(x1, year = "wy"), x1["2010-10/2013-09"])
+  expect_error(nfd_trim_ts(x1["2013"], year = "wy"))
   expect_error(nfd_trim_ts(x1["2013-2/"]))
   
   expect_equal(nfd_trim_ts(x2), x2)
   expect_equal(nfd_trim_ts(x2["2010-03/"]), x2["2011/"])
   expect_equal(nfd_trim_ts(x2["/2013-11"]), x2["/2012"])
-  expect_equal(nfd_trim_ts(x2, "wy"), x2["2010-10/2013-09"])
-  expect_error(nfd_trim_ts(x2["2013"], "wy"))
+  expect_equal(nfd_trim_ts(x2, year = "wy"), x2["2010-10/2013-09"])
+  expect_error(nfd_trim_ts(x2["2013"], year = "wy"))
   expect_error(nfd_trim_ts(x2["2013-2/"]))
   
   expect_message(

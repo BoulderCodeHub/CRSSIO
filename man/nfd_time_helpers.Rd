@@ -15,7 +15,7 @@ has_overlapping_ts(x, exact = TRUE)
 
 nfd_trim_ts(x, ...)
 
-\method{nfd_trim_ts}{xts}(x, year = "cy")
+\method{nfd_trim_ts}{xts}(x, ..., year = "cy")
 
 reindex(x, start_year, master_ts = "monthly")
 

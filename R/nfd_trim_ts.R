@@ -14,7 +14,7 @@ nfd_trim_ts <- function(x, ...)
 }
 
 #' @export
-nfd_trim_ts.nfd <- function(x)
+nfd_trim_ts.nfd <- function(x, ...)
 {
   year_type <- attr(x, "year")
   
@@ -58,7 +58,7 @@ nfd_trim_ts.nfd <- function(x)
 }
 
 #' @export
-nfd_trim_ts.crssi <- function(x)
+nfd_trim_ts.crssi <- function(x, ...)
 {
   # 1 trim the nfd data
   x_crss_nf <- nfd_trim_ts(suppressMessages(as_crss_nf(x)))
@@ -91,7 +91,7 @@ nfd_trim_ts.crssi <- function(x)
 #' @param year "cy" or "wy" to specify calendar or water year, respectively.
 #' @export
 #' @rdname nfd_time_helpers
-nfd_trim_ts.xts <- function(x, year = "cy") {
+nfd_trim_ts.xts <- function(x, ..., year = "cy") {
   year = match.arg(year, c("cy", "wy"))
   
   if (xts::periodicity(x)$scale == "yearly") {
