@@ -8,6 +8,7 @@ CRSSIO 0.8.1.9000
 - added `as.data.frame.nfd()` to create data.frames from `nfd`, `crss_nf`, and `crssi` objects.
 - Changed default for `n_sites` argument in `nfd()`. It now defaults to `NA` and is computed based on the shape of the data.
 - Added xts method for `nfd_trim_ts()`.
+- Added `nf_to_annual()`. 
 
 CRSSIO 0.8.1
 =================
