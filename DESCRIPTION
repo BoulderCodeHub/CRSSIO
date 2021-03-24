@@ -75,6 +75,7 @@ Collate:
     'ism.R'
     'ism_get_matrix.R'
     'nf_natsalt_names.R'
+    'nf_to_annual.R'
     'nf_to_intervening.R'
     'nf_to_total.R'
     'nfd_extract.R'
