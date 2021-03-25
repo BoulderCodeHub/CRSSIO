@@ -4,6 +4,7 @@
 \name{has_overlapping_ts}
 \alias{has_overlapping_ts}
 \alias{nfd_trim_ts}
+\alias{nfd_trim_ts.xts}
 \alias{reindex}
 \alias{reindex.crssi}
 \alias{reindex.nfd}
@@ -12,7 +13,9 @@
 \usage{
 has_overlapping_ts(x, exact = TRUE)
 
-nfd_trim_ts(x)
+nfd_trim_ts(x, ...)
+
+\method{nfd_trim_ts}{xts}(x, ..., year = "cy")
 
 reindex(x, start_year, master_ts = "monthly")
 
@@ -28,6 +31,11 @@ reindex(x, start_year, master_ts = "monthly")
 \item{exact}{Boolean. Do the annual and monthly data have to overlap
 "exactly". See \emph{Details.}}
 
+\item{...}{Other parameters passed to function. Ignored if \code{x} is an \code{xts}
+object.}
+
+\item{year}{"cy" or "wy" to specify calendar or water year, respectively.}
+
 \item{start_year}{The new starting year as a string or numeric.}
 
 \item{master_ts}{Ignored unless \code{x} has annual and monthly data. If \code{x} does
@@ -35,9 +43,6 @@ contain both, the time step specified here is the "master" time step, i.e.,
 it is the time step the \code{start_year} is applied to. Then, the other
 time step's start year is computed based on keeping the relative difference
 in the start year's the same.}
-
-\item{...}{Other parameters passed to function. Ignored if \code{x} is an \code{xts}
-object.}
 }
 \description{
 The objects that store natural flow data (\link{nfd}, \link{crss_nf}, or \link{crssi}) all

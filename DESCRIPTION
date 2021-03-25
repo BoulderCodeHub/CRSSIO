@@ -1,9 +1,12 @@
 Package: CRSSIO
 Title: Package to Manage the Input and Output of CRSS Data
-Version: 0.8.1
-Authors@R: person(
-    "Alan", "Butler", , "rabutler@usbr.gov", c("aut", "cre")
-    )
+Version: 0.8.2
+Authors@R: 
+    person(given = "Alan",
+           family = "Butler",
+           role = c("aut", "cre"),
+           email = "rabutler@usbr.gov",
+           comment = c(ORCID = "0000-0002-8625-6386"))
 Description: CRSSIO Provides functions to generate input files commmonly used by 
     the Colorado River Simulation System (CRSS) from publicly available data, as
     well as functions to modify these files. Figures that are commonly used to
@@ -54,6 +57,7 @@ Encoding: UTF-8
 Collate: 
     'CRSSIO.R'
     'add_secondary_y_conversion.R'
+    'as_xx_nfd.R'
     'createCRSSInput_addIn.R'
     'crssInput_helperFunctions.R'
     'nfd.R'
@@ -71,6 +75,7 @@ Collate:
     'ism.R'
     'ism_get_matrix.R'
     'nf_natsalt_names.R'
+    'nf_to_annual.R'
     'nf_to_intervening.R'
     'nf_to_total.R'
     'nfd_extract.R'

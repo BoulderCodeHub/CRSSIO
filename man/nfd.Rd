@@ -13,7 +13,7 @@ nfd(
   data = NA,
   n_months = NA,
   n_trace = 1,
-  n_sites = 1,
+  n_sites = NA,
   flow_space = c("total", "intervening", "both"),
   time_step = c("annual", "monthly", "both"),
   start_yearmon = NA,
@@ -49,7 +49,8 @@ an object based on the provided data. Data should be a matrix, array, or
 
 \item{n_trace}{The number of traces. Scalar numeric.}
 
-\item{n_sites}{The number of sites. Scalar numeric.}
+\item{n_sites}{The number of sites. Scalar numeric. When NA, the number of
+sites will be solved for from the \code{data} shape.}
 
 \item{flow_space}{Data are intervening or total flow (or both). If both, then
 will store/create total and intervening flow data.}

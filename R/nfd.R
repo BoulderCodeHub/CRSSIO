@@ -65,7 +65,8 @@
 #' 
 #' @param n_trace The number of traces. Scalar numeric.
 #' 
-#' @param n_sites The number of sites. Scalar numeric.
+#' @param n_sites The number of sites. Scalar numeric. When NA, the number of 
+#'   sites will be solved for from the `data` shape. 
 #'   
 #' @param flow_space Data are intervening or total flow (or both). If both, then
 #'   will store/create total and intervening flow data.
@@ -85,7 +86,7 @@
 #' 
 #' @export
 nfd <- function(data = NA, n_months = NA, n_trace = 1, 
-                n_sites = 1, flow_space = c("total", "intervening", "both"), 
+                n_sites = NA, flow_space = c("total", "intervening", "both"), 
                 time_step = c("annual", "monthly", "both"), 
                 start_yearmon = NA, year = c("cy", "wy"),
                 site_names = NA
@@ -94,7 +95,7 @@ nfd <- function(data = NA, n_months = NA, n_trace = 1,
   assert_that(length(start_yearmon) == 1)
   assert_that(length(n_months) == 1)
   assert_that(length(n_trace) == 1 && is.numeric(n_trace))
-  assert_that(length(n_sites) == 1 && is.numeric(n_sites))
+  assert_that(length(n_sites) == 1)
   flow_space <- match.arg(flow_space,  c("total", "intervening", "both"))
   time_step <- match.arg(time_step, c("annual", "monthly", "both"))
   year <- match.arg(year, c("cy", "wy"))
@@ -108,6 +109,9 @@ nfd <- function(data = NA, n_months = NA, n_trace = 1,
   if (isTRUE(is.na(data)) || (length(data) == 1 && is.numeric(data))) {
     if (is.na(n_months))
       n_months <- 1
+    
+    if (is.na(n_sites))
+      n_sites <- 1
     
     if (!isTRUE(is.na(site_names)))
       assert_that(length(site_names) == n_sites)

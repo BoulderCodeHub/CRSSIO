@@ -213,7 +213,7 @@ test_that("nfd works with arrays", {
 
 # matrix ---------------------------------------------
 test_that("nfd works with matrices", {
-  expect_warning(expect_is(x <- nfd(t1_tot, time_step = "monthly"), "nfd"))
+  expect_is(x <- nfd(t1_tot, time_step = "monthly"), "nfd")
   expect_null(x$annual$intervening)
   expect_null(x$annual$total)
   expect_null(x$monthly$intervening)
@@ -251,7 +251,7 @@ test_that("nfd works with matrices", {
 
 # xts --------------------------------------------------
 test_that("nfd works with xts", {
-  expect_warning(expect_is(x <- nfd(t1_tot_xts, time_step = "monthly"), "nfd"))
+  expect_is(x <- nfd(t1_tot_xts, time_step = "monthly"), "nfd")
   expect_identical(
     x, 
     nfd(
@@ -264,18 +264,20 @@ test_that("nfd works with xts", {
   )
   
   expect_identical(
-    nfd(t3_tot_xts, time_step = "monthly", n_sites = 29), 
+    nfd(t3_tot_xts, time_step = "monthly"), 
     nfd(
       t3_tot, 
       time_step = "monthly",
       start_yearmon = "Jan 2000", 
-      site_names = nf_gage_abbrv(), 
-      n_sites = 29
+      site_names = nf_gage_abbrv()
     )
   )
   
   # use the monthly data, but says its annual. will result in new years
-  expect_is(x <- nfd(t1_tot_xts[1:3], time_step = "annual", n_sites = 29), "nfd")
+  expect_is(
+    x <- nfd(t1_tot_xts[1:3], time_step = "annual", n_sites = 29), 
+    "nfd"
+  )
   expect_identical(start(x), as.yearmon("Dec 2000"))
   expect_identical(end(x), as.yearmon("Dec 2002"))
   

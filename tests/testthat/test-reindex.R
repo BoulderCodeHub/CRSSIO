@@ -48,9 +48,11 @@ test_that("reindex.xts() works", {
   expect_identical(start(x), as.yearmon("Sep 2053"))
   expect_identical(end(x), as.yearmon("Jan 2055"))
   
-  expect_equivalent(coredata(x <- reindex.xts(x3_mon, "2019")), coredata(x3_mon))
+  expect_equivalent(coredata(x <- reindex(x3_mon, "2019")), coredata(x3_mon))
   expect_identical(start(x), as.yearmon("Feb 2019"))
   expect_identical(end(x), as.yearmon("Feb 2019"))
+  
+  expect_error(reindex(x3_mon, "Jan 2010"))
 })
 
 # reindex.nfd ------------------------------------------
@@ -75,6 +77,8 @@ test_that("reindex works on nfd objects", {
   expect_is(x <- reindex(nfd_both, 2022), "nfd")
   expect_identical(start(x), as.yearmon("Feb 2022"))
   expect_identical(end(x), as.yearmon("Jan 2028"))
+  
+  expect_error(reindex(nfd_both, "jan 2022"))
 })
 
 # crssi.nfd -----------------------------------------
@@ -96,4 +100,6 @@ test_that("reindex works on crssi objects", {
   expect_is(x <- reindex(crssi_both, "1980"), "crssi")
   expect_identical(start(x), as.yearmon("Jan 1980"))
   expect_identical(end(x), as.yearmon("Dec 1982"))
+  
+  expect_error(reindex(crssi_mon, "2022-12"))
 })
