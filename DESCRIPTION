@@ -91,4 +91,5 @@ Collate:
     'storage_to_elevation.R'
     'trim_helpers.R'
     'write_crssi.R'
+    'write_nfd.R'
     'zzz.R'

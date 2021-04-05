@@ -3,6 +3,8 @@ CRSSIO 0.8.2.9000
 
 *In development*
 
+- added `write_nfd()` to create csv files from `nfd` and `crss_nf` objects.
+
 CRSSIO 0.8.2
 =================
 
