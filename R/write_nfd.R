@@ -87,7 +87,7 @@ flow_ts_to_csv <- function(x, flow_space, time_step, path, overwrite) {
     colnames(tmp_data) <- cc
     f_name <- file.path(path, paste0(ss[i], ".csv"))
     
-    write.csv(tmp_data, f_name, row.names = zoo::index(tmp_data))
+    utils::write.csv(tmp_data, f_name, row.names = zoo::index(tmp_data))
   })
   
   invisible(x)
