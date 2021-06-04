@@ -287,3 +287,19 @@ test_that("nfd works with xts", {
   expect_equal(CRSSIO:::n_sites(x), 2)
   expect_setequal(colnames(x$monthly$total[[1]]), c("GlenwoodSprings", "Cameo"))
 })
+
+# data.frame -----------------------------------------------
+df_simple <- data.frame(
+  year = 2021,
+  month = 1:12,
+  site = c(rep("a", 12), rep("b", 12)),
+  trace = c(rep(1, 24), rep(2, 24)),
+  value = 1:48
+)
+
+test_that("nfd() works with data.frames.", {
+  expect_s3_class(tmp <- nfd(df_simple, time_step = "monthly"), "nfd")
+  expect_equivalent(zoo::coredata(tmp$monthly$total[[1]]), cbind(1:12, 13:24))
+  expect_equivalent(zoo::coredata(tmp$monthly$total[[2]]), cbind(25:36, 37:48))
+  expect_equivalent(CRSSIO:::sites(tmp), c("a", "b"))
+})

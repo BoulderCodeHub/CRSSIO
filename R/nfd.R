@@ -494,9 +494,156 @@ as_nfd.data.frame <- function(x, ...) {
       dplyr::mutate(trace = 1)
   }
   
-  # TODO: now check the different specified parameters. If they are specified, 
-  # data should match their specification. If they are not specified, must guess
-  # based on data.
+  # check format of month column. 
+  x <- check_df_month_col(x)
+  
+  params <- list(...)
+  
+  # flow_space --------------------
+  if (!exists("flow_space", params) || is.na(params$flow_space)) {
+    stop("`flow_space` must be specified.")
+  } else {
+    flow_space <- params$flow_space
+  }
+  
+  # yearly or monthly ----------------
+  mm <- unique(x$month)
+  if (!exists("time_step", params) || is.na(params$time_step)) {
+    if (length(mm) == 1 && (mm == 12 || mm == 9)) {
+      time_step <- "annual"
+      tmp_yt <- ifelse(mm == 12, "cy", "wy")
+    } else if (all(1:12 %in% mm)) {
+      time_step <- "monthly"
+      tmp_yt <- min(x$year)
+      tmp_yt <- min(dplyr::filter(x, year == tmp_yt)$month)
+      tmp_yt <- ifelse(tmp_yt == 1, "cy", ifelse(tmp_yt == 10, "wy", NA))
+    } else {
+      stop(paste(
+        "Cannot determine if data are yearly or monthly.", 
+        "Either explicitly provide this using the `time_step` parameter,",
+        "or ensure that the data.frame contains correct months' data.",
+        sep = "\n"
+      ))
+    }
+    cat(
+      "Guessing that data.frame contains ", time_step, " data.\n", 
+      "If this is not correct, please try nfd() or as_nfd() with time_step specified."
+    )
+  } else {
+    time_step <- params$time_step
+    if (time_step == "annual") {
+      assert_that(
+        length(mm) == 1 && (mm == 12 || mm == 9),
+        msg = "time_step is specified as annual data, so it should only have December or September months."
+      )
+      tmp_yt <- ifelse(mm == 12, "cy", "wy")
+    } else if (time_step == "monthly") {
+      assert_that(
+        all(1:12 %in% mm),
+        msg = "All months should be found in data.frame when time_step is monthly."
+      )
+      tmp_yt <- min(x$year)
+      tmp_yt <- min(dplyr::filter(x, year == tmp_yt)$month)
+      tmp_yt <- ifelse(tmp_yt == 1, "cy", ifelse(tmp_yt == 10, "wy", NA))
+    } else {
+      stop("timestep = 'both' is too ambiguous for converting data.frames to nfd objects.")
+    }
+  }
+  
+  # if yearly wy or cy -------------------------
+  if (!exists("year", params) || is.na(params$year)) {
+    year_type <- tmp_yt
+    cat(
+      "Guessing that data.frame is on ", year_type, " basis.",
+      "If this is not correct, please try nfd() or as_nfd() with year specified."
+    )
+  } else {
+    year <- params$year
+    if (tmp_yt != year) {
+      warning(
+        "data seems like it is on ", tmp_yt, 
+        " basis. However, year is specified as ", year, 
+        ".\n Check data and/or year specification."
+      )
+    }
+    year_type <- year
+  }
+
+  # create list of xts objects from data frame ------------------
+  tt <- unique(x$trace)
+  xts_list <- lapply(tt, function(i) {
+    tmp <- dplyr::filter(x, trace == i)
+    tmp$time_step <- zoo::as.yearmon(paste0(tmp$year, "-", tmp$month))
+    tmp$year <- NULL
+    tmp$month <- NULL
+    tmp$trace <- NULL
+    tmp <- tidyr::pivot_wider(tmp, names_from = "site")
+    ts <- tmp$time_step
+    tmp$time_step <- NULL
+    
+    xts::xts(tmp, ts)
+  })
+  
+  # creat nfd object with data
+  is_monthly <- time_step == "monthly"
+  is_annual <- time_step == "annual"
+  is_int <- flow_space == "intervening"
+  is_tot <- flow_space == "total"
+  
+  # create xts data ---------
+  mon_int <- mon_tot <- ann_int <- ann_tot <- NULL
+  if (is_monthly && is_int) {
+    mon_int <- xts_list
+  }
+  
+  if (is_monthly && is_tot) {
+    mon_tot <- xts_list
+  }
+  
+  if (is_annual && is_int) {
+    ann_int <- xts_list
+  }
+  
+  if (is_annual && is_tot) {
+    ann_tot <- xts_list
+  }
+  
+  new_nfd(mon_int, mon_tot, ann_int, ann_tot, year = year_type)
+}
+
+check_df_month_col <- function(x) {
+  if (is.numeric(x$month)) {
+    assert_that(
+      all(x$month %in% 1:12),
+      msg = "month numbers must be in the range [1-12]."
+    )
+  } else if (is.character(x$month)) {
+    if (any(month.name %in% x$month)) {
+      assert_that(
+        all(x$month) %in% month.name, 
+        msg = "All months should be full month names found in `month.name`."
+      )
+      # convert to numbers
+      x$month <- match(x$month, month.name)
+    } else if (any(month.abb %in% x$month)) {
+      assert_that(
+        all(x$month %in% month.abb),
+        msg = "All months should be month abbreviations found in `month.abb`."
+      )
+      # convert to numbers
+      x$month <- match(x$month, month.abb)
+    } else {
+      stop(paste(
+        "month is specified in an unknown character format.",
+        "Use either full month names or 3-letter month abbreviations.", 
+        sep = "\n"
+      ))
+    }
+  } else {
+    stop("month column should be either a numeric or a character.")
+  }
+  
+  x
 }
 
 #' @export
