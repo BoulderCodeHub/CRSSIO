@@ -4,6 +4,10 @@ CRSSIO 0.8.2.9000
 *In development*
 
 - added `write_nfd()` to create csv files from `nfd` and `crss_nf` objects.
+- added `sac_year_type_calc()`. It calculates the Sacramento Water Year index based on either the Sacramento 4-river index water year volume or the Colorado River WY intervening natural flows. 
+- `sac_year_type_get()` gains a `paleo` argument. When this is true, the index values are obtained from paleo data. 
+  - added internal data from Meko et al. 2018's paleo reconstruction of the 4-river volume for use in this function. 
+  - also updated internal historical index data to go through 2019. 
 
 CRSSIO 0.8.2
 =================

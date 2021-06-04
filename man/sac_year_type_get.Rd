@@ -4,11 +4,14 @@
 \alias{sac_year_type_get}
 \title{Get Sacramento Year Type Index Data}
 \usage{
-sac_year_type_get(internal = FALSE)
+sac_year_type_get(internal = FALSE, paleo = FALSE)
 }
 \arguments{
 \item{internal}{Boolean. If \code{TRUE}, will use the internal data saved with
 the package instead of downloading the data.}
+
+\item{paleo}{Boolean. If \code{TRUE}, then ignore \code{internal} and get the index
+from paleo data.}
 }
 \value{
 \code{xts} object with 1 column.
@@ -18,7 +21,11 @@ the package instead of downloading the data.}
 indexes, which are required input to CRSS. The function will download them
 from http://cdec.water.ca.gov/cgi-progs/iodir/WSIHIST and then parse the
 required information. If an internet connection is not available, then the
-internal data can be used, but it may not be up-to-date.
+internal data can be used, but it may not be up-to-date. Additionally, the
+index can be obtained from paleo data. For the paleo data, the index is
+created from the Sacramento Valley 4 river index volume as reconstructed in
+Meko et al. (2018). The WY volume is passed to \code{\link[=sac_year_type_calc]{sac_year_type_calc()}} to
+compute the index value.
 }
 \details{
 The "crssio.sac_yt_url" option determines where the function downloads the

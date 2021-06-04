@@ -31,6 +31,7 @@ Imports:
     rlang,
     rvest,
     RWDataPlyr (> 0.5.0),
+    rpart,
     shiny (>= 0.13),
     stats,
     tibble,
@@ -86,6 +87,7 @@ Collate:
     'nfdplot.R'
     'plot.nfd.R'
     'reindex.R'
+    'sac_year_type_calc.R'
     'sac_year_type_get.R'
     'stat_boxplot_custom.R'
     'storage_to_elevation.R'
