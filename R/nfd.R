@@ -467,6 +467,43 @@ as_nfd.crss_nf <- function(x, ...) {
   x
 }
 
+#' @export
+as_nfd.data.frame <- function(x, ...) {
+  long_cols <- c("year", "month", "site", "trace", "value")
+  assert_that(
+    all(c("year", "month") %in% colnames(x)), 
+    msg = "data.frame must have year and month columns to be converted to nfd object."
+  )
+  
+  # determine if the data.frame is in long or wide format
+  if (all(long_cols %in% colnames(x)) && all(colnames(x) %in% long_cols)) {
+    cat("Converting 'long' data.frame to nfd.\n")
+  } else {
+    # assume data frame is in wide format. assume all columns that are not 
+    # year or month are sites
+    all_sites <- colnames(x)
+    all_sites <- all_sites[!(all_sites %in% c("year", "month"))]
+    cat("Converting 'wide' data.frame to nfd.\n")
+    cat(
+      "Assuming the following columns are different sites:\n", 
+      paste(all_sites, collapse = ", ")
+    )
+    
+    # convert to long format
+    x <- tidyr::pivot_longer(x, -c("year", "month"), names_to = "site") %>%
+      dplyr::mutate(trace = 1)
+  }
+  
+  # TODO: now check the different specified parameters. If they are specified, 
+  # data should match their specification. If they are not specified, must guess
+  # based on data.
+}
+
+#' @export
+as_nfd.list <- function(x, ...) {
+  as_nfd(as.data.frame(x), ...)
+}
+
 # Ignore the specified arg if it esists in args. Will post message that `used`
 # is being used instead.
 ignore_arg <- function(arg, args, used)
