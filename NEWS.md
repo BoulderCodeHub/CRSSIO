@@ -8,6 +8,7 @@ CRSSIO 0.8.2.9000
 - `sac_year_type_get()` gains a `paleo` argument. When this is true, the index values are obtained from paleo data. 
   - added internal data from Meko et al. 2018's paleo reconstruction of the 4-river volume for use in this function. 
   - also updated internal historical index data to go through 2019. 
+- added `as_nfd.data.frame()`, `as_nfd.list()`, `as_crss_nf.data.frame()`, and `as_crss_nf.list()` to convert data frames to `nfd` and `crss_nf` objects. (#82)
 
 CRSSIO 0.8.2
 =================
