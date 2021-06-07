@@ -122,6 +122,28 @@ as_crss_nf.xts <- function(x, ...)
 }
 
 #' @export
+as_crss_nf.data.frame <- function(x, ...) {
+  if ("site" %in% colnames(x)) {
+    assert_that(
+      all(nf_gage_abbrv() %in% unique(x$site)) && 
+        all(unique(x$site) %in% nf_gage_abbrv()),
+      msg = "All natural flow sites must be found in the `site` variable to convert 'long' data.frame to `crss_nf` object."
+    )
+  } else {
+    assert_that(
+      all(nf_gage_abbrv() %in% colnames(x)),
+      msg = "All natural flow sites must be found in the column names of 'wide' data.frame before conversion to `crss_nf` object is possible.")
+  }
+  
+  as_crss_nf(as_nfd(x, ...))
+}
+
+#' @export
+as_crss_nf.list <- function(x, ...) {
+  as_crss_nf(as.data.frame(x), ...)
+}
+
+#' @export
 #' @return `is_crss_nf()` returns `TRUE` if class inherits from `crss_nf`.
 #' @rdname nfd
 is_crss_nf <- function(x) {
