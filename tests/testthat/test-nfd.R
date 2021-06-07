@@ -5,6 +5,7 @@
 library(zoo)
 library(xts)
 library(CoRiverNF)
+library(dplyr)
 this_year <- format(Sys.Date(), "%Y")
 
 # tesk key --------------
@@ -297,9 +298,60 @@ df_simple <- data.frame(
   value = 1:48
 )
 
+df_simple_wide <- filter(df_simple, trace == 1) %>% 
+  tidyr::pivot_wider(names_from = "site") %>% 
+  select(-trace)
+
+df_ann <- data.frame(
+  year = rep(2021:2024),
+  site = c(rep("a", 4), rep("b", 4)),
+  trace = c(rep(1, 8), rep(2, 8)),
+  value = 1:16, 
+  month = 9
+)
+
 test_that("nfd() works with data.frames.", {
   expect_s3_class(tmp <- nfd(df_simple, time_step = "monthly"), "nfd")
   expect_equivalent(zoo::coredata(tmp$monthly$total[[1]]), cbind(1:12, 13:24))
   expect_equivalent(zoo::coredata(tmp$monthly$total[[2]]), cbind(25:36, 37:48))
   expect_equivalent(CRSSIO:::sites(tmp), c("a", "b"))
+  expect_equivalent(CRSSIO:::n_trace(tmp), 2)
+  
+  # check it works with wide data frame; wide data frame should only have one
+  # trace of data
+  expect_s3_class(tmp2 <- nfd(df_simple_wide, time_step = "monthly"), "nfd")
+  expect_equal(
+    nfd_get_trace(tmp, 1, "total", "monthly"), 
+    nfd_get_trace(tmp2, 1, "total", "monthly")
+  )
+  
+  # guessing works when using as_nfd
+  expect_error(as_nfd(df_simple))
+  expect_s3_class(
+    expect_output(tmp3 <- as_nfd(df_simple, flow_space = "total")), 
+    "nfd"
+  )
+  expect_equal(tmp, tmp3)
+  
+  # works with annual df
+  expect_s3_class(
+    expect_output(tmp <- nfd(df_ann, time_step = "annual", year = "wy")), "nfd"
+  )
+  expect_equivalent(zoo::coredata(tmp$annual$total[[1]]), cbind(1:4, 5:8))
+  expect_equivalent(zoo::coredata(tmp$annual$total[[2]]), cbind(9:12, 13:16))
+  expect_equivalent(CRSSIO:::sites(tmp), c("a", "b"))
+  expect_equivalent(CRSSIO:::n_trace(tmp), 2)
+  expect_equal(attr(tmp, "year"), "wy")
+  
+  # nfd to xts and xts to df to nfd produce the same results 
+  tmp_df <- as.data.frame(monthlyTot["1906/"])
+  tmp_df$tmp <- zoo::as.yearmon(rownames(tmp_df))
+  tmp_df$month <- month.abb[as.numeric(CRSSIO:::month(tmp_df$tmp))]
+  tmp_df$year <- as.numeric(CRSSIO:::year(tmp_df$tmp))
+  tmp_df$tmp <- NULL
+  
+  expect_equal(
+    nfd(monthlyTot["1906/"], flow_space = "total", time_step = "monthly"),
+    expect_output(nfd(tmp_df, flow_space = "total", time_step = "monthly"))
+  )
 })

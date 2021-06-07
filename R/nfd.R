@@ -25,7 +25,7 @@
 #' @section Data Types:
 #' 
 #' This section describes how different data types for the specified `data`/`x` 
-#' are treated when created the `nfd` object.
+#' are treated when creating an `nfd` object.
 #' 
 #' *Array:* Arrays should be an m x t x s array, where m is the number of
 #' months (or years), t is the number of traces, and s is the number of sites. 
@@ -49,6 +49,22 @@
 #' 
 #' *xts:* xts objects work the same way as matrices, except that `start_yearmon`
 #' is determined form the xts object.
+#' 
+#' *data.frame:* data.frames can be converted to `nfd` objects
+#' only if the variables ( i.e., column names) match specific variable names. 
+#' In a "long" format, the data.frame must have `month`, `year`, `site`, 
+#' `trace`, and `value` variables. In a "wide" format, the data.frame must have
+#' `month`, `year`, and at least one other column. In the wide format, the other
+#' column names are assumed to be site names, and there is assumed to be only
+#' 1 trace of data. When using `as_nfd()` the different components of an `nfd`
+#' object are guessed based on the data format. using `nfd()` uses the defaults
+#' if not specified, but will produce warnings and errors if the data seem to 
+#' reflect different components. For example if the data are annual and the 
+#' `year` argument is specified as "wy", then warnings will post if the `month` 
+#' variable contains values that are different than September. 
+#' 
+#' *list:* lists are treated the same way as data.frames. An error will post if
+#' the list cannot first be converted to a data.frame.
 #' 
 #' All other data types will result in an error. 
 #' 
@@ -618,20 +634,20 @@ check_df_month_col <- function(x) {
       msg = "month numbers must be in the range [1-12]."
     )
   } else if (is.character(x$month)) {
-    if (any(month.name %in% x$month)) {
-      assert_that(
-        all(x$month) %in% month.name, 
-        msg = "All months should be full month names found in `month.name`."
-      )
-      # convert to numbers
-      x$month <- match(x$month, month.name)
-    } else if (any(month.abb %in% x$month)) {
+    if (any(month.abb %in% x$month)) {
       assert_that(
         all(x$month %in% month.abb),
         msg = "All months should be month abbreviations found in `month.abb`."
       )
       # convert to numbers
       x$month <- match(x$month, month.abb)
+    } else if (any(month.name %in% x$month)) {
+      assert_that(
+        all(x$month) %in% month.name, 
+        msg = "All months should be full month names found in `month.name`."
+      )
+      # convert to numbers
+      x$month <- match(x$month, month.name)
     } else {
       stop(paste(
         "month is specified in an unknown character format.",
