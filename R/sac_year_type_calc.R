@@ -25,7 +25,7 @@
 #' where `RWY` is the Sacramento 4 river WY volume **in million acre-feet**. 
 #' Note that because the index
 #' in the first year depends on the index value from the previous year, which is
-#' unknown, the index[0] value is assumed to be an average year with an index
+#' unknown, the 0th index value is assumed to be an average year with an index
 #' value of 7.8. 
 #' 
 #' When the Sacramento 4 river index WY volume is unknown, the index can be 
