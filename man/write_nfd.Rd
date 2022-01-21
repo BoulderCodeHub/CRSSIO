@@ -4,7 +4,14 @@
 \alias{write_nfd}
 \title{Create Natural Flow Files for Each Site}
 \usage{
-write_nfd(x, path, overwrite = FALSE)
+write_nfd(
+  x,
+  path,
+  overwrite = FALSE,
+  format = "csv",
+  trace_names = NULL,
+  insert_name = ""
+)
 }
 \arguments{
 \item{x}{\link{nfd} or \link{crss_nf} object.}
@@ -13,23 +20,39 @@ write_nfd(x, path, overwrite = FALSE)
 
 \item{overwrite}{Boolean. If \code{TRUE} and files already exists in
 \code{path}/traceN, the files will be overwritten.}
+
+\item{format}{"csv" or "excel".}
+
+\item{trace_names}{Overwrite the default trace names. If not \code{NULL}, then
+must be the same length as the number of traces.}
+
+\item{insert_name}{String that is inserted in file name.}
 }
 \description{
-\code{write_nfd()} creates csv files for each site, flow type, and time step.
-In the directory provided, there will be one folder for each flow type-time
+\code{write_nfd()} creates csv files or an Excel file for \code{nfd} objects.
+For csv files, a file is created for each site, flow type, and time step (see
+details below). For Excel files, there will be one Excel file for each flow
+type and time step.
+}
+\details{
+For csv files, in the directory provided, there will be one folder for each
+flow type-time
 step combination, and it each of those folders there will a csv files for
 each site. The csv files will be named based on the site names in the \link{nfd}
 object. Each csv is in time by trace format
-}
-\details{
+
 Folders will be created inside path e.g.:
 | path/
 | monthly_intervening/
 | site1.csv
 | site2.csv
 | ...
-| annua_total/
+| annual_total/
 | site1.csv
 | site2.csv
 | ...
+
+For Excel files, there will be one file for each flow space, timestep
+combination. Each file will have the sites as sheets, and each sheet will
+be in time x trace format.
 }
