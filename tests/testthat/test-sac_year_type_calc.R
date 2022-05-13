@@ -22,7 +22,8 @@ test_that("sac_year_type_calc() works with WY volume.", {
 # co_int_nf specified ---------------------
 
 test_that("sac_year_type_calc() works with WY volume.", {
-  nf <- nfd(CoRiverNF::wyAnnInt, flow_space = "intervening", time_step = "annual",
+  nf <- nfd(CoRiverNF::wyAnnInt, flow_space = "intervening", 
+            time_step = "annual",
             year = "wy")
   
   expect_s3_class(tmp <- sac_year_type_calc(co_int_nf = nf), "xts")
