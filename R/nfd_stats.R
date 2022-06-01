@@ -110,7 +110,7 @@ get_nfd_stats <- function(x_df, var_mutate, vars_group)
         ~ stats::cor(., get("tmp"), use = "complete.obs")
       )
     ) %>%
-    tidyr::gather_(
+    tidyr::gather(
       "variable",
       "value",
       tidyselect::vars_select(names(.), -tidyselect::one_of(vars_group))
