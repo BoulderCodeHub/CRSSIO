@@ -11,6 +11,7 @@ CRSSIO 0.8.2.9000
 - added `as_nfd.data.frame()`, `as_nfd.list()`, `as_crss_nf.data.frame()`, and `as_crss_nf.list()` to convert data frames to `nfd` and `crss_nf` objects. (#82)
 - added Meko et al. (2017) and Woodhouse et al. (2006) Lees Ferry paleo reconstrutions for use in package. (#114)
 - Fixed bug in `plot.nfd()` so that it correctly errors, and posts a helpful error message, if `"cloud"` or `"spaghetti"` plots are specified for monthly `nfd` data. (#110)
+- Fixed bug in `nf_to_annual()` so that it handles differences between provided `year` argument and the year attribute for `nfd` like object. They can now differ if `keep_monthly` is `FALSE`, otherwise they have to match. (#113)
 
 CRSSIO 0.8.2
 =================
