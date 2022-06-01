@@ -53,7 +53,7 @@ Suggests:
     testthat
 VignetteBuilder: knitr
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.1.1
+RoxygenNote: 7.1.2
 Encoding: UTF-8
 Collate: 
     'CRSSIO.R'
@@ -69,6 +69,8 @@ Collate:
     'crssi_create_cmip_nf_files.R'
     'crssi_create_dnf_files.R'
     'crssi_create_hist_nf_xlsx.R'
+    'data-meko2017.R'
+    'data-woodhouse.R'
     'elevation_to_storage.R'
     'get_sys_cond_table.R'
     'globalVariables.R'
