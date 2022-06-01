@@ -504,6 +504,7 @@ as_nfd.data.frame <- function(x, ...) {
       "Assuming the following columns are different sites:\n", 
       paste(all_sites, collapse = ", ")
     )
+    cat('\n')
     
     # convert to long format
     x <- tidyr::pivot_longer(x, -c("year", "month"), names_to = "site") %>%
@@ -634,27 +635,12 @@ check_df_month_col <- function(x) {
       msg = "month numbers must be in the range [1-12]."
     )
   } else if (is.character(x$month)) {
-    if (any(month.abb %in% x$month)) {
-      assert_that(
-        all(x$month %in% month.abb),
-        msg = "All months should be month abbreviations found in `month.abb`."
-      )
-      # convert to numbers
-      x$month <- match(x$month, month.abb)
-    } else if (any(month.name %in% x$month)) {
-      assert_that(
-        all(x$month) %in% month.name, 
-        msg = "All months should be full month names found in `month.name`."
-      )
-      # convert to numbers
-      x$month <- match(x$month, month.name)
-    } else {
-      stop(paste(
-        "month is specified in an unknown character format.",
-        "Use either full month names or 3-letter month abbreviations.", 
-        sep = "\n"
-      ))
-    }
+    assert_that(
+      all(x$month %in% month.name), 
+      msg = "All months should be full month names found in `month.name`."
+    )
+    # convert to numbers
+    x$month <- match(x$month, month.name)
   } else {
     stop("month column should be either a numeric or a character.")
   }
