@@ -87,6 +87,13 @@ plot.nfd <- function(x, trace = -1, site = 1, flow_space = "both",
   if (get_tot && get_ann)
     assert_that(has_annual(x) && has_total(x, "annual"))
   
+  # check for valid plots with monthly data --------------------
+  if (get_mon)
+  assert_that(
+    !(any(which %in% c('cloud', 'spaghetti'))),
+    msg = "cloud and spaghetti are not valid plots for monthly data."
+  )
+  
   # plot by time_step and flow_space ---------------------
   gg_int_mon <- gg_int_ann <- gg_tot_mon <- gg_tot_ann <- NULL
   year_type <- year_type_label(x)
