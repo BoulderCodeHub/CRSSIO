@@ -12,6 +12,7 @@ CRSSIO 0.8.2.9000
 - added Meko et al. (2017) and Woodhouse et al. (2006) Lees Ferry paleo reconstrutions for use in package. (#114)
 - Fixed bug in `plot.nfd()` so that it correctly errors, and posts a helpful error message, if `"cloud"` or `"spaghetti"` plots are specified for monthly `nfd` data. (#110)
 - Fixed bug in `nf_to_annual()` so that it handles differences between provided `year` argument and the year attribute for `nfd` like object. They can now differ if `keep_monthly` is `FALSE`, otherwise they have to match. (#113)
+- All `nfd` related constructors now print the type of nfd object as it is created. This helps users know if they provided annual data and it was interpreted as monthly or vice versa. (#109)
 
 CRSSIO 0.8.2
 =================

@@ -50,7 +50,7 @@ crss_nf <- function(data = NA, n_months = NA, n_trace = 1,
     class(x) <- c("crss_nf", "nfd")
   }
   
-  x
+  invisible(x)
 }
 
 #' @param x An `R` object.

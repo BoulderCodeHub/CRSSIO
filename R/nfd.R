@@ -185,7 +185,7 @@ nfd <- function(data = NA, n_months = NA, n_trace = 1,
     )
   }
   
-  x
+  invisible(x)
 }
 
 new_nfd <- function(mon_int, mon_tot, ann_int, ann_tot, year)
@@ -204,7 +204,8 @@ new_nfd <- function(mon_int, mon_tot, ann_int, ann_tot, year)
   x <- structure(x, class = c("nfd"))
   attr(x, "year") <- year
   
-  x
+  print(x)
+  invisible(x)
 }
 
 #' @param x An `R` object.
