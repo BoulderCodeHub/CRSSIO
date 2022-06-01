@@ -94,7 +94,7 @@ test_that("crss_nf() works with xts", {
 test_that("crss_nf() works with data.frame", {
   tmp_df <- as.data.frame(CoRiverNF::monthlyInt["1906/"])
   tmp_df$tmp <- zoo::as.yearmon(rownames(tmp_df))
-  tmp_df$month <- month.abb[as.numeric(CRSSIO:::month(tmp_df$tmp))]
+  tmp_df$month <- month.name[as.numeric(CRSSIO:::month(tmp_df$tmp))]
   tmp_df$year <- as.numeric(CRSSIO:::year(tmp_df$tmp))
   tmp_df$tmp <- NULL
   
