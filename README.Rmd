@@ -15,7 +15,7 @@ knitr::opts_chunk$set(
 
 # CRSSIO
 <!-- badges: start -->
-*Stable version (v0.8.1):* [![R build status](https://github.com/BoulderCodeHub/CRSSIO/workflows/R-CMD-check/badge.svg)](https://github.com/BoulderCodeHub/CRSSIO/actions)
+*Stable version (v0.9.0):* [![R build status](https://github.com/BoulderCodeHub/CRSSIO/workflows/R-CMD-check/badge.svg)](https://github.com/BoulderCodeHub/CRSSIO/actions)
 [![Codecov test coverage](https://codecov.io/gh/BoulderCodeHub/CRSSIO/branch/master/graphs/badge.svg)](https://codecov.io/gh/BoulderCodeHub/CRSSIO)
 
 *Development version:*  [![R build status](https://github.com/rabutler-usbr/CRSSIO/workflows/R-CMD-check/badge.svg)](https://github.com/rabutler-usbr/CRSSIO/actions)
@@ -23,6 +23,15 @@ knitr::opts_chunk$set(
 <!-- badges: end -->
 
 R Package to manipulate the CRSS input and output data.
+
+## Installation
+
+Only available from GitHub. Use the following to install:
+```{r echo = TRUE, eval=FALSE}
+install.packages('devtools')
+library(devtools)
+devtools::install_github('BoulderCodeHub/CRSSIO')
+```
 
 ## Usage
 
@@ -105,19 +114,12 @@ sysCondTable <- crsso_get_sys_cond_table(sysData, 2018:2022)
 * `stat_boxplot_custom()` works with ggplots to add box and whisker plots. It differs from `ggplot2::stat_boxplot()` in that it extends the whiskers to specified percentiles instead of some scaled value of the IQR.
 * `add_secondary_y_conversion()` adds a secondary y-axis to a plot. It ensures that the secondary axis is a conversion of the primary axis labels so the ticks match the grid lines from the primary axis. 
 
-## Installation
-
-Only available from GitHub. Use the following to install:
-```{r echo = TRUE, eval=FALSE}
-install.packages('devtools')
-library(devtools)
-devtools::install_github('BoulderCodeHub/CRSSIO')
-```
 
 ## Log:
 
 For details, see the [News](NEWS.md)
 
+* 2022-06-01: version 0.9.0 available
 * 2021-03-24: version 0.8.2 available
 * 2021-03-19: version 0.8.1 available
 * 2020-06-12: version 0.8.0 available

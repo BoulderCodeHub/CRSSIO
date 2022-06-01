@@ -1,18 +1,29 @@
-CRSSIO 0.8.2.9000
+CRSSIO 0.9.0
 =================
 
-*In development*
+*Released June 1, 2022*
 
-- added `write_nfd()` to create csv and Excel files from `nfd` and `crss_nf` objects.
-- added `sac_year_type_calc()`. It calculates the Sacramento Water Year index based on either the Sacramento 4-river index water year volume or the Colorado River WY intervening natural flows. 
-- `sac_year_type_get()` gains a `paleo` argument. When this is true, the index values are obtained from paleo data. 
-  - added internal data from Meko et al. 2018's paleo reconstruction of the 4-river volume for use in this function. 
-  - also updated internal historical index data to go through 2019. 
-- added `as_nfd.data.frame()`, `as_nfd.list()`, `as_crss_nf.data.frame()`, and `as_crss_nf.list()` to convert data frames to `nfd` and `crss_nf` objects. (#82)
-- added Meko et al. (2017) and Woodhouse et al. (2006) Lees Ferry paleo reconstrutions for use in package. (#114)
+## Major Additions
+
+This release includes multiple new features and functions, but none should break any previous code. 
+
+- Several functions and new features were added that relate to the Sacramento Water Year index. This is required input to CRSS and this release includes several additions that make creating the index easier for any and all hydrology scenarios. Previously, we only had historical 1906-present index data and so hydrology scenarios that were created from data beyond the recorded historical data had to be handled specially.
+  - Added `sac_year_type_calc()`. This function calculates the Sacramento Water Year index based on either the Sacramento 4-river index water year volume or the Colorado River water year intervening natural flows. Both of these methods were reviewed with MWD and while not ideal, they allow us to create the index values any time we have Colorado River natural flows using the latter of the two data sets. The former is useful when we have Sacramento River volumes.  
+  - `sac_year_type_get()` gains a `paleo` argument. When this is true, the index values are obtained from paleo data. The paleo data is stored as internal data and is from Meko et al. 2018's paleo reconstruction of the 4-river volume for use in this function. 
+  - For `sac_year_type_get()`, the internal historical index data is updated through 2019. 
+- `write_nfd()` is a new function that will create csv and Excel files from `nfd` and `crss_nf` objects.
+- Multiple constructors were added to create `nfd` and `crss_nf` objects from data frames and lists.  `as_nfd.data.frame()`, `as_nfd.list()`, `as_crss_nf.data.frame()`, and `as_crss_nf.list()` were added. (#82)
+- Meko et al. (2017) and Woodhouse et al. (2006) Lees Ferry paleo reconstructions were added for use in package and for a central place to use these data to create CRSS input from. (#114)
+
+## Minor Improvements
+
+- All `nfd` related constructors now print the type of nfd object as it is created. This helps users know if they provided annual data and it was interpreted as monthly or vice versa. (#109)
+
+## Bug Fixes
+
 - Fixed bug in `plot.nfd()` so that it correctly errors, and posts a helpful error message, if `"cloud"` or `"spaghetti"` plots are specified for monthly `nfd` data. (#110)
 - Fixed bug in `nf_to_annual()` so that it handles differences between provided `year` argument and the year attribute for `nfd` like object. They can now differ if `keep_monthly` is `FALSE`, otherwise they have to match. (#113)
-- All `nfd` related constructors now print the type of nfd object as it is created. This helps users know if they provided annual data and it was interpreted as monthly or vice versa. (#109)
+
 
 CRSSIO 0.8.2
 =================
