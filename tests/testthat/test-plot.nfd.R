@@ -24,20 +24,20 @@ x6 <- ism(crssi(
 ))
 
 test_that("plot.nfd() works", {
+  expect_error(
+    gg <- plot(x, site = 2, 
+               which = c("box", "spaghetti", "cloud"), show = FALSE)
+  )
   expect_is(
     gg <- plot(x, site = 2, 
-               which = c("box", "spaghetti", "cloud"), show = FALSE), 
+               which = c("box"), show = FALSE), 
     "nfdplot"
   )
-  expect_length(gg, 8)
+  expect_length(gg, 4)
   expect_is(ggplot2::ggplot_build(gg[[1]]), "ggplot_built")
   expect_is(ggplot2::ggplot_build(gg[[2]]), "ggplot_built")
   expect_is(ggplot2::ggplot_build(gg[[3]]), "ggplot_built")
   expect_is(ggplot2::ggplot_build(gg[[4]]), "ggplot_built")
-  expect_is(ggplot2::ggplot_build(gg[[5]]), "ggplot_built")
-  expect_is(ggplot2::ggplot_build(gg[[6]]), "ggplot_built")
-  expect_is(ggplot2::ggplot_build(gg[[7]]), "ggplot_built")
-  expect_is(ggplot2::ggplot_build(gg[[8]]), "ggplot_built")
   
   expect_is(
     gg <- plot(
@@ -82,4 +82,8 @@ test_that("plot.nfd() works", {
   )
   expect_length(gg, 1)
   expect_is(ggplot2::ggplot_build(gg[[1]]), "ggplot_built")
+  
+  expect_error(
+    plot(x4, which = 'spaghetti', flow_space = 'total', time_step = 'monthly')
+  )
 })

@@ -89,3 +89,28 @@ test_that("crss_nf() works with xts", {
   colnames(tmp) <- NULL
   expect_error(expect_warning(crss_nf(tmp)))
 })
+
+# from data.frame ----------------------------------
+test_that("crss_nf() works with data.frame", {
+  tmp_df <- as.data.frame(CoRiverNF::monthlyInt["1906/"])
+  tmp_df$tmp <- zoo::as.yearmon(rownames(tmp_df))
+  tmp_df$month <- month.name[as.numeric(CRSSIO:::month(tmp_df$tmp))]
+  tmp_df$year <- as.numeric(CRSSIO:::year(tmp_df$tmp))
+  tmp_df$tmp <- NULL
+  
+  expect_s3_class(
+    expect_output(tmp <- as_crss_nf(
+      tmp_df, flow_space = "intervening", time_step = "monthly"
+    )), 
+    "crss_nf"
+  )
+  expect_equal(
+    as_nfd(tmp), 
+    expect_output(nfd(tmp_df, flow_space = "intervening", time_step = "monthly"))
+  )
+  
+  tmp_df$Cameo <- NULL
+  expect_error(
+    as_crss_nf(tmp_df, flow_space = "intervening", time_step = "monthly")
+  )
+})

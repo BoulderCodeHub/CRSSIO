@@ -24,8 +24,8 @@ nf_to_annual(x, ...)
 \item{...}{Other parameters passed to methods.}
 
 \item{year}{"cy" or "wy" to sum over the calendar or water year,
-respectively. For \code{nfd} like objects, year is determined from the year
-specified in the object.}
+respectively. For \code{nfd} like objects, this must either match the year
+attribute of \code{x} or \code{keep_monthly} must be \code{FALSE}.}
 
 \item{full_year}{Only return sums for full years when \code{TRUE}. Otherwise, will
 sum all months in a year, even if that's a partial year.}

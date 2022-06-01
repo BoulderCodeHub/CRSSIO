@@ -123,7 +123,7 @@ site names \code{\link[=nf_gage_abbrv]{nf_gage_abbrv()}}.
 
 
 This section describes how different data types for the specified \code{data}/\code{x}
-are treated when created the \code{nfd} object.
+are treated when creating an \code{nfd} object.
 
 \emph{Array:} Arrays should be an m x t x s array, where m is the number of
 months (or years), t is the number of traces, and s is the number of sites.
@@ -147,6 +147,22 @@ the matrix are used for the site names, if provided, otherwise they remain
 
 \emph{xts:} xts objects work the same way as matrices, except that \code{start_yearmon}
 is determined form the xts object.
+
+\emph{data.frame:} data.frames can be converted to \code{nfd} objects
+only if the variables ( i.e., column names) match specific variable names.
+In a "long" format, the data.frame must have \code{month}, \code{year}, \code{site},
+\code{trace}, and \code{value} variables. In a "wide" format, the data.frame must have
+\code{month}, \code{year}, and at least one other column. In the wide format, the other
+column names are assumed to be site names, and there is assumed to be only
+1 trace of data. When using \code{as_nfd()} the different components of an \code{nfd}
+object are guessed based on the data format. using \code{nfd()} uses the defaults
+if not specified, but will produce warnings and errors if the data seem to
+reflect different components. For example if the data are annual and the
+\code{year} argument is specified as "wy", then warnings will post if the \code{month}
+variable contains values that are different than September.
+
+\emph{list:} lists are treated the same way as data.frames. An error will post if
+the list cannot first be converted to a data.frame.
 
 All other data types will result in an error.
 }

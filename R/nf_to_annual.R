@@ -12,8 +12,8 @@ nf_to_annual <- function(x, ...) {
 }
 
 #' @param year "cy" or "wy" to sum over the calendar or water year, 
-#'   respectively. For `nfd` like objects, year is determined from the year 
-#'   specified in the object. 
+#'   respectively. For `nfd` like objects, this must either match the year
+#'   attribute of `x` or `keep_monthly` must be `FALSE`.
 #' 
 #' @param full_year Only return sums for full years when `TRUE`. Otherwise, will
 #'   sum all months in a year, even if that's a partial year.
@@ -111,6 +111,31 @@ nf_to_annual.nfd <- function(x, ..., full_year = TRUE, recompute = FALSE,
       msg = paste0("`x` already has annual data.\n",
         "Use `recompute = TRUE` to update the annual data.")
     )
+  }
+  
+  # check specified year argument (if provided) and how that compares with
+  # year attribute
+  # if year is specified and keep_monthly is TRUE, and specified year does not 
+  #   match nfd attribute, then post error.
+  # if year is specified and keep_monthly is FALSE, then sum over the specified 
+  #  year
+  # if year is not specified, will got about summing based on attribute of nfd 
+  #  object
+  my_args <- match.call()
+  
+  if ('year' %in% names(my_args)) {
+    yr_prov <- my_args[['year']]
+    assert_that(yr_prov %in% c('cy', 'wy'), msg = '`year` must by "cy" or "wy".')
+    
+    if (keep_monthly) {
+      assert_that(
+        yr_prov == yr, 
+        msg = 'To sum data to annual, and keep monthly data, the provided `year` must match the year attribute of `x`.'
+      )
+    } else {
+      # sum over whatever the provided year is (does not have to match nfd attr)
+      yr <- yr_prov
+    }
   }
   
   mon_int <- mon_tot <- ann_int <- ann_tot <- NULL

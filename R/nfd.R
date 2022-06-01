@@ -25,7 +25,7 @@
 #' @section Data Types:
 #' 
 #' This section describes how different data types for the specified `data`/`x` 
-#' are treated when created the `nfd` object.
+#' are treated when creating an `nfd` object.
 #' 
 #' *Array:* Arrays should be an m x t x s array, where m is the number of
 #' months (or years), t is the number of traces, and s is the number of sites. 
@@ -49,6 +49,22 @@
 #' 
 #' *xts:* xts objects work the same way as matrices, except that `start_yearmon`
 #' is determined form the xts object.
+#' 
+#' *data.frame:* data.frames can be converted to `nfd` objects
+#' only if the variables ( i.e., column names) match specific variable names. 
+#' In a "long" format, the data.frame must have `month`, `year`, `site`, 
+#' `trace`, and `value` variables. In a "wide" format, the data.frame must have
+#' `month`, `year`, and at least one other column. In the wide format, the other
+#' column names are assumed to be site names, and there is assumed to be only
+#' 1 trace of data. When using `as_nfd()` the different components of an `nfd`
+#' object are guessed based on the data format. using `nfd()` uses the defaults
+#' if not specified, but will produce warnings and errors if the data seem to 
+#' reflect different components. For example if the data are annual and the 
+#' `year` argument is specified as "wy", then warnings will post if the `month` 
+#' variable contains values that are different than September. 
+#' 
+#' *list:* lists are treated the same way as data.frames. An error will post if
+#' the list cannot first be converted to a data.frame.
 #' 
 #' All other data types will result in an error. 
 #' 
@@ -169,7 +185,7 @@ nfd <- function(data = NA, n_months = NA, n_trace = 1,
     )
   }
   
-  x
+  invisible(x)
 }
 
 new_nfd <- function(mon_int, mon_tot, ann_int, ann_tot, year)
@@ -188,7 +204,8 @@ new_nfd <- function(mon_int, mon_tot, ann_int, ann_tot, year)
   x <- structure(x, class = c("nfd"))
   attr(x, "year") <- year
   
-  x
+  print(x)
+  invisible(x)
 }
 
 #' @param x An `R` object.
@@ -465,6 +482,176 @@ as_nfd.xts <- function(x, ...) {
 as_nfd.crss_nf <- function(x, ...) {
   class(x) <- "nfd"
   x
+}
+
+#' @export
+as_nfd.data.frame <- function(x, ...) {
+  long_cols <- c("year", "month", "site", "trace", "value")
+  assert_that(
+    all(c("year", "month") %in% colnames(x)), 
+    msg = "data.frame must have year and month columns to be converted to nfd object."
+  )
+  
+  # determine if the data.frame is in long or wide format
+  if (all(long_cols %in% colnames(x)) && all(colnames(x) %in% long_cols)) {
+    cat("Converting 'long' data.frame to nfd.\n")
+  } else {
+    # assume data frame is in wide format. assume all columns that are not 
+    # year or month are sites
+    all_sites <- colnames(x)
+    all_sites <- all_sites[!(all_sites %in% c("year", "month"))]
+    cat("Converting 'wide' data.frame to nfd.\n")
+    cat(
+      "Assuming the following columns are different sites:\n", 
+      paste(all_sites, collapse = ", ")
+    )
+    cat('\n')
+    
+    # convert to long format
+    x <- tidyr::pivot_longer(x, -c("year", "month"), names_to = "site") %>%
+      dplyr::mutate(trace = 1)
+  }
+  
+  # check format of month column. 
+  x <- check_df_month_col(x)
+  
+  params <- list(...)
+  
+  # flow_space --------------------
+  if (!exists("flow_space", params) || is.na(params$flow_space)) {
+    stop("`flow_space` must be specified.")
+  } else {
+    flow_space <- params$flow_space
+  }
+  
+  # yearly or monthly ----------------
+  mm <- unique(x$month)
+  if (!exists("time_step", params) || is.na(params$time_step)) {
+    if (length(mm) == 1 && (mm == 12 || mm == 9)) {
+      time_step <- "annual"
+      tmp_yt <- ifelse(mm == 12, "cy", "wy")
+    } else if (all(1:12 %in% mm)) {
+      time_step <- "monthly"
+      tmp_yt <- min(x$year)
+      tmp_yt <- min(dplyr::filter(x, year == tmp_yt)$month)
+      tmp_yt <- ifelse(tmp_yt == 1, "cy", ifelse(tmp_yt == 10, "wy", NA))
+    } else {
+      stop(paste(
+        "Cannot determine if data are yearly or monthly.", 
+        "Either explicitly provide this using the `time_step` parameter,",
+        "or ensure that the data.frame contains correct months' data.",
+        sep = "\n"
+      ))
+    }
+    cat(
+      "Guessing that data.frame contains ", time_step, " data.\n", 
+      "If this is not correct, please try nfd() or as_nfd() with time_step specified."
+    )
+  } else {
+    time_step <- params$time_step
+    if (time_step == "annual") {
+      assert_that(
+        length(mm) == 1 && (mm == 12 || mm == 9),
+        msg = "time_step is specified as annual data, so it should only have December or September months."
+      )
+      tmp_yt <- ifelse(mm == 12, "cy", "wy")
+    } else if (time_step == "monthly") {
+      assert_that(
+        all(1:12 %in% mm),
+        msg = "All months should be found in data.frame when time_step is monthly."
+      )
+      tmp_yt <- min(x$year)
+      tmp_yt <- min(dplyr::filter(x, year == tmp_yt)$month)
+      tmp_yt <- ifelse(tmp_yt == 1, "cy", ifelse(tmp_yt == 10, "wy", NA))
+    } else {
+      stop("timestep = 'both' is too ambiguous for converting data.frames to nfd objects.")
+    }
+  }
+  
+  # if yearly wy or cy -------------------------
+  if (!exists("year", params) || is.na(params$year)) {
+    year_type <- tmp_yt
+    cat(
+      "Guessing that data.frame is on ", year_type, " basis.",
+      "If this is not correct, please try nfd() or as_nfd() with year specified."
+    )
+  } else {
+    year <- params$year
+    if (tmp_yt != year) {
+      warning(
+        "data seems like it is on ", tmp_yt, 
+        " basis. However, year is specified as ", year, 
+        ".\n Check data and/or year specification."
+      )
+    }
+    year_type <- year
+  }
+
+  # create list of xts objects from data frame ------------------
+  tt <- unique(x$trace)
+  xts_list <- lapply(tt, function(i) {
+    tmp <- dplyr::filter(x, trace == i)
+    tmp$time_step <- zoo::as.yearmon(paste0(tmp$year, "-", tmp$month))
+    tmp$year <- NULL
+    tmp$month <- NULL
+    tmp$trace <- NULL
+    tmp <- tidyr::pivot_wider(tmp, names_from = "site")
+    ts <- tmp$time_step
+    tmp$time_step <- NULL
+    
+    xts::xts(tmp, ts)
+  })
+  
+  # creat nfd object with data
+  is_monthly <- time_step == "monthly"
+  is_annual <- time_step == "annual"
+  is_int <- flow_space == "intervening"
+  is_tot <- flow_space == "total"
+  
+  # create xts data ---------
+  mon_int <- mon_tot <- ann_int <- ann_tot <- NULL
+  if (is_monthly && is_int) {
+    mon_int <- xts_list
+  }
+  
+  if (is_monthly && is_tot) {
+    mon_tot <- xts_list
+  }
+  
+  if (is_annual && is_int) {
+    ann_int <- xts_list
+  }
+  
+  if (is_annual && is_tot) {
+    ann_tot <- xts_list
+  }
+  
+  new_nfd(mon_int, mon_tot, ann_int, ann_tot, year = year_type)
+}
+
+check_df_month_col <- function(x) {
+  if (is.numeric(x$month)) {
+    assert_that(
+      all(x$month %in% 1:12),
+      msg = "month numbers must be in the range [1-12]."
+    )
+  } else if (is.character(x$month)) {
+    assert_that(
+      all(x$month %in% month.name), 
+      msg = "All months should be full month names found in `month.name`."
+    )
+    # convert to numbers
+    x$month <- match(x$month, month.name)
+  } else {
+    stop("month column should be either a numeric or a character.")
+  }
+  
+  x
+}
+
+#' @export
+as_nfd.list <- function(x, ...) {
+  as_nfd(as.data.frame(x), ...)
 }
 
 # Ignore the specified arg if it esists in args. Will post message that `used`

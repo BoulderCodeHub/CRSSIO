@@ -4,19 +4,31 @@
 #' indexes, which are required input to CRSS. The function will download them
 #' from http://cdec.water.ca.gov/cgi-progs/iodir/WSIHIST and then parse the
 #' required information. If an internet connection is not available, then the
-#' internal data can be used, but it may not be up-to-date. 
+#' internal data can be used, but it may not be up-to-date. Additionally, the 
+#' index can be obtained from paleo data. For the paleo data, the index is 
+#' created from the Sacramento Valley 4 river index volume as reconstructed in
+#' Meko et al. (2018). The WY volume is passed to [sac_year_type_calc()] to 
+#' compute the index value.
 #' 
 #' The "crssio.sac_yt_url" option determines where the function downloads the 
 #' data from.
 #' 
 #' @param internal Boolean. If `TRUE`, will use the internal data saved with 
-#' the package instead of downloading the data. 
+#'   the package instead of downloading the data. 
+#' 
+#' @param paleo Boolean. If `TRUE`, then ignore `internal` and get the index
+#'   from paleo data. 
 #' 
 #' @return `xts` object with 1 column.
 #' 
 #' @export
-sac_year_type_get <- function(internal = FALSE)
+sac_year_type_get <- function(internal = FALSE, paleo = FALSE)
 {
+  if (paleo) {
+    sac <- sac_year_type_calc(wy_vol = sac_paleo_wy_vol / 1000000)
+    return(sac)
+  }
+  
   if (internal)
     return(sacYT)
   

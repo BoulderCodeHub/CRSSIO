@@ -59,6 +59,18 @@ test_that("nf_to_annual.nfd() works", {
   )
 })
 
+test_that("nf_to_annual.nfd() handles different year types correctly.", {
+  x <- nfd(
+    matrix(1:40, ncol = 1), 
+    flow_space = 'total', 
+    time_step = 'monthly', 
+    year = 'cy'
+  )
+  expect_error(nf_to_annual(x, full_year = TRUE, year = 'wy'))
+  expect_error(nf_to_annual(x, full_year = TRUE, year = 'abc'))
+  expect_s3_class(nf_to_annual(x, keep_monthly = FALSE, year = 'wy'), 'nfd')
+})
+
 # nf_to_annual.crssi ------------------------------------------------
 test_that("nf_to_annual.crssi() works", {
   nf <- crss_nf(
