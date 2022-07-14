@@ -1,3 +1,11 @@
+CRSSIO 0.9.1
+=================
+
+*Released July 14, 2022*
+
+- Updated Powell elevation volume table with 2017 bathymetry survey.
+
+
 CRSSIO 0.9.0
 =================
 
