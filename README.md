@@ -5,7 +5,7 @@
 
 <!-- badges: start -->
 
-*Stable version (v0.9.0):* [![R build
+*Stable version (v0.9.1):* [![R build
 status](https://github.com/BoulderCodeHub/CRSSIO/workflows/R-CMD-check/badge.svg)](https://github.com/BoulderCodeHub/CRSSIO/actions)
 [![Codecov test
 coverage](https://codecov.io/gh/BoulderCodeHub/CRSSIO/branch/master/graphs/badge.svg)](https://codecov.io/gh/BoulderCodeHub/CRSSIO)
