@@ -19,8 +19,9 @@ jobs:
       matrix:
         config:
           - {os: windows-latest, r: 'release'}
-          - {os: windows-latest, r: '4.0'}
-          - {os: windows-latest, r: '3.6'}
+          - {os: windows-latest, r: 'oldrel-1'}
+          - {os: windows-latest, r: 'oldrel-2'}
+          - {os: windows-latest, r: 'oldrel-3'}
           - {os: windows-latest, r: 'devel'}
           - {os: macOS-latest, r: 'release'}
           - {os: ubuntu-18.04, r: 'release'}
