@@ -1,0 +1,234 @@
+---
+title: "Generating Required CRSS Input with CRSSIO"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{CRSS-input}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+## Introduction 
+
+CRSS has several required inputs, including natural flow, demands, physical parameters (e.g., reservoir evaporation rates), as well a representation of each reservoir's operating policy. This vignette demonstrates how to use CRSSIO to generate the required natural flow inputs. CRSS requires intervening natural inflow at 29 locations throughout the Colorado River Basin (CRB); additionally, there are two other required inputs that approximate hydrologic conditions in the Sacramento River Basin and in the Colorado Front Range. 
+
+CRSSIO includes a method for generating the inputs related to the Sacramento River Basin; the method to generate Colorado Front Range data is available in another form and will be integrated with CRSSIO in the near future.
+
+This vignette starts with a quick setup guide and then demonstrates the functionality using two examples: one that relies on historical data and the index sequential method (ISM) and another that assumes the user has created an entirely new data set for the 29 CRB sites.
+
+### Sacremento River Basin Input
+
+CRSS requires Sacremento Water Year Hydrologic Year Type indexes to run. These indexes are used to model a representative range of Intentionally Created Surplus (ICS) creation and delivery for MWD. The indexes are integer values from 1 to 5, where 1 represents a critical year in the Sacremento Basin, 2 a dry year, 3 a below normal year, 4 an above normal year, and 5 a wet year. The historical record of is available at [http://cdec.water.ca.gov/cgi-progs/iodir/WSIHIST](http://cdec.water.ca.gov/cgi-progs/iodir/WSIHIST). Typically MWD's ICS logic in CRSS creates ICS in moderately wet and wet years, takes deliver of ICS in critically dry and dry years, and is ICS neutral in moderately dry years; however, this and the volumes of creation/delivery can vary between CRSS releases/models. 
+
+For scenarios that rely on historical data (including paleo data back to 900 C.E.), the Sacramento Year Type values are directly available in CRSSIO. For other scenarios, the index can be generated using a method developed by Reclamation for the use in CRSS.
+
+### Colorado Front Range
+
+*will update when added to CRSSIO*
+
+### CRSSIO v0.9.1 Limitations
+
+CRSSIO v0.9.1 (and earlier) only include functionality to create the Sacramento River Basin input. For now, please contact Reclamation to create the Front Range related input. This funcionality will be added to CRSSIO in May/June 2023.
+
+## Setup
+
+After the user has R (and R studio) installed, CRSSIO should be installed from GitHub and loaded. Additionally, the [CoRiverNF](https://github.com/BoulderCodeHub/CoRiverNF) package, which contains historical natural flow data already loaded in R, should be installed from GitHub and loaded.
+
+```{r install, eval=FALSE}
+install.packages('remotes')
+remotes::install_github('BoulderCodeHub/CoRiverNF')
+remotes::install_github('BoulderCodeHub/CRSSIO')
+```
+
+```{r setup}
+library(CRSSIO)
+library(CoRiverNF)
+```
+
+## Example 1 - ISM Applied to Historical Data
+
+For natural flows that are based on the historical record, CRSSIO can be coupled with the [CoRiverNF](https://github.com/BoulderCodeHub/CoRiverNF) data package. Then functions in CRSSIO will provide the Sacramento Year Type data, apply ISM, and then create the necessary input files for CRSS.
+
+First, convert the existing natural flow data from CoRiverNF to a Natural Flow Data (`nfd`) object, and get the Sacramento Index data. For this example, we will assume we want to create CRSS input by applying ISM to the 2000-2019 natural flow record.
+
+```{r nfdata1}
+nf <- monthlyInt['2000/2019'] # monthly intervening natural flow data from CoRiverNF
+nf <- nfd(nf, flow_space = 'intervening', time_step = 'monthly', year = 'cy')
+sac_yt <- sac_year_type_get(internal = TRUE) 
+```
+
+*Note, `internal = TRUE` can be changed to `internal = FALSE` to download the latest data. See `?sac_year_type_get` for more details. This is required if the internally provided Sacramento Year Type data is not up-to-date or does not match the end date of the CRB natural flow data.*
+
+Next, `nf` can be converted to a `crss_nf` object. The only difference between an `nfd` and `crss_nf` object is the latter requires 29 sites that are correctly named, and that the data be intervening, monthly data. Because we started with data from CoRiverNF, this could have been done in the first step. 
+
+```{r convert}
+nf <- as_crss_nf(nf)
+```
+
+Now, `nf` and `sac_yt` can be combined into a "CRSS input" object (`crssi`):
+
+```{r convertCRSSI}
+crss_input <- crssi(
+  flow = nf,
+  sac_year_type = sac_yt,
+  scen_number = 1.20002019, 
+  scen_name = 'ISM applied to 2000-2019 data'
+)
+```
+
+*Note the `scen_number` is provided as input to CRSS too. This input does not affect results, but is useful for model diagnostics, i.e., understanding what hydrology is loaded into a model provided by someone else. See the Scenario Number Convention section of `?crssi` help file for additional details.*
+
+Currently, `crss_input` only includes data for a single trace. We can apply ISM to these data (natural flow sites and the Sacramento Year Type index) to create 20 input traces: 
+
+```{r ism}
+crss_input <- ism(crss_input)
+```
+
+`ism()` could have been applied in earlier steps to either the `crss_nf` or `nfd` objects.
+
+One adjustment has to be made before these data are used as input for CRSS. Currently these data start in 2000 (see 'dates' in the above summary print out), but we need them to start in 2023 for use with the latest version of CRSS. To accomplish this, we can "reindex" the data: 
+
+```{r reindex-input}
+crss_input <- reindex(crss_input, start_year = 2023)
+crss_input
+```
+
+As shown by the printed summary, the data now start in 2023.
+
+Finally, these data need to be saved in the format expected by CRSS DMIs, i.e., in individual trace folders with the correct naming convention:
+
+```{r ex1-output, eval=FALSE}
+# probably want to create this folder in $CRSS/dmi/
+# example just creats in your documents
+dir.create('~/test-ism2000-2019') 
+
+write_crssi(
+  crss_input, 
+  path = '~/test-ism2000-2019', 
+  file_names = nf_file_names(version = 5)
+)
+```
+
+And that's it - you now have all the necessary input files for CRSS for a hydrology scenario that applies ISM to 2000-2019 data. This will work for historical data going back to 900, which is the longest the paleo data goes back for the Sacramento Basin. See the `paleo=TRUE` parameter for `sac_year_type_get()` For historical data going back before that, the other method for generating Sacramento Year Type index data in the second example can be used.
+
+## Example 2 - New Hydrology Scenario
+
+For the second example, the method to compute Sacramento Year Type index data for any arbitrary Colorado Rive natural flow will be used. One use for this would be if you have created some new hydrology scenario for the natural flows in the CRB. 
+
+If you have done this, the hardest step might be getting these data into the correct format in R. You will need to make sure you have monthly, intervening natural flow for all 29 natural flow locations. Once you have this, you can read them in/convert them into a 3D array formatted as months x traces x sites and finally convert the 2D array into an `nfd` object.
+
+In this example, we will create some random data by randomly selecting a historical year and then perturbing the historical data by scaling all monthly values at all 29 sites by randomly adding/subtracting up to 50%. Note, this will not maintain any of the spatial or temporal correlation in the historical data; thus it is probably not the best hydrology scenario. It is only meant to demonstrate how any "random" CRB natural flows can be used to get the necessary CRSS input.
+
+We will create 20 traces, each 5 years long in this example. 
+
+To make the remaining code simpler, we're going to sample based on WY instead of CY and will then use CY for CRSS input in a later step. 
+
+```{r randomFlow}
+n_years <- 5
+n_traces <- 20
+rand_nf <- array(dim = c(n_years * 12, n_traces, 29))
+
+for (i in 1:n_traces) {
+  for (j in 1:n_years) {
+    for (k in 1:29) {
+      # select a random year of data
+      rr <- monthlyInt[as.character(sample(1906:2019, 1)),k]
+      # now randomly vary these data
+      rr <- rr * runif(12, 0.5, 1.5)
+      # and save these data in the array
+      tmp <- (12*j - 11):(12*j)
+      # now rearrange to WY (OND then JFMAMJJA)
+      tmp <- tmp[c(10:12, 1:9)]
+      rand_nf[tmp, i, k] <- rr
+    }
+  }
+}
+```
+
+For data you created the above might be replaced with code to read in data from 29 different csv files, or a single excel file. In any case, once the data are in the 3D array, the following steps are easier and mirror those in the first example. 
+
+First, the array can be converted to an `nfd` or `crss_nf` object:
+
+```{r}
+rand_nf <- as_crss_nf(nfd(
+  rand_nf, 
+  time_step = 'monthly', 
+  flow_space = 'intervening', 
+  year = 'wy',
+  start_yearmon = zoo::as.yearmon('Oct 2023'), 
+  site_names = nf_gage_abbrv()
+))
+```
+
+Then, the Sacramento Year Type Index can be calculated using `sac_year_type_calc()`. A method has been developed to create the Sacramento Year Type Index from any arbitrary Colorado River natural flows. This method relies on a decision tree that is fit to the water year intervening natural flow for all 29 sites in the CRB. More details on this method can be found in XXXX. 
+
+The method relies on Water Year annual intervening natural flow so first that needs to be calculated, then the Sacramento Year Type Index can be created.
+
+```{r sac-create}
+wy_nf <- nf_to_annual(rand_nf)
+new_sac_yt <- sac_year_type_calc(co_int_nf = wy_nf)
+
+# only necessary b/c of bug that will be fixed; for now, just switch these 
+# sacramento data that have September timesteps to having December timesteps
+index(new_sac_yt) <- as.yearmon(paste("Dec", 2024:2028))
+```
+
+The last step is necessary because of a bug in the code that returns Sacramento Year Type Index in WY index, while the next step assumes it is only CY index. Bug [#122](https://github.com/BoulderCodeHub/CRSSIO/issues/122) will be fixed and then the last step won't be necessary. 
+
+Now there are 5 years (water years) of natural flow and Sacramento Year Type index data. This just needs to be converted to a `crssi` object and then exported to the format expected by CRSS. Because the data are on a water year basis and CRSS works on calendar year basis, the conversion will result in only 4 years of CRSS input, i.e., October 2023 - September 2028 data will be trimmed to January 2024 - December 2027.
+
+```{r ex2-out}
+crss_input2 <- crssi(
+  flow = rand_nf,
+  sac_year_type = new_sac_yt,
+  scen_number = 99, 
+  scen_name = 'Random made up scenario'
+)
+```
+
+```{r ex2-save, eval=FALSE}
+# probably want this folder in $CRSS_DIR/dmi
+dir.create('~/test-random/')
+
+write_crssi(
+  crss_input2, 
+  path = 'test-random', 
+  file_names = nf_file_names(version = 5)
+)
+```
+
+### Comparing inputs
+
+One last side note: CRSSIO also includes some plotting functionality that can be useful to compare a given scenario to historical data. This section will compare the random natural flow previously created with historical natural flow. 
+
+We will do this for WY Lees Ferry total natural flow, so first step is to convert intervening flows to total flows, then annual flows.
+
+```{r get-total-lf}
+rand_nf <- nf_to_total(rand_nf)
+rand_nf <- nf_to_annual(rand_nf)
+```
+
+A standard `plot()` call, with some additional parameters, will create a simple plot to show the data: 
+
+```{r plot-nfd, fig.width=6}
+plot(rand_nf, site = 'LeesFerry', time_step = 'annual', flow_space = 'total')
+```
+
+`nfd_stats` will provide more statistics, and historical data can be added for reference. 
+
+```{r plot-stats, fig.width=6, fig.height=7}
+# get historical data and get its stats for reference 
+# data have to be in nfd format
+hist_nf <- nfd(wyAnnTot, flow_space = 'total', time_step = 'annual', year = 'wy')
+h_stats <- nfd_stats(hist_nf, flow_space = 'total', time_step = 'annual', site = 'LeesFerry')
+
+rand_stats <- nfd_stats(rand_nf, flow_space = 'total', time_step = 'annual', site = 'LeesFerry')
+plot(rand_stats, ref = h_stats)
+```
+

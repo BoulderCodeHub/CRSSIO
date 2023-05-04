@@ -49,6 +49,7 @@ Remotes:
 Suggests:
     covr,
     knitr,
+    rmarkdown,
     scales,
     testthat
 VignetteBuilder: knitr
