@@ -18,7 +18,7 @@ test_that("created files from package and Excel match", {
   skip_on_appveyor()
   skip_on_ci()
   
-  xlIn <- "C:/alan/NaturalFlow/current/NaturalFlows1906-2019_20210420.xlsx"
+  xlIn <- "C:/alan/NaturalFlow/current/NaturalFlows1906-2020_20221215.xlsx"
   if (!file.exists(xlIn))
     stop("You need to update the xlIn variable in test_data.R.")
   
