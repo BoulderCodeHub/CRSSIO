@@ -31,20 +31,21 @@ test_that("nf_xts_to_df() returns correct data.frame", {
 
 zz <- CRSSIO:::nf_xts_to_df(zz)
 zz1 <- zz %>% select_at(c(nf1, "year", "month"))
+
 zz1Comp <- zz1 %>%
   tail(24) %>%
   select_at(c(nf1[1], "year", "month")) %>%
-  spread_("month", nf1[1]) %>%
+  pivot_wider(names_from = 'month', values_from = nf1[1]) %>%
   summarise_at(.vars = as.character(1:12), .funs = list(~round(mean(.), 0))) %>%
-  gather_("month", nf1[1], gather_cols = as.character(1:12)) %>%
+  pivot_longer(everything(), names_to = 'month', values_to = nf1[1]) %>%
   mutate(month = as.numeric(month))
 
 zz2Comp <- zz1 %>%
   tail(120) %>%
   select_at(c(nf1[2], "year", "month")) %>%
-  spread_("month", nf1[2]) %>%
+  pivot_wider(names_from = 'month', values_from = nf1[2]) %>%
   summarise_at(.vars = as.character(1:12), .funs = list(~round(mean(.), 0))) %>%
-  gather_("month", nf1[2], gather_cols = as.character(1:12)) %>%
+  pivot_longer(everything(), names_to = 'month', values_to = nf1[2]) %>%
   mutate(month = as.numeric(month))
   
 

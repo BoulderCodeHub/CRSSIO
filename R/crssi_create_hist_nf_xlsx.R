@@ -44,7 +44,7 @@ crssi_create_hist_nf_xlsx <- function(modelStartYear, nYearAvg = 5,
 {
   # Lees Ferry total natural flow -----------------------
   lf <- nf_xts_to_df(CoRiverNF::monthlyTot, "LeesFerry") %>%
-    tidyr::unite_("month", from = c("month", "year"), sep = "/1/") %>%
+    tidyr::unite("month", c("month", "year"), sep = "/1/") %>%
     dplyr::select_at(c("month", "LeesFerry")) %>%
     dplyr::mutate_at("month", .funs = as.Date, format = "%m/%d/%Y") %>%
     dplyr::rename_at(
@@ -56,11 +56,11 @@ crssi_create_hist_nf_xlsx <- function(modelStartYear, nYearAvg = 5,
   lbSites <- c("Hoover", "Davis", "Alamo", "Parker", "Imperial")
   
   lb <- nf_xts_to_df(CoRiverNF::monthlyInt, lbSites) %>%
-  # fill the necessary years with avg data -------------------
+    # fill the necessary years with avg data -------------------
     fill_nf_data_with_avg(lbSites, modelStartYear, nYearAvg) %>%
     # prepare lb for formatting
     dplyr::arrange_at(c("year", "month")) %>%
-    tidyr::unite_("month", from = c("month", "year"), sep = "/1/") %>%
+    tidyr::unite("month", c("month", "year"), sep = "/1/") %>%
     dplyr::select_at(c("month", lbSites)) %>%
     dplyr::mutate_at("month", .funs = as.Date, format = "%m/%d/%Y") %>%
     dplyr::rename_at(
@@ -153,11 +153,15 @@ get_monthly_average_by_site <- function(x, site, nYearAvg)
   x %>%
     dplyr::select_at(.vars = c(site, "year", "month")) %>%
     dplyr::filter_at("year", dplyr::all_vars(. %in% yrKeep)) %>%
-    tidyr::spread_("month", site) %>%
+    tidyr::pivot_wider(names_from = 'month', values_from = site) %>%
     dplyr::arrange_at("year") %>%
     dplyr::select(-dplyr::matches("year")) %>%
     dplyr::summarise_all(.funs = list(~round(mean(.), 0))) %>%
-    tidyr::gather_("month", site, as.character(1:12)) %>%
+    tidyr::pivot_longer(
+      tidyr::everything(), 
+      names_to = 'month', 
+      values_to = site
+    ) %>%
     dplyr::mutate_at("month", as.numeric)
 }
 
