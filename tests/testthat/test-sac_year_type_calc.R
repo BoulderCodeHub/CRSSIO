@@ -41,6 +41,7 @@ test_that("sac_year_type_calc() works with WY volume.", {
   expect_equal(ncol(tmp), CRSSIO:::n_trace(nf2))
   expect_equal(nrow(tmp), CRSSIO:::n_years(nf2))
   expect_true(all(unique(tmp) %in% 1:5))
-  expect_true(all(1:5 %in% unique(tmp)))
+  # won't necesarily have all 5 year types in the truncated period
+  #expect_true(all(1:5 %in% unique(tmp)))
 })
 
