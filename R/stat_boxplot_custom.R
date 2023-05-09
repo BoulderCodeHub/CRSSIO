@@ -35,7 +35,7 @@
 #' 
 #' @export
 stat_boxplot_custom <- function(mapping = NULL, data = NULL,
-                                geom = "boxplot", position = "dodge",
+                                geom = "boxplot", position = "dodge2",
                                 ...,
                                 qs = c(.05, .25, 0.5, 0.75, 0.95),
                                 na.rm = FALSE,
@@ -65,7 +65,7 @@ stat_boxplot_custom <- function(mapping = NULL, data = NULL,
     position = position,
     show.legend = show.legend,
     inherit.aes = inherit.aes,
-    params = list(
+    params = rlang::list2(
       na.rm = na.rm,
       orientation = orientation,
       qs = qs,
@@ -81,8 +81,10 @@ stat_boxplot_custom <- function(mapping = NULL, data = NULL,
 StatBoxplotCustom <- ggplot2::ggproto("StatBoxplotCustom", ggplot2::Stat,
   required_aes = c("y|x"),
   non_missing_aes = "weight",
-  
-  setup_data = function(data, params) {
+  # either the x or y aesthetic will get dropped during
+  # statistical transformation, depending on the orientation
+  dropped_aes = c("x", "y", "weight"),
+  setup_data = function(self, data, params) {
     data <- ggplot2::flip_data(data, params$flipped_aes)
     data$x <- ggplot2:::"%||%"(data$x, 0)
     data <- ggplot2::remove_missing(
@@ -94,7 +96,7 @@ StatBoxplotCustom <- ggplot2::ggproto("StatBoxplotCustom", ggplot2::Stat,
     ggplot2::flip_data(data, params$flipped_aes)
   },
   
-  setup_params = function(data, params) {
+  setup_params = function(self, data, params) {
     params$flipped_aes <- ggplot2::has_flipped_aes(data, params, 
                                           main_is_orthogonal = TRUE,
                                           group_has_equal = TRUE,
@@ -112,7 +114,8 @@ StatBoxplotCustom <- ggplot2::ggproto("StatBoxplotCustom", ggplot2::Stat,
       (ggplot2::resolution(ggplot2:::"%||%"(data$x, 0) * 0.75))
     ) 
     
-    if (is.double(data$x) && !ggplot2:::has_groups(data) && any(data$x != data$x[1L])) {
+    if (!ggplot2:::is_mapped_discrete(data$x) && is.double(data$x) && 
+        !ggplot2:::has_groups(data) && any(data$x != data$x[1L])) {
       rlang::warn(glue::glue(
         "Continuous {flipped_names(params$flipped_aes)$x} aesthetic -- did you forget aes(group=...)?"
       ))
@@ -139,10 +142,10 @@ StatBoxplotCustom <- ggplot2::ggproto("StatBoxplotCustom", ggplot2::Stat,
     
     outliers <- (data$y < stats[1]) | (data$y > stats[5])
 
-    if (length(unique(data$x)) > 1)
+    if (vctrs::vec_unique_count(data$x) > 1)
       width <- diff(range(data$x)) * 0.9
     
-    df <- as.data.frame(as.list(stats))
+    df <- ggplot2:::data_frame0(!!!as.list(stats))
     df$outliers <- list(data$y[outliers])
     
     if (is.null(data$weight)) {

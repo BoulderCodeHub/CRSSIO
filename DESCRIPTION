@@ -40,6 +40,7 @@ Imports:
     tools,
     udunits2,
     utils,
+    vctrs,
     writexl,
     xml2,
     xts (>= 0.10.0),
