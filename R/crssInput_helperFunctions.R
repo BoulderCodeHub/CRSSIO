@@ -301,7 +301,7 @@ check_nf_oFolder <- function(oFolder, overwriteFiles, calledBy)
 
 check_recordToUse <- function(recordToUse)
 {
-  if (class(recordToUse) != "yearmon")
+  if (!is("yearmon"))
     stop("recordToUse must be class 'yearmon'.")
   
   if (length(recordToUse) != 2)
