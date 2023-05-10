@@ -10,7 +10,7 @@ stat_boxplot_custom(
   mapping = NULL,
   data = NULL,
   geom = "boxplot",
-  position = "dodge",
+  position = "dodge2",
   ...,
   qs = c(0.05, 0.25, 0.5, 0.75, 0.95),
   na.rm = FALSE,
@@ -39,6 +39,8 @@ A \code{function} will be called with a single argument,
 the plot data. The return value must be a \code{data.frame}, and
 will be used as the layer data. A \code{function} can be created
 from a \code{formula} (e.g. \code{~ head(.x, 10)}).}
+
+\item{geom}{Available, but should only be 'boxplot'.}
 
 \item{position}{Position adjustment, either as a string naming the adjustment
 (e.g. \code{"jitter"} to use \code{position_jitter}), or the result of a call to a

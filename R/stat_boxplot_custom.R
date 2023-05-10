@@ -20,6 +20,8 @@
 #'   should be a smaller percentile than the lower hinge, and can only span the 
 #'   values from 0 to 1 (inclusive).
 #'   
+#' @param geom Available, but should only be 'boxplot'.
+#'   
 #' @inheritParams ggplot2::stat_boxplot
 #' 
 #' @examples 
