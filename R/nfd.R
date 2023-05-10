@@ -860,7 +860,8 @@ print.nfd <- function(x, ...)
     "----------------------\n",
     "n traces:", n_trace(x), "\n",
     "dates:", as.character(start(x)), "-", as.character(end(x)), "\n",
-    "flow space:\n -", flow_space
+    "flow space:\n -", flow_space, 
+    "\n"
   )
   
   invisible(x)
