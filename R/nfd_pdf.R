@@ -225,16 +225,16 @@ nfd_pdf_plot_annual <- function(x, ref, base_units, ...)
 {
   lt <- plot_ops("linetype", "line", ...)
   color <- plot_ops("color", "line", ...)
-  size <- plot_ops("size", "line", ...)
+  lw <- plot_ops("linewidth", "line", ...)
   
   n_trace <- length(unique(x$trace))
   
   if (n_trace > 1) {
-    gg <- gg_ribbon_cloud(ggplot(ribbon_stats(x, "x", "y"), aes_string("x")))
+    gg <- gg_ribbon_cloud(ggplot(ribbon_stats(x, "x", "y"), aes(!!sym("x"))))
   
   } else {
-    gg <- ggplot(x, aes_string("x", "y")) + 
-      geom_line(color = "grey20", size = 1)
+    gg <- ggplot(x, aes(!!sym("x"), !!sym("y"))) + 
+      geom_line(color = "grey20", linewidth = 1)
   }
   
   add_ref <- FALSE
@@ -242,8 +242,8 @@ nfd_pdf_plot_annual <- function(x, ref, base_units, ...)
     gg <- gg +
       geom_line(
         data = ref, 
-        aes_string("x", "y"), 
-        color = color, linetype = lt, size = size
+        aes(!!sym("x"), !!sym("y")), 
+        color = color, linetype = lt, linewidth = lw
       )
     add_ref <- TRUE
   }
@@ -314,11 +314,11 @@ gg_ribbon_cloud <- function(gg)
   gg + 
     geom_ribbon(
       aes(ymin = q50, ymax = q50, fill = "median", color = "grey20"), 
-      size = 1
+      linewidth = 1
     ) + 
     geom_ribbon(aes(ymin = q05, ymax = q95, fill = "5th-95th"), alpha = 0.6) + 
     geom_ribbon(aes(ymin = q25, ymax = q75, fill = "25th-75th"), alpha = 0.5) + 
-    geom_line(aes(y = q50), color = "grey20", size = 1) +
+    geom_line(aes(y = q50), color = "grey20", linewidth = 1) +
     scale_fill_manual("Percentile:", values = fill_map) + 
     scale_color_manual("", values = "grey20", guide = "none")
 }

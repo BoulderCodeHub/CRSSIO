@@ -186,7 +186,8 @@ nfd_stats_verify <- function(x)
 #'   
 #' @param ... Additional options passed to [ggplot2::geom_point()] and 
 #'   [ggplot2::geom_line()]. `size`, `shape`, and `color` can be overridden for
-#'   points, and `size`, `linetype`, and `color` can be overriddent for lines. 
+#'   points, and `linewidth`, `linetype`, and `color` can be overridden for 
+#'   lines. 
 #'   
 #' @return `nfdplot` object.
 #' 
@@ -234,7 +235,7 @@ nfd_stats_plot_monthly <- function(x, ref, base_units, ...)
   
   x$month <- factor(x$month, levels = mm)
   
-  gg <- ggplot(x, aes_string(x = "month", y = "value")) +
+  gg <- ggplot(x, aes(x = !!sym("month"), y = !!sym("value"))) +
     stat_boxplot_custom() +
     facet_wrap("variable", ncol = 2, scales = "free_y")
   
@@ -243,7 +244,7 @@ nfd_stats_plot_monthly <- function(x, ref, base_units, ...)
     gg <- gg +
       geom_point(
         data = ref,
-        aes_string(x = "month", y = "value"),
+        aes(x = !!sym("month"), y = !!sym("value")),
         shape = shape,
         color = color,
         size = size
@@ -274,7 +275,7 @@ nfd_stats_plot_annual <- function(x, ref, base_units, ...)
   n_trace <- length(unique(x$trace))
   year_type <- ifelse(x$year_type[1] == "cy", "Calendar Year", "Water Year")
   
-  gg <- ggplot(x, aes_string(y = "value")) +
+  gg <- ggplot(x, aes(y = !!sym("value"))) +
     stat_boxplot_custom() +
     facet_wrap("variable", ncol = 2, scales = "free_y")
   
@@ -282,7 +283,7 @@ nfd_stats_plot_annual <- function(x, ref, base_units, ...)
     gg <- gg +
       geom_point(
         data = ref,
-        aes_string(x = 0, y = "value"),
+        aes(x = 0, y = !!sym("value")),
         shape = shape,
         color = color,
         size = size
@@ -312,13 +313,15 @@ plot_ops <- function(op, type, ...)
   if (exists(op, where = args)) {
     x <- args[[op]]
   } else {
-    size <- ifelse(type == "point", 2, 1.2)
+    size <- ifelse(type == "point", 2, NA)
+    lw <- ifelse(type == 'line', 1.2, NA)
     
     defaults <- list(
       color = "#51B2FF",
       size = size,
       shape = 17,
-      linetype = 2
+      linetype = 2,
+      linewidth = lw
     )
     
     x <- defaults[[op]]

@@ -203,8 +203,8 @@ plot_monthly <- function(x, trace, which, flow_space, site_name, year_type,
     
     x$month <- factor(x$month, levels = mm)
     
-    gg_box <- ggplot(x, aes_string("month", "value")) +
-      stat_boxplot_custom(aes_string(group = "month")) +
+    gg_box <- ggplot(x, aes(!!sym("month"), !!sym("value"))) +
+      stat_boxplot_custom(aes(group = !!sym("month"))) +
       scale_x_discrete(labels = month.abb[mm])
     
     gg_box <- nfd_plot_style(gg_box, "Monthly", flow_space, site_name, trace,
@@ -233,8 +233,8 @@ plot_annual <- function(x, trace, which, flow_space, site_name, year_type,
   
   # boxblot ------------------------------------
   if ("box" %in% which) {
-    gg_box <- ggplot(x, aes_string("year", "value")) +
-      stat_boxplot_custom(aes_string(group = "year"))
+    gg_box <- ggplot(x, aes(!!sym("year"), !!sym("value"))) +
+      stat_boxplot_custom(aes(group = !!sym("year")))
     
     gg_box <- nfd_plot_style(gg_box, "Annual", flow_space, site_name, trace, 
                              year_type, base_units)
@@ -245,8 +245,8 @@ plot_annual <- function(x, trace, which, flow_space, site_name, year_type,
   
   # spaghetti -----------------------------------
   if ("spaghetti" %in% which) {
-    gg_spag <- ggplot(x, aes_string("year", "value")) +
-      geom_line(aes_string(group = "trace"))
+    gg_spag <- ggplot(x, aes(!!sym("year"), !!sym("value"))) +
+      geom_line(aes(group = !!sym("trace")))
     gg_spag <- nfd_plot_style(gg_spag, "Annual", flow_space, site_name, trace, 
                               year_type, base_units)
     gg_spag <- list(gg_spag)
@@ -257,7 +257,7 @@ plot_annual <- function(x, trace, which, flow_space, site_name, year_type,
     # compute stats 5, 25, 50, 75, 95 percentiles
     x_stats <- ribbon_stats(x, "year", "value")
 
-    gg_cloud <- gg_ribbon_cloud(ggplot(x_stats, aes_string("year"))) 
+    gg_cloud <- gg_ribbon_cloud(ggplot(x_stats, aes(!!sym("year"))))
     
     gg_cloud <- nfd_plot_style(gg_cloud, "Annual", flow_space, site_name, trace, 
                                year_type, base_units)
