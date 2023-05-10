@@ -301,8 +301,10 @@ check_nf_oFolder <- function(oFolder, overwriteFiles, calledBy)
 
 check_recordToUse <- function(recordToUse)
 {
-  if (!is("yearmon"))
-    stop("recordToUse must be class 'yearmon'.")
+  assert_that(
+    inherits(recordToUse, 'yearmon'), 
+    msg = "recordToUse must be class 'yearmon'."
+  )
   
   if (length(recordToUse) != 2)
     stop("recordToUse should only contain two entries, or be 'NA'.")
