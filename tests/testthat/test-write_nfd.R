@@ -1,3 +1,4 @@
+sink('nul')
 
 d1 <- ism(nfd(CoRiverNF::cyAnnTot["2000/2005"]))
 d2 <- ism(nfd(CoRiverNF::monthlyInt["2000/2002"], time_step = "monthly",
@@ -5,13 +6,15 @@ d2 <- ism(nfd(CoRiverNF::monthlyInt["2000/2002"], time_step = "monthly",
 d2 <- nf_to_annual(d2)
 d2 <- nf_to_total(d2)
 
+sink()
+
 p1 <- file.path(tempdir(), "d1")
 p2 <- file.path(tempdir(), "d2")
 dir.create(p1)
 dir.create(p2)
 teardown({
-  unlink(p1)
-  unlink(p2)
+  unlink(p1, recursive = TRUE)
+  unlink(p2, recursive = TRUE)
 })
 
 # write csv files ----------------------------

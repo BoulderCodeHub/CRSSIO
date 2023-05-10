@@ -1,9 +1,11 @@
+sink('nul')
 xx <- nfd(CoRiverNF::cyAnnTot, flow_space = "total", n_sites = 29)
 xx2 <- ism(xx, n_years_keep = 50)
 
 mm <- crss_nf(CoRiverNF::monthlyInt) 
 mm <- nfd_extract(mm, "1906/") 
 mm2 <- ism(mm, n_years_keep = 50)
+sink()
 
 # nfd_pdf --------------------------------------
 test_that("nfd_pdf returns correctly", {

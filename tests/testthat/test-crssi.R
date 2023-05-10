@@ -13,6 +13,7 @@ yrs <- zoo::as.yearmon("Dec 2000") + 0:2
 sac_xts <- xts(sac_mat, order.by = yrs)
 
 test_that("crssi constructor works", {
+  sink('nul')
   expect_is(
     x <- crssi(
       crss_nf(monthlyInt, flow_space = "intervening", time_step = "monthly"),
@@ -50,4 +51,5 @@ test_that("crssi constructor works", {
   expect_true(CRSSIO:::has_total(x, "monthly"))
   expect_false(CRSSIO:::has_total(x))
   expect_length(capture.output(expect_identical(x, print(x))), 4)
+  sink()
 })

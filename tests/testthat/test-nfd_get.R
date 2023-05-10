@@ -72,6 +72,7 @@ ann_array[,3,,2] <- ann3
 ann_array[,4,,1] <- ann4
 ann_array[,4,,2] <- ann4
 
+sink('nul')
 nfd_ann <- nfd(ann_array, flow_space = "both", time_step = "annual", 
                n_sites = 29, n_trace = 4,
                start_yearmon = "Dec 2020", site_names = nf_gage_abbrv())
@@ -88,6 +89,7 @@ sac_yt <- xts(
   order.by = as.yearmon("Dec 2020") + 0:1
 )
 x_crssi <- crssi(x_crss_nf, sac_yt, 1.20002001, "my scenario", drop_flow = FALSE)
+sink()
 
 # nfd_get_site() --------------------------------------
 test_that("nfd_get_site() works", {

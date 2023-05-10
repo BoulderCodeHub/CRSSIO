@@ -1,3 +1,4 @@
+sink('nul')
 xx <- nfd(CoRiverNF::cyAnnTot, flow_space = "total", n_sites = 29)
 xx2 <- ism(xx, n_years_keep = 50)
 
@@ -9,6 +10,7 @@ ann1 <- nfd_stats(xx, "LeesFerry", "total", "annual")
 ann2 <- nfd_stats(xx2, "LeesFerry", "total", "annual")
 mon1 <- nfd_stats(mm, "Cameo", "intervening", "monthly")
 mon2 <- nfd_stats(mm2, "Cameo", "intervening", "monthly")
+sink()
 
 test_that("nfd_stats() returns correctly", {
   expect_is(ann1, c("nfd_stats", "data.frame"))

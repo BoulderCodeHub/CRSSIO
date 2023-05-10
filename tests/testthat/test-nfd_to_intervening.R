@@ -1,3 +1,5 @@
+sink('nul')
+
 cy_nfd <- nfd(
   CoRiverNF::cyAnnTot["2000/2005"],
   flow_space = "total", 
@@ -18,9 +20,11 @@ ism_nfd_exp <- ism(nfd(
   time_step = "monthly",
   n_sites = 29
 ))
+sink()
 
 # nfd -----------------------------------------------------
 test_that("can convert from total to interveing for nfd object.", {
+  sink('nul')
   expect_equal(
     zoo::coredata(CoRiverNF::cyAnnInt["2000/2005"]),
     zoo::coredata(nfd_get_trace(
@@ -67,14 +71,18 @@ test_that("can convert from total to interveing for nfd object.", {
   # fails to work with recompute = FALSE but works with recompute = true
   expect_error(nf_to_intervening(tmp))
   expect_identical(tmp, nf_to_intervening(tmp, recompute = TRUE))
+  sink()
 })
 
 # crss_nf -----------------------------------------------------------
 
+sink('nul')
 nf <- as_crss_nf(nf_to_intervening(mon_nfd, keep_total = TRUE))
+sink()
 
 test_that("nf_to_intervening.crss_nf works", {
   # should fail with default recompute
+  sink('nul')
   expect_error(nf_to_intervening(nf))
   
   # should match input with recompute = TRUE and keep_total = TRUE
@@ -89,15 +97,20 @@ test_that("nf_to_intervening.crss_nf works", {
     nf_to_intervening(nf, recompute = TRUE)$monthly$intervening,
     nf$monthly$intervening
   )
+  sink()
 })
 
 # crssi ---------------------------------------------------------------
+sink('nul')
 sac <- ism(sac_year_type_get(TRUE)["1950/1954"])
 nf <- crssi(ism(nf), sac, 222, drop_flow = FALSE)
+sink()
 test_that("nf_to_intervening.crssi works", {
+  sink('nul')
   tmp <- nf_to_intervening(nf, recompute = TRUE)
   expect_s3_class(tmp, "crssi")
   expect_equal(tmp$monthly$intervening, nf$monthly$intervening)
+  sink()
 })
 
 # xts -----------------------------------------------------------------

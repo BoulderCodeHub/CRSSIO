@@ -22,6 +22,7 @@ test_that("sac_year_type_calc() works with WY volume.", {
 # co_int_nf specified ---------------------
 
 test_that("sac_year_type_calc() works with WY volume.", {
+  sink('nul')
   nf <- nfd(CoRiverNF::wyAnnInt, flow_space = "intervening", 
             time_step = "annual",
             year = "wy")
@@ -43,5 +44,6 @@ test_that("sac_year_type_calc() works with WY volume.", {
   expect_true(all(unique(tmp) %in% 1:5))
   # won't necesarily have all 5 year types in the truncated period
   #expect_true(all(1:5 %in% unique(tmp)))
+  sink()
 })
 

@@ -4,6 +4,7 @@ t1 <- monthlyTot["2010-01/2011-12"]$LeesFerry
 
 # nf_to_annual.xts ------------------------------------------------
 test_that("nf_to_annual.xts() works", {
+  sink('nul')
   expect_s3_class(t1_sum <- nf_to_annual(t1), "xts")
   expect_equivalent(t1_sum, cyAnnTot["2010/2011"]$LeesFerry)
   
@@ -28,11 +29,13 @@ test_that("nf_to_annual.xts() works", {
     zoo::as.yearmon(paste("Sep", CRSSIO:::year(end(monthlyInt), TRUE) + 1))
   )
   expect_equivalent(tmp[paste0("/", CRSSIO:::year(end(monthlyInt)))], wyAnnInt)
+  sink()
 })
 
 # nf_to_annual.nfd ----------------------------------------------
 
 test_that("nf_to_annual.nfd() works", {
+  sink('nul')
   n1 <- nfd(
     CoRiverNF::monthlyInt, flow_space = "intervening", time_step = "monthly"
   )
@@ -57,9 +60,11 @@ test_that("nf_to_annual.nfd() works", {
     ))$annual$intervening, 
     n2$annual$intervening
   )
+  sink()
 })
 
 test_that("nf_to_annual.nfd() handles different year types correctly.", {
+  sink('nul')
   x <- nfd(
     matrix(1:40, ncol = 1), 
     flow_space = 'total', 
@@ -69,10 +74,12 @@ test_that("nf_to_annual.nfd() handles different year types correctly.", {
   expect_error(nf_to_annual(x, full_year = TRUE, year = 'wy'))
   expect_error(nf_to_annual(x, full_year = TRUE, year = 'abc'))
   expect_s3_class(nf_to_annual(x, keep_monthly = FALSE, year = 'wy'), 'nfd')
+  sink()
 })
 
 # nf_to_annual.crssi ------------------------------------------------
 test_that("nf_to_annual.crssi() works", {
+  sink('nul')
   nf <- crss_nf(
     CoRiverNF::monthlyInt["2000/2002"],
     flow_space = "intervening",
@@ -87,4 +94,5 @@ test_that("nf_to_annual.crssi() works", {
   expect_identical(nf2$n_trace, nf$n_trace)
   expect_identical(nf2$scen_number, nf$scen_number)
   expect_identical(nf2$scen_name, nf$scen_name)
+  sink()
 })

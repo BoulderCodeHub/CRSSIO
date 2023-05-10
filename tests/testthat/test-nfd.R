@@ -79,6 +79,7 @@ ann_array[,4,,2] <- ann4
 
 # 1D -----------------
 test_that("nfd constructor for 1d data works", {
+  sink('nul')
   expect_is(x <- nfd(), "nfd")
   expect_true(CRSSIO:::has_annual(x) && CRSSIO:::has_total(x))
   expect_false(CRSSIO:::has_intervening(x))
@@ -132,6 +133,7 @@ test_that("nfd constructor for 1d data works", {
     start(x), 
     zoo::as.yearmon(paste0("Sep", this_year))
   )
+  sink()
 })
 
 # array ----------------------
@@ -146,6 +148,7 @@ a3[,3,] <- t3_tot
 a4 <- array(45524, dim = c(24, 3, 1))
   
 test_that("nfd works with arrays", {
+  sink('nul')
   expect_warning(expect_is(x <- nfd(nf_array, time_step = "monthly"), "nfd"))
   expect_identical(as_nfd(nf_array, time_step = "monthly"), x)
   expect_null(x$annual$intervening)
@@ -210,10 +213,12 @@ test_that("nfd works with arrays", {
   expect_identical(dim(x$monthly$total[[1]]), c(24L, 1L))
   expect_identical(start(x), as.yearmon("Jan 2000"))
   expect_identical(end(x), as.yearmon("Dec 2001"))
+  sink()
 })
 
 # matrix ---------------------------------------------
 test_that("nfd works with matrices", {
+  sink('nul')
   expect_is(x <- nfd(t1_tot, time_step = "monthly"), "nfd")
   expect_null(x$annual$intervening)
   expect_null(x$annual$total)
@@ -248,10 +253,13 @@ test_that("nfd works with matrices", {
   expect_equal(CRSSIO:::n_trace(x), 1)
   expect_equal(CRSSIO:::n_years(x), 36)
   expect_null(colnames(x$annual$total[[1]]))
+  sink()
 })
 
 # xts --------------------------------------------------
 test_that("nfd works with xts", {
+  sink('nul')
+  
   expect_is(x <- nfd(t1_tot_xts, time_step = "monthly"), "nfd")
   expect_identical(
     x, 
@@ -287,6 +295,8 @@ test_that("nfd works with xts", {
   expect_equal(CRSSIO:::n_trace(x), 1)
   expect_equal(CRSSIO:::n_sites(x), 2)
   expect_setequal(colnames(x$monthly$total[[1]]), c("GlenwoodSprings", "Cameo"))
+  
+  sink()
 })
 
 # data.frame -----------------------------------------------
@@ -311,6 +321,8 @@ df_ann <- data.frame(
 )
 
 test_that("nfd() works with data.frames.", {
+  sink('nul')
+  
   expect_s3_class(tmp <- nfd(df_simple, time_step = "monthly"), "nfd")
   expect_equivalent(zoo::coredata(tmp$monthly$total[[1]]), cbind(1:12, 13:24))
   expect_equivalent(zoo::coredata(tmp$monthly$total[[2]]), cbind(25:36, 37:48))
@@ -354,4 +366,6 @@ test_that("nfd() works with data.frames.", {
     nfd(monthlyTot["1906/"], flow_space = "total", time_step = "monthly"),
     expect_output(nfd(tmp_df, flow_space = "total", time_step = "monthly"))
   )
+  
+  sink()
 })

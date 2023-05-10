@@ -1,4 +1,5 @@
 # as.data.frame.nfd -------------------------------
+sink('nul')
 nf <- nfd(
   CoRiverNF::monthlyInt["2000/2002"],
   flow_space = "intervening",
@@ -14,6 +15,7 @@ nf3 <- nfd(
 )
 
 nf3 <- nf_to_intervening(nf3)
+sink()
 
 test_that("as.data.frame.nfd works", {
   expect_s3_class(df <- as.data.frame(nf), "data.frame")
@@ -54,8 +56,10 @@ test_that("as.data.frame.nfd works", {
 # this also tests as.data.frame.crss_nf by inheritance and they way 
 # as.data.frame.crssi is coded
 
+sink('nul')
 sac <- sac_year_type_get(internal = TRUE)["2000/2002"]
 nf <- crssi(as_crss_nf(nf), sac, scen_number = 1.20002002)
+sink()
 
 test_that("as.data.frame.crssi() works", {
   expect_s3_class(df <- as.data.frame(nf), "data.frame")

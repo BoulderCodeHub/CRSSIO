@@ -56,7 +56,7 @@ test_that("reindex.xts() works", {
 })
 
 # reindex.nfd ------------------------------------------
-
+sink('nul')
 nfd_ann <- nfd(4, n_months = 36, n_trace = 1, n_sites = 1, flow_space = "total",
                time_step = "annual", start_yearmon = "Sep 2020", year = "wy")
 nfd_mon <- nfd(5, n_months = 37, n_trace = 5, n_sites = 5, 
@@ -64,8 +64,10 @@ nfd_mon <- nfd(5, n_months = 37, n_trace = 5, n_sites = 5,
                start_yearmon = "Jan 2020")
 nfd_both <- nfd(6, n_months = 72, n_trace = 4, n_sites = 7, flow_space = "both",
                 time_step = "both", start_yearmon = "Feb 2020")
+sink()
 
 test_that("reindex works on nfd objects", {
+  sink('nul')
   expect_is(x <- reindex(nfd_ann, 2022), "nfd")
   expect_identical(start(x), as.yearmon("Sep 2022"))
   expect_identical(end(x), as.yearmon("Sep 2024"))
@@ -79,10 +81,11 @@ test_that("reindex works on nfd objects", {
   expect_identical(end(x), as.yearmon("Jan 2028"))
   
   expect_error(reindex(nfd_both, "jan 2022"))
+  sink()
 })
 
 # crssi.nfd -----------------------------------------
-
+sink('nul')
 crssi_mon <- crssi(crss_nf(CoRiverNF::monthlyInt), CRSSIO:::sacYT, 1.1906)
 crssi_both <- crssi(crss_nf(5, n_months = 36, n_trace = 5, flow_space = "both",
                               time_step = "both", start_yearmon = "Jan 2000"),
@@ -91,8 +94,10 @@ crssi_both <- crssi(crss_nf(5, n_months = 36, n_trace = 5, flow_space = "both",
                       order.by = as.yearmon("Dec 2000") + 0:2
                     ),
                     1.2000, "weird scen", drop_flow = FALSE)
+sink()
 
 test_that("reindex works on crssi objects", {
+  sink('nul')
   expect_is(x <- reindex(crssi_mon, 2022), "crssi")
   expect_identical(start(x), as.yearmon("Jan 2022"))
   expect_identical(end(x), end(crssi_mon) + (2022-1906))
@@ -102,4 +107,5 @@ test_that("reindex works on crssi objects", {
   expect_identical(end(x), as.yearmon("Dec 1982"))
   
   expect_error(reindex(crssi_mon, "2022-12"))
+  sink()
 })

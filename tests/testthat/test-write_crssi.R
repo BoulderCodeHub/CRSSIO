@@ -2,6 +2,8 @@
 # ISM
 # write out data then test it
 
+sink('nul')
+
 nf <- crssi(
   crss_nf(CoRiverNF::monthlyInt["2000/2001"]),
   sac_year_type_get(TRUE)["2000/2001"],
@@ -10,6 +12,8 @@ nf <- crssi(
 )
 
 nf <- ism(nf)
+
+sink()
 
 path <- file.path(tempdir(), "write_crssi")
 dir.create(path)

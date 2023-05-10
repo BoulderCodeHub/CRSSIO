@@ -12,6 +12,7 @@ ann_array <- array(
 
 # has_overlapping_ts() -----------------------------
 #has_overlapping_ts(x, exact = TRUE)
+sink('nul')
 x1 <- nfd(1, n_months = 36, n_trace = 5, n_sites = 29, flow_space = "both",
           time_step = "both", start_yearmon = "Jan 2020", 
           site_names = nf_gage_abbrv())
@@ -21,7 +22,10 @@ x2 <- nfd(1, n_months = 36, n_trace = 5, n_sites = 29, flow_space = "both",
 x3 <- nfd(1, n_months = 36, n_trace = 5, n_sites = 29, flow_space = "both",
           time_step = "both", start_yearmon = "June 2020", 
           site_names = nf_gage_abbrv())
+sink()
+
 test_that("has_overlapping_ts() works with exact = TRUE", {
+  sink('nul')
   expect_true(has_overlapping_ts(x1))
   expect_true(has_overlapping_ts(x2))
   # should fail b/c data do not start/end at beginning/end of cy
@@ -33,10 +37,12 @@ test_that("has_overlapping_ts() works with exact = TRUE", {
   expect_true(
     has_overlapping_ts(expect_warning(nfd(ann_array, time_step = "annual")))
   )
+  sink()
 })
 
 # exact = FALSE ------------------------------------------
 test_that("has_overlapping_ts(exact = FALSE)", {
+  sink('nul')
   expect_true(has_overlapping_ts(x1, exact = FALSE))
   expect_true(has_overlapping_ts(x2, exact = FALSE))
   # should pass this time because exact = FALSE
@@ -56,4 +62,5 @@ test_that("has_overlapping_ts(exact = FALSE)", {
   )
   x2$annual <- y1$annual
   expect_true(has_overlapping_ts(x2, exact = FALSE))
+  sink()
 })

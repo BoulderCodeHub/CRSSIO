@@ -1,3 +1,5 @@
+sink('nul')
+
 cy_nf <- nfd(
   CoRiverNF::cyAnnInt, 
   flow_space = "intervening", 
@@ -18,9 +20,11 @@ zz_exp <- ism(nfd(
   time_step = "monthly",
   n_sites = 29
 ))
+sink()
 
 # nfd --------------------------------------------------------
 test_that("can convert to total nf correctly for nfd object", {
+  sink('nul')
   expect_equal(
     zoo::coredata(CoRiverNF::cyAnnTot), 
     zoo::coredata(nfd_get_trace(nf_to_total(cy_nf), 1, "total", "annual"))
@@ -84,14 +88,17 @@ test_that("can convert to total nf correctly for nfd object", {
   # fails to work with default recompute, but succeeds with recompute = true
   expect_error(nf_to_total(zz))
   expect_identical(zz, nf_to_total(zz, recompute = TRUE))
+  sink()
 })
 
 # crss_nf -----------------------------------------------------------------
+sink('nul')
 int_nf <- ism(crss_nf(
   CoRiverNF::monthlyInt["2000/2004"], 
   flow_space = "intervening", 
   time_step = "monthly"
 ))
+sink()
 
 test_that("nf_to_total.crss_nf works", {
   tmp <- nf_to_total(int_nf)
@@ -106,8 +113,11 @@ test_that("nf_to_total.crss_nf works", {
 })
 
 # crssi -------------------------------------------------------------------
+sink('nul')
 sac <- ism(sac_year_type_get(TRUE)["2000/2004"])
 int_nf <- crssi(int_nf, sac, 1)
+sink()
+
 test_that("nf_to_total.crssi works", {
   tmp <- nf_to_total(int_nf)
   expect_s3_class(tmp, "crssi")

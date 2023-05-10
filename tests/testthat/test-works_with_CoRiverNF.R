@@ -22,6 +22,7 @@ test_that("created files from package and Excel match", {
   if (!file.exists(xlIn))
     stop("You need to update the xlIn variable in test_data.R.")
   
+  sink('nul')
   crssi_create_dnf_files(
     "CoRiverNF",
     oFolder = file.path(tmpDir, "method1"),
@@ -58,5 +59,5 @@ test_that("created files from package and Excel match", {
       })
     }
   }
-  
+  sink()
 })

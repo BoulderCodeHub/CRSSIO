@@ -56,6 +56,7 @@ test_that('ism.xts works as expected',{
 })
 
 # nfd -------------------------------------------------
+sink('nul')
 nfd_ann <- nfd(CoRiverNF::cyAnnTot["2000/2009", c("LeesFerry", "Imperial")], 
                flow_space = "total", time_step = "annual", n_sites = 2)
 ann_mat <- coredata(CoRiverNF::cyAnnTot["2000/2009", c("LeesFerry", "Imperial")])
@@ -64,8 +65,10 @@ nfd_mon <- nfd(CoRiverNF::monthlyInt["2000/2009","LeesFerry"],
 mon_mat <- coredata(CoRiverNF::monthlyInt["2000/2009","LeesFerry"])
 nfd_both <- nfd(5, n_months = 36, n_sites = 5, flow_space = "both", 
                 time_step = "both", start_yearmon = "Oct 2000", year = "wy")
+sink()
 
 test_that("ism.nfd works", {
+  sink('nul')
   expect_is(x <- ism(nfd_ann), "nfd")
   expect_true(CRSSIO:::has_annual(x))
   expect_false(CRSSIO:::has_monthly(x))
@@ -129,9 +132,11 @@ test_that("ism.nfd works", {
   expect_identical(start(x), as.yearmon("Oct 2000"))
   expect_identical(end(x), as.yearmon("Sep 2003"))
   expect_equal(CRSSIO:::sites(x), NULL)
+  sink()
 })
 
 # crss_nf ---------------------------------------------
+sink('nul')
 nfd_ann <- crss_nf(-99, n_trace = 1, flow_space = "intervening", 
                    time_step = "both")
 nfd_ann$monthly$intervening[[1]] <- CoRiverNF::monthlyInt["1980/1989"]
@@ -146,8 +151,10 @@ mon_mat <- coredata(CoRiverNF::monthlyTot["1970-10/1980-09"])
 
 nfd_both <- crss_nf(5, n_months = 36, flow_space = "both", 
                 time_step = "both", start_yearmon = "Jan 2000")
+sink()
 
 test_that("ism.crss_nf works", {
+  sink('nul')
   expect_is(x <- ism(nfd_ann), "crss_nf")
   expect_true(CRSSIO:::has_annual(x))
   expect_true(CRSSIO:::has_monthly(x))
@@ -211,9 +218,11 @@ test_that("ism.crss_nf works", {
   expect_identical(start(x), as.yearmon("Jan 2000"))
   expect_identical(end(x), as.yearmon("Dec 2002"))
   expect_true(all(CRSSIO:::sites(x) == nf_gage_abbrv()))
+  sink()
 })
 
 # crssi -----------------------------------------------
+sink('nul')
 sac1 <- CRSSIO:::sacYT["1980/1989"]
 sac2 <- CRSSIO:::sacYT["1971/1979"]
 sac3 <- CRSSIO:::sacYT["2000/2002"]
@@ -224,8 +233,10 @@ crssi3 <- crssi(nfd_both, sac3, 1.2, "ok", drop_flow = FALSE)
 
 mm1 <- coredata(CoRiverNF::monthlyInt["1980/1989"])
 mm2 <- coredata(CoRiverNF::monthlyInt["1971/1979"])
+sink()
 
 test_that("ism.crssi works", {
+  sink('nul')
   expect_is(x <- ism(crssi1), "crss_nf")
   expect_false(CRSSIO:::has_annual(x))
   expect_true(CRSSIO:::has_monthly(x))
@@ -289,12 +300,15 @@ test_that("ism.crssi works", {
   expect_identical(start(x), as.yearmon("Jan 2000"))
   expect_identical(end(x), as.yearmon("Dec 2002"))
   expect_true(all(CRSSIO:::sites(x) == nf_gage_abbrv()))
+  sink()
 })
 
 # process check ---------------------------
 test_that("2 processes yield the same result", {
+  sink('nul')
   expect_identical(
     ism(crssi1),
     crssi(ism(nfd_ann), ism(sac1), 1.1)
   )
+  sink()
 })

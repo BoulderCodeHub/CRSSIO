@@ -1,9 +1,14 @@
 # setup ---------------
+
+sink('nul')
 mon_nfd <- as_nfd(CoRiverNF::monthlyInt, flow_space = "intervening", 
                   time_step = "monthly")
+sink()
 
 # from scalar -----------------------------
 test_that("crss_nf() works with scalar", {
+  sink('nul')
+  
   expect_is(
     x <- crss_nf(40, n_months = 24, n_trace = 5, flow_space = "both", 
                  start_yearmon = "Jan 2020"),
@@ -13,16 +18,21 @@ test_that("crss_nf() works with scalar", {
   expect_true(CRSSIO:::has_intervening(x, "monthly"))
   expect_true(CRSSIO:::has_total(x, "monthly"))
   expect_error(crss_nf(40, flow_space = "total"))
+  
+  sink()
 })
 
 # from nfd() ------------------------------
 test_that("crss_nf() works with nfd", {
+  sink('nul')
   expect_is(x <- crss_nf(mon_nfd), "crss_nf")
   expect_error(crss_nf(as_nfd(CoRiverNF::cyAnnTot)))
+  sink()
 })
 
 # from array  -----------------------------
 test_that("crss_nf() works with array", {
+  sink('nul')
   nf_array <- array(
     40, c(37, 12, 29), dimnames = list(NULL, NULL, nf_gage_abbrv())
   )
@@ -45,10 +55,12 @@ test_that("crss_nf() works with array", {
   # TODO: this array is unnamed, so it should throw an error
   expect_error(expect_warning(crss_nf(array(40, c(37, 12, 1)))))
   expect_error(expect_warning(crss_nf(array(40, c(37, 12, 29)), n_trace = 12)))
+  sink()
 })
 
 # from matrix -----------------------------
 test_that("crss_nf() works with matrix", {
+  sink('nul')
   nf_mat <- matrix(1:2900, ncol = 29, dimnames = list(NULL, nf_gage_abbrv()))
   expect_is(x <- crss_nf(nf_mat), "crss_nf")
   expect_identical(
@@ -71,10 +83,12 @@ test_that("crss_nf() works with matrix", {
   )
   expect_error(expect_warning(crss_nf(matrix(1:100, ncol = 10))))
   expect_error(crss_nf(matrix(1:2900, ncol = 29)))
+  sink()
 })
 
 # from xts --------------------------------
 test_that("crss_nf() works with xts", {
+  sink('nul')
   tmp <- CoRiverNF::monthlyInt
   expect_is(x <- crss_nf(tmp), "crss_nf")
   expect_identical(
@@ -88,10 +102,12 @@ test_that("crss_nf() works with xts", {
   expect_error(expect_warning(crss_nf(tmp[,"LeesFerry"])))
   colnames(tmp) <- NULL
   expect_error(expect_warning(crss_nf(tmp)))
+  sink()
 })
 
 # from data.frame ----------------------------------
 test_that("crss_nf() works with data.frame", {
+  sink('nul')
   tmp_df <- as.data.frame(CoRiverNF::monthlyInt["1906/"])
   tmp_df$tmp <- zoo::as.yearmon(rownames(tmp_df))
   tmp_df$month <- month.name[as.numeric(CRSSIO:::month(tmp_df$tmp))]
@@ -113,4 +129,5 @@ test_that("crss_nf() works with data.frame", {
   expect_error(
     as_crss_nf(tmp_df, flow_space = "intervening", time_step = "monthly")
   )
+  sink()
 })

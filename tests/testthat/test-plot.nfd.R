@@ -2,7 +2,6 @@ library(CoRiverNF)
 
 # don't need all the constructor summaries printed
 sink('nul')
-teardown({sink()})
 
 x <- nfd(50, n_months = 144, n_trace = 20, n_sites = 3, flow_space = "both", 
     time_step = "both", start_yearmon = "Oct 2000", year = "wy")

@@ -140,6 +140,7 @@ test_that("Upfront errors post correctly", {
 # because we are using pre- 1971 data, we do not need to regenerate the data
 # in the provided trace folders each time the natural flow are updated
 test_that('can create files',{
+  sink('nul')
   expect_message(
     crssi_create_dnf_files(
       'CoRiverNF', 
@@ -159,6 +160,7 @@ test_that('can create files',{
       recordToUse = r2u
     )
   ))
+  sink()
 })
 
 # check that all files in the three directories are the same -------------
