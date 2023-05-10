@@ -22,7 +22,8 @@ in the plot window.}
 
 \item{...}{Additional options passed to \code{\link[ggplot2:geom_point]{ggplot2::geom_point()}} and
 \code{\link[ggplot2:geom_path]{ggplot2::geom_line()}}. \code{size}, \code{shape}, and \code{color} can be overridden for
-points, and \code{size}, \code{linetype}, and \code{color} can be overriddent for lines.}
+points, and \code{linewidth}, \code{linetype}, and \code{color} can be overridden for
+lines.}
 }
 \value{
 \code{nfdplot} object.
