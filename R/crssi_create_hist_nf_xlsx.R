@@ -153,7 +153,10 @@ get_monthly_average_by_site <- function(x, site, nYearAvg)
   x %>%
     dplyr::select_at(.vars = c(site, "year", "month")) %>%
     dplyr::filter_at("year", dplyr::all_vars(. %in% yrKeep)) %>%
-    tidyr::pivot_wider(names_from = 'month', values_from = site) %>%
+    tidyr::pivot_wider(
+      names_from = 'month', 
+      values_from = tidyselect::all_of(site)
+    ) %>%
     dplyr::arrange_at("year") %>%
     dplyr::select(-dplyr::matches("year")) %>%
     dplyr::summarise_all(.funs = list(~round(mean(.), 0))) %>%

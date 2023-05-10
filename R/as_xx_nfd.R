@@ -96,7 +96,7 @@ as.data.frame.nfd <- function(x, row.names = NULL, optional = FALSE, ...,
   if (wide) {
     df <- df[, c(col_order, sites)]
   } else {
-    df <- tidyr::pivot_longer(df, sites, names_to = "site")
+    df <- tidyr::pivot_longer(df, tidyselect::all_of(sites), names_to = "site")
     
     df <- df[,c(col_order, "site", "value")]
   }
