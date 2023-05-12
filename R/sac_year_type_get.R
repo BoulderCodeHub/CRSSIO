@@ -88,7 +88,7 @@ sac_year_type_get <- function(internal = FALSE, paleo = FALSE)
   t3 <- matrix(t3, ncol = length(header), byrow = TRUE)
   
   yrs <- t3[,1]
-  yrs <- zoo::as.yearmon(paste("Dec", yrs))
+  yrs <- zoo::as.yearmon(paste("Sep", yrs))
   
   # the first year type is the sacramento
   yt <- t3[,which(header == "Yr-type")[1]]
