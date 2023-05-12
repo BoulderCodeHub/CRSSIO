@@ -1,4 +1,3 @@
-source("data-raw/parseSacYTData.R")
 
 # get the elevation volume tables, and save them as system data
 
@@ -16,11 +15,9 @@ evTables <- lapply(res, getData)
 names(evTables) <- tolower(res)
 
 
-# and get the sacramento year type data too
-sacYT <- parseSACData("data-raw/sacrementoData.txt", 1906:2019)
+# and get the latest sacramento year type data 
+sacYT <- CRSSIO::sac_year_type_get()
   
-
-
 # sacramento 4 gage paleo data ----------------
 sac_paleo <- read.table("data-raw/sacramentofourupdate.txt", skip = 3, nrows = 1006)
 sac_paleo2 <- read.table("data-raw/sacramentofourupdate.txt", skip = 1009)

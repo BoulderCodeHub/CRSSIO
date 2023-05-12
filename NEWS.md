@@ -4,6 +4,8 @@ CRSSIO 0.9.1.9000
 *In development*
 
 - Removed print statements from `nfd()` constructors. This prevents the possibility for multiple prints being called when extracting data or converting between `nfd`, `crss_nf` and `crssi` objects. (#125)
+- Updated internal Sacramento Year Type Index data (`sac_year_type_get(internal = TRUE)`) to go through 2022. (#123)
+  - Note that it now has a WY (September) based timestep.
 
 CRSSIO 0.9.1
 =================
