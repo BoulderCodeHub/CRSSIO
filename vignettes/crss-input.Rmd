@@ -60,7 +60,9 @@ First, convert the existing natural flow data from CoRiverNF to a Natural Flow D
 ```{r nfdata1}
 nf <- monthlyInt['2000/2019'] # monthly intervening natural flow data from CoRiverNF
 nf <- nfd(nf, flow_space = 'intervening', time_step = 'monthly', year = 'cy')
+nf
 sac_yt <- sac_year_type_get(internal = TRUE) 
+head(sac_yt)
 ```
 
 *Note, `internal = TRUE` can be changed to `internal = FALSE` to download the latest data. See `?sac_year_type_get` for more details. This is required if the internally provided Sacramento Year Type data is not up-to-date or does not match the end date of the CRB natural flow data.*
@@ -69,6 +71,7 @@ Next, `nf` can be converted to a `crss_nf` object. The only difference between a
 
 ```{r convert}
 nf <- as_crss_nf(nf)
+nf
 ```
 
 Now, `nf` and `sac_yt` can be combined into a "CRSS input" object (`crssi`):
@@ -80,6 +83,7 @@ crss_input <- crssi(
   scen_number = 1.20002019, 
   scen_name = 'ISM applied to 2000-2019 data'
 )
+crss_input
 ```
 
 *Note the `scen_number` is provided as input to CRSS too. This input does not affect results, but is useful for model diagnostics, i.e., understanding what hydrology is loaded into a model provided by someone else. See the Scenario Number Convention section of `?crssi` help file for additional details.*
@@ -88,6 +92,7 @@ Currently, `crss_input` only includes data for a single trace. We can apply ISM 
 
 ```{r ism}
 crss_input <- ism(crss_input)
+crss_input
 ```
 
 `ism()` could have been applied in earlier steps to either the `crss_nf` or `nfd` objects.
@@ -164,6 +169,7 @@ rand_nf <- as_crss_nf(nfd(
   start_yearmon = zoo::as.yearmon('Oct 2023'), 
   site_names = nf_gage_abbrv()
 ))
+rand_nf
 ```
 
 Then, the Sacramento Year Type Index can be calculated using `sac_year_type_calc()`. A method has been developed to create the Sacramento Year Type Index from any arbitrary Colorado River natural flows. This method relies on a decision tree that is fit to the water year intervening natural flow for all 29 sites in the CRB. More details on this method can be found in XXXX. 
@@ -172,11 +178,13 @@ The method relies on Water Year annual intervening natural flow so first that ne
 
 ```{r sac-create}
 wy_nf <- nf_to_annual(rand_nf)
+wy_nf
 new_sac_yt <- sac_year_type_calc(co_int_nf = wy_nf)
 
 # only necessary b/c of bug that will be fixed; for now, just switch these 
 # sacramento data that have September timesteps to having December timesteps
 index(new_sac_yt) <- as.yearmon(paste("Dec", 2024:2028))
+head(new_sac_yt)
 ```
 
 The last step is necessary because of a bug in the code that returns Sacramento Year Type Index in WY index, while the next step assumes it is only CY index. Bug [#122](https://github.com/BoulderCodeHub/CRSSIO/issues/122) will be fixed and then the last step won't be necessary. 
@@ -190,6 +198,7 @@ crss_input2 <- crssi(
   scen_number = 99, 
   scen_name = 'Random made up scenario'
 )
+crss_input2
 ```
 
 ```{r ex2-save, eval=FALSE}

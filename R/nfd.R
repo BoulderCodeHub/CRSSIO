@@ -204,7 +204,6 @@ new_nfd <- function(mon_int, mon_tot, ann_int, ann_tot, year)
   x <- structure(x, class = c("nfd"))
   attr(x, "year") <- year
   
-  print(x)
   invisible(x)
 }
 
@@ -855,8 +854,14 @@ print.nfd <- function(x, ...)
   
   flow_space <- paste(c(ann_int, ann_tot, mon_int, mon_tot), collapse = "\n - ")
   
+  if (inherits(x, 'crss_nf')) {
+    title <- "crss_nf: CRSS Natural Flow Data\n"
+  } else {
+    title <- "nfd: Natural Flow Data\n"
+  }
+  
   cat(
-    "nfd: Natural Flow Data\n",
+    title,
     "----------------------\n",
     "n traces:", n_trace(x), "\n",
     "dates:", as.character(start(x)), "-", as.character(end(x)), "\n",

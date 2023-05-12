@@ -1,3 +1,10 @@
+CRSSIO 0.9.1.9000
+=================
+
+*In development*
+
+- Removed print statements from `nfd()` constructors. This prevents the possibility for multiple prints being called when extracting data or converting between `nfd`, `crss_nf` and `crssi` objects. (#125)
+
 CRSSIO 0.9.1
 =================
 
