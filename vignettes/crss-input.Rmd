@@ -116,7 +116,7 @@ dir.create('~/test-ism2000-2019')
 write_crssi(
   crss_input, 
   path = '~/test-ism2000-2019', 
-  file_names = nf_file_names(version = 5)
+  file_names = nf_file_names(version = 6)
 )
 ```
 
@@ -208,7 +208,7 @@ dir.create('~/test-random/')
 write_crssi(
   crss_input2, 
   path = 'test-random', 
-  file_names = nf_file_names(version = 5)
+  file_names = nf_file_names(version = 6)
 )
 ```
 

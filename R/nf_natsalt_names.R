@@ -10,8 +10,8 @@
 #' `nf_file_names()` and `natsalt_file_names()` return file names that
 #' CRSS is expecting to read in for natural flow and salt input data.
 #' 
-#' @param version The CRSS version number. Current version of CRSS is 5. Valid 
-#'   versions are 1-5.
+#' @param version The CRSS version number. Current version of CRSS is 6. Valid 
+#'   versions are 1-6.
 #'   
 #' @return Vector of characters with 29 entries (file names, gage names, gage 
 #'   abbreviations).
@@ -29,7 +29,15 @@
 #' @rdname nf_natsalt_names
 nf_file_names <- function(version = 5)
 {
-	if (version == 5) {
+	if (missing(version)) {
+	  message(paste(
+	    "`nf_file_names()` called without specifiying `version`.",
+	    "  Default value of `version` will be removed in the next release.",
+	    sep = "\n"
+	  ))
+	}
+  
+  if (version %in% 5:6) {
 	  ff <- paste0(nf_gage_abbrv(), "NF.Inflow")
 	  return (ff)
 	} else if (version %in% 2:4 ) {
@@ -101,7 +109,15 @@ nf_file_names <- function(version = 5)
 #' @rdname nf_natsalt_names
 natsalt_file_names <- function(version = 5)
 {
-	if (version == 5) {
+  if (missing(version)) {
+    message(paste(
+      "`natsalt_file_names()` called without specifiying `version`.",
+      "  Default value of `version` will be removed in the next release.",
+      sep = "\n"
+    ))
+  }
+  
+  if (version == 5:6) {
 	  ff <- paste0(nf_gage_abbrv(), "NF.Inflow_Salt_Concentration")
 	  return(ff)
 	  

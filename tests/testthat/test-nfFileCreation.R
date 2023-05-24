@@ -180,7 +180,7 @@ test_that("all files are the same", {
   }
 })
 
-allFiles <- c(nf_file_names(), "MWD_ICS.SacWYType", 
+allFiles <- c(nf_file_names(6), "MWD_ICS.SacWYType", 
               "MeadFloodControlData.hydrologyIncrement", 
               "HydrologyParameters.TraceNumber",
               "HydrologyParameters.SupplyScenario")
@@ -193,51 +193,51 @@ test_that("all files exist", {
 test_that('files created from "CoRiverNF" are the same as from Excel', {
   expect_equal(
     as.matrix(read.csv(
-      file.path(dir2, 'trace1',nf_file_names()[rr[1]]),
+      file.path(dir2, 'trace1',nf_file_names(6)[rr[1]]),
       skip = 1
     )),
     as.matrix(read.csv(
-      file.path(p1,'trace1', nf_file_names()[rr[1]]), 
+      file.path(p1,'trace1', nf_file_names(6)[rr[1]]), 
       skip = 1
     ))
   )
   expect_equal(
     as.matrix(read.csv(
-      file.path(dir2, 'trace5',nf_file_names()[rr[1]]),
+      file.path(dir2, 'trace5',nf_file_names(6)[rr[1]]),
       skip = 1
     )),
     as.matrix(read.csv(
-      file.path(p1,'trace5', nf_file_names()[rr[1]]),
+      file.path(p1,'trace5', nf_file_names(6)[rr[1]]),
       skip = 1
     ))
   )
   expect_equal(
     as.matrix(read.csv(
-      file.path(dir2, 'trace2',nf_file_names()[rr[2]]),
+      file.path(dir2, 'trace2',nf_file_names(6)[rr[2]]),
       skip = 1
     )),
     as.matrix(read.csv(
-      file.path(p1,'trace2', nf_file_names()[rr[2]]),
+      file.path(p1,'trace2', nf_file_names(6)[rr[2]]),
       skip = 1
     ))
   )
   expect_equal(
     as.matrix(read.csv(
-      file.path(dir2, 'trace3',nf_file_names()[rr[3]]),
+      file.path(dir2, 'trace3',nf_file_names(6)[rr[3]]),
       skip = 1
     )),
     as.matrix(read.csv(
-      file.path(p1,'trace3', nf_file_names()[rr[3]]),
+      file.path(p1,'trace3', nf_file_names(6)[rr[3]]),
       skip = 1
     ))
   )
   expect_equal(
     as.matrix(read.csv(
-      file.path(dir2, 'trace4',nf_file_names()[rr[4]]),
+      file.path(dir2, 'trace4',nf_file_names(6)[rr[4]]),
       skip = 1
     )),
     as.matrix(read.csv(
-      file.path(p1,'trace4', nf_file_names()[rr[4]]),
+      file.path(p1,'trace4', nf_file_names(6)[rr[4]]),
       skip = 1
     ))
   )
@@ -246,31 +246,31 @@ test_that('files created from "CoRiverNF" are the same as from Excel', {
 test_that('ism files match each other as expected', {
   expect_equal(
     as.matrix(read.csv(
-      file.path(dir2, 'trace1',nf_file_names()[rr[1]]),
+      file.path(dir2, 'trace1',nf_file_names(6)[rr[1]]),
       skip = 1
     ))[13:24],
     as.matrix(read.csv(
-      file.path(p1,'trace2', nf_file_names()[rr[1]]),
+      file.path(p1,'trace2', nf_file_names(6)[rr[1]]),
       skip = 1
     ))[1:12]
   )
   expect_equal(
     as.matrix(read.csv(
-      file.path(dir2, 'trace1',nf_file_names()[rr[2]]),
+      file.path(dir2, 'trace1',nf_file_names(6)[rr[2]]),
       skip = 1
     ))[49:60],
     as.matrix(read.csv(
-      file.path(p1,'trace5', nf_file_names()[rr[2]]),
+      file.path(p1,'trace5', nf_file_names(6)[rr[2]]),
       skip = 1
     ))[1:12]
   )
   expect_equal(
     as.matrix(read.csv(
-      file.path(dir2, 'trace1',nf_file_names()[rr[2]]),
+      file.path(dir2, 'trace1',nf_file_names(6)[rr[2]]),
       skip = 1
     ))[1:12],
     as.matrix(read.csv(
-      file.path(p1,'trace4', nf_file_names()[rr[2]]),
+      file.path(p1,'trace4', nf_file_names(6)[rr[2]]),
       skip = 1
     ))[25:36]
   )

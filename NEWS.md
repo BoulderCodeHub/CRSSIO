@@ -6,6 +6,8 @@ CRSSIO 0.9.1.9000
 - Removed print statements from `nfd()` constructors. This prevents the possibility for multiple prints being called when extracting data or converting between `nfd`, `crss_nf` and `crssi` objects. (#125)
 - Updated internal Sacramento Year Type Index data (`sac_year_type_get(internal = TRUE)`) to go through 2022. (#123)
   - Note that it now has a WY (September) based timestep.
+- Added `version = 6` as valid value to `nf_file_names()` and `natsalt_file_names()`
+  - Note that in a future release, the default value of `version` will be removed so that a user has to specify a version. In this release, this is noted as a message. 
 
 CRSSIO 0.9.1
 =================

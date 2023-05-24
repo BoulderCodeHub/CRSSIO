@@ -20,7 +20,7 @@ dir.create(path)
 teardown(unlink(path, recursive = TRUE))
 
 all_files <- c(
-  nf_file_names(), getOption("crssio.supplyScenarioSlot"),
+  nf_file_names(6), getOption("crssio.supplyScenarioSlot"),
   getOption("crssio.traceNumberSlot"), 
   getOption("crssio.hydroIncrement"), getOption("crssio.sacYTSlot")
 )

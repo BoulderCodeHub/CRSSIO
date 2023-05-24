@@ -16,8 +16,8 @@ nf_gage_names()
 nf_gage_abbrv()
 }
 \arguments{
-\item{version}{The CRSS version number. Current version of CRSS is 5. Valid
-versions are 1-5.}
+\item{version}{The CRSS version number. Current version of CRSS is 6. Valid
+versions are 1-6.}
 }
 \value{
 Vector of characters with 29 entries (file names, gage names, gage
