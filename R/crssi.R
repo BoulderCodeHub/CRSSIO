@@ -51,9 +51,9 @@
 #' @param flow A `crss_nf` object.
 #' 
 #' @param sac_year_type An annual xts object with all time steps having a 
-#'   December-some year time step. The number of columns in this object must 
-#'   match the number of traces in `flow`. Additionally, there must be some
-#'   overlapping years of data. See details.
+#'   September or December-some year time step. The number of columns in this 
+#'   object must match the number of traces in `flow`. Additionally, there must 
+#'   be some overlapping years of data. See details.
 #'   
 #' @param scen_number The scenario number. See **Scenario Numbering Convention**
 #'   section.
@@ -101,11 +101,12 @@ crssi <- function(flow, sac_year_type, scen_number, scen_name = NULL,
     )
   )
   
-  # sac_yt should only include December time steps
+  # sac_yt should only include September or December time steps
   sac_time <- zoo::index(sac_year_type)
+  sac_mon <- format(sac_time, "%m")
   assert_that(
-    all(format(sac_time, "%m") == "12"),
-    msg = "`sac_year_type` should only include December timestep."
+    all(sac_mon == "12") || all(sac_mon == "09"),
+    msg = "`sac_year_type` should only include September or December timestep."
   )
   
   # check that there are at least some overlapping years of data
@@ -122,6 +123,14 @@ crssi <- function(flow, sac_year_type, scen_number, scen_name = NULL,
       flow$monthly$intervening, NULL, NULL, NULL, attr(flow, "year")
     )
     flow <- crss_nf(flow)
+  }
+  
+  # it's ok if user provided Sac year type with Sep timestep, but we need it to
+  # be in December (assume that Sep 2000 is 2000's index, same with Dec 2000)
+  if (all(sac_mon == "09")) {
+    # shift to december (3 months)
+    zoo::index(sac_year_type) <- zoo::index(sac_year_type) + 3/12
+    sac_time <- zoo::index(sac_year_type)
   }
   
   # compute the overlapping years of data, and trim to those overlapping years

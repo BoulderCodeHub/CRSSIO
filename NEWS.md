@@ -8,6 +8,7 @@ CRSSIO 0.9.1.9000
   - Note that it now has a WY (September) based timestep.
 - Added `version = 6` as valid value to `nf_file_names()` and `natsalt_file_names()`
   - Note that in a future release, the default value of `version` will be removed so that a user has to specify a version. In this release, this is noted as a message. 
+- Updated `crssi()` to work with Sacramento year type that is WY or CY based. Either way, the index is assumed to be for the year in the xts object, i.e., the month is effectively ignored. (#118)
 
 CRSSIO 0.9.1
 =================

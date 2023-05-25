@@ -13,9 +13,9 @@ is_crssi(x)
 \item{flow}{A \code{crss_nf} object.}
 
 \item{sac_year_type}{An annual xts object with all time steps having a
-December-some year time step. The number of columns in this object must
-match the number of traces in \code{flow}. Additionally, there must be some
-overlapping years of data. See details.}
+September or December-some year time step. The number of columns in this
+object must match the number of traces in \code{flow}. Additionally, there must
+be some overlapping years of data. See details.}
 
 \item{scen_number}{The scenario number. See \strong{Scenario Numbering Convention}
 section.}
