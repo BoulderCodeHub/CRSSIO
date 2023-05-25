@@ -46,6 +46,9 @@ sink('nul')
 x <- crssi(crss_nf(CoRiverNF::monthlyInt), CRSSIO:::sacYT, 1.1, "ok")
 sac2 <- CRSSIO:::sacYT
 sac2 <- CRSSIO:::reindex.xts(sac2, "2000")
+# this is done inside crssi() (usually)
+zoo::index(sac2) <- zoo::index(sac2) + 3/12 
+
 x2 <- x
 x2$sac_year_type <- sac2
 x$annual$intervening[[1]] <- CoRiverNF::cyAnnTot["1996/"]
