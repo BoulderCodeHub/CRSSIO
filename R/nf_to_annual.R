@@ -60,7 +60,11 @@ nf_to_annual.xts <- function(x, ..., year = "cy", full_year = TRUE) {
   }
   
   r <- apply(x, 2, xts::period.sum, ep)
-  
+
+  if (is.null(dim(r))) {
+    r <- matrix(r, nrow = 1, dimnames = list(NULL, names(r)))
+  }
+    
   if (year == "wy") {
     i <- get_eowy(zoo::index(x)[ep])
   } else {
@@ -161,7 +165,19 @@ nf_to_annual.nfd <- function(x, ..., full_year = TRUE, recompute = FALSE,
 #' @export
 nf_to_annual.crss_nf <- function(x, ..., full_year = TRUE, recompute = FALSE,
                                          keep_monthly = TRUE) {
-  crss_nf(nf_to_annual(as_nfd(x), ..., full_year, recompute, keep_monthly))
+  nf <- nf_to_annual(as_nfd(x), ..., full_year = full_year, recompute = recompute, keep_monthly = keep_monthly)
+  if (keep_monthly) {
+    # crss_nf have to have monthly, so cannot be crss_nf if dropping monthly
+    nf <- crss_nf(nf)
+  } else {
+    message(paste(
+      'crss_nf is summed to annual, but monthly data are dropped.', 
+      'This means the returned object will be an `nfd` not `crss_nf`.',
+      sep = '\n'
+    ))
+  }
+  
+  nf
 }
 
 #' @rdname nf_to_annual

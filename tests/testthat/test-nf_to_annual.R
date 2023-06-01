@@ -77,6 +77,46 @@ test_that("nf_to_annual.nfd() handles different year types correctly.", {
   sink()
 })
 
+# nf_to_annual.crss_nf ----------------------------------------------
+# check that summing between wy/cy works as expected
+test_that('nf_to_annual.crss_nf() works & properly handles cy/wy differences', {
+  x <- matrix(rep(1:24, each = 29), nrow = 24, ncol = 29, byrow = TRUE)
+  
+  x <- as_crss_nf(nfd(
+    x, 
+    time_step = 'monthly', 
+    flow_space = 'intervening', 
+    start_yearmon = 2023, 
+    site_names = nf_gage_abbrv()
+  ))
+  exp1 <- matrix(
+    rep(c(45,186,69), each = 29), 
+    nrow = 3, ncol = 29, 
+    byrow = TRUE
+  )
+  expect_error(nf_to_annual(
+    x, 
+    year = 'wy', 
+    keep_monthly = TRUE, 
+    full_year = FALSE
+  ))
+  expect_is(
+    x2 <- nf_to_annual(x, year = 'wy', keep_monthly = FALSE, full_year = FALSE), 
+    'nfd'
+  )
+  expect_null(x2$monthly$intervening)
+  expect_null(x2$monthly$total)
+  expect_true(all(x2$annual$intervening[[1]] == exp1))
+  expect_is(x3 <- nf_to_annual(x, keep_monthly = FALSE), "nfd")
+  expect_null(x3$monthly$intervening)
+  expect_is(
+    x4 <- nf_to_annual(x, year = 'wy', keep_monthly = FALSE, full_year = TRUE), 
+    'nfd'
+  )
+  exp2 <- matrix(186, nrow = 1, ncol = 29)
+  expect_true(all(x4$annual$intervening[[1]] == exp2))
+})
+
 # nf_to_annual.crssi ------------------------------------------------
 test_that("nf_to_annual.crssi() works", {
   sink('nul')
