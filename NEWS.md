@@ -10,6 +10,7 @@ CRSSIO 0.9.1.9000
   - Note that in a future release, the default value of `version` will be removed so that a user has to specify a version. In this release, this is noted as a message. 
 - Updated `crssi()` to work with Sacramento year type that is WY or CY based. Either way, the index is assumed to be for the year in the xts object, i.e., the month is effectively ignored. (#118)
 - Fixed two bugs in `nf_to_annual.crss_nf()`. First, it can now correctly sum over a water year for a calendar year object. Second, it now drops monthly when `keep_monthly = FALSE`. (#121)
+- Updated Flaming Gorge elevation-volume table to use latest. (#117)
 
 CRSSIO 0.9.1
 =================
