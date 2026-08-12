@@ -138,6 +138,40 @@ writeHydroIncrement <- function(traceNum, nYrs, startDate, folderPath){
   )
 }
 
+#' Write the St Vrain Natural Flow data
+#' 
+#' \code{writeStVrainNF} writes out the St. Vrain natural flow type data for a
+#' single trace, given a matrix of data for all traces.
+#' 
+#' @param traceNum The trace of data to save
+#' @param svData A matrix of all traces of data
+#' @param startDate The start date of the trace file as a character. Should be
+#' in yyyy-mm-dd format, which is what RiverWare expects.
+#' @param folderPath The folder path to the directory containing the 
+#' trace folders.
+#' 
+#' @keywords internal
+#' @noRd
+
+writeStVrainNF <- function(traceNum, svData, startDate, folderPath)
+{
+  folderName <- file.path(folderPath, paste0('trace', traceNum))
+  stopifnot(dir.exists(folderName))
+  
+  tt <- matrix(c(
+    paste("start_date:", startDate, "24:00"), 
+    "units: acre-ft", 
+    as.character(svData[,traceNum])),
+    ncol = 1)
+  utils::write.table(
+    tt, 
+    quote = FALSE, 
+    row.names = FALSE, 
+    col.names = FALSE, 
+    file = file.path(folderName, getOption("crssio.StVrainSlot"))
+  )
+}
+
 #' Write the Sacramento Year Type Data
 #' 
 #' \code{writeSacYT} writes out the Sacramento year type data for a single 

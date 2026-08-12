@@ -37,6 +37,10 @@
 #' @param readme Boolean. If `TRUE` also create a README file in `path`.
 #' 
 #' @export
+#' 
+#' 
+#' 
+
 write_crssi <- function(x, path, file_names = nf_file_names(), 
                         overwrite = FALSE, readme = TRUE)
 {
@@ -77,6 +81,7 @@ write_crssi <- function(x, path, file_names = nf_file_names(),
   # get sacramento year type ism data ----------
   eoyDate <- paste0(startYear, "-12-31")
   ytData <- x[["sac_year_type"]]
+  svData <- x[["StVrain_nf"]]
   
   scen_num <- x[["scen_number"]]
   
@@ -91,6 +96,10 @@ write_crssi <- function(x, path, file_names = nf_file_names(),
     
     # write out the sacramento year type file
     writeSacYT(i, ytData, eoyDate, path)
+    
+    # write out St Vrain Nat Flow file
+    writeStVrainNF(i, svData, eoyDate, path)
+    
   })
   
   # create the README

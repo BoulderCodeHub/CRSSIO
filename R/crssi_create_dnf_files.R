@@ -100,9 +100,10 @@
 #' # get data
 #' flow <- CoRiverNF::monthlyInt["1988/2018"]
 #' sac_yt <- sac_year_type_get()["1988/2018"]
+#' sv <- st_vrain_nf_calc(CoRiverNF::cyAnnTot$GlenwoodSprings)["1988/2018"]
 #'
 #' # create crssi object
-#' nf <- crssi(crss_nf(flow), sac_yt, scen_number = 1.19882018)
+#' nf <- crssi(crss_nf(flow), sac_yt, sv, scen_number = 1.19882018)
 #' 
 #' # apply ism
 #' nf <- ism(nf, n_years_keep = 5)
@@ -196,9 +197,19 @@ crssi_create_dnf_files <- function(iFile,
     sac_yt <- sac_yt[paste(recordToUse_str[1], recordToUse_str[2], sep = '/')]
   }
   
+  # get st vrain natural flow data -------------------------------------
+  
+  SV <- st_vrain_nf_calc(CoRiverNF::cyAnnTot$GlenwoodSprings)
+  # trim to correct years
+  if (!anyNA(recordToUse)) {
+    check_recordToUse_year2(recordToUse[2], SV)
+    # trim data
+    SV <- SV[paste(recordToUse_str[1], recordToUse_str[2], sep = '/')]
+  }
+  
   # create crssi ----------------------------------------
   scen_name <- paste0("ISM applied to ", y1, "-", y2, " historical hydrology.")
-  nf <- crssi(nf, sac_yt, supplyScenario, scen_name)
+  nf <- crssi(nf, sac_yt, SV, supplyScenario, scen_name)
   
   # reindex to start in specified year ------------------
   nf <- reindex(nf, startYear)

@@ -88,7 +88,16 @@ sac_yt <- xts(
   matrix(sample.int(5, 6, replace = TRUE), ncol = 3), 
   order.by = as.yearmon("Dec 2020") + 0:1
 )
-x_crssi <- crssi(x_crss_nf, sac_yt, 1.20002001, "my scenario", drop_flow = FALSE)
+SV <- st_vrain_nf_calc(
+  
+  xts(
+    matrix(sample(CoRiverNF::cyAnnTot$GlenwoodSprings, 6, replace = TRUE), ncol = 3), 
+    order.by = as.yearmon("Dec 2020") + 0:1
+  )
+)
+
+
+x_crssi <- crssi(x_crss_nf, sac_yt, SV, 1.20002001, "my scenario", drop_flow = FALSE)
 sink()
 
 # nfd_get_site() --------------------------------------

@@ -24,6 +24,7 @@ x5 <- crss_nf(monthlyInt, flow_space = "intervening", time_step = "monthly")
 x6 <- ism(crssi(
   nfd_extract(x5, "2000/"), 
   sac_year_type_get(TRUE)["2000/"], 
+  st_vrain_nf_calc(CoRiverNF::cyAnnTot$GlenwoodSprings["2000/"]),
   scen_number = -99
 ))
 

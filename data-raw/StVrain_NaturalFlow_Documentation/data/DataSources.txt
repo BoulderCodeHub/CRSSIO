@@ -1,0 +1,6 @@
+SP2016_BFx.xbm contains St Vrain Natural flow for 1950-2012 (gage 06724000). Data is from the South Platte Statemod model. Open the file in a text editor for information about model version and dates.
+
+Selected_Station_Analysis_Xtab_202608051549.csv . Daily historical St. Vrain flows in Lyons, CO. Retrieved 8/5/2026 from
+https://dwr.state.co.us/Tools/Stations/SVCLYOCO?params=DISCHRG
+
+ 

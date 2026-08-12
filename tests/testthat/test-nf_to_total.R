@@ -115,7 +115,8 @@ test_that("nf_to_total.crss_nf works", {
 # crssi -------------------------------------------------------------------
 sink('nul')
 sac <- ism(sac_year_type_get(TRUE)["2000/2004"])
-int_nf <- crssi(int_nf, sac, 1)
+SV <- ism(st_vrain_nf_calc(CoRiverNF::cyAnnTot$GlenwoodSprings["2000/2004"]))
+int_nf <- crssi(int_nf, sac, SV, 1)
 sink()
 
 test_that("nf_to_total.crssi works", {

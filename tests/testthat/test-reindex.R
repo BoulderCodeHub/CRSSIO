@@ -86,12 +86,18 @@ test_that("reindex works on nfd objects", {
 
 # crssi.nfd -----------------------------------------
 sink('nul')
-crssi_mon <- crssi(crss_nf(CoRiverNF::monthlyInt), CRSSIO:::sacYT, 1.1906)
+crssi_mon <- crssi(crss_nf(CoRiverNF::monthlyInt), CRSSIO:::sacYT, st_vrain_nf_calc(CoRiverNF::cyAnnTot$GlenwoodSprings), 1.1906)
 crssi_both <- crssi(crss_nf(5, n_months = 36, n_trace = 5, flow_space = "both",
                               time_step = "both", start_yearmon = "Jan 2000"),
                     xts(
                       matrix(5, nrow = 3, ncol = 5), 
                       order.by = as.yearmon("Dec 2000") + 0:2
+                    ),
+                    st_vrain_nf_calc(
+                      xts(
+                        matrix(sample(CoRiverNF::cyAnnTot$GlenwoodSprings,15), nrow = 3, ncol = 5), 
+                        order.by = as.yearmon("Dec 2000") + 0:2
+                      )
                     ),
                     1.2000, "weird scen", drop_flow = FALSE)
 sink()

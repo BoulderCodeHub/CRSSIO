@@ -24,17 +24,15 @@ This vignette starts with a quick setup guide and then demonstrates the function
 
 ### Sacremento River Basin Input
 
-CRSS requires Sacremento Water Year Hydrologic Year Type indexes to run. These indexes are used to model a representative range of Intentionally Created Surplus (ICS) creation and delivery for MWD. The indexes are integer values from 1 to 5, where 1 represents a critical year in the Sacremento Basin, 2 a dry year, 3 a below normal year, 4 an above normal year, and 5 a wet year. The historical record of is available at [http://cdec.water.ca.gov/cgi-progs/iodir/WSIHIST](http://cdec.water.ca.gov/cgi-progs/iodir/WSIHIST). Typically MWD's ICS logic in CRSS creates ICS in moderately wet and wet years, takes deliver of ICS in critically dry and dry years, and is ICS neutral in moderately dry years; however, this and the volumes of creation/delivery can vary between CRSS releases/models. 
+CRSS requires Sacramento Water Year Hydrologic Year Type indexes to run. These indexes are used to model a representative range of Intentionally Created Surplus (ICS) creation and delivery for MWD. The indexes are integer values from 1 to 5, where 1 represents a critical year in the Sacremento Basin, 2 a dry year, 3 a below normal year, 4 an above normal year, and 5 a wet year. The historical record of is available at [http://cdec.water.ca.gov/cgi-progs/iodir/WSIHIST](http://cdec.water.ca.gov/cgi-progs/iodir/WSIHIST). Typically MWD's ICS logic in CRSS creates ICS in moderately wet and wet years, takes deliver of ICS in critically dry and dry years, and is ICS neutral in moderately dry years; however, this and the volumes of creation/delivery can vary between CRSS releases/models. 
 
 For scenarios that rely on historical data (including paleo data back to 900 C.E.), the Sacramento Year Type values are directly available in CRSSIO. For other scenarios, the index can be generated using a method developed by Reclamation for the use in CRSS.
 
 ### Colorado Front Range
 
-*will update when added to CRSSIO*
+CRSS requires calendar year volume of natural flow for the St. Vrain river in Lyons, Colorado for each year of model simulation. The model uses this information to estimate the volume of transmountain diversions, where wetter years result in smaller transmountain diversion volumes and drier years result in greater transmountain diversions. 
 
-### CRSSIO v0.9.1 Limitations
-
-CRSSIO v0.9.1 (and earlier) only include functionality to create the Sacramento River Basin input. For now, please contact Reclamation to create the Front Range related input. This funcionality will be added to CRSSIO in May/June 2023.
+The CRSSIO package uses the function st_vrain_nf_calc() to predict St. Vrain natural flow using total natural flow at Glenwood Springs and a linear regression developed by Reclamation.
 
 ## Setup
 
@@ -55,7 +53,11 @@ library(CoRiverNF)
 
 For natural flows that are based on the historical record, CRSSIO can be coupled with the [CoRiverNF](https://github.com/BoulderCodeHub/CoRiverNF) data package. Then functions in CRSSIO will provide the Sacramento Year Type data, apply ISM, and then create the necessary input files for CRSS.
 
-First, convert the existing natural flow data from CoRiverNF to a Natural Flow Data (`nfd`) object, and get the Sacramento Index data. For this example, we will assume we want to create CRSS input by applying ISM to the 2000-2019 natural flow record.
+First, convert the existing natural flow data from CoRiverNF to a Natural Flow Data (`nfd`) object. Also get the Sacramento Index data
+and calculate St. Vrain natural flow using `st_vrain_nf_calc()`, which estimates St. Vrain natural flow using total natural flow
+at Glenwood Springs and a regression developed by Reclamation.
+
+For this example, we will assume we want to create CRSS input by applying ISM to the 2000-2019 natural flow record.
 
 ```{r nfdata1}
 nf <- monthlyInt['2000/2019'] # monthly intervening natural flow data from CoRiverNF
@@ -63,6 +65,9 @@ nf <- nfd(nf, flow_space = 'intervening', time_step = 'monthly', year = 'cy')
 nf
 sac_yt <- sac_year_type_get(internal = TRUE) 
 head(sac_yt)
+StVrain_nf=st_vrain_nf_calc(CoRiverNF::cyAnnTot$GlenwoodSprings)
+head(StVrain_nf)
+
 ```
 
 *Note, `internal = TRUE` can be changed to `internal = FALSE` to download the latest data. See `?sac_year_type_get` for more details. This is required if the internally provided Sacramento Year Type data is not up-to-date or does not match the end date of the CRB natural flow data.*
@@ -74,12 +79,13 @@ nf <- as_crss_nf(nf)
 nf
 ```
 
-Now, `nf` and `sac_yt` can be combined into a "CRSS input" object (`crssi`):
+Now, `nf` `sac_yt` and `StVrain_nf` can be combined into a "CRSS input" object (`crssi`):
 
 ```{r convertCRSSI}
 crss_input <- crssi(
   flow = nf,
   sac_year_type = sac_yt,
+  StVrain_nf = StVrain_nf,
   scen_number = 1.20002019, 
   scen_name = 'ISM applied to 2000-2019 data'
 )
@@ -180,21 +186,24 @@ The method relies on Water Year annual intervening natural flow so first that ne
 wy_nf <- nf_to_annual(rand_nf)
 wy_nf
 new_sac_yt <- sac_year_type_calc(co_int_nf = wy_nf)
-
-# only necessary b/c of bug that will be fixed; for now, just switch these 
-# sacramento data that have September timesteps to having December timesteps
-index(new_sac_yt) <- as.yearmon(paste("Dec", 2024:2028))
 head(new_sac_yt)
 ```
 
-The last step is necessary because of a bug in the code that returns Sacramento Year Type Index in WY index, while the next step assumes it is only CY index. Bug [#122](https://github.com/BoulderCodeHub/CRSSIO/issues/122) will be fixed and then the last step won't be necessary. 
+Next, St. Vrain natural flow can be be calculated using `st_vrain_nf_calc()`. 
 
-Now there are 5 years (water years) of natural flow and Sacramento Year Type index data. This just needs to be converted to a `crssi` object and then exported to the format expected by CRSS. Because the data are on a water year basis and CRSS works on calendar year basis, the conversion will result in only 4 years of CRSS input, i.e., October 2023 - September 2028 data will be trimmed to January 2024 - December 2027.
+```{r StVrainCalc}
+cy_nf=nf_to_annual(nf_to_total(rand_nf), year='cy', full_year = T, keep_monthly=F)
+new_StVrain_nf <- st_vrain_nf_calc(co_tot_nf = cy_nf)
+head(new_StVrain_nf)
+```
+
+Now there are 5 years (water years) of natural flow and Sacramento Year Type index data. This just needs to be converted to a `crssi` object and then exported to the format expected by CRSS. Because the data are on a water year basis and CRSS works on calendar year basis, the conversion will result in only 4 years of CRSS input, i.e., October 2023 - September 2028 data will be trimmed to January 2024 - December 2027. Note there are also 4 calendar years of St. Vrain natural flow - these were already trimmed to 4 years because the calculation uses calendar years. 
 
 ```{r ex2-out}
 crss_input2 <- crssi(
   flow = rand_nf,
   sac_year_type = new_sac_yt,
+  StVrain_nf = new_StVrain_nf,
   scen_number = 99, 
   scen_name = 'Random made up scenario'
 )
@@ -207,7 +216,7 @@ dir.create('~/test-random/')
 
 write_crssi(
   crss_input2, 
-  path = 'test-random', 
+  path = '~/test-random/', 
   file_names = nf_file_names(version = 6)
 )
 ```

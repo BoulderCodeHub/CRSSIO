@@ -58,7 +58,8 @@ test_that("as.data.frame.nfd works", {
 
 sink('nul')
 sac <- sac_year_type_get(internal = TRUE)["2000/2002"]
-nf <- crssi(as_crss_nf(nf), sac, scen_number = 1.20002002)
+SV=st_vrain_nf_calc(CoRiverNF::cyAnnTot$GlenwoodSprings["2000/2002"])
+nf <- crssi(as_crss_nf(nf), sac, SV, scen_number = 1.20002002)
 sink()
 
 test_that("as.data.frame.crssi() works", {

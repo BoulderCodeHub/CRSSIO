@@ -6,6 +6,7 @@
     crssio.traceNumberSlot = 'HydrologyParameters.TraceNumber',
     crssio.hydroIncrement = 'MeadFloodControlData.hydrologyIncrement',
     crssio.sacYTSlot = "MWD_ICS.SacWYType",
+    crssio.StVrainSlot= "TMD_East_Slope_Supply.St_Vrain_Annual_Flow",
     crssio.histNfFile = "HistoricalNaturalFlow.xlsx",
     crssio.nf_sheet_name = "InterveningNaturalFlow",
     crssio.sac_yt_url = "http://cdec.water.ca.gov/cgi-progs/iodir/WSIHIST"

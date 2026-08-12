@@ -227,9 +227,13 @@ sac1 <- CRSSIO:::sacYT["1980/1989"]
 sac2 <- CRSSIO:::sacYT["1971/1979"]
 sac3 <- CRSSIO:::sacYT["2000/2002"]
 
-crssi1 <- crssi(nfd_ann, sac1, 1.1)
-crssi2 <- crssi(nfd_mon, sac2, 1.2, "ok")
-crssi3 <- crssi(nfd_both, sac3, 1.2, "ok", drop_flow = FALSE)
+SV1  <- st_vrain_nf_calc(CoRiverNF::cyAnnTot$GlenwoodSprings["1980/1989"])
+SV2  <- st_vrain_nf_calc(CoRiverNF::cyAnnTot$GlenwoodSprings["1971/1979"])
+SV3  <- st_vrain_nf_calc(CoRiverNF::cyAnnTot$GlenwoodSprings["2000/2002"])
+
+crssi1 <- crssi(nfd_ann, sac1, SV1, 1.1)
+crssi2 <- crssi(nfd_mon, sac2, SV2, 1.2, "ok")
+crssi3 <- crssi(nfd_both, sac3,SV3, 1.2, "ok", drop_flow = FALSE)
 
 mm1 <- coredata(CoRiverNF::monthlyInt["1980/1989"])
 mm2 <- coredata(CoRiverNF::monthlyInt["1971/1979"])
@@ -308,7 +312,7 @@ test_that("2 processes yield the same result", {
   sink('nul')
   expect_identical(
     ism(crssi1),
-    crssi(ism(nfd_ann), ism(sac1), 1.1)
+    crssi(ism(nfd_ann), ism(sac1), ism(SV1), 1.1)
   )
   sink()
 })

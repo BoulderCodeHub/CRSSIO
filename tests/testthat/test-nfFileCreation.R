@@ -181,6 +181,7 @@ test_that("all files are the same", {
 })
 
 allFiles <- c(nf_file_names(6), "MWD_ICS.SacWYType", 
+              "TMD_East_Slope_Supply.St_Vrain_Annual_Flow",
               "MeadFloodControlData.hydrologyIncrement", 
               "HydrologyParameters.TraceNumber",
               "HydrologyParameters.SupplyScenario")

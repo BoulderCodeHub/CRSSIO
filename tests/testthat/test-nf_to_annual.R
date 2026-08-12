@@ -126,7 +126,8 @@ test_that("nf_to_annual.crssi() works", {
     time_step = "monthly"
   )
   sac <- sac_year_type_get(internal = TRUE)["2000/2002"]
-  nf <- crssi(nf, sac, scen_number = 1.20002002, scen_name = "abc")
+  sv <- st_vrain_nf_calc(CoRiverNF::cyAnnTot$GlenwoodSprings["2000/2002"])
+  nf <- crssi(nf, sac, sv, scen_number = 1.20002002, scen_name = "abc")
   
   expect_s3_class(nf2 <- nf_to_annual(nf), "crssi")
   expect_equivalent(nf2$annual$intervening[[1]], cyAnnInt["2000/2002"])

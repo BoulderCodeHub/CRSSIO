@@ -43,7 +43,7 @@ test_that("trim_ts.nfd works", {
 # this function is used in the crssi constructor, so we'll test it out. 
 
 sink('nul')
-x <- crssi(crss_nf(CoRiverNF::monthlyInt), CRSSIO:::sacYT, 1.1, "ok")
+x <- crssi(crss_nf(CoRiverNF::monthlyInt), CRSSIO:::sacYT, st_vrain_nf_calc(CoRiverNF::cyAnnTot$GlenwoodSprings), 1.1, "ok")
 sac2 <- CRSSIO:::sacYT
 sac2 <- CRSSIO:::reindex.xts(sac2, "2000")
 # this is done inside crssi() (usually)

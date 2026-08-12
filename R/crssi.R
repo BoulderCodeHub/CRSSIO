@@ -3,19 +3,24 @@
 #' `crssi()` constructs a `crssi` object that holds all of the necessary 
 #' trace-based input data for CRSS. Namely, this includes the intervening, 
 #' monthly natural flow for all 29 sites, the Sacremento Year Type index, 
-#' and a scenario number.
+#' St Vrain natural flow, and a scenario number.
 #' 
 #' `crssi()` inherits from [crss_nf], maintaining the same required structure 
 #' for the intervening natural flows. The object also contains the Sacramento 
-#' Year Type index, and a scenario number. Given this, all functions that work
-#' on [crss_nf] and [nfd] objects work on `crssi` objects.
+#' Year Type index, St. Vrain natural flow, and a scenario number. Given this, 
+#' all functions that work on [crss_nf] and [nfd] objects work on `crssi` objects.
 #' 
 #' **Sacramento Year Type index:** Beginning in CRSS v2.6, input data for the 
 #' Sacramento year type index are necessary. For historical values see
 #' [sac_year_type_get()].
 #' 
+#' **St. Vrain natural flow:** CRSS requires input data for calendar year 
+#' natural flow for the St. Vrain. The crssio package estimates these values
+#' from total natural flow at Glenwood Springs using function
+#' [st_vrain_nf_calc()].
+#' 
 #' Overlapping years: `crssi()` checks to make sure that there at least some
-#' overlappying yeras of data between `flow` and `sac_year_type`. It then trims
+#' overlapping yeras of data between `flow` and `sac_year_type`. It then trims
 #' the data to be January, year1 - December, year2 for the overlapping period 
 #' between `flow` and `sac_year_type`. For example, if `flow` contains data 
 #' for March 2020 - December 2024 while `sac_year_type` contains data for 
@@ -55,6 +60,12 @@
 #'   object must match the number of traces in `flow`. Additionally, there must 
 #'   be some overlapping years of data. See details.
 #'   
+#' @param StVrain_nf An annual xts object with all time steps having a 
+#'   December-some year time step. [st_vrain_nf_calc()] returns the data in
+#'   the required format.The number of columns in this object must match
+#'   the number of traces in `flow`. Additionally, there must 
+#'   be some overlapping years of data. See details.
+#'   
 #' @param scen_number The scenario number. See **Scenario Numbering Convention**
 #'   section.
 #'   
@@ -80,14 +91,15 @@
 #' sac <- sac_year_type_get(internal = TRUE)["2000/2002"]
 #' in_data <- crssi(nf, sac, scen_number = 1.20002002)
 #' 
-#' @seealso [crss_nf], [nfd], [write_crssi()], [sac_year_type_get()]
+#' @seealso [crss_nf], [nfd], [write_crssi()], [sac_year_type_get()], [st_vrain_nf_calc()]
 #' 
 #' @export
-crssi <- function(flow, sac_year_type, scen_number, scen_name = NULL, 
+crssi <- function(flow, sac_year_type, StVrain_nf, scen_number, scen_name = NULL, 
                   drop_flow = TRUE)
 {
   assert_that(is_crss_nf(flow))
   assert_that(xts::is.xts(sac_year_type))
+  assert_that(xts::is.xts(StVrain_nf))
   assert_that(is.numeric(scen_number) && length(scen_number) == 1)
   
   nt <- n_trace(flow)
@@ -101,6 +113,15 @@ crssi <- function(flow, sac_year_type, scen_number, scen_name = NULL,
     )
   )
   
+  assert_that(
+    nt == ncol(StVrain_nf),
+    msg = paste0(
+      "Number of traces for `flow` and `StVrain_nf` should be the same.\n",
+      "`flow` has: ", n_trace(flow), "\n",
+      "`StVrain_nf` has: ", ncol(StVrain_nf)
+    )
+  )
+  
   # sac_yt should only include September or December time steps
   sac_time <- zoo::index(sac_year_type)
   sac_mon <- format(sac_time, "%m")
@@ -109,11 +130,25 @@ crssi <- function(flow, sac_year_type, scen_number, scen_name = NULL,
     msg = "`sac_year_type` should only include September or December timestep."
   )
   
+  # StVrain_nf should only include December time steps
+  SV_time <- zoo::index(StVrain_nf)
+  SV_mon <- format(SV_time, "%m")
+  assert_that(
+    all(SV_mon == "12"),
+    msg = "`StVrain_nf` should only include December timestep."
+  )
+  
   # check that there are at least some overlapping years of data
   flow_time <- zoo::index(nfd_get_trace(flow, 1, "intervening", "monthly"))
   assert_that(
     any(flow_time %in% sac_time), 
     msg = "`flow` and `sac_year_type` have no overlapping dates."
+  )
+  
+  # check that there are at least some overlapping years of data
+  assert_that(
+    any(flow_time %in% SV_time), 
+    msg = "`flow` and `StVrain_nf` have no overlapping dates."
   )
   
   # if drop_flow == TRUE, delete the monthly total, and annual flow data from
@@ -134,14 +169,20 @@ crssi <- function(flow, sac_year_type, scen_number, scen_name = NULL,
   }
   
   # compute the overlapping years of data, and trim to those overlapping years
-  overlap <- find_overlap_years(flow_time, sac_time, "cy")
+
+  overlap1 <- find_overlap_years(flow_time, sac_time, "cy")
+  overlap2 <- find_overlap_years(flow_time, SV_time, "cy")
+  overlap <- range(c(overlap1, overlap2))
+  
   sac_year_type <- sac_year_type[paste0(overlap[1],"/",overlap[2])]
+  StVrain_nf <- StVrain_nf[paste0(overlap[1],"/",overlap[2])]
   
   flow <- nfd_extract(flow, paste0(overlap[1], "-01/", overlap[2], "-12"))
   crss_nf_validate(flow)
   
   # add on to flow list structure
   flow[["sac_year_type"]] <- sac_year_type
+  flow[["StVrain_nf"]] <- StVrain_nf
   flow[["n_trace"]] <- nt
   flow[["scen_number"]] <- scen_number
   
@@ -153,6 +194,7 @@ crssi <- function(flow, sac_year_type, scen_number, scen_name = NULL,
   
   flow
 }
+
 
 #' @param x An object.
 #' @export

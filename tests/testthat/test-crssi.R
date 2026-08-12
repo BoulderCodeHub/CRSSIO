@@ -12,12 +12,18 @@ sac_mat <- matrix(sample.int(5, 3 * 5, replace = TRUE), ncol = 5)
 yrs <- zoo::as.yearmon("Dec 2000") + 0:2
 sac_xts <- xts(sac_mat, order.by = yrs)
 
+GWS_mat <- matrix(sample(CoRiverNF::cyAnnTot$GlenwoodSprings, size = 5*3, replace = T), ncol = 5)
+yrs <- zoo::as.yearmon("Dec 2000") + 0:2
+GWS_xts <- xts(GWS_mat, order.by = yrs)
+
 test_that("crssi constructor works", {
   sink('nul')
   expect_is(
     x <- crssi(
       crss_nf(monthlyInt, flow_space = "intervening", time_step = "monthly"),
-      CRSSIO:::sacYT, 1.19062018, "ISM 1906-2018"
+      CRSSIO:::sacYT,
+      st_vrain_nf_calc(cy_vol=CoRiverNF::cyAnnTot$GlenwoodSprings),
+      1.19062018, "ISM 1906-2018"
     ),
     "crssi"
   )
@@ -32,17 +38,23 @@ test_that("crssi constructor works", {
 
   expect_error(crssi(
     crss_nf(ann_array, time_step = "annual", start_yearmon = "Jan 2000"),
-    sac_xts, 1.567, "sample"
+    sac_xts,
+    st_vrain_nf_calc(GWS_xts),
+    1.567, "sample"
   ))
 
   expect_error(crssi(
     crss_nf(mon_array, time_step = "monthly", start_yearmon = "Jan 2000", n_trace = 5, flow_space = "both"),
-    sac_mat, 1.2000
+    sac_mat,
+    st_vrain_nf_calc(GWS_xts),
+    1.2000
   ))
 
   expect_is(x <- crssi(
     crss_nf(mon_array, time_step = "monthly", start_yearmon = "Jan 2000", n_trace = 5, flow_space = "both"),
-    sac_xts, 1.2000,
+    sac_xts,
+    st_vrain_nf_calc(GWS_xts),
+    1.2000,
     drop = FALSE
   ), "crssi")
 

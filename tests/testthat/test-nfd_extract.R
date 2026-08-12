@@ -80,7 +80,19 @@ sac_yt <- xts(
   matrix(sample.int(5, 6, replace = TRUE), ncol = 3), 
   order.by = as.yearmon("Dec 2000") + 0:1
 )
-x_crssi <- crssi(x_crss_nf, sac_yt, 1.20002001, "my scenario", drop_flow = FALSE)
+
+SV <- st_vrain_nf_calc(
+  
+  xts(
+    matrix(sample(CoRiverNF::cyAnnTot$GlenwoodSprings, 6, replace = TRUE), ncol = 3), 
+    order.by = as.yearmon("Dec 2000") + 0:1
+  )
+)
+  
+  
+
+
+x_crssi <- crssi(x_crss_nf, sac_yt, SV, 1.20002001, "my scenario", drop_flow = FALSE)
 sink()
 
 # time - monthly -------------------------------------------------
@@ -308,7 +320,13 @@ test_that("can extract monthly and annual data from nfd", {
   sac_yt <- xts(
     matrix(1, ncol = 20, nrow = 2), order.by = as.yearmon("Dec 2000") + 0:1
   )
-  x_crssi <- crssi(x_crss_nf, sac_yt, -99, drop_flow = FALSE)
+  SV <- st_vrain_nf_calc(
+    xts(
+      matrix(sample(CoRiverNF::cyAnnTot$GlenwoodSprings, 40), ncol = 20, nrow = 2), order.by = as.yearmon("Dec 2000") + 0:1
+    )
+  ) 
+    
+  x_crssi <- crssi(x_crss_nf, sac_yt, SV, -99, drop_flow = FALSE)
   
   # nfd
   expect_is(

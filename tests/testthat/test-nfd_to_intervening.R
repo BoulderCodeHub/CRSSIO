@@ -103,7 +103,9 @@ test_that("nf_to_intervening.crss_nf works", {
 # crssi ---------------------------------------------------------------
 sink('nul')
 sac <- ism(sac_year_type_get(TRUE)["1950/1954"])
-nf <- crssi(ism(nf), sac, 222, drop_flow = FALSE)
+SV <- ism(st_vrain_nf_calc(CoRiverNF::cyAnnTot$GlenwoodSprings)["1950/1954"])
+
+nf <- crssi(ism(nf), sac, SV, 222, drop_flow = FALSE)
 sink()
 test_that("nf_to_intervening.crssi works", {
   sink('nul')

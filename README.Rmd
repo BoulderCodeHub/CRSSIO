@@ -51,7 +51,7 @@ CRSSIO defines three classes for storing multi-trace natural flow data: `nfd`, `
 
 `crss_nf` objects require that there are exactly 29 sites: the 29 sites required for input into CRSS, and that there are monthly intervening natural flows, which are also required input to CRSS. Other time step and flow space combinations are allowed, but there must be monthly intervening data. 
 
-`crssi` objects add additional required input into CRSS: the Sacramento year type index and a scenario number. 
+`crssi` objects add additional required input into CRSS: the Sacramento year type index, St. Vrain natural flow, and a scenario number. 
 
 Several methods exist to work with these objects. `reindex()` changes the underlying time component so that historical data can be used for future projections in CRSS; `ism()` applies the Index Sequential Method to a single trace; `plot()` will quickly show the data; `write_crssi()` will create the input files necessary for CRSS; `nfd_stats()` and `nfd_pdf()` compute statistics across the different traces and can then be plotted with `plot()`. `nf_to_total()` and `nf_to_intervening()` will convert between total and intervening flow. 
 

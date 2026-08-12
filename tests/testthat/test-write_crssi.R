@@ -7,6 +7,7 @@ sink('nul')
 nf <- crssi(
   crss_nf(CoRiverNF::monthlyInt["2000/2001"]),
   sac_year_type_get(TRUE)["2000/2001"],
+  st_vrain_nf_calc(CoRiverNF::cyAnnTot$GlenwoodSprings)["2000/2001"],
   scen_number = 1.20002001,
   scen_name = "ISM 2000-2001"
 )
@@ -22,7 +23,7 @@ teardown(unlink(path, recursive = TRUE))
 all_files <- c(
   nf_file_names(6), getOption("crssio.supplyScenarioSlot"),
   getOption("crssio.traceNumberSlot"), 
-  getOption("crssio.hydroIncrement"), getOption("crssio.sacYTSlot")
+  getOption("crssio.hydroIncrement"), getOption("crssio.sacYTSlot"), getOption('crssio.StVrainSlot')
 )
 
 test_that("write_crssi works with generic crssi object", {
