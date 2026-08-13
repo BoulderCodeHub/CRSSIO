@@ -55,9 +55,9 @@ sac_year_type_get <- function(internal = FALSE, paleo = FALSE)
   site <- xml2::read_html(site)
   
   # the html is inside the body and pre tags
-  txt <- site %>% 
-    rvest::html_nodes("body") %>%
-    rvest::html_nodes("pre") %>%
+  txt <- site |> 
+    rvest::html_nodes("body") |>
+    rvest::html_nodes("pre") |>
     rvest::html_text(trim = TRUE)
   
   # convert to one row per line

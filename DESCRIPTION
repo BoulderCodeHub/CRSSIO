@@ -16,7 +16,7 @@ BugReports: https://github.com/BoulderCodeHub/CRSSIO/issues
 License: CC0
 LazyData: true
 Depends: 
-    R (>= 2.10)
+    R (>= 4.1.0)
 Imports:
     assertthat,
     CoRiverNF,
@@ -24,7 +24,6 @@ Imports:
     grDevices,
     ggplot2 (>= 4.0.0),
     httr,
-    magrittr,
     miniUI (>= 0.1.1),
     ncdf4,
     readxl,

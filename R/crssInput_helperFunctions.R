@@ -24,21 +24,21 @@ read_and_format_nf_excel <- function(iFile)
     iFile, 
     sheet = getOption("crssio.nf_sheet_name"), 
     skip = 3
-  ) %>%
+  ) |>
   # going to take a lot of trimming, etc. to get rid of all the labels we don't 
   # need for the flow matrix
     dplyr::rename_at(
       .vars = "Natural Flow And Salt Calc model Object.Slot", 
       .funs = function(x) "date"
-    ) %>%
-    dplyr::mutate_at("date", .funs = zoo::as.yearmon) %>%
+    ) |>
+    dplyr::mutate_at("date", .funs = zoo::as.yearmon) |>
     # get rid of the filler row at top, and the rows containing averages on 
     # bottom
-    dplyr::filter_at("date", dplyr::any_vars(!is.na(.))) %>%
-    dplyr::filter_at("date", dplyr::any_vars(. >= ymJan1906)) %>%
+    dplyr::filter_at("date", dplyr::any_vars(!is.na(.))) |>
+    dplyr::filter_at("date", dplyr::any_vars(. >= ymJan1906)) |>
     # should drop any columns that were renamed b/c they were empty
-    dplyr::select(-dplyr::contains(drop_chars)) %>%
-    dplyr::mutate_if(is.character, as.numeric) %>%
+    dplyr::select(-dplyr::contains(drop_chars)) |>
+    dplyr::mutate_if(is.character, as.numeric) |>
     as.data.frame()
  
   # 1. potential update the other column names

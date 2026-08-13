@@ -30,22 +30,22 @@ test_that("nf_xts_to_df() returns correct data.frame", {
 })
 
 zz <- CRSSIO:::nf_xts_to_df(zz)
-zz1 <- zz %>% select_at(c(nf1, "year", "month"))
+zz1 <- zz |> select_at(c(nf1, "year", "month"))
 
-zz1Comp <- zz1 %>%
-  tail(24) %>%
-  select_at(c(nf1[1], "year", "month")) %>%
-  pivot_wider(names_from = 'month', values_from = nf1[1]) %>%
-  summarise_at(.vars = as.character(1:12), .funs = list(~round(mean(.), 0))) %>%
-  pivot_longer(everything(), names_to = 'month', values_to = nf1[1]) %>%
+zz1Comp <- zz1 |>
+  tail(24) |>
+  select_at(c(nf1[1], "year", "month")) |>
+  pivot_wider(names_from = 'month', values_from = nf1[1]) |>
+  summarise_at(.vars = as.character(1:12), .funs = list(~round(mean(.), 0))) |>
+  pivot_longer(everything(), names_to = 'month', values_to = nf1[1]) |>
   mutate(month = as.numeric(month))
 
-zz2Comp <- zz1 %>%
-  tail(120) %>%
-  select_at(c(nf1[2], "year", "month")) %>%
-  pivot_wider(names_from = 'month', values_from = nf1[2]) %>%
-  summarise_at(.vars = as.character(1:12), .funs = list(~round(mean(.), 0))) %>%
-  pivot_longer(everything(), names_to = 'month', values_to = nf1[2]) %>%
+zz2Comp <- zz1 |>
+  tail(120) |>
+  select_at(c(nf1[2], "year", "month")) |>
+  pivot_wider(names_from = 'month', values_from = nf1[2]) |>
+  summarise_at(.vars = as.character(1:12), .funs = list(~round(mean(.), 0))) |>
+  pivot_longer(everything(), names_to = 'month', values_to = nf1[2]) |>
   mutate(month = as.numeric(month))
   
 
@@ -61,7 +61,7 @@ test_that("fill_nf_data_with_avg() returns correct average", {
     "data.frame"
   )
   expect_equal(nrow(tmp), nrow(zz1) + 12)
-  expect_equivalent(tail(tmp, 12) %>% select_at(c("month", nf1[1])), zz1Comp)
+  expect_equivalent(tail(tmp, 12) |> select_at(c("month", nf1[1])), zz1Comp)
   expect_equal(max(tmp$year), 1972)
   expect_equal(ncol(tmp), ncol(zz1))
   # check the data frame returned for a 10-year average and 3 years of fill 
@@ -69,16 +69,16 @@ test_that("fill_nf_data_with_avg() returns correct average", {
     tmp <- CRSSIO:::fill_nf_data_with_avg(zz1, nf1, 1975, 10), 
     "data.frame"
   )
-  expect_equivalent(tail(tmp, 12) %>% select_at(c("month", nf1[2])), zz2Comp)
+  expect_equivalent(tail(tmp, 12) |> select_at(c("month", nf1[2])), zz2Comp)
   # and the last three years should all by equal to one another except for the
   # year column
   expect_equivalent(
-    tail(tmp, 12) %>% select(-year),
-    tail(tmp, 24) %>% head(12) %>% select(-year)
+    tail(tmp, 12) |> select(-year),
+    tail(tmp, 24) |> head(12) |> select(-year)
   )
   expect_equivalent(
-    tail(tmp, 12) %>% select(-year),
-    tail(tmp, 36) %>% head(12) %>% select(-year)
+    tail(tmp, 12) |> select(-year),
+    tail(tmp, 36) |> head(12) |> select(-year)
   )
   expect_equal(max(tmp$year), 1974)
   expect_equal(ncol(tmp), ncol(zz1))

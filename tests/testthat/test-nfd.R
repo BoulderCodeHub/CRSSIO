@@ -308,8 +308,8 @@ df_simple <- data.frame(
   value = 1:48
 )
 
-df_simple_wide <- filter(df_simple, trace == 1) %>% 
-  tidyr::pivot_wider(names_from = "site") %>% 
+df_simple_wide <- filter(df_simple, trace == 1) |> 
+  tidyr::pivot_wider(names_from = "site") |> 
   select(-trace)
 
 df_ann <- data.frame(

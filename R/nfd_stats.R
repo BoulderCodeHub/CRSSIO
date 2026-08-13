@@ -98,10 +98,10 @@ get_nfd_stats <- function(x_df, var_mutate, vars_group)
     "skew" = "Skew"
   )
  
-  res <- x_df %>%
-    dplyr::group_by_at(vars_group) %>%
-    dplyr::arrange_at("ym") %>%
-    dplyr::mutate_at(var_mutate, list("tmp" = dplyr::lag)) %>%
+  res <- x_df |>
+    dplyr::group_by_at(vars_group) |>
+    dplyr::arrange_at("ym") |>
+    dplyr::mutate_at(var_mutate, list("tmp" = dplyr::lag)) |>
     # means, standard deviation, max, min, skew, lag-1 correlation
     dplyr::summarise_at(
       var_mutate,
@@ -109,12 +109,12 @@ get_nfd_stats <- function(x_df, var_mutate, vars_group)
         ~ mean(.), ~ stats::var(.), ~ max(.), ~ min(.), ~ skew(.),
         ~ stats::cor(., get("tmp"), use = "complete.obs")
       )
-    ) %>%
+    ) |>
     tidyr::gather(
       "variable",
       "value",
       tidyselect::vars_select(names(.), -tidyselect::one_of(vars_group))
-    ) %>%
+    ) |>
     dplyr::mutate_at(
       "variable",
       list(~ factor(var_name_order[.], levels = var_name_order))

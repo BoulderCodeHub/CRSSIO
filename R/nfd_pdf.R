@@ -274,8 +274,8 @@ nfd_pdf_plot_monthly <- function(x, ref, base_units, ...)
 
 ribbon_stats <- function(x, group_variables, summary_var)
 {
-  x %>%
-    dplyr::group_by_at(group_variables) %>%
+  x |>
+    dplyr::group_by_at(group_variables) |>
     dplyr::summarise_at(summary_var, list(
       "q05" = ~quantile(., 0.05),
       "q25" = ~quantile(., 0.25),

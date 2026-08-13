@@ -174,19 +174,19 @@ crsso_get_sys_cond_table <- function(zz, yrs)
    
   }
   
-  zz <- zz %>% 
-    dplyr::filter(Year %in% yrs) %>%
+  zz <- zz |> 
+    dplyr::filter(Year %in% yrs) |>
     # multiply mean by 100 to create % of traces.
-    dplyr::group_by(Year, Variable) %>%
-    dplyr::summarise(Value = mean(Value)*100) %>%
-    tidyr::spread(Variable, Value) %>%
+    dplyr::group_by(Year, Variable) |>
+    dplyr::summarise(Value = mean(Value)*100) |>
+    tidyr::spread(Variable, Value) |>
     # change names and arange in the correct order
     dplyr::mutate(
       eqAll = .data$eq + .data$eq823,
       uebAll = .data$uebGt823 + .data$ueb823 + .data$uebLt823,
       merAll = .data$mer823 + .data$mer748,
       lebAll = .data$lebGt823 + .data$leb823 + .data$lebLt823
-    ) %>%
+    ) |>
     dplyr::arrange(Year)
 
   yrsLab <- zz$Year

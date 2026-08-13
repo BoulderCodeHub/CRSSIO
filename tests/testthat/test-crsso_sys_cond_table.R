@@ -33,8 +33,8 @@ test_that('object dimensions and attributes are correct', {
   expect_equal(dim(s2$fullTable), c(length(CRSSIO:::slotNames()) + 4, 2))
 })
 
-s2 <- sysData %>%
-  mutate(Scenario = "scen2") %>%
+s2 <- sysData |>
+  mutate(Scenario = "scen2") |>
   bind_rows(sysData)
 
 test_that("warnings and errors are as expected", {
@@ -46,13 +46,13 @@ test_that("warnings and errors are as expected", {
     )
   )
   expect_error(
-    sysData %>% filter(Variable != "mer748") %>% crsso_get_sys_cond_table(yrs),
+    sysData |> filter(Variable != "mer748") |> crsso_get_sys_cond_table(yrs),
     "The following variables are not found in the data frame passed to crsso_get_sys_cond_table():\nmer748",
     fixed = TRUE
   )
   expect_error(
-    sysData %>% 
-      filter(Variable != "mer748", Variable != "eq") %>% 
+    sysData |> 
+      filter(Variable != "mer748", Variable != "eq") |> 
       crsso_get_sys_cond_table(yrs),
     "The following variables are not found in the data frame passed to crsso_get_sys_cond_table():\nmer748, eq",
     fixed = TRUE

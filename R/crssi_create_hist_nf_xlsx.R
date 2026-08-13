@@ -43,10 +43,10 @@ crssi_create_hist_nf_xlsx <- function(modelStartYear, nYearAvg = 5,
                                       oFolder = ".")
 {
   # Lees Ferry total natural flow -----------------------
-  lf <- nf_xts_to_df(CoRiverNF::monthlyTot, "LeesFerry") %>%
-    tidyr::unite("month", c("month", "year"), sep = "/1/") %>%
-    dplyr::select_at(c("month", "LeesFerry")) %>%
-    dplyr::mutate_at("month", .funs = as.Date, format = "%m/%d/%Y") %>%
+  lf <- nf_xts_to_df(CoRiverNF::monthlyTot, "LeesFerry") |>
+    tidyr::unite("month", c("month", "year"), sep = "/1/") |>
+    dplyr::select_at(c("month", "LeesFerry")) |>
+    dplyr::mutate_at("month", .funs = as.Date, format = "%m/%d/%Y") |>
     dplyr::rename_at(
       "LeesFerry", 
       function(x) "HistoricalNaturalFlow.AboveLeesFerry"
@@ -55,14 +55,14 @@ crssi_create_hist_nf_xlsx <- function(modelStartYear, nYearAvg = 5,
   # LB nodes intervening natural flow -------------------
   lbSites <- c("Hoover", "Davis", "Alamo", "Parker", "Imperial")
   
-  lb <- nf_xts_to_df(CoRiverNF::monthlyInt, lbSites) %>%
+  lb <- nf_xts_to_df(CoRiverNF::monthlyInt, lbSites) |>
     # fill the necessary years with avg data -------------------
-    fill_nf_data_with_avg(lbSites, modelStartYear, nYearAvg) %>%
+    fill_nf_data_with_avg(lbSites, modelStartYear, nYearAvg) |>
     # prepare lb for formatting
-    dplyr::arrange_at(c("year", "month")) %>%
-    tidyr::unite("month", c("month", "year"), sep = "/1/") %>%
-    dplyr::select_at(c("month", lbSites)) %>%
-    dplyr::mutate_at("month", .funs = as.Date, format = "%m/%d/%Y") %>%
+    dplyr::arrange_at(c("year", "month")) |>
+    tidyr::unite("month", c("month", "year"), sep = "/1/") |>
+    dplyr::select_at(c("month", lbSites)) |>
+    dplyr::mutate_at("month", .funs = as.Date, format = "%m/%d/%Y") |>
     dplyr::rename_at(
       lbSites, 
       .funs = list(~paste("HistoricalNaturalFlow", ., sep = "."))
@@ -102,15 +102,15 @@ crssi_create_hist_nf_xlsx <- function(modelStartYear, nYearAvg = 5,
 
 nf_xts_to_df <- function(x, nfGages = nf_gage_abbrv())
 {
-  x %>%
-    as.data.frame() %>%
-    tibble::rownames_to_column(var = "ym") %>%
-    dplyr::select_at(.vars = c("ym", nfGages)) %>%
-    dplyr::mutate_at(.vars = "ym", zoo::as.yearmon) %>%
+  x |>
+    as.data.frame() |>
+    tibble::rownames_to_column(var = "ym") |>
+    dplyr::select_at(.vars = c("ym", nfGages)) |>
+    dplyr::mutate_at(.vars = "ym", zoo::as.yearmon) |>
     dplyr::mutate_at(.vars = "ym", .funs = list(
       "year" = ~ year(., TRUE),
       "month" = ~ month(., TRUE)
-    )) %>%
+    )) |>
     dplyr::select(-dplyr::matches("ym"))
 }
 
@@ -125,7 +125,7 @@ fill_nf_data_with_avg <- function(x, nfGages, modelStartYear, nYearAvg)
     t2 <- lapply(
       nfGages, 
       function(site) get_monthly_average_by_site(x, site, nYearAvg)
-    ) %>%
+    ) |>
       Reduce(function(dtf1, dtf2) dplyr::full_join(dtf1, dtf2, by = "month"), .)
     
     
@@ -135,8 +135,8 @@ fill_nf_data_with_avg <- function(x, nfGages, modelStartYear, nYearAvg)
     for (tmpYr in fillYrs) {
       x <- dplyr::bind_rows(
         x, 
-        t2 %>%
-          tibble::add_column("year" = tmpYr) %>%
+        t2 |>
+          tibble::add_column("year" = tmpYr) |>
           dplyr::select_at(.vars = colnames(x))
       )
     }
@@ -150,21 +150,21 @@ get_monthly_average_by_site <- function(x, site, nYearAvg)
   maxYear <- max(x$year)
   yrKeep <- seq(maxYear - nYearAvg + 1, maxYear)
   
-  x %>%
-    dplyr::select_at(.vars = c(site, "year", "month")) %>%
-    dplyr::filter_at("year", dplyr::all_vars(. %in% yrKeep)) %>%
+  x |>
+    dplyr::select_at(.vars = c(site, "year", "month")) |>
+    dplyr::filter_at("year", dplyr::all_vars(. %in% yrKeep)) |>
     tidyr::pivot_wider(
       names_from = 'month', 
       values_from = tidyselect::all_of(site)
-    ) %>%
-    dplyr::arrange_at("year") %>%
-    dplyr::select(-dplyr::matches("year")) %>%
-    dplyr::summarise_all(.funs = list(~round(mean(.), 0))) %>%
+    ) |>
+    dplyr::arrange_at("year") |>
+    dplyr::select(-dplyr::matches("year")) |>
+    dplyr::summarise_all(.funs = list(~round(mean(.), 0))) |>
     tidyr::pivot_longer(
       tidyr::everything(), 
       names_to = 'month', 
       values_to = site
-    ) %>%
+    ) |>
     dplyr::mutate_at("month", as.numeric)
 }
 

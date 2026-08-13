@@ -508,7 +508,7 @@ as_nfd.data.frame <- function(x, ...) {
     cat('\n')
     
     # convert to long format
-    x <- tidyr::pivot_longer(x, -c("year", "month"), names_to = "site") %>%
+    x <- tidyr::pivot_longer(x, -c("year", "month"), names_to = "site") |>
       dplyr::mutate(trace = 1)
   }
   
