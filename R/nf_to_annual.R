@@ -201,6 +201,7 @@ nf_to_annual.crssi <- function(x, ..., recompute = FALSE) {
   r
 }
 
+#' @export
 nf_to_annual.list <- function(x, ..., year = "cy", full_year = TRUE) {
   year <- match.arg(year, c("cy", "wy"))
   

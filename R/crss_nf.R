@@ -62,6 +62,7 @@ as_crss_nf <- function(x, ...)
   UseMethod("as_crss_nf")
 }
 
+#' @export
 as_crss_nf.default <- function(x, ...)
 {
   stop("as_crss_nf() is not implemented for an object of class: ", class(x),

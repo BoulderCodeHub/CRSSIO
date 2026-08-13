@@ -216,6 +216,7 @@ as_nfd <- function(x, ...)
   UseMethod("as_nfd")
 }
 
+#' @export
 as_nfd.default <- function(x, ...)
 {
   stop("as_nfd() is not implemented for an object of class: ", class(x),
