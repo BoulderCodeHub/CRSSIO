@@ -59,20 +59,32 @@ stat_boxplot_custom <- function(mapping = NULL, data = NULL,
     msg = "`qs` should only span values [0, 1]."
   )
   
+  # Let ggplot2 itself parse/pack the geom-side args (outlier.*, notch,
+  # staplewidth, box.*, whisker.*, etc.) by constructing a real
+  # geom_boxplot layer and borrowing its processed pieces. This avoids
+  # hardcoding the internal outlier_gp structure, which changed in
+  # ggplot2 4.0 and broke earlier versions of this function.
+  #
+  # NOTE: relies on the LayerInstance fields $geom and $geom_params. These
+  # are internal, not a documented API -- if a future ggplot2 upgrade
+  # errors here, check that these field names/structure still hold.
+  ref <- ggplot2::geom_boxplot(..., na.rm = na.rm, orientation = orientation)
+
+  params <- c(
+    list(qs = qs, na.rm = na.rm, orientation = orientation),
+    ref$geom_params
+  )
+  params <- params[!duplicated(names(params))]
+  
   ggplot2::layer(
     data = data,
     mapping = mapping,
     stat = StatBoxplotCustom,
-    geom = geom,
+    geom = ref$geom,
     position = position,
     show.legend = show.legend,
     inherit.aes = inherit.aes,
-    params = rlang::list2(
-      na.rm = na.rm,
-      orientation = orientation,
-      qs = qs,
-      ...
-    )
+    params = params
   )
 }
 

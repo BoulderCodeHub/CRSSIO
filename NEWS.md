@@ -7,6 +7,7 @@ CRSSIO XXXXX ALAN PLEASE UPDATE WITH CORRECT VERSION NUMBER
 - replaced udunits2 package with units b/c udunits2 is orphaned
 - Fixed reference to the paleo reconstruction of the Sacramento 4-river index in `sac_year_type_get()`. Now correctly points to Meko et al. (2014)
 - `add_secondary_y_conversion()` uses `transform` parameter as `trans` was deprecated several ggplot versions ago
+- updated `stat_boxplot_customs()` for changes to ggplot2. Now depends on ggplot2 > 4.0.0.
 
 CRSSIO 0.9.1.9000
 =================
