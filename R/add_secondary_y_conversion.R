@@ -83,7 +83,7 @@ add_secondary_y_conversion <- function(gg, from_unit, to_unit,
     ggplot2::scale_y_continuous(
       sec.axis = ggplot2::sec_axis(
         name = sec_name,
-        trans = ~convert_units(., from_unit, to_unit), 
+        transform = ~convert_units(., from_unit, to_unit), 
         breaks = convert_units(current_y_num, from_unit, to_unit), 
         labels = to_metric_labels(
           convert_units(current_y_num, from_unit, to_unit), 
