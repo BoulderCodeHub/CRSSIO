@@ -20,7 +20,7 @@
 #' [st_vrain_nf_calc()].
 #' 
 #' Overlapping years: `crssi()` checks to make sure that there at least some
-#' overlapping yeras of data between `flow` and `sac_year_type`. It then trims
+#' overlapping years of data between `flow` and `sac_year_type`. It then trims
 #' the data to be January, year1 - December, year2 for the overlapping period 
 #' between `flow` and `sac_year_type`. For example, if `flow` contains data 
 #' for March 2020 - December 2024 while `sac_year_type` contains data for 
