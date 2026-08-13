@@ -5,6 +5,7 @@ CRSSIO XXXXX ALAN PLEASE UPDATE WITH CORRECT VERSION NUMBER
 - added parameter StVrain_nf to function `crssi()`
 - Updated crss-input.Rmd with examples of how to use `st_vrain_nf_calc()` and integrate into the pipeline for creating input files for CRSS.
 - replaced udunits2 package with units b/c udunits2 is orphaned
+- Fixed reference to the paleo reconstruction of the Sacramento 4-river index in `sac_year_type_get()`. Now correctly points to Meko et al. (2014)
 
 CRSSIO 0.9.1.9000
 =================

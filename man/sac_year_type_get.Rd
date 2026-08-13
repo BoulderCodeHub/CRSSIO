@@ -24,10 +24,17 @@ required information. If an internet connection is not available, then the
 internal data can be used, but it may not be up-to-date. Additionally, the
 index can be obtained from paleo data. For the paleo data, the index is
 created from the Sacramento Valley 4 river index volume as reconstructed in
-Meko et al. (2018). The WY volume is passed to \code{\link[=sac_year_type_calc]{sac_year_type_calc()}} to
+Meko et al. (2014). The WY volume is passed to \code{\link[=sac_year_type_calc]{sac_year_type_calc()}} to
 compute the index value.
 }
 \details{
 The "crssio.sac_yt_url" option determines where the function downloads the
 data from.
+}
+\references{
+Meko, D. M., Woodhouse, C. A., & Touchan, R. (2014).
+Klamath/San Joaquin/Sacramento Hydroclimatic Reconstructions from Tree Rings,
+Final Report to California Department of Water Resources,Agreement
+4600008850. (California Department of Water Resources, P.O. Box 942836,
+Sacramento, CA 94236-0001)
 }
