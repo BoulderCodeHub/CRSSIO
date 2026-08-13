@@ -1,6 +1,6 @@
 #' Compute Sacramento Valley Water Year Index for CRSS
 #' 
-#' `st_vrain_nf_cal()` estimates annual (calendar year) natural flow in  
+#' `st_vrain_nf_calc()` estimates annual (calendar year) natural flow in  
 #' the St. Vrain river in Lyons, CO as a function of total natural flow 
 #' at Glenwood Springs. 
 #' 
@@ -22,8 +22,8 @@
 #' "cy" year type. It also must have at least Glenwood Springs volumes. 
 #'  Volumes at other locations are ignored. 
 #'  
-#' @return xts object containing calendar year total natural flow for the St. Vrain.
-#' Columns are traces and rows are years.
+#' @return xts object containing calendar year total natural flow for the St. 
+#' Vrain. Columns are traces and rows are years.
 #'  
 #' @examples
 #' st_vrain_nf_calc(
@@ -56,7 +56,8 @@ st_vrain_nf_calc <- function(cy_vol = NULL, co_tot_nf=NULL) {
 
     # if one column called GlenwoodSprings (likely if user input historical data)
     # rename column to StVrain
-    if(ncol(st_vrain)==1 && !is.null(colnames(st_vrain)[1]) && colnames(st_vrain)[1]=='GlenwoodSprings'){
+    if(ncol(st_vrain)==1 && !is.null(colnames(st_vrain)[1]) && 
+       colnames(st_vrain)[1]=='GlenwoodSprings') {
 
       colnames(st_vrain)='StVrain'
 
@@ -81,12 +82,10 @@ st_vrain_nf_calc <- function(cy_vol = NULL, co_tot_nf=NULL) {
     })
     
     st_vrain <- do.call(cbind, st_vrain)
-    names(st_vrain)=paste0('TraceNumber', 1:ncol(st_vrain))
+    names(st_vrain) <- paste0('TraceNumber', 1:ncol(st_vrain))
     st_vrain <- xts::xts(st_vrain, zoo::index(co_tot_nf$annual$total[[1]]))
     
   }
   
   st_vrain
-  
-  
 }
