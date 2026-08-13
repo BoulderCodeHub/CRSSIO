@@ -38,7 +38,7 @@ Imports:
     tidyr,
     tidyselect,
     tools,
-    udunits2,
+    units,
     utils,
     vctrs,
     writexl,
@@ -55,7 +55,6 @@ Suggests:
     testthat
 VignetteBuilder: knitr
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.2.3
 Encoding: UTF-8
 Collate: 
     'CRSSIO.R'
@@ -93,9 +92,11 @@ Collate:
     'reindex.R'
     'sac_year_type_calc.R'
     'sac_year_type_get.R'
+    'st_vrain_nf_calc.R'
     'stat_boxplot_custom.R'
     'storage_to_elevation.R'
     'trim_helpers.R'
     'write_crssi.R'
     'write_nfd.R'
     'zzz.R'
+Config/roxygen2/version: 8.0.0

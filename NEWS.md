@@ -4,6 +4,7 @@ CRSSIO XXXXX ALAN PLEASE UPDATE WITH CORRECT VERSION NUMBER
 - added function `st_vrain_nf_calc()` to calculate St. Vrain natural flow, a necessary input to CRSS, as a function of total natural flow at Glenwood Springs
 - added parameter StVrain_nf to function `crssi()`
 - Updated crss-input.Rmd with examples of how to use `st_vrain_nf_calc()` and integrate into the pipeline for creating input files for CRSS.
+- replaced udunits2 package with units b/c udunits2 is orphaned
 
 CRSSIO 0.9.1.9000
 =================

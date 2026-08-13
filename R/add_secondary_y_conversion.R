@@ -41,6 +41,12 @@ add_secondary_y_conversion <- function(gg, from_unit, to_unit,
     inherits(gg, c("gg", "ggplot")), 
     msg = "`gg` does not inherit from c('gg', 'ggplot')"
   )
+  
+  convert_units <- function(x, from, to) {
+    x <- units::set_units(x, from, mode = "standard")
+    x <- units::set_units(x, to, mode = "standard")
+    units::drop_units(x)
+  }
  
   current_y_num <- ggplot2::ggplot_build(gg)$layout$panel_params[[1]]$y$breaks
   current_y_num <- current_y_num[!is.na(current_y_num)]
@@ -77,10 +83,10 @@ add_secondary_y_conversion <- function(gg, from_unit, to_unit,
     ggplot2::scale_y_continuous(
       sec.axis = ggplot2::sec_axis(
         name = sec_name,
-        trans = ~udunits2::ud.convert(., from_unit, to_unit), 
-        breaks = udunits2::ud.convert(current_y_num, from_unit, to_unit), 
+        trans = ~convert_units(., from_unit, to_unit), 
+        breaks = convert_units(current_y_num, from_unit, to_unit), 
         labels = to_metric_labels(
-          udunits2::ud.convert(current_y_num, from_unit, to_unit), 
+          convert_units(current_y_num, from_unit, to_unit), 
           num_digits
         )
       )
