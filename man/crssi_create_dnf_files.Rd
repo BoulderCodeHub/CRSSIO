@@ -118,9 +118,10 @@ crssi_create_dnf_files(
 # get data
 flow <- CoRiverNF::monthlyInt["1988/2018"]
 sac_yt <- sac_year_type_get()["1988/2018"]
+sv <- st_vrain_nf_calc(CoRiverNF::cyAnnTot$GlenwoodSprings)["1988/2018"]
 
 # create crssi object
-nf <- crssi(crss_nf(flow), sac_yt, scen_number = 1.19882018)
+nf <- crssi(crss_nf(flow), sac_yt, sv, scen_number = 1.19882018)
 
 # apply ism
 nf <- ism(nf, n_years_keep = 5)

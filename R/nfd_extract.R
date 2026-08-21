@@ -249,6 +249,7 @@ nfd_extract.crssi <- function(x, i, j, k, l, m)
   
   # save other data
   sac_yt <- x[["sac_year_type"]]
+  st_vrain_nf <- x[["st_vrain_nf"]]
   scen_name <- x[["scen_name"]]
   scen_number <- x[["scen_number"]]
   orig_trace <- x[["n_trace"]]
@@ -256,7 +257,7 @@ nfd_extract.crssi <- function(x, i, j, k, l, m)
   # extract the flow data using nfd_extract.crss_nf
   x <- nfd_extract.crss_nf(x, i, j, k, l, m)
   
-  # then extract sac_yt data ----------------
+  # then extract sac_yt data and st_vrain_nf ----------------
   # time 
   if (missing(i)) {
     i <- ""
@@ -279,9 +280,11 @@ nfd_extract.crssi <- function(x, i, j, k, l, m)
   }
   
   sac_yt <- sac_yt[i, j]
+  st_vrain_nf <- st_vrain_nf[i, j]
   
   # then recreate crssi
   x[["sac_year_type"]] <- sac_yt
+  x[["st_vrain_nf"]] <- st_vrain_nf
   x[["scen_name"]] <- scen_name
   x[["scen_number"]] <- scen_number
   x[["n_trace"]] <- n_trace(x)

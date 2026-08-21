@@ -111,11 +111,12 @@ as.data.frame.nfd <- function(x, row.names = NULL, optional = FALSE, ...,
 }
 
 #' @examples 
-#' # crssi objects have sacramento year type data in them, which is also 
-#' # included in the data frame
+#' # crssi objects have sacramento year type and St. Vrain natural flow data
+#' # in them, which is also included in the data frame
 #' 
 #' sac <- sac_year_type_get(internal = TRUE)["2000/2002"]
-#' in_data <- crssi(nf, sac, scen_number = 1.20002002)
+#' sv <- st_vrain_nf_calc(CoRiverNF::cyAnnTot$GlenwoodSprings)["2000/2002"]
+#' in_data <- crssi(nf, sac, sv, scen_number = 1.20002002)
 #' 
 #' as.data.frame(in_data)
 #' 

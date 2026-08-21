@@ -25,7 +25,7 @@ ism(x, n_years_keep = NA, ...)
 ism_get_site_matrix(xtsData, startMonth, nYrs = NA, monthly = TRUE)
 }
 \arguments{
-\item{x}{An R object. \code{ism()} is implemented for matrices, \link{xts}, \link{nfd},
+\item{x}{An R object. \code{ism()} is implemented for matrices, \link[xts:xts]{xts}, \link{nfd},
 \link{crss_nf}, and \link{crssi} objects.}
 
 \item{n_years_keep}{The number of years of data to keep. This must be <= the
@@ -58,7 +58,7 @@ number of years in \code{xtsData}
 }
 \description{
 \code{ism()} applies the Index Sequential Method to a single trace of data to
-create multiple traces. \code{ism()} will work on matrices, \link{xts}, \link{nfd},
+create multiple traces. \code{ism()} will work on matrices, \link[xts:xts]{xts}, \link{nfd},
 \link{crss_nf}, and \link{crssi} objects. \code{ism_get_site_matrix()} is a deprecated
 precursor to this function that only works on \code{xts} objects.
 }

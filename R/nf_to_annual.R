@@ -192,7 +192,7 @@ nf_to_annual.crssi <- function(x, ..., recompute = FALSE) {
   r <- crssi(
     nf, 
     sac_year_type = x$sac_year_type, 
-    StVrain_nf = x$StVrain_nf,
+    st_vrain_nf = x$st_vrain_nf,
     scen_number = x$scen_number,
     scen_name = x$scen_name,
     drop_flow = FALSE

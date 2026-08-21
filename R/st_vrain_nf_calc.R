@@ -1,4 +1,4 @@
-#' Compute Sacramento Valley Water Year Index for CRSS
+#' Compute St. Vrain Natural Flow for CRSS
 #' 
 #' `st_vrain_nf_calc()` estimates annual (calendar year) natural flow in  
 #' the St. Vrain river in Lyons, CO as a function of total natural flow 
@@ -27,11 +27,18 @@
 #'  
 #' @examples
 #' st_vrain_nf_calc(
-#'   xts(
+#'   xts::xts(
 #'     matrix(sample(CoRiverNF::cyAnnTot$GlenwoodSprings,15), nrow = 3, ncol = 5), 
 #'     order.by = zoo::as.yearmon("Dec 2000") + 0:2
 #'   )
 #' )
+#' 
+#' nf <- nfd(CoRiverNF::cyAnnTot, flow_space = "total", 
+#'   time_step = "annual",
+#'   year = "cy")
+#'
+#' st_vrain_nf_calc(co_tot_nf = nf)
+#' 
 #' @export
 
 st_vrain_nf_calc <- function(cy_vol = NULL, co_tot_nf=NULL) {
@@ -54,15 +61,9 @@ st_vrain_nf_calc <- function(cy_vol = NULL, co_tot_nf=NULL) {
     
     st_vrain = cy_vol*slope+int
 
-    # if one column called GlenwoodSprings (likely if user input historical data)
-    # rename column to StVrain
-    if(ncol(st_vrain)==1 && !is.null(colnames(st_vrain)[1]) && 
-       colnames(st_vrain)[1]=='GlenwoodSprings') {
-
-      colnames(st_vrain)='StVrain'
-
-    }
-
+    # rename columns
+    names(st_vrain) <- paste0('TraceNumber', 1:ncol(st_vrain))
+    
   } else {
     assert_that(
       is_nfd(co_tot_nf) && has_total(co_tot_nf) && 
@@ -86,6 +87,9 @@ st_vrain_nf_calc <- function(cy_vol = NULL, co_tot_nf=NULL) {
     st_vrain <- xts::xts(st_vrain, zoo::index(co_tot_nf$annual$total[[1]]))
     
   }
+  
+  # remove attributes. If there were any, they were inherited from the input.
+  xtsAttributes(st_vrain) <- NULL
   
   st_vrain
 }

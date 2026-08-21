@@ -52,3 +52,22 @@ test_that("st_vrain_nf_calc() works with nfd", {
   sink()
 })
 
+# xts and nfd methods should return same results -------
+
+test_that("st_vrain_nf_calc() returns same results with xts and ndf methods", {
+
+  nf <- nfd(CoRiverNF::cyAnnTot, flow_space = "total", 
+            time_step = "annual",
+            year = "cy")
+  
+  nfd_results=st_vrain_nf_calc(co_tot_nf = nf)
+  
+  xts_results=st_vrain_nf_calc(CoRiverNF::cyAnnTot$GlenwoodSprings)
+  
+  expect(all.equal(nfd_results, xts_results), 'nfd and xts inputs giving
+         different results')
+
+})
+
+
+

@@ -36,9 +36,11 @@ reindex.crssi <- function(x, start_year, master_ts = "monthly")
   flow <- reindex(flow, start_year)
   
   sac_yt <- reindex(x[["sac_year_type"]], start_year)
+  st_vrain_nf <- reindex(x[["st_vrain_nf"]], start_year)
   x[["annual"]] <- flow[["annual"]]
   x[["monthly"]] <- flow[["monthly"]]
   x[["sac_year_type"]] <- sac_yt
+  x[["st_vrain_nf"]] <- st_vrain_nf
   
   crssi_validate(x)
 }
