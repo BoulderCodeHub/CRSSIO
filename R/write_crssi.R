@@ -83,7 +83,7 @@ write_crssi <- function(x, path, file_names = nf_file_names(),
   ytData <- x[["sac_year_type"]]
   svData <- x[["st_vrain_nf"]]
   
-  scen_num <- x[["scen_number"]]
+  scen_num <- formatC(x[["scen_number"]], format = "f", digits = 8)
   
   # write out additional trace files ----------
   message("\nBeginning to write additional trace files")

@@ -9,6 +9,7 @@ CRSSIO XXXXX ALAN PLEASE UPDATE WITH CORRECT VERSION NUMBER
 - `add_secondary_y_conversion()` uses `transform` parameter as `trans` was deprecated several ggplot versions ago
 - updated `stat_boxplot_customs()` for changes to ggplot2. Now depends on ggplot2 > 4.0.0.
 - switched everything to |> pipe and removed dependency on magrittr
+- HydrologyParameters.SupplyScenario now keeps the trailing 0 when writing number out, e.g., 1.20002010 (#120)
 
 CRSSIO 0.9.1.9000
 =================
