@@ -122,12 +122,15 @@ fill_nf_data_with_avg <- function(x, nfGages, modelStartYear, nYearAvg)
   # the beginning of the model run
   if (fillEnd >= fillBegin){
     # call get_monthly_average_by_site for all sites
-    t2 <- lapply(
-      nfGages, 
+    site_avgs <- lapply(
+      nfGages,
       function(site) get_monthly_average_by_site(x, site, nYearAvg)
-    ) |>
-      Reduce(function(dtf1, dtf2) dplyr::full_join(dtf1, dtf2, by = "month"), .)
+    )
     
+    t2 <- Reduce(
+      function(dtf1, dtf2) dplyr::full_join(dtf1, dtf2, by = "month"),
+      site_avgs
+    )
     
     # for all the fill years, use t2, create the tmp year and bind it to lb
     fillYrs <- seq(fillBegin, fillEnd)

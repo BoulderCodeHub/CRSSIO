@@ -24,6 +24,8 @@
 #'   
 #' @inheritParams ggplot2::stat_boxplot
 #' 
+#' @importFrom vctrs vec_unique_count
+#' 
 #' @examples 
 #' 
 #' library(ggplot2)

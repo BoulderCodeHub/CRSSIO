@@ -116,7 +116,7 @@ get_nfd_stats <- function(x_df, var_mutate, vars_group)
         ),
         .names = "{.fn}"
       ),
-      `stats::cor` = stats::cor(!!val_sym, tmp, use = "complete.obs"),
+      `stats::cor` = stats::cor(!!val_sym, .data[["tmp"]], use = "complete.obs"),
       .groups = "drop"
     ) |>
     tidyr::pivot_longer(
