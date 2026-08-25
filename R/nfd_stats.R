@@ -98,26 +98,37 @@ get_nfd_stats <- function(x_df, var_mutate, vars_group)
     "skew" = "Skew"
   )
  
+  val_sym <- rlang::sym(var_mutate)
+  
   res <- x_df |>
-    dplyr::group_by_at(vars_group) |>
-    dplyr::arrange_at("ym") |>
-    dplyr::mutate_at(var_mutate, list("tmp" = dplyr::lag)) |>
-    # means, standard deviation, max, min, skew, lag-1 correlation
-    dplyr::summarise_at(
-      var_mutate,
-      list(
-        ~ mean(.), ~ stats::var(.), ~ max(.), ~ min(.), ~ skew(.),
-        ~ stats::cor(., get("tmp"), use = "complete.obs")
+    dplyr::group_by(dplyr::across(tidyselect::all_of(vars_group))) |>
+    dplyr::arrange(.data[["ym"]], .by_group = TRUE) |>
+    dplyr::mutate(tmp = dplyr::lag(!!val_sym)) |>
+    dplyr::summarise(
+      dplyr::across(
+        tidyselect::all_of(var_mutate),
+        list(
+          mean = ~ mean(.x),
+          `stats::var` = ~ stats::var(.x),
+          max = ~ max(.x),
+          min = ~ min(.x),
+          skew = ~ skew(.x)
+        ),
+        .names = "{.fn}"
+      ),
+      `stats::cor` = stats::cor(!!val_sym, tmp, use = "complete.obs"),
+      .groups = "drop"
+    ) |>
+    tidyr::pivot_longer(
+      cols = -tidyselect::all_of(vars_group),
+      names_to = "variable",
+      values_to = "value"
+    ) |>
+    dplyr::mutate(
+      variable = factor(
+        var_name_order[.data[["variable"]]],
+        levels = var_name_order
       )
-    ) |>
-    tidyr::gather(
-      "variable",
-      "value",
-      tidyselect::vars_select(names(.), -tidyselect::one_of(vars_group))
-    ) |>
-    dplyr::mutate_at(
-      "variable",
-      list(~ factor(var_name_order[.], levels = var_name_order))
     )
     
   res
