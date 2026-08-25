@@ -13,14 +13,10 @@ teardown({
 })
 
 test_that("created files from package and Excel match", {
-  skip_on_cran()
-  skip_on_travis()
-  skip_on_appveyor()
-  skip_on_ci()
   
-  xlIn <- file.path('C:\\Users\\nbonham\\Desktop\\GitHubRepos\\CRSSIO\\data-raw', 'NaturalFlows1906-2020_20221215.xlsx')
+  xlIn <- test_path('fixtures', 'NaturalFlows1906-2020_20221215.xlsx')
   if (!file.exists(xlIn))
-    stop("You need to update the xlIn variable in test_data.R.")
+    stop("You need to update the xlIn variable in test-works_with_CoRiverNF.R.")
   
   sink('nul')
   crssi_create_dnf_files(
