@@ -14,6 +14,8 @@
 #' `"MeadFloodControlData.hydrologyIncrement"`}
 #' \item{`crssio.sacYTSlot`}{The file name (slot name) used for the 
 #' Sacramento year type index. Default: `"MWD_ICS.SacWYType"`}
+#' #' \item{`crssio.StVrainSlot`}{The file name (slot name) used for St. 
+#' Vrain natural flow. Default: `"TMD_East_Slope_Supply.St_Vrain_Annual_Flow"`}
 #' }
 #' 
 #' Additional options for file I/O:

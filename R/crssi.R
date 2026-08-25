@@ -60,7 +60,7 @@
 #'   object must match the number of traces in `flow`. Additionally, there must 
 #'   be some overlapping years of data. See details.
 #'   
-#' @param StVrain_nf An annual xts object with all time steps having a 
+#' @param st_vrain_nf An annual xts object with all time steps having a 
 #'   December-some year time step. [st_vrain_nf_calc()] returns the data in
 #'   the required format.The number of columns in this object must match
 #'   the number of traces in `flow`. Additionally, there must 
@@ -89,17 +89,18 @@
 #'   time_step = "monthly"
 #' )
 #' sac <- sac_year_type_get(internal = TRUE)["2000/2002"]
-#' in_data <- crssi(nf, sac, scen_number = 1.20002002)
+#' sv <- st_vrain_nf_calc(CoRiverNF::cyAnnTot$GlenwoodSprings)["2000/2002"]
+#' in_data <- crssi(nf, sac, sv, scen_number = 1.20002002)
 #' 
 #' @seealso [crss_nf], [nfd], [write_crssi()], [sac_year_type_get()], [st_vrain_nf_calc()]
 #' 
 #' @export
-crssi <- function(flow, sac_year_type, StVrain_nf, scen_number, scen_name = NULL, 
+crssi <- function(flow, sac_year_type, st_vrain_nf, scen_number, scen_name = NULL, 
                   drop_flow = TRUE)
 {
   assert_that(is_crss_nf(flow))
   assert_that(xts::is.xts(sac_year_type))
-  assert_that(xts::is.xts(StVrain_nf))
+  assert_that(xts::is.xts(st_vrain_nf))
   assert_that(is.numeric(scen_number) && length(scen_number) == 1)
   
   nt <- n_trace(flow)
@@ -114,11 +115,11 @@ crssi <- function(flow, sac_year_type, StVrain_nf, scen_number, scen_name = NULL
   )
   
   assert_that(
-    nt == ncol(StVrain_nf),
+    nt == ncol(st_vrain_nf),
     msg = paste0(
-      "Number of traces for `flow` and `StVrain_nf` should be the same.\n",
+      "Number of traces for `flow` and `st_vrain_nf` should be the same.\n",
       "`flow` has: ", n_trace(flow), "\n",
-      "`StVrain_nf` has: ", ncol(StVrain_nf)
+      "`st_vrain_nf` has: ", ncol(st_vrain_nf)
     )
   )
   
@@ -130,12 +131,12 @@ crssi <- function(flow, sac_year_type, StVrain_nf, scen_number, scen_name = NULL
     msg = "`sac_year_type` should only include September or December timestep."
   )
   
-  # StVrain_nf should only include December time steps
-  SV_time <- zoo::index(StVrain_nf)
+  # st_vrain_nf should only include December time steps
+  SV_time <- zoo::index(st_vrain_nf)
   SV_mon <- format(SV_time, "%m")
   assert_that(
     all(SV_mon == "12"),
-    msg = "`StVrain_nf` should only include December timestep."
+    msg = "`st_vrain_nf` should only include December timestep."
   )
   
   # check that there are at least some overlapping years of data
@@ -148,7 +149,7 @@ crssi <- function(flow, sac_year_type, StVrain_nf, scen_number, scen_name = NULL
   # check that there are at least some overlapping years of data
   assert_that(
     any(flow_time %in% SV_time), 
-    msg = "`flow` and `StVrain_nf` have no overlapping dates."
+    msg = "`flow` and `st_vrain_nf` have no overlapping dates."
   )
   
   # if drop_flow == TRUE, delete the monthly total, and annual flow data from
@@ -175,14 +176,14 @@ crssi <- function(flow, sac_year_type, StVrain_nf, scen_number, scen_name = NULL
   overlap <- range(c(overlap1, overlap2))
   
   sac_year_type <- sac_year_type[paste0(overlap[1],"/",overlap[2])]
-  StVrain_nf <- StVrain_nf[paste0(overlap[1],"/",overlap[2])]
+  st_vrain_nf <- st_vrain_nf[paste0(overlap[1],"/",overlap[2])]
   
   flow <- nfd_extract(flow, paste0(overlap[1], "-01/", overlap[2], "-12"))
   crss_nf_validate(flow)
   
   # add on to flow list structure
   flow[["sac_year_type"]] <- sac_year_type
-  flow[["StVrain_nf"]] <- StVrain_nf
+  flow[["st_vrain_nf"]] <- st_vrain_nf
   flow[["n_trace"]] <- nt
   flow[["scen_number"]] <- scen_number
   
@@ -243,6 +244,17 @@ crssi_validate <- function(x)
   assert_that(
     x[["n_trace"]] == n_trace(x) && x[["n_trace"]] == ncol(x[["sac_year_type"]])
   )
+  
+  assert_that(xts::is.xts(x[["st_vrain_nf"]]))
+  assert_that(end(x[["st_vrain_nf"]]) == end(x))
+  assert_that(
+    start(x) ==
+      zoo::as.yearmon(paste0("Jan", year(start(x[["st_vrain_nf"]]))))
+  )
+  assert_that(
+    x[["n_trace"]] == n_trace(x) && x[["n_trace"]] == ncol(x[["st_vrain_nf"]])
+  )
+  
   assert_that(attr(x, "year") == "cy")
   
   invisible(x)

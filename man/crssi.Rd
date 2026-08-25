@@ -5,7 +5,14 @@
 \alias{is_crssi}
 \title{CRSS Input Class (crssi)}
 \usage{
-crssi(flow, sac_year_type, scen_number, scen_name = NULL, drop_flow = TRUE)
+crssi(
+  flow,
+  sac_year_type,
+  st_vrain_nf,
+  scen_number,
+  scen_name = NULL,
+  drop_flow = TRUE
+)
 
 is_crssi(x)
 }
@@ -15,6 +22,12 @@ is_crssi(x)
 \item{sac_year_type}{An annual xts object with all time steps having a
 September or December-some year time step. The number of columns in this
 object must match the number of traces in \code{flow}. Additionally, there must
+be some overlapping years of data. See details.}
+
+\item{st_vrain_nf}{An annual xts object with all time steps having a
+December-some year time step. \code{\link[=st_vrain_nf_calc]{st_vrain_nf_calc()}} returns the data in
+the required format.The number of columns in this object must match
+the number of traces in \code{flow}. Additionally, there must
 be some overlapping years of data. See details.}
 
 \item{scen_number}{The scenario number. See \strong{Scenario Numbering Convention}
@@ -40,20 +53,25 @@ kept in the object.}
 \code{crssi()} constructs a \code{crssi} object that holds all of the necessary
 trace-based input data for CRSS. Namely, this includes the intervening,
 monthly natural flow for all 29 sites, the Sacremento Year Type index,
-and a scenario number.
+St Vrain natural flow, and a scenario number.
 }
 \details{
 \code{crssi()} inherits from \link{crss_nf}, maintaining the same required structure
 for the intervening natural flows. The object also contains the Sacramento
-Year Type index, and a scenario number. Given this, all functions that work
-on \link{crss_nf} and \link{nfd} objects work on \code{crssi} objects.
+Year Type index, St. Vrain natural flow, and a scenario number. Given this,
+all functions that work on \link{crss_nf} and \link{nfd} objects work on \code{crssi} objects.
 
 \strong{Sacramento Year Type index:} Beginning in CRSS v2.6, input data for the
 Sacramento year type index are necessary. For historical values see
 \code{\link[=sac_year_type_get]{sac_year_type_get()}}.
 
+\strong{St. Vrain natural flow:} CRSS requires input data for calendar year
+natural flow for the St. Vrain. The crssio package estimates these values
+from total natural flow at Glenwood Springs using function
+\code{\link[=st_vrain_nf_calc]{st_vrain_nf_calc()}}.
+
 Overlapping years: \code{crssi()} checks to make sure that there at least some
-overlappying yeras of data between \code{flow} and \code{sac_year_type}. It then trims
+overlapping years of data between \code{flow} and \code{sac_year_type}. It then trims
 the data to be January, year1 - December, year2 for the overlapping period
 between \code{flow} and \code{sac_year_type}. For example, if \code{flow} contains data
 for March 2020 - December 2024 while \code{sac_year_type} contains data for
@@ -98,9 +116,10 @@ nf <- crss_nf(
   time_step = "monthly"
 )
 sac <- sac_year_type_get(internal = TRUE)["2000/2002"]
-in_data <- crssi(nf, sac, scen_number = 1.20002002)
+sv <- st_vrain_nf_calc(CoRiverNF::cyAnnTot$GlenwoodSprings)["2000/2002"]
+in_data <- crssi(nf, sac, sv, scen_number = 1.20002002)
 
 }
 \seealso{
-\link{crss_nf}, \link{nfd}, \code{\link[=write_crssi]{write_crssi()}}, \code{\link[=sac_year_type_get]{sac_year_type_get()}}
+\link{crss_nf}, \link{nfd}, \code{\link[=write_crssi]{write_crssi()}}, \code{\link[=sac_year_type_get]{sac_year_type_get()}}, \code{\link[=st_vrain_nf_calc]{st_vrain_nf_calc()}}
 }

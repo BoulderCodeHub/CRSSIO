@@ -81,7 +81,7 @@ write_crssi <- function(x, path, file_names = nf_file_names(),
   # get sacramento year type ism data ----------
   eoyDate <- paste0(startYear, "-12-31")
   ytData <- x[["sac_year_type"]]
-  svData <- x[["StVrain_nf"]]
+  svData <- x[["st_vrain_nf"]]
   
   scen_num <- x[["scen_number"]]
   

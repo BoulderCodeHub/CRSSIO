@@ -88,9 +88,6 @@ SV <- st_vrain_nf_calc(
     order.by = as.yearmon("Dec 2000") + 0:1
   )
 )
-  
-  
-
 
 x_crssi <- crssi(x_crss_nf, sac_yt, SV, 1.20002001, "my scenario", drop_flow = FALSE)
 sink()

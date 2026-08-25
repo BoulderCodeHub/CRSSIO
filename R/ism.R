@@ -43,7 +43,7 @@ ism <- function(x, n_years_keep = NA, ...)
 ism.crssi <- function(x, n_years_keep = NA, ...)
 {
  
-  StVrain_nf <- x[["StVrain_nf"]]
+  st_vrain_nf <- x[["st_vrain_nf"]]
   sac_year_type <- x[["sac_year_type"]]
   scen_number <- x[["scen_number"]]
   scen_name <- x[["scen_name"]]
@@ -54,12 +54,12 @@ ism.crssi <- function(x, n_years_keep = NA, ...)
   
   x <- suppressMessages(as_crss_nf(x))
   x <- ism.crss_nf(x, n_years_keep, ...)
-  StVrain_nf <- ism(StVrain_nf, n_years_keep, ...)
+  st_vrain_nf <- ism(st_vrain_nf, n_years_keep, ...)
   sac_year_type <- ism(sac_year_type, n_years_keep, ...)
   
   # rbuild crssi
   x[["sac_year_type"]] <- sac_year_type
-  x[["StVrain_nf"]] <- StVrain_nf
+  x[["st_vrain_nf"]] <- st_vrain_nf
   x[["n_trace"]] <- n_trace(x)
   x[["scen_number"]] <- scen_number
   

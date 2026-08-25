@@ -81,10 +81,10 @@ as_crss_nf.nfd <- function(x, ...)
 as_crss_nf.crssi <- function(x, ...)
 {
   # drop sac_year_type, n_trace, scen_name, scen_number
-  drop_vals <- c("sac_year_type", "n_trace", "scen_number", "scen_name")
+  drop_vals <- c("sac_year_type","st_vrain_nf", "n_trace", "scen_number", "scen_name")
   
   if (!exists("scen_name", where = x))
-    drop_vals <- drop_vals[1:3]
+    drop_vals <- setdiff(drop_vals, "scen_name")
   
   for (dv in drop_vals) {
     x[[dv]] <- NULL

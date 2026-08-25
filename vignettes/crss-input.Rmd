@@ -65,8 +65,8 @@ nf <- nfd(nf, flow_space = 'intervening', time_step = 'monthly', year = 'cy')
 nf
 sac_yt <- sac_year_type_get(internal = TRUE) 
 head(sac_yt)
-StVrain_nf=st_vrain_nf_calc(CoRiverNF::cyAnnTot$GlenwoodSprings)
-head(StVrain_nf)
+st_vrain_nf =st_vrain_nf_calc(CoRiverNF::cyAnnTot$GlenwoodSprings)
+head(st_vrain_nf )
 
 ```
 
@@ -79,13 +79,13 @@ nf <- as_crss_nf(nf)
 nf
 ```
 
-Now, `nf` `sac_yt` and `StVrain_nf` can be combined into a "CRSS input" object (`crssi`):
+Now, `nf` `sac_yt` and `st_vrain_nf ` can be combined into a "CRSS input" object (`crssi`):
 
 ```{r convertCRSSI}
 crss_input <- crssi(
   flow = nf,
   sac_year_type = sac_yt,
-  StVrain_nf = StVrain_nf,
+  st_vrain_nf  = st_vrain_nf ,
   scen_number = 1.20002019, 
   scen_name = 'ISM applied to 2000-2019 data'
 )
@@ -193,8 +193,8 @@ Next, St. Vrain natural flow can be be calculated using `st_vrain_nf_calc()`.
 
 ```{r StVrainCalc}
 cy_nf=nf_to_annual(nf_to_total(rand_nf), year='cy', full_year = T, keep_monthly=F)
-new_StVrain_nf <- st_vrain_nf_calc(co_tot_nf = cy_nf)
-head(new_StVrain_nf)
+new_st_vrain_nf  <- st_vrain_nf_calc(co_tot_nf = cy_nf)
+head(new_st_vrain_nf )
 ```
 
 Now there are 5 years (water years) of natural flow and Sacramento Year Type index data. This just needs to be converted to a `crssi` object and then exported to the format expected by CRSS. Because the data are on a water year basis and CRSS works on calendar year basis, the conversion will result in only 4 years of CRSS input, i.e., October 2023 - September 2028 data will be trimmed to January 2024 - December 2027. Note there are also 4 calendar years of St. Vrain natural flow - these were already trimmed to 4 years because the calculation uses calendar years. 
@@ -203,7 +203,7 @@ Now there are 5 years (water years) of natural flow and Sacramento Year Type ind
 crss_input2 <- crssi(
   flow = rand_nf,
   sac_year_type = new_sac_yt,
-  StVrain_nf = new_StVrain_nf,
+  st_vrain_nf  = new_st_vrain_nf ,
   scen_number = 99, 
   scen_name = 'Random made up scenario'
 )
