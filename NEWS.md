@@ -1,22 +1,20 @@
-CRSSIO XXXXX ALAN PLEASE UPDATE WITH CORRECT VERSION NUMBER
-=================
-
-- added function `st_vrain_nf_calc()` to calculate St. Vrain natural flow, a necessary input to CRSS, as a function of total natural flow at Glenwood Springs
-- added parameter st_vrain_nf to function `crssi()`
-- Updated crss-input.Rmd with examples of how to use `st_vrain_nf_calc()` and integrate into the pipeline for creating input files for CRSS.
-- replaced udunits2 package with units b/c udunits2 is orphaned
-- Fixed reference to the paleo reconstruction of the Sacramento 4-river index in `sac_year_type_get()`. Now correctly points to Meko et al. (2014)
-- `add_secondary_y_conversion()` uses `transform` parameter as `trans` was deprecated several ggplot versions ago
-- updated `stat_boxplot_customs()` for changes to ggplot2. Now depends on ggplot2 > 4.0.0.
-- switched everything to |> pipe and removed dependency on magrittr
-- HydrologyParameters.SupplyScenario now keeps the trailing 0 when writing number out, e.g., 1.20002010 (#120)
-- Updated test in comparing Excel file and CoRiverNF file creation to look at all sites (#127)
-
-CRSSIO 0.9.1.9000
+CRSSIO 0.10.0
 =================
 
 *In development*
 
+## Major (& API breaking) changes
+
+- The St Vrain natural flow is a necessary input to CRSS. Several updates were made so this is now included in this packages. Thank you @nbonham-usbr.
+  - Added `st_vrain_nf_calc()` to calculate St. Vrain natural flow, as a function of total natural flow at Glenwood Springs. Supporting data/code for this is included in data-raw/StVrain_NaturalFlow_Documentation.
+  - Added parameter `st_vrain_nf` to `crssi()` as it is a necessary input to CRSS. 
+  - Updated CRSS Input vignette with examples of how to use `st_vrain_nf_calc()` and integrate into the pipeline for creating input files for CRSS.
+
+
+## Minor changes and bug fixes
+
+- Fixed reference to the paleo reconstruction of the Sacramento 4-river index in `sac_year_type_get()`. Now correctly points to Meko et al. (2014)
+- When writing out the scenario number (from `crssi()`), the trailing 0 is now kept, e.g., 1.20002010 (#120)
 - Removed print statements from `nfd()` constructors. This prevents the possibility for multiple prints being called when extracting data or converting between `nfd`, `crss_nf` and `crssi` objects. (#125)
 - Updated internal Sacramento Year Type Index data (`sac_year_type_get(internal = TRUE)`) to go through 2022. (#123)
   - Note that it now has a WY (September) based timestep.
@@ -25,6 +23,15 @@ CRSSIO 0.9.1.9000
 - Updated `crssi()` to work with Sacramento year type that is WY or CY based. Either way, the index is assumed to be for the year in the xts object, i.e., the month is effectively ignored. (#118)
 - Fixed two bugs in `nf_to_annual.crss_nf()`. First, it can now correctly sum over a water year for a calendar year object. Second, it now drops monthly when `keep_monthly = FALSE`. (#121)
 - Updated Flaming Gorge elevation-volume table to use latest. (#117)
+
+
+## Under the hood updates
+
+- Replaced udunits2 package with units package because udunits2 is orphaned.
+- `add_secondary_y_conversion()` uses `transform` parameter as `trans` was deprecated several ggplot versions ago.
+- Updated `stat_boxplot_customs()` for changes to ggplot2. Now depends on ggplot2 > 4.0.0.
+- (Unnecessarily) switched everything to |> pipe and removed dependency on magrittr.
+- Updated test in comparing Excel file and CoRiverNF file creation to look at all sites (#127)
 
 CRSSIO 0.9.1
 =================

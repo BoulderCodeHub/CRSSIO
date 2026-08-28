@@ -5,15 +5,15 @@
 
 <!-- badges: start -->
 
-*Stable version (v0.9.1):* [![R build
+*Stable version (v0.10.0):* [![R build
 status](https://github.com/BoulderCodeHub/CRSSIO/workflows/R-CMD-check/badge.svg)](https://github.com/BoulderCodeHub/CRSSIO/actions)
 [![Codecov test
 coverage](https://codecov.io/gh/BoulderCodeHub/CRSSIO/branch/master/graphs/badge.svg)](https://codecov.io/gh/BoulderCodeHub/CRSSIO)
 
 *Development version:* [![R build
-status](https://github.com/rabutler-usbr/CRSSIO/workflows/R-CMD-check/badge.svg)](https://github.com/rabutler-usbr/CRSSIO/actions)
+status](https://github.com/rabutler-usbr/CRSSIO/workflows/R-CMD-check/badge.svg)](https://github.com/BoulderCodeHub/CRSSIO/actions)
 [![Codecov test
-coverage](https://codecov.io/gh/rabutler-usbr/CRSSIO/branch/master/graph/badge.svg)](https://codecov.io/gh/rabutler-usbr/CRSSIO?branch=master)
+coverage](https://codecov.io/gh/BoulderCodeHub/CRSSIO/branch/dev/graph/badge.svg)](https://codecov.io/gh/rabutler-usbr/CRSSIO?branch=dev)
 <!-- badges: end -->
 
 R Package to manipulate the CRSS input and output data.
@@ -72,7 +72,7 @@ and flow space combinations are allowed, but there must be monthly
 intervening data.
 
 `crssi` objects add additional required input into CRSS: the Sacramento
-year type index and a scenario number.
+year type index, St. Vrain natural flow, and a scenario number.
 
 Several methods exist to work with these objects. `reindex()` changes
 the underlying time component so that historical data can be used for
@@ -91,42 +91,30 @@ statistics.
 ``` r
 library(CRSSIO)
 flows <- crss_nf(CoRiverNF::monthlyInt["1988/"])
-#> nfd: Natural Flow Data
-#>  ----------------------
-#>  n traces: 1 
-#>  dates: Jan 1988 - Dec 2019 
-#>  flow space:
-#>  - monthly intervening
 ism_flows <- ism(flows, n_years_keep = 15)
-#> nfd: Natural Flow Data
-#>  ----------------------
-#>  n traces: 32 
-#>  dates: Jan 1988 - Dec 2002 
-#>  flow space:
-#>  - monthly intervening
 hist_stats <- nfd_stats(flows, "Cameo", "intervening", "monthly")
 ism_stats <- nfd_stats(ism_flows, "Cameo", "intervening", "monthly")
 plot(ism_stats, ref = hist_stats, base_units = "acre-feet")
 ```
 
-<img src="man/figures/README-statPlot-1.png" width="100%" />
+<img src="man/figures/README-statPlot-1.png" alt="" width="100%" />
 
 ### `crssi_`
 
--   Create CRSS input files with `crssi_create_dnf_files()`,
-    `crssi_create_cmip_nf_files()`, and `crssi_create_hist_nf_xlsx()`
-    -   These files can also be created with a GUI through an R Studio
-        Addin (see `?crss_input_addin`)
--   Modify existing CRSS natural flow input files with
-    `crssi_change_nf_start_date()`, `crssi_change_nf_file_names()`, and
-    `crssi_change_evap_files()`
+- Create CRSS input files with `crssi_create_dnf_files()`,
+  `crssi_create_cmip_nf_files()`, and `crssi_create_hist_nf_xlsx()`
+  - These files can also be created with a GUI through an R Studio Addin
+    (see `?crss_input_addin`)
+- Modify existing CRSS natural flow input files with
+  `crssi_change_nf_start_date()`, `crssi_change_nf_file_names()`, and
+  `crssi_change_evap_files()`
 
 ### `crsso_`
 
--   `sys_cond_matrix()` and `crsso_get_sys_cond_table()` help create the
-    standard System Conditions Table from CRSS output. Commonly referred
-    to as the “5-year table” but it can go through as many years as
-    simulation data exists. Ex:
+- `sys_cond_matrix()` and `crsso_get_sys_cond_table()` help create the
+  standard System Conditions Table from CRSS output. Commonly referred
+  to as the “5-year table” but it can go through as many years as
+  simulation data exists. Ex:
 
 ``` r
 library(CRSSIO)
@@ -152,50 +140,51 @@ sysCondTable <- crsso_get_sys_cond_table(sysData, 2018:2022)
 
 ### Natural Flow and Salt Names
 
--   Vectors of the natural flow gage names (`nf_gage_names()`), along
-    with corresponding CRSS natural inflow input slot names
-    (`nf_file_names()`), corresponding CRSS natural salt input slot
-    names (`natsalt_file_names()`), and corresponding abbreviated, i.e.,
-    variable, names (`nf_gage_abbrv()`).
+- Vectors of the natural flow gage names (`nf_gage_names()`), along with
+  corresponding CRSS natural inflow input slot names
+  (`nf_file_names()`), corresponding CRSS natural salt input slot names
+  (`natsalt_file_names()`), and corresponding abbreviated, i.e.,
+  variable, names (`nf_gage_abbrv()`).
 
 ### Other CRSS Functions
 
--   `elevation_to_storage()` and `storage_to_elevation()` convert
-    between elevation and storage for reservoirs modeled in CRSS.
--   `ism_get_site_matrix()` applies the index sequential method (ISM) to
-    a single time series of data.
+- `elevation_to_storage()` and `storage_to_elevation()` convert between
+  elevation and storage for reservoirs modeled in CRSS.
+- `ism_get_site_matrix()` applies the index sequential method (ISM) to a
+  single time series of data.
 
 ## Plotting
 
--   `stat_boxplot_custom()` works with ggplots to add box and whisker
-    plots. It differs from `ggplot2::stat_boxplot()` in that it extends
-    the whiskers to specified percentiles instead of some scaled value
-    of the IQR.
--   `add_secondary_y_conversion()` adds a secondary y-axis to a plot. It
-    ensures that the secondary axis is a conversion of the primary axis
-    labels so the ticks match the grid lines from the primary axis.
+- `stat_boxplot_custom()` works with ggplots to add box and whisker
+  plots. It differs from `ggplot2::stat_boxplot()` in that it extends
+  the whiskers to specified percentiles instead of some scaled value of
+  the IQR.
+- `add_secondary_y_conversion()` adds a secondary y-axis to a plot. It
+  ensures that the secondary axis is a conversion of the primary axis
+  labels so the ticks match the grid lines from the primary axis.
 
 ## Log:
 
 For details, see the [News](NEWS.md)
 
--   2022-06-01: version 0.9.0 available
--   2021-03-24: version 0.8.2 available
--   2021-03-19: version 0.8.1 available
--   2020-06-12: version 0.8.0 available
--   2020-01-24: version 0.7.4 available
--   2019-07-25: version 0.7.3 available
--   2019-02-07: version 0.7.2 available
--   2019-01-18: version 0.7.1 available
--   2019-01-17: version 0.7.0 available
--   2018-11-29: version 0.6.3 available
--   2018-03-23: version 0.6.2 available
--   2018-01-23: version 0.6.1 available
--   2018-01-17: version 0.6.0 available
--   2017-08-30: version 0.5.0 available
--   2017-05-10: version 0.4.1 available
--   2017-03-31: version 0.4.0 available
--   2016-10-04: version 0.3 available
--   2016-05-30: version 0.2.1 available
--   2016-05-05: version 0.2 available
--   2015-02-10: version 0.1 available
+- 2026-08-28: version 0.10.0 available
+- 2022-06-01: version 0.9.0 available
+- 2021-03-24: version 0.8.2 available
+- 2021-03-19: version 0.8.1 available
+- 2020-06-12: version 0.8.0 available
+- 2020-01-24: version 0.7.4 available
+- 2019-07-25: version 0.7.3 available
+- 2019-02-07: version 0.7.2 available
+- 2019-01-18: version 0.7.1 available
+- 2019-01-17: version 0.7.0 available
+- 2018-11-29: version 0.6.3 available
+- 2018-03-23: version 0.6.2 available
+- 2018-01-23: version 0.6.1 available
+- 2018-01-17: version 0.6.0 available
+- 2017-08-30: version 0.5.0 available
+- 2017-05-10: version 0.4.1 available
+- 2017-03-31: version 0.4.0 available
+- 2016-10-04: version 0.3 available
+- 2016-05-30: version 0.2.1 available
+- 2016-05-05: version 0.2 available
+- 2015-02-10: version 0.1 available

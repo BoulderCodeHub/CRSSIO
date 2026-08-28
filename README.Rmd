@@ -15,11 +15,11 @@ knitr::opts_chunk$set(
 
 # CRSSIO
 <!-- badges: start -->
-*Stable version (v0.9.1):* [![R build status](https://github.com/BoulderCodeHub/CRSSIO/workflows/R-CMD-check/badge.svg)](https://github.com/BoulderCodeHub/CRSSIO/actions)
+*Stable version (v0.10.0):* [![R build status](https://github.com/BoulderCodeHub/CRSSIO/workflows/R-CMD-check/badge.svg)](https://github.com/BoulderCodeHub/CRSSIO/actions)
 [![Codecov test coverage](https://codecov.io/gh/BoulderCodeHub/CRSSIO/branch/master/graphs/badge.svg)](https://codecov.io/gh/BoulderCodeHub/CRSSIO)
 
-*Development version:*  [![R build status](https://github.com/rabutler-usbr/CRSSIO/workflows/R-CMD-check/badge.svg)](https://github.com/rabutler-usbr/CRSSIO/actions)
-[![Codecov test coverage](https://codecov.io/gh/rabutler-usbr/CRSSIO/branch/master/graph/badge.svg)](https://codecov.io/gh/rabutler-usbr/CRSSIO?branch=master)
+*Development version:*  [![R build status](https://github.com/rabutler-usbr/CRSSIO/workflows/R-CMD-check/badge.svg)](https://github.com/BoulderCodeHub/CRSSIO/actions)
+[![Codecov test coverage](https://codecov.io/gh/BoulderCodeHub/CRSSIO/branch/dev/graph/badge.svg)](https://codecov.io/gh/rabutler-usbr/CRSSIO?branch=dev)
 <!-- badges: end -->
 
 R Package to manipulate the CRSS input and output data.
@@ -119,6 +119,7 @@ sysCondTable <- crsso_get_sys_cond_table(sysData, 2018:2022)
 
 For details, see the [News](NEWS.md)
 
+* 2026-08-28: version 0.10.0 available
 * 2022-06-01: version 0.9.0 available
 * 2021-03-24: version 0.8.2 available
 * 2021-03-19: version 0.8.1 available
