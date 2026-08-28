@@ -8,8 +8,8 @@ Authors@R:c(
            email = "rabutler@usbr.gov",
            comment = c(ORCID = "0000-0002-8625-6386")),
     person(given = "Nathan", family = "Bonham", role = "ctb"),
-    )
     person(given = "Sarah", family = "Baker", role = "ctb")
+    )
 Description: CRSSIO Provides functions to generate input files commmonly used by 
     the Colorado River Simulation System (CRSS) from publicly available data, as
     well as functions to modify these files. Figures that are commonly used to
