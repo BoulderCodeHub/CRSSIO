@@ -1,7 +1,7 @@
 CRSSIO 0.10.0
 =================
 
-*In development*
+*Released August 28, 2026*
 
 ## Major (& API breaking) changes
 
