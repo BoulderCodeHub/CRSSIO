@@ -14,8 +14,6 @@ teardown({
 })
 
 p1 <- ".."
-rr <- sample(1:29, 4) # get 4 random nodes
-message('\n4 random nodes are: ',paste(rr, collapse = " "))
 r2u <- zoo::as.yearmon(c('1950-01','1954-12'))
 
 # check errors -------------------
@@ -192,86 +190,48 @@ test_that("all files exist", {
 })
 
 test_that('files created from "CoRiverNF" are the same as from Excel', {
-  expect_equal(
-    as.matrix(read.csv(
-      file.path(dir2, 'trace1',nf_file_names(6)[rr[1]]),
-      skip = 1
-    )),
-    as.matrix(read.csv(
-      file.path(p1,'trace1', nf_file_names(6)[rr[1]]), 
-      skip = 1
-    ))
-  )
-  expect_equal(
-    as.matrix(read.csv(
-      file.path(dir2, 'trace5',nf_file_names(6)[rr[1]]),
-      skip = 1
-    )),
-    as.matrix(read.csv(
-      file.path(p1,'trace5', nf_file_names(6)[rr[1]]),
-      skip = 1
-    ))
-  )
-  expect_equal(
-    as.matrix(read.csv(
-      file.path(dir2, 'trace2',nf_file_names(6)[rr[2]]),
-      skip = 1
-    )),
-    as.matrix(read.csv(
-      file.path(p1,'trace2', nf_file_names(6)[rr[2]]),
-      skip = 1
-    ))
-  )
-  expect_equal(
-    as.matrix(read.csv(
-      file.path(dir2, 'trace3',nf_file_names(6)[rr[3]]),
-      skip = 1
-    )),
-    as.matrix(read.csv(
-      file.path(p1,'trace3', nf_file_names(6)[rr[3]]),
-      skip = 1
-    ))
-  )
-  expect_equal(
-    as.matrix(read.csv(
-      file.path(dir2, 'trace4',nf_file_names(6)[rr[4]]),
-      skip = 1
-    )),
-    as.matrix(read.csv(
-      file.path(p1,'trace4', nf_file_names(6)[rr[4]]),
-      skip = 1
-    ))
-  )
+  fnames <- nf_file_names(6)
+  
+  for (i in 1:29) {
+    trace <- paste0('trace', ((i - 1) %% 5) + 1)
+    fname <- fnames[i]
+    
+    expect_equal(
+      as.matrix(read.csv(file.path(dir2, trace, fname), skip = 1)),
+      as.matrix(read.csv(file.path(p1,   trace, fname), skip = 1)),
+      info = paste("mismatch at", trace, "/", fname)
+    )
+  }
 })
 
 test_that('ism files match each other as expected', {
   expect_equal(
     as.matrix(read.csv(
-      file.path(dir2, 'trace1',nf_file_names(6)[rr[1]]),
+      file.path(dir2, 'trace1',nf_file_names(6)[1]),
       skip = 1
     ))[13:24],
     as.matrix(read.csv(
-      file.path(p1,'trace2', nf_file_names(6)[rr[1]]),
+      file.path(p1,'trace2', nf_file_names(6)[1]),
       skip = 1
     ))[1:12]
   )
   expect_equal(
     as.matrix(read.csv(
-      file.path(dir2, 'trace1',nf_file_names(6)[rr[2]]),
+      file.path(dir2, 'trace1',nf_file_names(6)[2]),
       skip = 1
     ))[49:60],
     as.matrix(read.csv(
-      file.path(p1,'trace5', nf_file_names(6)[rr[2]]),
+      file.path(p1,'trace5', nf_file_names(6)[2]),
       skip = 1
     ))[1:12]
   )
   expect_equal(
     as.matrix(read.csv(
-      file.path(dir2, 'trace1',nf_file_names(6)[rr[2]]),
+      file.path(dir2, 'trace1',nf_file_names(6)[3]),
       skip = 1
     ))[1:12],
     as.matrix(read.csv(
-      file.path(p1,'trace4', nf_file_names(6)[rr[2]]),
+      file.path(p1,'trace4', nf_file_names(6)[3]),
       skip = 1
     ))[25:36]
   )
